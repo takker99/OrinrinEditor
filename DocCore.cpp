@@ -531,7 +531,7 @@ HRESULT DocOpenFromNull( HWND hWnd )
 */
 INT DocFileCloseCheck( HWND hWnd, UINT dMode )
 {
-	INT		rslt, ret;
+	INT		rslt, ret = 0;
 
 	TCHAR	atMessage[BIG_STRING];
 	BOOLEAN	bMod = FALSE;

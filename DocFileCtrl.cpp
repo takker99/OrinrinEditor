@@ -19,6 +19,9 @@ If not, see <http://www.gnu.org/licenses/>.
 
 #include "stdafx.h"
 #include "OrinrinEditor.h"
+#ifdef _DEBUG
+#include <chrono>
+#endif
 //-------------------------------------------------------------------------------------------------
 
 //	TODO:	保存するとき、同じ名前のファイルがあれば、日時をつけて自動でバックアップを取る
@@ -182,7 +185,7 @@ HRESULT DocFileBackup( HWND hWnd )
 	INT		iByteSize, iNullTmt, iCrLf;
 
 	LPVOID	pbSplit;
-	UINT	cbSplSz;
+	UINT	cbSplSz = 0; //  WriteFileするときの書くバイト数
 
 	INT		isAST, isMLT, idExten;
 
@@ -321,6 +324,13 @@ HRESULT DocFileBackup( HWND hWnd )
 */
 HRESULT DocFileSave( HWND hWnd, UINT bStyle )
 {
+#ifdef _DEBUG
+	std::chrono::system_clock::time_point  start, end; // 型は auto で可
+	start = std::chrono::system_clock::now(); // 計測開始時間
+	double elapsed = 0.0;
+	OutputDebugString(TEXT("DocFileSave\n"));
+#endif
+
 	CONST  TCHAR	aatExte[3][5] = { {TEXT(".ast")}, {TEXT(".mlt")}, {TEXT(".txt")} };
 	CONST  WCHAR	rtHead = 0xFEFF;	//	ユニコードテキストヘッダ
 
@@ -528,6 +538,12 @@ HRESULT DocFileSave( HWND hWnd, UINT bStyle )
 	//	本文の取込はユニコードでやる必要がある
 	if( bUnic || bUtf8 ){	bStyle |= D_UNI;	}
 
+#ifdef _DEBUG
+	end = std::chrono::system_clock::now();  // 計測終了時間
+	elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count(); //処理に要した時間をミリ秒に変換
+	OutputDebugString(TEXT("Before Write"));
+	_RPT1(_CRT_WARN, "ELAPSED:%f", elapsed);
+#endif
 	for( i = 0; iPages > i; i++ )	//	全頁保存
 	{
 		if( isAST )	//	ＡＳＴの場合は、頁先頭にタイトルが入ってる
@@ -561,6 +577,12 @@ HRESULT DocFileSave( HWND hWnd, UINT bStyle )
 	SetEndOfFile( hFile );
 	CloseHandle( hFile );
 
+#ifdef _DEBUG
+	end = std::chrono::system_clock::now();  // 計測終了時間
+	elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count(); //処理に要した時間をミリ秒に変換
+	OutputDebugString(TEXT("After Write"));
+	_RPT1(_CRT_WARN, "ELAPSED:%f", elapsed);
+#endif
 	FREE( pbSplit );
 
 	//	エクスポートなので保存してないことに
@@ -601,7 +623,12 @@ HRESULT DocFileSave( HWND hWnd, UINT bStyle )
 
 	//	頁一覧の書き直し
 	if( bForceMLT ){	PageListViewRewrite( -1 );	}
-
+#ifdef _DEBUG
+	end = std::chrono::system_clock::now();  // 計測終了時間
+	elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count(); //処理に要した時間をミリ秒に変換
+	OutputDebugString(TEXT("END"));
+	_RPT1(_CRT_WARN,"ELAPSED:%f", elapsed);
+#endif
 	return S_OK;
 }
 //-------------------------------------------------------------------------------------------------

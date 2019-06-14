@@ -546,13 +546,13 @@ LPSTR SjisEncodeAlloc( LPCTSTR ptTexts )
 	LPSTR	pcString;
 
 	string	sString;
+	stringstream ss;
 
 	if( !(ptTexts) ){	return NULL;	}
 
 	//	’·‚³Šm”F
 	StringCchLength( ptTexts, STRSAFE_MAX_CCH, &cchSize );
 
-	sString.clear( );
 
 	atMozi[1] = 0;
 	for( d = 0; cchSize > d; d++ )	//	ˆë•¶Žš‚¸‚Â•ÏŠ·‚µ‚Ä‚¢‚­
@@ -576,9 +576,10 @@ LPSTR SjisEncodeAlloc( LPCTSTR ptTexts )
 		}
 #endif
 
-		sString += string( acSjis );
+		ss << string( acSjis );
 	}
 
+	ss >> sString;
 	cbSize = sString.size( ) + 2;
 	pcString = (LPSTR)malloc( cbSize );
 	ZeroMemory( pcString, cbSize );

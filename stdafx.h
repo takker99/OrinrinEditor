@@ -77,6 +77,8 @@ If not, see <http://www.gnu.org/licenses/>.
 #include <tchar.h>
 #include <time.h>
 
+#include <sstream>
+
 #define STRSAFE_NO_CB_FUNCTIONS
 #include <strsafe.h>
 

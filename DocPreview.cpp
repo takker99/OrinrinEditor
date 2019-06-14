@@ -271,7 +271,7 @@ HRESULT PreviewVisibalise( INT iNowPage, BOOLEAN bForeg )
 	RECT	rect;
 	RECT	tbRect;
 
-	HRESULT	hRslt;
+	HRESULT	hRslt = S_OK;
 
 	CComPtr<IUnknown>	comPunkIE;	
 	CComPtr<IDispatch>	pDispatch;
