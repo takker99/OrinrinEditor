@@ -58,7 +58,7 @@ If not, see <http://www.gnu.org/licenses/>.
 #pragma comment(lib, "imm32.lib")
 
 //	SQLite3
-#include "sqlite3.h"
+#include <sqlite3.h>
 #pragma comment(lib, "sqlite3.lib")
 
 
