@@ -53,7 +53,7 @@ ttp://www.microsoft.com/download/en/details.aspx?displaylang=en&id=11800
 #endif
 
 //	DDKのATL使うなら必要なようだ
-#pragma comment(lib, "atlthunk.lib")
+//#pragma comment(lib, "atlthunk.lib")
 
 
 //	ATLを使用するために必要なグローバル変数
@@ -70,11 +70,11 @@ extern CComModule	_Module;
 //	DDKなら、AtlAxWin80 っぽい
 
 
-#if _ATL_VER == 0x0800
+//#if _ATL_VER == 14
 #define ATL_AX_WIN	TEXT("AtlAxWin80")
-#else
-#error ATLバージョンに合わせて定義する必要がある
-#endif
+//#else
+//#error ATLバージョンに合わせて定義する必要がある TEXT(_ATL_VER)
+//#endif
 
 //	ATLAXWIN_CLASS	定義されてるけどTEXTになってない
 
