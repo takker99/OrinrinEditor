@@ -2321,7 +2321,13 @@ VOID OperationOnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 		case  IDM_UNI_PALETTE:		UniDialogueEntry( ghInst, hWnd );	break;
 
 		//	プレビューオーポン
-		case  IDM_ON_PREVIEW:		PreviewVisibalise( gixFocusPage, TRUE );	break;
+		case  IDM_ON_PREVIEW:
+#ifdef ENABLE_PREVIEW
+			PreviewVisibalise( gixFocusPage, TRUE );
+#else
+			MessageBox(hWnd, TEXT("プレビュー機能は封鎖されています。\n"), TEXT("プレビュー機能は封鎖されています"),MB_OK);
+#endif
+			break;
 
 		//	頁一覧を前面に
 		case  IDM_PAGELIST_VIEW:	ShowWindow( ghPgVwWnd , SW_SHOW );		SetForegroundWindow( ghPgVwWnd );	break;
@@ -2375,10 +2381,20 @@ VOID OperationOnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 		case IDM_OPEN:				DocFileOpen( hWnd );	break;
 
 		//	上書き保存
-		case IDM_OVERWRITESAVE:		DocFileSave( hWnd, D_SJIS );	PreviewVisibalise( gixFocusPage, FALSE );	break;
+		case IDM_OVERWRITESAVE:		
+			DocFileSave( hWnd, D_SJIS );
+#ifdef ENABLE_PREVIEW
+			PreviewVisibalise( gixFocusPage, FALSE );
+#endif
+			break;
 
 		//	名前を付けて保存
-		case IDM_RENAMESAVE:		DocFileSave( hWnd , (D_SJIS|D_RENAME) );	PreviewVisibalise( gixFocusPage, FALSE );	break;
+		case IDM_RENAMESAVE:	
+			DocFileSave( hWnd , (D_SJIS|D_RENAME) );	
+#ifdef ENABLE_PREVIEW
+			PreviewVisibalise(gixFocusPage, FALSE);
+#endif
+			break;
 
 		//	画像として保存
 		case IDM_IMAGE_SAVE:		DocImageSave( hWnd, 0, ghAaFont );	break;
@@ -2504,7 +2520,9 @@ VOID OperationOnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 			FindNowPageReSearch(  );
 #endif
 			ViewRedrawSetLine( -1 );
+#ifdef ENABLE_PREVIEW
 			PreviewVisibalise( gixFocusPage, FALSE );
+#endif
 			break;
 
 		//	800Dｘ40Lくらいまでを全角スペースで埋めちゃう

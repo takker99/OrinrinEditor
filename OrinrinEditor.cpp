@@ -1174,7 +1174,9 @@ BOOL InitInstance( HINSTANCE hInstance, INT nCmdShow, LPTSTR ptArgv )
 
 	UserDefInitialise( hWnd, TRUE );
 
+#ifdef ENABLE_PREVIEW
 	PreviewInitialise( hInstance, hWnd );
+#endif
 
 	FrameNameModifyMenu( hWnd );
 
@@ -1850,7 +1852,9 @@ VOID Cls_OnDestroy( HWND hWnd )
 
 	ToolBarBandInfoGet( NULL );
 
+#ifdef ENABLE_PREVIEW
 	PreviewInitialise( NULL, NULL );
+#endif
 
 	TraceInitialise( hWnd, FALSE );
 
