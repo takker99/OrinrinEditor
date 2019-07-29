@@ -1,6 +1,12 @@
 version: 1.0.{build}
 configuration: Release
-platform: x64
+platform: x86
+install:
+- cd C:\Tools\vcpkg
+- git pull
+- .\bootstrap-vcpkg.bat
+- cd %APPVEYOR_BUILD_FOLDER%
+- vcpkg install sqlite3:x86-windows
 build:
   project: OrinrinEditor.vcxproj
   parallel: true
