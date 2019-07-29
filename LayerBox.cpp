@@ -1,6 +1,6 @@
-﻿/*! @file
-	@brief 合成用のレイヤボックスのビュー側の操作です
-	このファイルは LayerBox.cpp です。
+/*! @file
+	@brief �����p�̃��C���{�b�N�X�̃r���[���̑���ł�
+	���̃t�@�C���� LayerBox.cpp �ł��B
 	@author	SikigamiHNQ
 	@date	2011/05/31
 */
@@ -22,33 +22,33 @@ If not, see <http://www.gnu.org/licenses/>.
 //-------------------------------------------------------------------------------------------------
 
 /*
-輪郭白ヌキするには？
-その行の、最初の空白以外の文字の手前と、末尾文字の後
-透過エリアの開始位置と終端位置
-しない・5dot・11dotくらいで
+�֊s���k�L����ɂ́H
+���̍s�́A�ŏ��̋󔒈ȊO�̕����̎�O�ƁA���������̌�
+���߃G���A�̊J�n�ʒu�ƏI�[�ʒu
+���Ȃ��E5dot�E11dot���炢��
 
-挿入上書き処理する前に、白ヌキエリアを元文字列に追加しておく
-作業用文字列として、挿入処理函数内で単独で確保しておく・元文字列を破壊しないように
-開始位置とか透過領域は、白ヌキに併せて弄っておく
+�}���㏑����������O�ɁA���k�L�G���A����������ɒǉ����Ă���
+��Ɨp������Ƃ��āA�}�������������ŒP�ƂŊm�ۂ��Ă����E���������j�󂵂Ȃ��悤��
+�J�n�ʒu�Ƃ����ߗ̈�́A���k�L�ɕ����ĘM���Ă���
 */
 
 //-------------------------------------------------------------------------------------------------
 
 typedef struct tagLAYERBOXSTRUCT
 {
-	LONG	id;					//!<	ボックスの認識番号
+	LONG	id;					//!<	�{�b�N�X�̔F���ԍ�
 
-	POINT	stOffset;			//!<	ビュー左上からの、ボックスの相対位置
+	POINT	stOffset;			//!<	�r���[���ォ��́A�{�b�N�X�̑��Έʒu
 
-	HWND	hBoxWnd;			//!<	ボックスのウインドウハンドル
+	HWND	hBoxWnd;			//!<	�{�b�N�X�̃E�C���h�E�n���h��
 
-	HWND	hTextWnd;			//!<	テキストエリアのウインドウハンドル
-//	WNDPROC	pfOrgTextProc;		//!<	サブクラス元プロシージャ・いらない？
+	HWND	hTextWnd;			//!<	�e�L�X�g�G���A�̃E�C���h�E�n���h��
+//	WNDPROC	pfOrgTextProc;		//!<	�T�u�N���X���v���V�[�W���E����Ȃ��H
 
-	HWND	hToolWnd;			//!<	ツールバーのウインドウハンドル
-//	WNDPROC	pfOrgToolProc;		//!<	サブクラス元プロシージャ・いらない？
+	HWND	hToolWnd;			//!<	�c�[���o�[�̃E�C���h�E�n���h��
+//	WNDPROC	pfOrgToolProc;		//!<	�T�u�N���X���v���V�[�W���E����Ȃ��H
 
-	vector<ONELINE>	vcLyrImg;	//!<	表示するデータの保持・AA用
+	vector<ONELINE>	vcLyrImg;	//!<	�\������f�[�^�̕ێ��EAA�p
 
 } LAYERBOXSTRUCT, *LPLAYERBOXSTRUCT;
 
@@ -61,55 +61,55 @@ typedef vector<ONELINE>::iterator		LYLINE_ITR;
 #define	LB_WIDTH	310
 #define LB_HEIGHT	220
 
-#define EDGE_BLANK_NARROW	16	//	最低限とる空白幅
-#define EDGE_BLANK_WIDE		22	//	広い幅
+#define EDGE_BLANK_NARROW	16	//	�Œ���Ƃ�󔒕�
+#define EDGE_BLANK_WIDE		22	//	�L����
 //-------------------------------------------------------------------------------------------------
 
 #define TB_ITEMS	8
 static  TBBUTTON	gstTBInfo[] = {
-	{ 0,	IDM_LYB_INSERT,		TBSTATE_ENABLED,	TBSTYLE_AUTOSIZE,					{0, 0}, 0, 0  },	//	挿入
-	{ 1,	IDM_LYB_OVERRIDE,	TBSTATE_ENABLED,	TBSTYLE_AUTOSIZE,					{0, 0}, 0, 0  },	//	上書
+	{ 0,	IDM_LYB_INSERT,		TBSTATE_ENABLED,	TBSTYLE_AUTOSIZE,					{0, 0}, 0, 0  },	//	�}��
+	{ 1,	IDM_LYB_OVERRIDE,	TBSTATE_ENABLED,	TBSTYLE_AUTOSIZE,					{0, 0}, 0, 0  },	//	�㏑
 	{ 0,	0,					TBSTATE_ENABLED,	TBSTYLE_SEP,						{0, 0}, 0, 0  },
-	{ 2,	IDM_LYB_COPY,		TBSTATE_ENABLED,	TBSTYLE_AUTOSIZE,					{0, 0}, 0, 0  },	//	コピー
+	{ 2,	IDM_LYB_COPY,		TBSTATE_ENABLED,	TBSTYLE_AUTOSIZE,					{0, 0}, 0, 0  },	//	�R�s�[
 	{ 0,	0,					TBSTATE_ENABLED,	TBSTYLE_SEP,						{0, 0}, 0, 0  },
-	{ 3,	IDM_LYB_DO_EDIT,	TBSTATE_ENABLED,	TBSTYLE_CHECK | TBSTYLE_AUTOSIZE,	{0, 0}, 0, 0  },	//	編集ボックスON/OFF
+	{ 3,	IDM_LYB_DO_EDIT,	TBSTATE_ENABLED,	TBSTYLE_CHECK | TBSTYLE_AUTOSIZE,	{0, 0}, 0, 0  },	//	�ҏW�{�b�N�XON/OFF
 	{ 0,	0,					TBSTATE_ENABLED,	TBSTYLE_SEP,						{0, 0}, 0, 0  },
-	{ 4,	IDM_LYB_DELETE,		TBSTATE_ENABLED,	TBSTYLE_AUTOSIZE,					{0, 0}, 0, 0  } 	//	20120507	内容クルヤー
+	{ 4,	IDM_LYB_DELETE,		TBSTATE_ENABLED,	TBSTYLE_AUTOSIZE,					{0, 0}, 0, 0  } 	//	20120507	���e�N�����[
 
 };	//	
 //-------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------
 
-extern INT		gdDocXdot;		//!<	キャレットのＸドット・ドキュメント位置
-extern INT		gdDocLine;		//!<	キャレットのＹ行数・ドキュメント位置
+extern INT		gdDocXdot;		//!<	�L�����b�g�̂w�h�b�g�E�h�L�������g�ʒu
+extern INT		gdDocLine;		//!<	�L�����b�g�̂x�s���E�h�L�������g�ʒu
 
-extern INT		gdHideXdot;		//!<	左の隠れ部分
-extern INT		gdViewTopLine;	//!<	表示中の最上部行番号
+extern INT		gdHideXdot;		//!<	���̉B�ꕔ��
+extern INT		gdViewTopLine;	//!<	�\�����̍ŏ㕔�s�ԍ�
 
-extern HFONT	ghAaFont;		//!<	AA用フォント
+extern HFONT	ghAaFont;		//!<	AA�p�t�H���g
 
-extern  HWND	ghViewWnd;		//!<	ビューウインドウハンドル
+extern  HWND	ghViewWnd;		//!<	�r���[�E�C���h�E�n���h��
 
-static POINT	gstViewOrigin;	//!<	ビューの左上ウインドウ位置・
+static POINT	gstViewOrigin;	//!<	�r���[�̍���E�C���h�E�ʒu�E
 
-static  ATOM	gLyrBoxAtom;	//!<	レイヤボックス窓のクラスアトム
+static  ATOM	gLyrBoxAtom;	//!<	���C���{�b�N�X���̃N���X�A�g��
 
-static  LONG	gdBoxID;		//!<	通し番号・常にINCREMENT
+static  LONG	gdBoxID;		//!<	�ʂ��ԍ��E���INCREMENT
 
-static POINT	gstFrmSz;		//!<	ウインドウエッジからスタティックまでのオフセット
-static INT		gdToolBarHei;	//!<	ツールバー太さ
+static POINT	gstFrmSz;		//!<	�E�C���h�E�G�b�W����X�^�e�B�b�N�܂ł̃I�t�Z�b�g
+static INT		gdToolBarHei;	//!<	�c�[���o�[����
 
-EXTERNED BYTE	gbAlpha;		//!<	透明度
+EXTERNED BYTE	gbAlpha;		//!<	�����x
 
-static BOOLEAN	gbQuickClose;	//!<	貼り付けたら直ぐ閉じる
+static BOOLEAN	gbQuickClose;	//!<	�\��t�����璼������
 
 static WNDPROC	gpfOrigLyrTBProc;	//!<	
 static WNDPROC	gpfOrigLyrEditProc;	//!<	
-//	元プロシージャは共通で問題無い？
+//	���v���V�[�W���͋��ʂŖ�薳���H
 
 static HIMAGELIST	ghLayerImgLst;	//!<	
 
-static  list<LAYERBOXSTRUCT>	gltLayer;	//!<	複数のレイヤボックスを開いたとき
+static  list<LAYERBOXSTRUCT>	gltLayer;	//!<	�����̃��C���{�b�N�X���J�����Ƃ�
 //-------------------------------------------------------------------------------------------------
 
 static LRESULT	CALLBACK gpfLayerTBProc( HWND, UINT, WPARAM, LPARAM );	//!<	
@@ -117,7 +117,7 @@ static LRESULT	CALLBACK gpfLyrEditProc( HWND, UINT, WPARAM, LPARAM );	//!<
 
 LRESULT	CALLBACK LayerBoxProc( HWND, UINT, WPARAM, LPARAM );	//!<	
 
-BOOLEAN	Lyb_OnCreate( HWND, LPCREATESTRUCT );				//!<	WM_CREATE の処理
+BOOLEAN	Lyb_OnCreate( HWND, LPCREATESTRUCT );				//!<	WM_CREATE �̏���
 VOID	Lyb_OnCommand( HWND , INT, HWND, UINT );			//!<	
 //VOID	Lyb_OnSize( HWND , UINT, INT, INT );				//!<	
 VOID	Lyb_OnKey( HWND, UINT, BOOL, INT, UINT );			//!<	
@@ -151,17 +151,17 @@ HRESULT	LayerEdgeBlankSizeCheck( HWND, INT );				//!<
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ボックスの作成・最初の1回のみ
-	@param[in]	hInstance	アプリのインスタンス
-	@param[in]	pstFrame	クライヤントサイズ
-	@return		無し
+	�{�b�N�X�̍쐬�E�ŏ���1��̂�
+	@param[in]	hInstance	�A�v���̃C���X�^���X
+	@param[in]	pstFrame	�N���C�����g�T�C�Y
+	@return		����
 */
 VOID LayerBoxInitialise( HINSTANCE hInstance, LPRECT pstFrame )
 {
 	WNDCLASSEX	wcex;
 	HBITMAP	hImg, hMsq;
 
-	if( !(hInstance) )	//	破壊命令
+	if( !(hInstance) )	//	�j�󖽗�
 	{
 		ImageList_Destroy( ghLayerImgLst );
 
@@ -188,7 +188,7 @@ VOID LayerBoxInitialise( HINSTANCE hInstance, LPRECT pstFrame )
 
 	gdBoxID = 0;
 
-	//ツールバー用イメージリスト作成
+	//�c�[���o�[�p�C���[�W���X�g�쐬
 	ghLayerImgLst = ImageList_Create( 16, 16, ILC_COLOR24 | ILC_MASK, 5, 1 );
 
 	hImg = LoadBitmap( hInstance, MAKEINTRESOURCE( (IDBMP_LAYERINSERT) ) );
@@ -221,9 +221,9 @@ VOID LayerBoxInitialise( HINSTANCE hInstance, LPRECT pstFrame )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	れいやぼっくちゅのアルファを更新!?
-	@param[in]	dParam	新しいアルファ値
-	@return		HRESULT	終了状態コード
+	�ꂢ��ڂ�������̃A���t�@���X�V!?
+	@param[in]	dParam	�V�����A���t�@�l
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT LayerBoxAlphaSet( UINT dParam )
 {
@@ -233,12 +233,12 @@ HRESULT LayerBoxAlphaSet( UINT dParam )
 }
 //-------------------------------------------------------------------------------------------------
 
-/*！
-	レイヤボックスを作成
-	@param[in]	hInst	実存値
-	@param[in]	ptStr	表示すべき文字列なら有効、違うならNULL
-	@param[in]	bNormal	0x00普通に処理　0x10裏処理
-	@return		HWND	作成されたレイヤボックスのウインドウハンドル
+/*�I
+	���C���{�b�N�X���쐬
+	@param[in]	hInst	�����l
+	@param[in]	ptStr	�\�����ׂ�������Ȃ�L���A�Ⴄ�Ȃ�NULL
+	@param[in]	bNormal	0x00���ʂɏ����@0x10������
+	@return		HWND	�쐬���ꂽ���C���{�b�N�X�̃E�C���h�E�n���h��
 */
 HWND LayerBoxVisibalise( HINSTANCE hInst, LPCTSTR ptStr, UINT bNormal )
 {
@@ -253,36 +253,36 @@ HWND LayerBoxVisibalise( HINSTANCE hInst, LPCTSTR ptStr, UINT bNormal )
 	LAYER_ITR	itLyr;
 
 
-//	stLayer.pfOrgTextProc = NULL;	//	あとで
-//	stLayer.pfOrgToolProc = NULL;	//	あとで
-	stLayer.id = gdBoxID;	//	ボックスの認識番号
+//	stLayer.pfOrgTextProc = NULL;	//	���Ƃ�
+//	stLayer.pfOrgToolProc = NULL;	//	���Ƃ�
+	stLayer.id = gdBoxID;	//	�{�b�N�X�̔F���ԍ�
 
 	bSelect = IsSelecting( &bSqSel );
 
-	stLayer.vcLyrImg.clear( );	//	表示するデータの保持・AA用
+	stLayer.vcLyrImg.clear( );	//	�\������f�[�^�̕ێ��EAA�p
 
 	if( 0x10 & bNormal ){	dwStyle = WS_POPUP | WS_THICKFRAME | WS_CAPTION | WS_SYSMENU;	}
 	else{		dwStyle = WS_POPUP | WS_THICKFRAME | WS_CAPTION | WS_VISIBLE | WS_SYSMENU;	}
 
-	//	場所は０にしておけばクライヤント位置で計算出来る
+	//	�ꏊ�͂O�ɂ��Ă����΃N���C�����g�ʒu�Ōv�Z�o����
 	stLayer.hBoxWnd = CreateWindowEx( WS_EX_TOOLWINDOW | WS_EX_LAYERED, LAYERBOX_CLASS,
-		TEXT("レイヤ"), dwStyle, 0, 0, LB_WIDTH, LB_HEIGHT, NULL, NULL, hInst, NULL);
+		TEXT("���C��"), dwStyle, 0, 0, LB_WIDTH, LB_HEIGHT, NULL, NULL, hInst, NULL);
 
-	//	ＩＤをウインドウハンドルに保存しておく
+	//	�h�c���E�C���h�E�n���h���ɕۑ����Ă���
 	WndTagSet( stLayer.hBoxWnd, stLayer.id );
 
 	SetLayeredWindowAttributes( stLayer.hBoxWnd, 0, gbAlpha, LWA_ALPHA );
 
-	//	ツールバーのウインドウハンドル
+	//	�c�[���o�[�̃E�C���h�E�n���h��
 	stLayer.hToolWnd = GetDlgItem( stLayer.hBoxWnd, IDW_LYB_TOOL_BAR );
 
-	//	ウインドウ位置を確定させる
+	//	�E�C���h�E�ʒu���m�肳����
 	GetWindowRect( ghViewWnd, &vwRect );
-	gstViewOrigin.x = vwRect.left;//位置記録・そうそう変わるものじゃない
+	gstViewOrigin.x = vwRect.left;//�ʒu�L�^�E���������ς����̂���Ȃ�
 	gstViewOrigin.y = vwRect.top;
 	//x = (vwRect.left + LINENUM_WID) - gstFrmSz.x;
 	//y = (vwRect.top  + RULER_AREA)  - gstFrmSz.y;
-	//この時点で、編集エリアの０，０を示している
+	//���̎��_�ŁA�ҏW�G���A�̂O�C�O�������Ă���
 	x = gdDocXdot;
 	y = gdDocLine * LINE_HEIGHT;
 	ViewPositionTransform( &x, &y, TRUE );
@@ -300,33 +300,33 @@ HWND LayerBoxVisibalise( HINSTANCE hInst, LPCTSTR ptStr, UINT bNormal )
 
 	GetClientRect( stLayer.hBoxWnd, &rect );
 
-	//	編集用エディット
+	//	�ҏW�p�G�f�B�b�g
 	stLayer.hTextWnd = CreateWindowEx( 0, WC_EDIT, TEXT(""), 
 		WS_CHILD | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOHSCROLL | ES_AUTOVSCROLL,
 		0, gdToolBarHei, rect.right, rect.bottom - gdToolBarHei,
 		stLayer.hBoxWnd, (HMENU)IDE_LYB_TEXTEDIT, hInst, NULL );
 	SetWindowFont( stLayer.hTextWnd, ghAaFont, TRUE );
 
-	//	サブクラス
+	//	�T�u�N���X
 	gpfOrigLyrEditProc = SubclassWindow( stLayer.hTextWnd, gpfLyrEditProc );
 
-	//	レイヤリストに記録
+	//	���C�����X�g�ɋL�^
 	gltLayer.push_back( stLayer );
 	itLyr = gltLayer.end();
-	itLyr--;	//	追加したのは末端だからこれでいい
+	itLyr--;	//	�ǉ������͖̂��[�����炱��ł���
 
-	//	優先順位に注意
-	if( ptStr  )	//	有効文字列があるなら
+	//	�D�揇�ʂɒ���
+	if( ptStr  )	//	�L�������񂪂���Ȃ�
 	{
 		TRACE( TEXT("LAYER from STRING") );
 		LayerFromString( itLyr, ptStr );
 	}
-	else if( bSelect )	//	選択範囲が有効である	DocIsSelecting
+	else if( bSelect )	//	�I��͈͂��L���ł���	DocIsSelecting
 	{
 		TRACE( TEXT("LAYER from Select") );
 		LayerFromSelectArea( itLyr, bSqSel );
 	}
-	else	//	どうでもないならクルップボードから
+	else	//	�ǂ��ł��Ȃ��Ȃ�N���b�v�{�[�h����
 	{
 		TRACE( TEXT("LAYER from ClipBoard") );
 		LayerFromClipboard( itLyr );
@@ -348,10 +348,10 @@ HWND LayerBoxVisibalise( HINSTANCE hInst, LPCTSTR ptStr, UINT bNormal )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	レイヤボックスの位置を外部から変更
-	@param[in]	hWnd	対象のレイヤボックスのハンドル
-	@param[in]	x		描画位置のスクリーンＸ位置
-	@param[in]	y		描画位置のスクリーンＹ位置
+	���C���{�b�N�X�̈ʒu���O������ύX
+	@param[in]	hWnd	�Ώۂ̃��C���{�b�N�X�̃n���h��
+	@param[in]	x		�`��ʒu�̃X�N���[���w�ʒu
+	@param[in]	y		�`��ʒu�̃X�N���[���x�ʒu
 */
 HRESULT LayerBoxPositionChange( HWND hWnd, LONG x, LONG y )
 {
@@ -372,14 +372,14 @@ HRESULT LayerBoxPositionChange( HWND hWnd, LONG x, LONG y )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ツールバーサブクラス
-	WindowsXPで、ツールバーのボタン上でマウスの左ボタンを押したまま右ボタンを押すと、
-	それ以降のマウス操作を正常に受け付けなくなる。それの対策
-	@param[in]	hWnd	ツールバーハンドル
-	@param[in]	msg		ウインドウメッセージの識別番号
-	@param[in]	wParam	追加の情報１
-	@param[in]	lParam	追加の情報２
-	@return	処理した結果とか
+	�c�[���o�[�T�u�N���X
+	WindowsXP�ŁA�c�[���o�[�̃{�^����Ń}�E�X�̍��{�^�����������܂܉E�{�^���������ƁA
+	����ȍ~�̃}�E�X����𐳏�Ɏ󂯕t���Ȃ��Ȃ�B����̑΍�
+	@param[in]	hWnd	�c�[���o�[�n���h��
+	@param[in]	msg		�E�C���h�E���b�Z�[�W�̎��ʔԍ�
+	@param[in]	wParam	�ǉ��̏��P
+	@param[in]	lParam	�ǉ��̏��Q
+	@return	�����������ʂƂ�
 */
 LRESULT CALLBACK gpfLayerTBProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
@@ -389,7 +389,7 @@ LRESULT CALLBACK gpfLayerTBProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 
 	switch( msg )
 	{
-		case WM_CTLCOLORSTATIC:	//	チェックボックスの文字列部分の色変更
+		case WM_CTLCOLORSTATIC:	//	�`�F�b�N�{�b�N�X�̕����񕔕��̐F�ύX
 			hdc = (HDC)(wParam);
 			hWndChild = (HWND)(lParam);
 
@@ -414,12 +414,12 @@ LRESULT CALLBACK gpfLayerTBProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	エディットボックスサブクラス
-	@param[in]	hWnd	ウインドウのハンドル
-	@param[in]	msg		ウインドウメッセージの識別番号
-	@param[in]	wParam	追加の情報１
-	@param[in]	lParam	追加の情報２
-	@return	処理した結果とか
+	�G�f�B�b�g�{�b�N�X�T�u�N���X
+	@param[in]	hWnd	�E�C���h�E�̃n���h��
+	@param[in]	msg		�E�C���h�E���b�Z�[�W�̎��ʔԍ�
+	@param[in]	wParam	�ǉ��̏��P
+	@param[in]	lParam	�ǉ��̏��Q
+	@return	�����������ʂƂ�
 */
 LRESULT CALLBACK gpfLyrEditProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
@@ -433,12 +433,12 @@ LRESULT CALLBACK gpfLyrEditProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 		default:	break;
 
 		case WM_COMMAND:
-			id         = LOWORD(wParam);	//	発生したコマンドの識別子
-			hWndCtl    = (HWND)lParam;		//	コマンドを発生させた子ウインドウのハンドル
-			codeNotify = HIWORD(wParam);	//	追加の通知メッセージ
+			id         = LOWORD(wParam);	//	���������R�}���h�̎��ʎq
+			hWndCtl    = (HWND)lParam;		//	�R�}���h�𔭐��������q�E�C���h�E�̃n���h��
+			codeNotify = HIWORD(wParam);	//	�ǉ��̒ʒm���b�Z�[�W
 			TRACE( TEXT("[%X]LyrEdit COMMAND %d"), hWnd, id );
 			
-			switch( id )	//	キーボードショートカットをブッとばす
+			switch( id )	//	�L�[�{�[�h�V���[�g�J�b�g���u�b�Ƃ΂�
 			{
 				case IDM_PASTE:	SendMessage( hWnd, WM_PASTE, 0, 0 );	return 0;
 				case IDM_COPY:	SendMessage( hWnd, WM_COPY,  0, 0 );	return 0;
@@ -460,13 +460,13 @@ LRESULT CALLBACK gpfLyrEditProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 
 
 /*!
-	レイヤボックスのウインドウプロシージャ
-	@param[in]	hWnd	親ウインドウのハンドル
-	@param[in]	message	ウインドウメッセージの識別番号
-	@param[in]	wParam	追加の情報１
-	@param[in]	lParam	追加の情報２
-	@retval 0	メッセージ処理済み
-	@retval no0	ここでは処理せず次に回す
+	���C���{�b�N�X�̃E�C���h�E�v���V�[�W��
+	@param[in]	hWnd	�e�E�C���h�E�̃n���h��
+	@param[in]	message	�E�C���h�E���b�Z�[�W�̎��ʔԍ�
+	@param[in]	wParam	�ǉ��̏��P
+	@param[in]	lParam	�ǉ��̏��Q
+	@retval 0	���b�Z�[�W�����ς�
+	@retval no0	�����ł͏����������ɉ�
 */
 LRESULT CALLBACK LayerBoxProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
@@ -481,7 +481,7 @@ LRESULT CALLBACK LayerBoxProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 		HANDLE_MSG( hWnd, WM_CONTEXTMENU,		Lyb_OnContextMenu );	
 		HANDLE_MSG( hWnd, WM_WINDOWPOSCHANGING,	Lyb_OnWindowPosChanging );	
 		HANDLE_MSG( hWnd, WM_WINDOWPOSCHANGED,	Lyb_OnWindowPosChanged );	
-	//	WM_WINDOWPOSCHANGED を使った場合、WM_SIZEは発生しないようだ
+	//	WM_WINDOWPOSCHANGED ���g�����ꍇ�AWM_SIZE�͔������Ȃ��悤��
 	//	HANDLE_MSG( hWnd, WM_SIZE,				Lyb_OnSize );	
 
 		case WM_MOVING:	Lyb_OnMoving( hWnd, (LPRECT)lParam );	return 0;
@@ -494,14 +494,14 @@ LRESULT CALLBACK LayerBoxProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	レイヤボックスのクリエイト。
-	@param[in]	hWnd			親ウインドウのハンドル
-	@param[in]	lpCreateStruct	アプリケーションの初期化内容
-	@return	TRUE	特になし
+	���C���{�b�N�X�̃N���G�C�g�B
+	@param[in]	hWnd			�e�E�C���h�E�̃n���h��
+	@param[in]	lpCreateStruct	�A�v���P�[�V�����̏��������e
+	@return	TRUE	���ɂȂ�
 */
 BOOLEAN Lyb_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 {
-	HINSTANCE	lcInst  = lpCreateStruct->hInstance;	//	受け取った初期化情報から、インスタンスハンドルをひっぱる
+	HINSTANCE	lcInst  = lpCreateStruct->hInstance;	//	�󂯎������������񂩂�A�C���X�^���X�n���h�����Ђ��ς�
 	HWND	hToolWnd, hWorkWnd;
 	TCHAR	atBuffer[MAX_STRING];
 //	UINT	iIndex;
@@ -511,7 +511,7 @@ BOOLEAN Lyb_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 
 	hToolWnd = CreateWindowEx( WS_EX_CLIENTEDGE, TOOLBARCLASSNAME, TEXT("toolbar"), WS_CHILD | WS_VISIBLE | TBSTYLE_FLAT | TBSTYLE_LIST | TBSTYLE_TOOLTIPS, 0, 0, 0, 0, hWnd, (HMENU)IDW_LYB_TOOL_BAR, lcInst, NULL );
 
-	//	自動ツールチップスタイルを追加
+	//	�����c�[���`�b�v�X�^�C����ǉ�
 	SendMessage( hToolWnd, TB_SETEXTENDEDSTYLE, 0, TBSTYLE_EX_MIXEDBUTTONS );
 
 	//stToolBmp.hInst = HINST_COMMCTRL;
@@ -520,35 +520,35 @@ BOOLEAN Lyb_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 	SendMessage( hToolWnd, TB_SETIMAGELIST, 0, (LPARAM)ghLayerImgLst );
 
 	SendMessage( hToolWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0 );
-	//	ツールチップ文字列を設定・ボタンテキストがツールチップになる
-	StringCchCopy( atBuffer, MAX_STRING, TEXT("この辺に挿入") );	gstTBInfo[0].iString = SendMessage( hToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuffer );
-	StringCchCopy( atBuffer, MAX_STRING, TEXT("ここらに上書") );	gstTBInfo[1].iString = SendMessage( hToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuffer );
-	StringCchCopy( atBuffer, MAX_STRING, TEXT("コピーする") );		gstTBInfo[3].iString = SendMessage( hToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuffer );
-	StringCchCopy( atBuffer, MAX_STRING, TEXT("テキスト編集") );	gstTBInfo[5].iString = SendMessage( hToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuffer );
-	StringCchCopy( atBuffer, MAX_STRING, TEXT("内容を削除") );		gstTBInfo[7].iString = SendMessage( hToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuffer );
+	//	�c�[���`�b�v�������ݒ�E�{�^���e�L�X�g���c�[���`�b�v�ɂȂ�
+	StringCchCopy( atBuffer, MAX_STRING, TEXT("���̕ӂɑ}��") );	gstTBInfo[0].iString = SendMessage( hToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuffer );
+	StringCchCopy( atBuffer, MAX_STRING, TEXT("������ɏ㏑") );	gstTBInfo[1].iString = SendMessage( hToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuffer );
+	StringCchCopy( atBuffer, MAX_STRING, TEXT("�R�s�[����") );		gstTBInfo[3].iString = SendMessage( hToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuffer );
+	StringCchCopy( atBuffer, MAX_STRING, TEXT("�e�L�X�g�ҏW") );	gstTBInfo[5].iString = SendMessage( hToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuffer );
+	StringCchCopy( atBuffer, MAX_STRING, TEXT("���e���폜") );		gstTBInfo[7].iString = SendMessage( hToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuffer );
 
-	SendMessage( hToolWnd , TB_ADDBUTTONS, (WPARAM)TB_ITEMS, (LPARAM)&gstTBInfo );	//	ツールバーにボタンを挿入
+	SendMessage( hToolWnd , TB_ADDBUTTONS, (WPARAM)TB_ITEMS, (LPARAM)&gstTBInfo );	//	�c�[���o�[�Ƀ{�^����}��
 
-	SendMessage( hToolWnd , TB_AUTOSIZE, 0, 0 );	//	ボタンのサイズに合わせてツールバーをリサイズ
-	InvalidateRect( hToolWnd , NULL, TRUE );		//	クライアント全体を再描画する命令
+	SendMessage( hToolWnd , TB_AUTOSIZE, 0, 0 );	//	�{�^���̃T�C�Y�ɍ��킹�ăc�[���o�[�����T�C�Y
+	InvalidateRect( hToolWnd , NULL, TRUE );		//	�N���C�A���g�S�̂��ĕ`�悷�閽��
 
-	//	ツールバーサブクラス化
+	//	�c�[���o�[�T�u�N���X��
 	gpfOrigLyrTBProc = SubclassWindow( hToolWnd, gpfLayerTBProc );
 
-	//	貼り付けたら閉じるチェックボックスを付ける
-	CreateWindowEx( 0, WC_BUTTON, TEXT("貼付たら閉じる"), WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX, 150, 2, 138, 23, hToolWnd, (HMENU)IDCB_LAYER_QUICKCLOSE, lcInst, NULL );
+	//	�\��t���������`�F�b�N�{�b�N�X��t����
+	CreateWindowEx( 0, WC_BUTTON, TEXT("�\�t�������"), WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX, 150, 2, 138, 23, hToolWnd, (HMENU)IDCB_LAYER_QUICKCLOSE, lcInst, NULL );
 	CheckDlgButton( hToolWnd, IDCB_LAYER_QUICKCLOSE, gbQuickClose ? BST_CHECKED : BST_UNCHECKED );
 
 #ifdef EDGE_BLANK_STYLE
 	hWorkWnd = CreateWindowEx( 0, WC_COMBOBOX, TEXT(""), WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST, 290, 0, 123, 70, hToolWnd, (HMENU)IDCB_LAYER_EDGE_BLANK, lcInst, NULL );
-	ComboBox_AddString( hWorkWnd, TEXT("白抜きしない") );
-	ComboBox_AddString( hWorkWnd, TEXT("狭く白抜き") );
-	ComboBox_AddString( hWorkWnd, TEXT("広く白抜き") );
+	ComboBox_AddString( hWorkWnd, TEXT("���������Ȃ�") );
+	ComboBox_AddString( hWorkWnd, TEXT("����������") );
+	ComboBox_AddString( hWorkWnd, TEXT("�L��������") );
 	ComboBox_SetCurSel( hWorkWnd, 0 );
 #endif
 
 
-	if( 0 == gdBoxID )	//	最初の壱個目のときに計算
+	if( 0 == gdBoxID )	//	�ŏ��̈�ڂ̂Ƃ��Ɍv�Z
 	{
 		//GetClientRect( hToolWnd, &tbRect );
 		//gdToolBarHei = tbRect.bottom + 5;
@@ -556,7 +556,7 @@ BOOLEAN Lyb_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 		gdToolBarHei = tbRect.bottom - tbRect.top;
 
 
-		//	スクリーン位置は００なのがポインヨ
+		//	�X�N���[���ʒu�͂O�O�Ȃ̂��|�C����
 		gstFrmSz.x = 0;
 		gstFrmSz.y = gdToolBarHei;
 		ClientToScreen( hWnd, &gstFrmSz );
@@ -568,12 +568,12 @@ BOOLEAN Lyb_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	COMMANDメッセージの受け取り。ボタン押されたとかで発生
-	@param[in]	hWnd		ウインドウハンドル
-	@param[in]	id			メッセージを発生させた子ウインドウの識別子	LOWORD(wParam)
-	@param[in]	hWndCtl		メッセージを発生させた子ウインドウのハンドル	lParam
-	@param[in]	codeNotify	通知メッセージ	HIWORD(wParam)
-	@return		なし
+	COMMAND���b�Z�[�W�̎󂯎��B�{�^�������ꂽ�Ƃ��Ŕ���
+	@param[in]	hWnd		�E�C���h�E�n���h��
+	@param[in]	id			���b�Z�[�W�𔭐��������q�E�C���h�E�̎��ʎq	LOWORD(wParam)
+	@param[in]	hWndCtl		���b�Z�[�W�𔭐��������q�E�C���h�E�̃n���h��	lParam
+	@param[in]	codeNotify	�ʒm���b�Z�[�W	HIWORD(wParam)
+	@return		�Ȃ�
 */
 VOID Lyb_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 {
@@ -583,7 +583,7 @@ VOID Lyb_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 
 	switch( id )
 	{
-		case IDE_LYB_TEXTEDIT:	//	レイヤ非表示にしてもKILLFOCUS出る
+		case IDE_LYB_TEXTEDIT:	//	���C����\���ɂ��Ă�KILLFOCUS�o��
 			if( EN_SETFOCUS  == codeNotify ){	TRACE( TEXT("LYREDIT_SETFOCUS") );	}
 
 			if( EN_KILLFOCUS == codeNotify )
@@ -593,36 +593,36 @@ VOID Lyb_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 			}
 			break;
 
-		case IDM_LYB_INSERT:	//	貼り付ける
+		case IDM_LYB_INSERT:	//	�\��t����
 		case IDM_LYB_OVERRIDE:
 			LayerContentsImportable( hWnd, id, &iXpos, &iYln, 0 );
 			ViewPosResetCaret( iXpos, iYln );	
 			DocPageInfoRenew( -1, 1 );
-			if( gbQuickClose  ){	DestroyWindow( hWnd );	}	//	直ぐ閉じる？
+			if( gbQuickClose  ){	DestroyWindow( hWnd );	}	//	��������H
 			break;
 
-		case IDM_LYB_COPY:	//	クルップボードへ
+		case IDM_LYB_COPY:	//	�N���b�v�{�[�h��
 			LayerForClipboard( hWnd, D_UNI );
 			break;
 
-		case IDM_LYB_DO_EDIT:	//	文字列を編集
+		case IDM_LYB_DO_EDIT:	//	�������ҏW
 			lRslt = SendMessage( GetDlgItem(hWnd,IDW_LYB_TOOL_BAR), TB_GETSTATE, IDM_LYB_DO_EDIT, 0 );
 			LayerEditOnOff( hWnd, (lRslt&TBSTATE_CHECKED) ? TRUE : FALSE );
 			SendMessage( GetDlgItem(hWnd,IDW_LYB_TOOL_BAR), TB_SETSTATE, IDM_LYB_INSERT,   (lRslt&TBSTATE_CHECKED) ? 0 : TBSTATE_ENABLED );
 			SendMessage( GetDlgItem(hWnd,IDW_LYB_TOOL_BAR), TB_SETSTATE, IDM_LYB_OVERRIDE, (lRslt&TBSTATE_CHECKED) ? 0 : TBSTATE_ENABLED );
 			break;
 
-		case IDM_LYB_DELETE:	//	内容を削除
+		case IDM_LYB_DELETE:	//	���e���폜
 			LayerOnDelete( hWnd );
 			break;
 
-		case IDCB_LAYER_QUICKCLOSE:	//	貼り付けたら閉じるか？
+		case IDCB_LAYER_QUICKCLOSE:	//	�\��t��������邩�H
 			gbQuickClose = IsDlgButtonChecked( GetDlgItem(hWnd,IDW_LYB_TOOL_BAR), IDCB_LAYER_QUICKCLOSE ) ? TRUE : FALSE;
 			SetFocus( hWnd );
 			break;
 
 #ifdef EDGE_BLANK_STYLE
-		case IDCB_LAYER_EDGE_BLANK:	//	白ヌキするか
+		case IDCB_LAYER_EDGE_BLANK:	//	���k�L���邩
 			if( CBN_SELCHANGE == codeNotify )
 			{
 				bEdgeBlank = ComboBox_GetCurSel( hWndCtl );
@@ -632,17 +632,17 @@ VOID Lyb_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 			break;
 #endif
 
-		case IDM_LYB_TRANCE_RELEASE:	//	透過選択を解除
+		case IDM_LYB_TRANCE_RELEASE:	//	���ߑI��������
 			LayerTransparentToggle( hWnd, 0 );
 			InvalidateRect( hWnd, NULL, TRUE );
 			break;
 
-		case IDM_LYB_TRANCE_ALL:	//	空白を全部透過領域に設定
+		case IDM_LYB_TRANCE_ALL:	//	�󔒂�S�����ߗ̈�ɐݒ�
 			LayerTransparentToggle( hWnd, 1 );
 			InvalidateRect( hWnd, NULL, TRUE );
 			break;
 
-		default:	TRACE( TEXT("Layer未知のコマンド %d"), id );	break;
+		default:	TRACE( TEXT("Layer���m�̃R�}���h %d"), id );	break;
 	}
 
 	return;
@@ -650,13 +650,13 @@ VOID Lyb_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	キーダウンが発生・キーボードで移動用
-	@param[in]	hWnd	ウインドウハンドル・ビューのとは限らないので注意セヨ
-	@param[in]	vk		押されたキーが仮想キーコードで来る
-	@param[in]	fDown	非０ダウン　０アップ
-	@param[in]	cRepeat	連続オサレ回数・取れてない？
-	@param[in]	flags	キーフラグいろいろ
-	@return		無し
+	�L�[�_�E���������E�L�[�{�[�h�ňړ��p
+	@param[in]	hWnd	�E�C���h�E�n���h���E�r���[�̂Ƃ͌���Ȃ��̂Œ��ӃZ��
+	@param[in]	vk		�����ꂽ�L�[�����z�L�[�R�[�h�ŗ���
+	@param[in]	fDown	��O�_�E���@�O�A�b�v
+	@param[in]	cRepeat	�A���I�T���񐔁E���ĂȂ��H
+	@param[in]	flags	�L�[�t���O���낢��
+	@return		����
 */
 VOID Lyb_OnKey( HWND hWnd, UINT vk, BOOL fDown, int cRepeat, UINT flags )
 {
@@ -668,10 +668,10 @@ VOID Lyb_OnKey( HWND hWnd, UINT vk, BOOL fDown, int cRepeat, UINT flags )
 	{
 		switch( vk )
 		{
-			case VK_RIGHT:	TRACE( TEXT("右") );	rect.left++;	break;
-			case VK_LEFT:	TRACE( TEXT("左") );	rect.left--;	break;
-			case VK_DOWN:	TRACE( TEXT("下") );	rect.top += LINE_HEIGHT;	break;
-			case  VK_UP:	TRACE( TEXT("上") );	rect.top -= LINE_HEIGHT;	break;
+			case VK_RIGHT:	TRACE( TEXT("�E") );	rect.left++;	break;
+			case VK_LEFT:	TRACE( TEXT("��") );	rect.left--;	break;
+			case VK_DOWN:	TRACE( TEXT("��") );	rect.top += LINE_HEIGHT;	break;
+			case  VK_UP:	TRACE( TEXT("��") );	rect.top -= LINE_HEIGHT;	break;
 			default:	return;
 		}
 	}
@@ -684,9 +684,9 @@ VOID Lyb_OnKey( HWND hWnd, UINT vk, BOOL fDown, int cRepeat, UINT flags )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	PAINT。無効領域が出来たときに発生。背景の扱いに注意。背景を塗りつぶしてから、オブジェクトを描画
-	@param[in]	hWnd	親ウインドウのハンドル
-	@return		無し
+	PAINT�B�����̈悪�o�����Ƃ��ɔ����B�w�i�̈����ɒ��ӁB�w�i��h��Ԃ��Ă���A�I�u�W�F�N�g��`��
+	@param[in]	hWnd	�e�E�C���h�E�̃n���h��
+	@return		����
 */
 VOID Lyb_OnPaint( HWND hWnd )
 {
@@ -729,11 +729,11 @@ VOID Lyb_OnPaint( HWND hWnd )
 
 			for( i = 0; iLines > i; i++ )
 			{
-				cchLen = itLyr->vcLyrImg.at( i ).vcLine.size(  );	//	必要文字数
+				cchLen = itLyr->vcLyrImg.at( i ).vcLine.size(  );	//	�K�v������
 				if( 0 >= cchLen ){	height += LINE_HEIGHT;	continue;	}
 
 				cbSize = (cchLen+1) * sizeof(TCHAR);
-				ptText = (LPTSTR)malloc( cbSize );	//	ぬるたーみねーた分増やす
+				ptText = (LPTSTR)malloc( cbSize );	//	�ʂ邽�[�݂ˁ[�������₷
 				ZeroMemory( ptText, cbSize );
 
 				bStyle  = itLyr->vcLyrImg.at( i ).vcLine.at( 0 ).mzStyle;
@@ -745,21 +745,21 @@ VOID Lyb_OnPaint( HWND hWnd )
 
 				for( mz = 0; cchLen >= mz; mz++ )
 				{
-					if( cchLen ==  mz ){	doDraw = TRUE;	}	//	末端まできちゃったら
+					if( cchLen ==  mz ){	doDraw = TRUE;	}	//	���[�܂ł����������
 					else
 					{
-						//	同じスタイルが続くなら
+						//	�����X�^�C���������Ȃ�
 						if( bStyle == (itLyr->vcLyrImg.at( i ).vcLine.at( mz ).mzStyle & CT_LYR_TRNC) )
 						{
-							ptText[cchMr++] = itLyr->vcLyrImg.at( i ).vcLine.at( mz ).cchMozi;	//	壱繋がりの文字列として確保
+							ptText[cchMr++] = itLyr->vcLyrImg.at( i ).vcLine.at( mz ).cchMozi;	//	��q����̕�����Ƃ��Ċm��
 							width += itLyr->vcLyrImg.at( i ).vcLine.at( mz ).rdWidth;
 						}
 						else{	doDraw = TRUE;	}
 					}
 
-					if( doDraw )	//	描画タイミングであるなら
+					if( doDraw )	//	�`��^�C�~���O�ł���Ȃ�
 					{
-						if( bStyle & CT_LYR_TRNC )	//	透過部分の場合背景色と枠塗り潰し
+						if( bStyle & CT_LYR_TRNC )	//	���ߕ����̏ꍇ�w�i�F�Ƙg�h��ׂ�
 						{
 							SetBkColor(   hdc, CLR_SILVER );	//	LTGRAY_BRUSH
 
@@ -777,7 +777,7 @@ VOID Lyb_OnPaint( HWND hWnd )
 						if( cchLen != mz )
 						{
 							rdStart += width;
-							//	描画したら、今の文字を新しいスタイルとして登録してループ再開
+							//	�`�悵����A���̕�����V�����X�^�C���Ƃ��ēo�^���ă��[�v�ĊJ
 							bStyle  = itLyr->vcLyrImg.at( i ).vcLine.at( mz ).mzStyle;
 							bStyle &= CT_LYR_TRNC;
 							ZeroMemory( ptText, cbSize );
@@ -814,9 +814,9 @@ VOID Lyb_OnPaint( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ウインドウを閉じるときに発生。デバイスコンテキストとか確保した画面構造のメモリとかも終了。
-	@param[in]	hWnd	ウインドウハンドル
-	@return		無し
+	�E�C���h�E�����Ƃ��ɔ����B�f�o�C�X�R���e�L�X�g�Ƃ��m�ۂ�����ʍ\���̃������Ƃ����I���B
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@return		����
 */
 VOID Lyb_OnDestroy( HWND hWnd )
 {
@@ -831,7 +831,7 @@ VOID Lyb_OnDestroy( HWND hWnd )
 
 			gltLayer.erase( itLyr );
 
-			//SubclassWindow( itLyr->hTextWnd, gpfOrigLyrEditProc );	//	サブクラスを元に戻す
+			//SubclassWindow( itLyr->hTextWnd, gpfOrigLyrEditProc );	//	�T�u�N���X�����ɖ߂�
 
 			break;
 		}
@@ -843,10 +843,10 @@ VOID Lyb_OnDestroy( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ウィンドウのサイズ変更が完了する前に送られてくる
-	@param[in]	hWnd	ウインドウハンドル
-	@param[in]	pstWpos	新しい位置と大きさが入ってる
-	@return		このMessageを処理したら０
+	�E�B���h�E�̃T�C�Y�ύX����������O�ɑ����Ă���
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@param[in]	pstWpos	�V�����ʒu�Ƒ傫���������Ă�
+	@return		����Message������������O
 */
 BOOL Lyb_OnWindowPosChanging( HWND hWnd, LPWINDOWPOS pstWpos )
 {
@@ -858,14 +858,14 @@ BOOL Lyb_OnWindowPosChanging( HWND hWnd, LPWINDOWPOS pstWpos )
 	//TRACE( TEXT("WM_WINDOWPOSCHANGING POS[%d %d] SIZE[%d %d] FLAG[%d]"), 
 	//	pstWpos->x, pstWpos->y, pstWpos->cx, pstWpos->cy, pstWpos->flags );
 
-	//	移動がなかったときは何もしないでおｋ
+	//	�ړ����Ȃ������Ƃ��͉������Ȃ��ł���
 	if( SWP_NOMOVE & pstWpos->flags )	return TRUE;
 
-	clPosY = pstWpos->y + gstFrmSz.y;	//	表示位置のTOP
+	clPosY = pstWpos->y + gstFrmSz.y;	//	�\���ʒu��TOP
 
-	//	表示高さを壱行単位に合わせる
+	//	�\����������s�P�ʂɍ��킹��
 	GetWindowRect( ghViewWnd, &vwRect );
-	gstViewOrigin.x = vwRect.left;//位置記録・そうそう変わるものじゃない
+	gstViewOrigin.x = vwRect.left;//�ʒu�L�^�E���������ς����̂���Ȃ�
 	gstViewOrigin.y = vwRect.top;
 	vwTopY = (vwRect.top  + RULER_AREA);
 
@@ -889,9 +889,9 @@ BOOL Lyb_OnWindowPosChanging( HWND hWnd, LPWINDOWPOS pstWpos )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ウィンドウのサイズ変更が完了したら送られてくる
-	@param[in]	hWnd	ウインドウハンドル
-	@param[in]	pstWpos	新しい位置と大きさが入ってる
+	�E�B���h�E�̃T�C�Y�ύX�����������瑗���Ă���
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@param[in]	pstWpos	�V�����ʒu�Ƒ傫���������Ă�
 */
 VOID Lyb_OnWindowPosChanged( HWND hWnd, const LPWINDOWPOS pstWpos )
 {
@@ -910,14 +910,14 @@ VOID Lyb_OnWindowPosChanged( HWND hWnd, const LPWINDOWPOS pstWpos )
 	if( !(bHit) )	return;
 
 	GetClientRect( hWnd, &rect );
-	MoveWindow( itLyr->hToolWnd, 0, 0, 0, 0, TRUE );	//	ツールバーは数値なくても勝手に合わせてくれる
+	MoveWindow( itLyr->hToolWnd, 0, 0, 0, 0, TRUE );	//	�c�[���o�[�͐��l�Ȃ��Ă�����ɍ��킹�Ă����
 	SetWindowPos( itLyr->hTextWnd, HWND_TOP, 0, 0, rect.right, rect.bottom - gdToolBarHei, SWP_NOMOVE | SWP_NOZORDER );
 
-	//	移動がなかったときは何もしないでおｋ
+	//	�ړ����Ȃ������Ƃ��͉������Ȃ��ł���
 	if( SWP_NOMOVE & pstWpos->flags )	return;
 
 	GetWindowRect( ghViewWnd, &vwRect );
-	gstViewOrigin.x = vwRect.left;//位置記録・そうそう変わるものじゃない
+	gstViewOrigin.x = vwRect.left;//�ʒu�L�^�E���������ς����̂���Ȃ�
 	gstViewOrigin.y = vwRect.top;
 
 	itLyr->stOffset.x = pstWpos->x - vwRect.left;
@@ -928,9 +928,9 @@ VOID Lyb_OnWindowPosChanged( HWND hWnd, const LPWINDOWPOS pstWpos )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	動かされているときに発生・マウスでウインドウドラッグ中とか
-	@param[in]	hWnd	ウインドウハンドル
-	@param[in]	pstPos	その瞬間のスクリーン座標
+	��������Ă���Ƃ��ɔ����E�}�E�X�ŃE�C���h�E�h���b�O���Ƃ�
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@param[in]	pstPos	���̏u�Ԃ̃X�N���[�����W
 */
 VOID Lyb_OnMoving( HWND hWnd, LPRECT pstPos )
 {
@@ -939,29 +939,29 @@ VOID Lyb_OnMoving( HWND hWnd, LPRECT pstPos )
 	BOOLEAN	bMinus = FALSE;
 	TCHAR	atBuffer[SUB_STRING];
 
-	//	レイヤボックスウインドウのスクリーン座標左上と右下
+	//	���C���{�b�N�X�E�C���h�E�̃X�N���[�����W����ƉE��
 //	TRACE( TEXT("WM_MOVING [L%d T%d R%d B%d]"), pstPos->left, pstPos->top, pstPos->right, pstPos->bottom );
-	//	レイヤコンテンツの左上スクリーン座標
+	//	���C���R���e���c�̍���X�N���[�����W
 	xLy = pstPos->left + gstFrmSz.x;
 	yLy = pstPos->top  + gstFrmSz.y;
 
-	//	ビューの左上テキストエリア位置
+	//	�r���[�̍���e�L�X�g�G���A�ʒu
 	xEt = (gstViewOrigin.x + LINENUM_WID);
 	yEt = (gstViewOrigin.y + RULER_AREA);
 //	TRACE( TEXT("%d x %d"), xEt, yEt );
 
-	//	オフセット量
-	xSb = xLy - xEt;	//	Ｘはそのままドット数
-	ySb = yLy - yEt;	//	Ｙもドットなので行数にしないといけない
+	//	�I�t�Z�b�g��
+	xSb = xLy - xEt;	//	�w�͂��̂܂܃h�b�g��
+	ySb = yLy - yEt;	//	�x���h�b�g�Ȃ̂ōs���ɂ��Ȃ��Ƃ����Ȃ�
 
-	if( 0 > ySb ){	ySb *= -1;	bMinus = TRUE;	}	//	マイナス補正
-	//	行数的なモノを求めるってばよ
+	if( 0 > ySb ){	ySb *= -1;	bMinus = TRUE;	}	//	�}�C�i�X�␳
+	//	�s���I�ȃ��m�����߂���Ă΂�
 	dLine = ySb / LINE_HEIGHT;
 	dRema = ySb % LINE_HEIGHT;
 	if( (LINE_HEIGHT/2) < dRema ){	dLine++;	}
 	if( bMinus ){	dLine *= -1;	}else{	dLine++;	}
 
-	//	20110704	ここでは、まだ位置はスクロールのズレが考慮されてない
+	//	20110704	�����ł́A�܂��ʒu�̓X�N���[���̃Y�����l������ĂȂ�
 	xSb += gdHideXdot;
 	dLine += gdViewTopLine;
 
@@ -973,12 +973,12 @@ VOID Lyb_OnMoving( HWND hWnd, LPRECT pstPos )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	マウスの左ボタンがダウンされたとき・ダブルクルック用・クラススタイルにCS_DBLCLKSを付けないとメッセージ来ない
-	@param[in]	hWnd			ウインドウハンドル・ビューのとは限らないので注意セヨ
-	@param[in]	fDoubleClick	非０ダブルクルックされた場合
-	@param[in]	x				発生したＸ座標値
-	@param[in]	y				発生したＹ座標値
-	@param[in]	keyFlags		他に押されてるキーについて
+	�}�E�X�̍��{�^�����_�E�����ꂽ�Ƃ��E�_�u���N���b�N�p�E�N���X�X�^�C����CS_DBLCLKS��t���Ȃ��ƃ��b�Z�[�W���Ȃ�
+	@param[in]	hWnd			�E�C���h�E�n���h���E�r���[�̂Ƃ͌���Ȃ��̂Œ��ӃZ��
+	@param[in]	fDoubleClick	��O�_�u���N���b�N���ꂽ�ꍇ
+	@param[in]	x				���������w���W�l
+	@param[in]	y				���������x���W�l
+	@param[in]	keyFlags		���ɉ�����Ă�L�[�ɂ���
 */
 VOID Lyb_OnLButtonDown( HWND hWnd, BOOL fDoubleClick, INT x, INT y, UINT keyFlags )
 {
@@ -988,13 +988,13 @@ VOID Lyb_OnLButtonDown( HWND hWnd, BOOL fDoubleClick, INT x, INT y, UINT keyFlag
 	BOOLEAN		bGet = FALSE;
 
 
-	iDot = x;	//	位置合わせ
+	iDot = x;	//	�ʒu���킹
 	sy = y - gdToolBarHei;	if( 0 > sy )	sy = 0;
 	iLine = sy / LINE_HEIGHT;
 
-	TRACE( TEXT("マウスボタンダウン[%d][%dx%d(%d)]"), fDoubleClick, iDot, sy, iLine );
+	TRACE( TEXT("�}�E�X�{�^���_�E��[%d][%dx%d(%d)]"), fDoubleClick, iDot, sy, iLine );
 
-	if( !(fDoubleClick) )	 return;	//	ダブウクルックでないと用はない
+	if( !(fDoubleClick) )	 return;	//	�_�u�E�N���b�N�łȂ��Ɨp�͂Ȃ�
 
 	for( itLyr = gltLayer.begin(); itLyr != gltLayer.end(); itLyr++ )
 	{
@@ -1003,9 +1003,9 @@ VOID Lyb_OnLButtonDown( HWND hWnd, BOOL fDoubleClick, INT x, INT y, UINT keyFlag
 			bGet = TRUE;	break;
 		}
 	}
-	if( !(bGet) )	 return;	//	ヒットしなかった・あり得ないはずだけど
+	if( !(bGet) )	 return;	//	�q�b�g���Ȃ������E���蓾�Ȃ��͂�������
 
-	//	カーソルヒット位置が、連続空白の部分ならばマークを反転させる
+	//	�J�[�\���q�b�g�ʒu���A�A���󔒂̕����Ȃ�΃}�[�N�𔽓]������
 	if( LayerTransparentAdjust( itLyr, iDot, iLine ) )
 	{
 		GetClientRect( hWnd, &rect );
@@ -1019,12 +1019,12 @@ VOID Lyb_OnLButtonDown( HWND hWnd, BOOL fDoubleClick, INT x, INT y, UINT keyFlag
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	コンテキストメニュー呼びだしアクション(要は右クルック）
-	@param[in]	hWnd		ウインドウハンドル・ビューのとは限らないので注意セヨ
-	@param[in]	hWndContext	コンテキストが発生したウインドウのハンドル
-	@param[in]	xPos		スクリーンＸ座標
-	@param[in]	yPos		スクリーンＹ座業
-	@return		無し
+	�R���e�L�X�g���j���[�Ăт����A�N�V����(�v�͉E�N���b�N�j
+	@param[in]	hWnd		�E�C���h�E�n���h���E�r���[�̂Ƃ͌���Ȃ��̂Œ��ӃZ��
+	@param[in]	hWndContext	�R���e�L�X�g�����������E�C���h�E�̃n���h��
+	@param[in]	xPos		�X�N���[���w���W
+	@param[in]	yPos		�X�N���[���x����
+	@return		����
 */
 VOID Lyb_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 {
@@ -1032,7 +1032,7 @@ VOID Lyb_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 	HMENU	hMenu, hSubMenu;
 	UINT	dRslt;
 
-	posX = (SHORT)xPos;	//	画面座標はマイナスもありうる
+	posX = (SHORT)xPos;	//	��ʍ��W�̓}�C�i�X�����肤��
 	posY = (SHORT)yPos;
 
 	TRACE( TEXT("LAYER_WM_CONTEXTMENU %d x %d"), posX, posY );
@@ -1048,10 +1048,10 @@ VOID Lyb_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	透過合成エリアを全選択したり全解除したり
-	@param[in]	hWnd	本体ウインドウハンドル・あまり意味はない
-	@param[in]	bMode	非０全選択　０全解除
-	@return		HRESULT	終了状態コード
+	���ߍ����G���A��S�I��������S����������
+	@param[in]	hWnd	�{�̃E�C���h�E�n���h���E���܂�Ӗ��͂Ȃ�
+	@param[in]	bMode	��O�S�I���@�O�S����
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT LayerTransparentToggle( HWND hWnd, UINT bMode )
 {
@@ -1070,14 +1070,14 @@ HRESULT LayerTransparentToggle( HWND hWnd, UINT bMode )
 	}
 	if( itLyr == gltLayer.end( ) )	return E_OUTOFMEMORY;
 
-	TRACE( TEXT("透過選択を解除か選択 %u"), bMode );
+	TRACE( TEXT("���ߑI�����������I�� %u"), bMode );
 
-	//	行数確認
+	//	�s���m�F
 	iLines = itLyr->vcLyrImg.size(  );
 
 	for( iL = 0; iLines > iL; iL++ )
 	{
-		//	文字をイテレータで確保
+		//	�������C�e���[�^�Ŋm��
 		for( itMozi = itLyr->vcLyrImg.at( iL ).vcLine.begin( );
 		itMozi != itLyr->vcLyrImg.at( iL ).vcLine.end( ); itMozi++ )
 		{
@@ -1091,7 +1091,7 @@ HRESULT LayerTransparentToggle( HWND hWnd, UINT bMode )
 				itMozi->mzStyle &= ~CT_LYR_TRNC;
 			}
 		}
-		//	全部解除
+		//	�S������
 	}
 
 #ifdef DO_TRY_CATCH
@@ -1105,11 +1105,11 @@ HRESULT LayerTransparentToggle( HWND hWnd, UINT bMode )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	行数とドット値を受け取って、その場所の
-	@param[in]	itLyr	対象レイヤボックスのイテレータ
-	@param[in]	dNowDot	今のキャレット・
-	@param[in]	rdLine	対象の行番号・絶対０インデックスか
-	@return		文字数
+	�s���ƃh�b�g�l���󂯎���āA���̏ꏊ��
+	@param[in]	itLyr	�Ώۃ��C���{�b�N�X�̃C�e���[�^
+	@param[in]	dNowDot	���̃L�����b�g�E
+	@param[in]	rdLine	�Ώۂ̍s�ԍ��E��΂O�C���f�b�N�X��
+	@return		������
 */
 INT LayerTransparentAdjust( LAYER_ITR itLyr, INT dNowDot, INT rdLine )
 {
@@ -1122,16 +1122,16 @@ INT LayerTransparentAdjust( LAYER_ITR itLyr, INT dNowDot, INT rdLine )
 	try{
 #endif
 
-	//	行のはみ出しを？
+	//	�s�̂͂ݏo�����H
 	iLines = itLyr->vcLyrImg.size(  );
 	if( 0 >= iLines )	return 0;
 	if( iLines <= rdLine )	return 0;
 
-	//	文字数確認
+	//	�������m�F
 	iCount = itLyr->vcLyrImg.at( rdLine ).vcLine.size(  );
 	if( 0 >= iCount )	return 0;
 
-	//	文字をイテレータで確保
+	//	�������C�e���[�^�Ŋm��
 	itMozi = itLyr->vcLyrImg.at( rdLine ).vcLine.begin( );
 
 	for( i = 0, iLetter = 0; iCount > i; i++, iLetter++ )
@@ -1141,41 +1141,41 @@ INT LayerTransparentAdjust( LAYER_ITR itLyr, INT dNowDot, INT rdLine )
 		dPrvCnt = dDotCnt;
 		rdWidth = itLyr->vcLyrImg.at( rdLine ).vcLine.at( i ).rdWidth;
 		dDotCnt += rdWidth;
-	}	//	振り切るようなら末端
+	}	//	�U��؂�悤�Ȃ疖�[
 
 	if( iCount <= iLetter )	return 0;
 
-	if(  1 <= iLetter )	//	左文字で判定
+	if(  1 <= iLetter )	//	�������Ŕ���
 	{
 		iLetter--;
 		itMozi += iLetter;
 	}
 
 	ch = itLyr->vcLyrImg.at( rdLine ).vcLine.at( iLetter ).cchMozi;
-	//	該当箇所の文字を確認して
+	//	�Y���ӏ��̕������m�F����
 	if( !( iswspace( ch ) ) )	return 0;
-	//	空白でないなら何もしないでおｋ
+	//	�󔒂łȂ��Ȃ牽�����Ȃ��ł���
 
-	//	その場所から頭方向に辿って、途切れ目を探す
+	//	���̏ꏊ���瓪�����ɒH���āA�r�؂�ڂ�T��
 	itHead = itLyr->vcLyrImg.at( rdLine ).vcLine.begin( );
 	for( ; itHead != itMozi; itMozi-- )
 	{
 		chb = itMozi->cchMozi;
 		if(  !( iswspace( chb ) ) ){	itMozi++;	break;	}
 	}
-	if( itHead == itMozi )	//	先頭を確認
+	if( itHead == itMozi )	//	�擪���m�F
 	{
 		chb = itMozi->cchMozi;
 		if(  !( iswspace( chb ) ) ){	itMozi++;	}
 	}
-	//	非空白文字にヒットしたか、先頭位置である
+	//	��󔒕����Ƀq�b�g�������A�擪�ʒu�ł���
 
 
-	//	その場所から、同じグループの所まで確認
+	//	���̏ꏊ����A�����O���[�v�̏��܂Ŋm�F
 	itTail = itLyr->vcLyrImg.at( rdLine ).vcLine.end( );
 	for( itTemp = itMozi; itTemp != itTail; itTemp++ )
 	{
-		chb = itTemp->cchMozi;	//	空白である間は
+		chb = itTemp->cchMozi;	//	�󔒂ł���Ԃ�
 		if(  !( iswspace( chb ) ) ){	break;	}
 
 		itTemp->mzStyle ^= CT_LYR_TRNC;
@@ -1192,10 +1192,10 @@ INT LayerTransparentAdjust( LAYER_ITR itLyr, INT dNowDot, INT rdLine )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ビューが移動した
-	@param[in]	hWnd	本体ウインドウハンドル・あまり意味はない
-	@param[in]	state	窓状態・最小化なら違うコトする
-	@return		HRESULT	終了状態コード
+	�r���[���ړ�����
+	@param[in]	hWnd	�{�̃E�C���h�E�n���h���E���܂�Ӗ��͂Ȃ�
+	@param[in]	state	����ԁE�ŏ����Ȃ�Ⴄ�R�g����
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT LayerMoveFromView( HWND hWnd, UINT state )
 {
@@ -1203,12 +1203,12 @@ HRESULT LayerMoveFromView( HWND hWnd, UINT state )
 	RECT	vwRect = {0,0,0,0};
 	POINT	lyPoint;
 
-	//	最小化時は非表示にするとか	SIZE_MINIMIZED
+	//	�ŏ������͔�\���ɂ���Ƃ�	SIZE_MINIMIZED
 
 	if( SIZE_MINIMIZED != state )
 	{
 		GetWindowRect( ghViewWnd, &vwRect );
-		gstViewOrigin.x = vwRect.left;//位置記録
+		gstViewOrigin.x = vwRect.left;//�ʒu�L�^
 		gstViewOrigin.y = vwRect.top;
 	}
 
@@ -1237,10 +1237,10 @@ HRESULT LayerMoveFromView( HWND hWnd, UINT state )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	行の内容を文字列で確保・ポインタ開放は呼んだほうでやる
-	@param[in]	itLyr	保持してるイテレータ
-	@param[in]	il		行番号
-	@return		LPTSTR	文字列のぽいんた～
+	�s�̓��e�𕶎���Ŋm�ہE�|�C���^�J���͌Ă񂾂ق��ł��
+	@param[in]	itLyr	�ێ����Ă�C�e���[�^
+	@param[in]	il		�s�ԍ�
+	@return		LPTSTR	������̂ۂ��񂽁`
 */
 LPTSTR LayerLineTextGetAlloc( LAYER_ITR itLyr, INT il )
 {
@@ -1250,7 +1250,7 @@ LPTSTR LayerLineTextGetAlloc( LAYER_ITR itLyr, INT il )
 	cchSize = itLyr->vcLyrImg.at( il ).vcLine.size( );
 	if( 0 >= cchSize )	return NULL;
 
-	ptText = (LPTSTR)malloc( (cchSize+1) * sizeof(TCHAR) );	//	ぬるたーみねーた分増やす
+	ptText = (LPTSTR)malloc( (cchSize+1) * sizeof(TCHAR) );	//	�ʂ邽�[�݂ˁ[�������₷
 	ZeroMemory( ptText, (cchSize+1) * sizeof(TCHAR) );
 
 	for( i = 0; cchSize > i; i++ )
@@ -1263,9 +1263,9 @@ LPTSTR LayerLineTextGetAlloc( LAYER_ITR itLyr, INT il )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	対象のレイヤボックスの保持してる文字列を破壊する
-	@param[in]	itLyr	対象のレイヤボックスを示すイテレータ
-	@return		HRESULT	終了状態コード
+	�Ώۂ̃��C���{�b�N�X�̕ێ����Ă镶�����j�󂷂�
+	@param[in]	itLyr	�Ώۂ̃��C���{�b�N�X�������C�e���[�^
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT LayerStringObliterate( LAYER_ITR itLyr )
 {
@@ -1274,19 +1274,19 @@ HRESULT LayerStringObliterate( LAYER_ITR itLyr )
 	iLine = itLyr->vcLyrImg.size( );
 	for( j = 0; iLine > j; j++ )
 	{
-		itLyr->vcLyrImg.at( j ).vcLine.clear( );	//	各行の中身全消し
+		itLyr->vcLyrImg.at( j ).vcLine.clear( );	//	�e�s�̒��g�S����
 	}
-	itLyr->vcLyrImg.clear(  );	//	行を全消し
+	itLyr->vcLyrImg.clear(  );	//	�s��S����
 
 	return S_OK;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	レイヤボックスの中身の編集をON/OFF
-	@param[in]	hWnd	レイヤボックスのウインドウハンドル
-	@param[in]	dStyle	非０編集する　０終了
-	@return		HRESULT	終了状態コード
+	���C���{�b�N�X�̒��g�̕ҏW��ON/OFF
+	@param[in]	hWnd	���C���{�b�N�X�̃E�C���h�E�n���h��
+	@param[in]	dStyle	��O�ҏW����@�O�I��
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT LayerEditOnOff( HWND hWnd, UINT dStyle )
 {
@@ -1302,7 +1302,7 @@ HRESULT LayerEditOnOff( HWND hWnd, UINT dStyle )
 	{
 		if( itLyr->hBoxWnd == hWnd )
 		{
-			if( dStyle )	//	編集する
+			if( dStyle )	//	�ҏW����
 			{
 		//		SetLayeredWindowAttributes( hWnd, 0, 0xFF, LWA_ALPHA );
 				Edit_SetText( itLyr->hTextWnd, TEXT("") );
@@ -1312,14 +1312,14 @@ HRESULT LayerEditOnOff( HWND hWnd, UINT dStyle )
 				iLines = itLyr->vcLyrImg.size( );
 				for( i = 0; iLines > i; i++ )
 				{
-					if( 0 != i )	//	次の行に進むようなら改行いれとく
+					if( 0 != i )	//	���̍s�ɐi�ނ悤�Ȃ���s����Ƃ�
 					{
 						ndx = GetWindowTextLength( itLyr->hTextWnd );
 						SendMessage( itLyr->hTextWnd, EM_SETSEL, ndx, ndx );
 						SendMessage( itLyr->hTextWnd, EM_REPLACESEL, 0, (LPARAM)(CH_CRLFW) );
 					}
 
-					//	壱行ずつ中身を取って
+					//	��s�����g�������
 					ptStr = LayerLineTextGetAlloc( itLyr, i );
 					if( ptStr )
 					{
@@ -1333,10 +1333,10 @@ HRESULT LayerEditOnOff( HWND hWnd, UINT dStyle )
 
 				ShowWindow( itLyr->hTextWnd, SW_SHOW );
 			}
-			else	//	終了
+			else	//	�I��
 			{
 				ndx = Edit_GetTextLength( itLyr->hTextWnd );
-				ndx += 2;	//	ぬるたみねた分
+				ndx += 2;	//	�ʂ邽�݂˂���
 				ptStr = (LPTSTR)malloc( ndx * sizeof(TCHAR) );
 				ZeroMemory( ptStr, ndx * sizeof(TCHAR) );
 				Edit_GetText( itLyr->hTextWnd, ptStr, ndx );
@@ -1346,7 +1346,7 @@ HRESULT LayerEditOnOff( HWND hWnd, UINT dStyle )
 
 				LayerStringObliterate( itLyr );
 				ZeroONELINE( &stLine );
-				itLyr->vcLyrImg.push_back( stLine );	//	壱発目
+				itLyr->vcLyrImg.push_back( stLine );	//	�딭��
 
 				LayerBoxSetString( itLyr, ptStr, cchSize, NULL, 0x00 );
 
@@ -1367,10 +1367,10 @@ HRESULT LayerEditOnOff( HWND hWnd, UINT dStyle )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	レイヤボックスの内容を入れ替える・外部から？
-	@param[in]	hLyrWnd	レイヤボッキスウインドウのハンドル
-	@param[in]	ptStr	表示する文字列
-	@return		HRESULT	終了状態コード
+	���C���{�b�N�X�̓��e�����ւ���E�O������H
+	@param[in]	hLyrWnd	���C���{�b�L�X�E�C���h�E�̃n���h��
+	@param[in]	ptStr	�\�����镶����
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT LayerStringReplace( HWND hLyrWnd, LPTSTR ptStr )
 {
@@ -1378,7 +1378,7 @@ HRESULT LayerStringReplace( HWND hLyrWnd, LPTSTR ptStr )
 	ONELINE		stLine;
 	LAYER_ITR	itLyr;
 
-	//	イテレータで探して処理する
+	//	�C�e���[�^�ŒT���ď�������
 	for( itLyr = gltLayer.begin(); itLyr != gltLayer.end(); itLyr++ )
 	{
 		if( itLyr->hBoxWnd == hLyrWnd )
@@ -1387,7 +1387,7 @@ HRESULT LayerStringReplace( HWND hLyrWnd, LPTSTR ptStr )
 
 			LayerStringObliterate( itLyr );
 			ZeroONELINE( &stLine );
-			itLyr->vcLyrImg.push_back( stLine );	//	壱発目
+			itLyr->vcLyrImg.push_back( stLine );	//	�딭��
 
 			LayerBoxSetString( itLyr, ptStr, cchSize, NULL, 0x00 );
 
@@ -1400,10 +1400,10 @@ HRESULT LayerStringReplace( HWND hLyrWnd, LPTSTR ptStr )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	文字列を表示内容にする
-	@param[in]	itLyr	レイヤボッキスのイテレータ
-	@param[in]	ptStr	表示する文字列
-	@return		HRESULT	終了状態コード
+	�������\�����e�ɂ���
+	@param[in]	itLyr	���C���{�b�L�X�̃C�e���[�^
+	@param[in]	ptStr	�\�����镶����
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT LayerFromString( LAYER_ITR itLyr, LPCTSTR ptStr )
 {
@@ -1412,7 +1412,7 @@ HRESULT LayerFromString( LAYER_ITR itLyr, LPCTSTR ptStr )
 
 	ZeroONELINE( &stLine );
 
-	itLyr->vcLyrImg.push_back( stLine );	//	壱発目
+	itLyr->vcLyrImg.push_back( stLine );	//	�딭��
 
 	StringCchLength( ptStr, STRSAFE_MAX_CCH, &cchSize );
 
@@ -1423,10 +1423,10 @@ HRESULT LayerFromString( LAYER_ITR itLyr, LPCTSTR ptStr )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	表示内容を選択範囲から頂戴する
-	@param[in]	itLyr	レイヤボッキスのイテレータ
-	@param[in]	bSqSel	矩形選択中であるか
-	@return		HRESULT	終了状態コード
+	�\�����e��I��͈͂��璸�Ղ���
+	@param[in]	itLyr	���C���{�b�L�X�̃C�e���[�^
+	@param[in]	bSqSel	��`�I�𒆂ł��邩
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT LayerFromSelectArea( LAYER_ITR itLyr, UINT bSqSel )
 {
@@ -1435,14 +1435,14 @@ HRESULT LayerFromSelectArea( LAYER_ITR itLyr, UINT bSqSel )
 	LPPOINT	pstPos;
 	ONELINE	stLine;
 
-	TRACE( TEXT("選択範囲から取得") );
+	TRACE( TEXT("�I��͈͂���擾") );
 #ifdef DO_TRY_CATCH
 	try{
 #endif
 
 	ZeroONELINE( &stLine );
 
-	itLyr->vcLyrImg.push_back( stLine );	//	壱発目
+	itLyr->vcLyrImg.push_back( stLine );	//	�딭��
 
 	cbSize = DocSelectTextGetAlloc( D_UNI | bSqSel, (LPVOID *)(&ptString), &pstPos );
 
@@ -1463,9 +1463,9 @@ HRESULT LayerFromSelectArea( LAYER_ITR itLyr, UINT bSqSel )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	表示内容をくるっぷぼーどから頂戴する
-	@param[in]	itLyr	保持してるイテレータ
-	@return		HRESULT	終了状態コード
+	�\�����e��������Ղځ[�ǂ��璸�Ղ���
+	@param[in]	itLyr	�ێ����Ă�C�e���[�^
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT LayerFromClipboard( LAYER_ITR itLyr )
 {
@@ -1476,9 +1476,9 @@ HRESULT LayerFromClipboard( LAYER_ITR itLyr )
 
 	ZeroONELINE( &stLine );
 
-	itLyr->vcLyrImg.push_back( stLine );	//	壱発目
+	itLyr->vcLyrImg.push_back( stLine );	//	�딭��
 
-	//	くるっぺぼーどからの場合は、矩形でも関係ない
+	//	������؂ځ[�ǂ���̏ꍇ�́A��`�ł��֌W�Ȃ�
 	ptString = DocClipboardDataGet( &dStyle );
 
 	StringCchLength( ptString, STRSAFE_MAX_CCH, &cchSize );
@@ -1492,9 +1492,9 @@ HRESULT LayerFromClipboard( LAYER_ITR itLyr )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ボックス内容に合わせてサイズ広げる
-	@param[in]	itLyr	保持してるイテレータ
-	@return		HRESULT	終了状態コード
+	�{�b�N�X���e�ɍ��킹�ăT�C�Y�L����
+	@param[in]	itLyr	�ێ����Ă�C�e���[�^
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT LayerBoxSizeAdjust( LAYER_ITR itLyr )
 {
@@ -1506,22 +1506,22 @@ HRESULT LayerBoxSizeAdjust( LAYER_ITR itLyr )
 #ifdef DO_TRY_CATCH
 	try{
 #endif
-	//	最小サイズってことで
+	//	�ŏ��T�C�Y���Ă��Ƃ�
 	//clSize.cx = LB_WIDTH  - gstFrmSz.x;
 	//clSize.cy = LB_HEIGHT - gstFrmSz.y;
 
-	//	今の画面の行数とドット数確認
+	//	���̉�ʂ̍s���ƃh�b�g���m�F
 	dYline = ViewAreaSizeGet( &dViewXdot );
 	dViewYdot = dYline * LINE_HEIGHT;
 
-	//	使っている内容からサイズを確認
+	//	�g���Ă�����e����T�C�Y���m�F
 	iLine = itLyr->vcLyrImg.size(  );
 	iYdot = iLine * LINE_HEIGHT;
-	for( i = 0; iLine > i; i++ )	//	最大ドット数を確認
+	for( i = 0; iLine > i; i++ )	//	�ő�h�b�g�����m�F
 	{
 		if( iMaxDot < itLyr->vcLyrImg.at( i ).iDotCnt ){	iMaxDot = itLyr->vcLyrImg.at( i ).iDotCnt;	}
 	}
-	//	多分ウインドウサイズになるはず
+	//	�����E�C���h�E�T�C�Y�ɂȂ�͂�
 	wdSize.cx = gstFrmSz.x + iMaxDot + gstFrmSz.x;
 	wdSize.cy = gstFrmSz.y + iYdot + gstFrmSz.x;
 
@@ -1550,13 +1550,13 @@ HRESULT LayerBoxSizeAdjust( LAYER_ITR itLyr )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	レイヤボックスに文字列を記録する
-	@param[in]	itLyr	対象レイヤボッキスのイテレータ
-	@param[in]	ptText	記録する文字列
-	@param[in]	cchSize	文字列の文字数
-	@param[in]	pstPt	矩形のときのオフセット量
-	@param[in]	bStyle	非０内容に合わせてサイズ変更　０ナニもしない
-	@return		HRESULT	終了状態コード
+	���C���{�b�N�X�ɕ�������L�^����
+	@param[in]	itLyr	�Ώۃ��C���{�b�L�X�̃C�e���[�^
+	@param[in]	ptText	�L�^���镶����
+	@param[in]	cchSize	������̕�����
+	@param[in]	pstPt	��`�̂Ƃ��̃I�t�Z�b�g��
+	@param[in]	bStyle	��O���e�ɍ��킹�ăT�C�Y�ύX�@�O�i�j�����Ȃ�
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT LayerBoxSetString( LAYER_ITR itLyr, LPCTSTR ptText, UINT cchSize, LPPOINT pstPt, UINT bStyle )
 {
@@ -1571,31 +1571,31 @@ HRESULT LayerBoxSetString( LAYER_ITR itLyr, LPCTSTR ptText, UINT cchSize, LPPOIN
 #endif
 	ZeroONELINE( &stLine );
 
-	//	オフセット設定が有る場合、その分を埋める空白が必要
-	if( pstPt )	//	最小オフセット値を探して、そこを左端にする
+	//	�I�t�Z�b�g�ݒ肪�L��ꍇ�A���̕��𖄂߂�󔒂��K�v
+	if( pstPt )	//	�ŏ��I�t�Z�b�g�l��T���āA���������[�ɂ���
 	{
 		dMin = pstPt[0].x;
 
 		yLine = 0;
 		for( i = 0; cchSize > i; i++ )
 		{
-			if( CC_CR == ptText[i] && CC_LF == ptText[i+1] )	//	改行であったら
+			if( CC_CR == ptText[i] && CC_LF == ptText[i+1] )	//	���s�ł�������
 			{
-				//	オフセット最小をさがす
+				//	�I�t�Z�b�g�ŏ���������
 				if( dMin > pstPt[yLine].x ){	dMin = pstPt[yLine].x;	}
 
-				i++;		//	0x0D,0x0Aだから、壱文字飛ばすのがポイント
-				yLine++;	//	改行したからFocusは次の行へ
+				i++;		//	0x0D,0x0A������A�땶����΂��̂��|�C���g
+				yLine++;	//	���s��������Focus�͎��̍s��
 			}
 		}
-		//	この時点で、yLineは行数になってる
+		//	���̎��_�ŁAyLine�͍s���ɂȂ��Ă�
 		iLines = yLine;
 
-		//	壱行目の空白を作って閃光入力しておく
+		//	��s�ڂ̋󔒂�����đM�����͂��Ă���
 		insDot = 0;
 		dOffset = pstPt[0].x - dMin;
 		ptSpace = DocPaddingSpaceUni( dOffset, NULL, NULL, NULL );
-		//	前方空白は無視されるのでユニコード使って問題無い
+		//	�O���󔒂͖��������̂Ń��j�R�[�h�g���Ė�薳��
 		StringCchLength( ptSpace, STRSAFE_MAX_CCH, &iTexts );
 		for( j = 0; iTexts > j; j++ )
 		{
@@ -1607,20 +1607,20 @@ HRESULT LayerBoxSetString( LAYER_ITR itLyr, LPCTSTR ptText, UINT cchSize, LPPOIN
 	yLine = 0;	insDot = 0;
 	for( i = 0; cchSize > i; i++ )
 	{
-		if( CC_CR == ptText[i] && CC_LF == ptText[i+1] )	//	改行であったら
+		if( CC_CR == ptText[i] && CC_LF == ptText[i+1] )	//	���s�ł�������
 		{
-			itLyr->vcLyrImg.push_back( stLine );	//	次の行を作る
+			itLyr->vcLyrImg.push_back( stLine );	//	���̍s�����
 
-			i++;		//	0x0D,0x0Aだから、壱文字飛ばすのがポイント
-			yLine++;	//	改行したからFocusは次の行へ
-			insDot = 0;	//	そして行の先頭である
+			i++;		//	0x0D,0x0A������A�땶����΂��̂��|�C���g
+			yLine++;	//	���s��������Focus�͎��̍s��
+			insDot = 0;	//	�����čs�̐擪�ł���
 
-			//	オフセット分の空白を作る
+			//	�I�t�Z�b�g���̋󔒂����
 			if( pstPt && (iLines > yLine) )
 			{
 				dOffset = pstPt[yLine].x - dMin;
 				ptSpace = DocPaddingSpaceUni( dOffset, NULL, NULL, NULL );
-				//	前方空白は無視されるのでユニコード使って問題無い
+				//	�O���󔒂͖��������̂Ń��j�R�[�h�g���Ė�薳��
 				StringCchLength( ptSpace, STRSAFE_MAX_CCH, &iTexts );
 				for( j = 0; iTexts > j; j++ )
 				{
@@ -1632,7 +1632,7 @@ HRESULT LayerBoxSetString( LAYER_ITR itLyr, LPCTSTR ptText, UINT cchSize, LPPOIN
 		}
 		else if( CC_TAB == ptText[i] )
 		{
-			//	タブは挿入しない
+			//	�^�u�͑}�����Ȃ�
 		}
 		else
 		{
@@ -1640,26 +1640,26 @@ HRESULT LayerBoxSetString( LAYER_ITR itLyr, LPCTSTR ptText, UINT cchSize, LPPOIN
 		}
 	}
 
-	//	末尾整形と前方空白確認
+	//	�������`�ƑO���󔒊m�F
 	iLine = itLyr->vcLyrImg.size( );
 	for( i = 0; iLine > i; i++ )
 	{
-		//	末端空白削除
+		//	���[�󔒍폜
 		ptBuff = DocLastSpDel( &(itLyr->vcLyrImg.at( i ).vcLine) );
-		FREE(ptBuff);	//	使わないが、受けて開放しないとイケない
+		FREE(ptBuff);	//	�g��Ȃ����A�󂯂ĊJ�����Ȃ��ƃC�P�Ȃ�
 
-		//	先頭空白確認
+		//	�擪�󔒊m�F
 		dSpMozi = 0;
 		dSpDot = LayerHeadSpaceCheck( &(itLyr->vcLyrImg.at( i ).vcLine), &dSpMozi );
 
 		itLyr->vcLyrImg.at( i ).dFrtSpDot  = dSpDot;
 		itLyr->vcLyrImg.at( i ).dFrtSpMozi = dSpMozi;
 
-		//	矩形オフセット
+		//	��`�I�t�Z�b�g
 		//if( pstPt ){	itLyr->vcLyrImg.at( i ).dOffset = pstPt[i].x - dMin;	}
 	}
 
-	//	サイズ調整
+	//	�T�C�Y����
 	if( bStyle ){	LayerBoxSizeAdjust( itLyr );	}
 
 #ifdef DO_TRY_CATCH
@@ -1673,15 +1673,15 @@ HRESULT LayerBoxSetString( LAYER_ITR itLyr, LPCTSTR ptText, UINT cchSize, LPPOIN
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	行頭空白確認・ピリオドは空白と見なす・先頭のみ、とかオプソンできるかも
-	@param[in]	*vcTgLine	該当する行のベクターへのポインタ～
-	@param[out]	pdMozi		文字数を入れるポインタ～
-	@return	非空白に至るまでのドット数
+	�s���󔒊m�F�E�s���I�h�͋󔒂ƌ��Ȃ��E�擪�̂݁A�Ƃ��I�v�\���ł��邩��
+	@param[in]	*vcTgLine	�Y������s�̃x�N�^�[�ւ̃|�C���^�`
+	@param[out]	pdMozi		������������|�C���^�`
+	@return	��󔒂Ɏ���܂ł̃h�b�g��
 */
 INT LayerHeadSpaceCheck( vector<LETTER> *vcTgLine, PINT pdMozi )
 {
 	TCHAR		ch;
-	INT			cchSp, dDot;	//	文字数とドット数
+	INT			cchSp, dDot;	//	�������ƃh�b�g��
 	UINT_PTR	i, iMozi;
 
 #ifdef DO_TRY_CATCH
@@ -1694,15 +1694,15 @@ INT LayerHeadSpaceCheck( vector<LETTER> *vcTgLine, PINT pdMozi )
 	{
 		ch = vcTgLine->at( i ).cchMozi;
 
-		//	字がスペースでもピリオドでもないなら、余白はそこまで
+		//	�����X�y�[�X�ł��s���I�h�ł��Ȃ��Ȃ�A�]���͂����܂�
 		if( !( iswspace(ch) ) && TEXT('.') != ch )
 		{
 			if( pdMozi ){	*pdMozi = cchSp;	}
 			return dDot;
 		}
 
-		dDot += vcTgLine->at( i ).rdWidth;	//	ドット数
-		cchSp++;	//	文字数
+		dDot += vcTgLine->at( i ).rdWidth;	//	�h�b�g��
+		cchSp++;	//	������
 	}
 
 	if( pdMozi ){	*pdMozi = cchSp;	}
@@ -1717,12 +1717,12 @@ INT LayerHeadSpaceCheck( vector<LETTER> *vcTgLine, PINT pdMozi )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	指定行のドット位置(キャレット位置)に壱文字追加する
-	@param[in]	itLyr	対象レイヤボッキスのイテレータ
-	@param[in]	nowDot	挿入するドット位置・使ってない
-	@param[in]	rdLine	対象の行番号・絶対０インデックスか
-	@param[in]	ch		追加したい文字
-	@return		INT		追加した文字のドット数
+	�w��s�̃h�b�g�ʒu(�L�����b�g�ʒu)�Ɉ땶���ǉ�����
+	@param[in]	itLyr	�Ώۃ��C���{�b�L�X�̃C�e���[�^
+	@param[in]	nowDot	�}������h�b�g�ʒu�E�g���ĂȂ�
+	@param[in]	rdLine	�Ώۂ̍s�ԍ��E��΂O�C���f�b�N�X��
+	@param[in]	ch		�ǉ�����������
+	@return		INT		�ǉ����������̃h�b�g��
 */
 INT LayerInputLetter( LAYER_ITR itLyr, INT nowDot, INT rdLine, TCHAR ch )
 {
@@ -1732,8 +1732,8 @@ INT LayerInputLetter( LAYER_ITR itLyr, INT nowDot, INT rdLine, TCHAR ch )
 #ifdef DO_TRY_CATCH
 	try{
 #endif
-	//	データ作成
-	DocLetterDataCheck( &stLetter, ch );	//	指定行のドット位置(キャレット位置)に壱文字追加する・レイヤボックス
+	//	�f�[�^�쐬
+	DocLetterDataCheck( &stLetter, ch );	//	�w��s�̃h�b�g�ʒu(�L�����b�g�ʒu)�Ɉ땶���ǉ�����E���C���{�b�N�X
 
 	itLyr->vcLyrImg.at( rdLine ).vcLine.push_back( stLetter );
 
@@ -1753,13 +1753,13 @@ INT LayerInputLetter( LAYER_ITR itLyr, INT nowDot, INT rdLine, TCHAR ch )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	該当エリアに上書きしたり挿入したり
-	@param[in]	hWnd	ボックスのウインドウハンドル
-	@param[in]	cmdID	挿入か上書きか
-	@param[out]	pXdot	入れ込み位置Ｘドット・NULLでも可
-	@param[out]	pYline	入れ込み位置Ｙライン・NULLでも可
-	@param[in]	dStyle	不可視特別処理を？
-	@return		HRESULT	終了状態コード
+	�Y���G���A�ɏ㏑��������}��������
+	@param[in]	hWnd	�{�b�N�X�̃E�C���h�E�n���h��
+	@param[in]	cmdID	�}�����㏑����
+	@param[out]	pXdot	���ꍞ�݈ʒu�w�h�b�g�ENULL�ł���
+	@param[out]	pYline	���ꍞ�݈ʒu�x���C���ENULL�ł���
+	@param[in]	dStyle	�s�����ʏ������H
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT LayerContentsImportable( HWND hWnd, UINT cmdID, LPINT pXdot, LPINT pYline, UINT dStyle )
 {
@@ -1774,7 +1774,7 @@ HRESULT LayerContentsImportable( HWND hWnd, UINT cmdID, LPINT pXdot, LPINT pYlin
 	INT_PTR		dNeedLine;
 	UINT_PTR	cchSize;
 	LPTSTR		ptStr, ptBuffer;
-	BOOLEAN		bFirst = TRUE;	//	なんか処理したらFALSE
+	BOOLEAN		bFirst = TRUE;	//	�Ȃ񂩏���������FALSE
 	BOOLEAN		bSpace, bBkSpase;
 
 #ifdef EDGE_BLANK_STYLE
@@ -1797,7 +1797,7 @@ HRESULT LayerContentsImportable( HWND hWnd, UINT cmdID, LPINT pXdot, LPINT pYlin
 	if( itLyr == gltLayer.end( ) )	return E_OUTOFMEMORY;
 
 
-	//	まず場所を確認
+	//	�܂��ꏊ���m�F
 	GetWindowRect( ghViewWnd, &vwRect );
 	vwRect.left += LINENUM_WID;
 	vwRect.top  += RULER_AREA;
@@ -1805,16 +1805,16 @@ HRESULT LayerContentsImportable( HWND hWnd, UINT cmdID, LPINT pXdot, LPINT pYlin
 	GetWindowRect( itLyr->hBoxWnd, &lyRect );
 	conPoint.x = lyRect.left + gstFrmSz.x;
 	conPoint.y = lyRect.top  + gstFrmSz.y;
-	//	左や上にはみ出してたら、ここはマイナスになっている
+	//	�����ɂ͂ݏo���Ă���A�����̓}�C�i�X�ɂȂ��Ă���
 	xTgDot   =  conPoint.x - vwRect.left;
 	yTgLine  =  conPoint.y - vwRect.top;
 
 	yTgLine /= LINE_HEIGHT;
 
-	//	20110704	この時点では、スクロールによるズレが考慮されてない
+	//	20110704	���̎��_�ł́A�X�N���[���ɂ��Y�����l������ĂȂ�
 	xTgDot  += gdHideXdot;
 	yTgLine += gdViewTopLine;
-	//	多分これで大丈夫
+	//	��������ő��v
 
 	xDot = xTgDot;
 
@@ -1824,67 +1824,67 @@ HRESULT LayerContentsImportable( HWND hWnd, UINT cmdID, LPINT pXdot, LPINT pYlin
 	if( pYline )	*pYline = yTgLine;
 
 
-	//	使う行数確認
+	//	�g���s���m�F
 	dNeedLine = itLyr->vcLyrImg.size( );
-	//	最終行の空白確認
+	//	�ŏI�s�̋󔒊m�F
 	ptStr = LayerLineTextGetAlloc( itLyr, dNeedLine - 1 );
-	if( !(ptStr) )	dNeedLine--;	//	最後空白なら使わない
+	if( !(ptStr) )	dNeedLine--;	//	�Ō�󔒂Ȃ�g��Ȃ�
 	FREE(ptStr);
 
-	iPageLine = DocPageParamGet( NULL, NULL );	//	この頁の行数確認・入れ替えていけるか
+	iPageLine = DocPageParamGet( NULL, NULL );	//	���̕ł̍s���m�F�E����ւ��Ă����邩
 
-	//	全体行数より、追加行数が多かったら、改行増やす
+	//	�S�̍s�����A�ǉ��s��������������A���s���₷
 	if( iPageLine < (dNeedLine + yTgLine) )
 	{
-		iMinus = ( dNeedLine + yTgLine ) - iPageLine;	//	追加する行数
+		iMinus = ( dNeedLine + yTgLine ) - iPageLine;	//	�ǉ�����s��
 		DocAdditionalLine( iMinus, &bFirst );//	bFirst = FALSE;
 		TRACE( TEXT("ADD LINE[%d]"), iMinus );
 	}
 
-	//	白ヌキするには、前後の空白文字量を増やせばいい
-	//	透過領域が狭い場合は、非透過とする・先にスキャンするか。
+	//	���k�L����ɂ́A�O��̋󔒕����ʂ𑝂₹�΂���
+	//	���ߗ̈悪�����ꍇ�́A�񓧉߂Ƃ���E��ɃX�L�������邩�B
 	bEdgeBlank = ComboBox_GetCurSel( GetDlgItem( GetDlgItem(hWnd,IDW_LYB_TOOL_BAR), IDCB_LAYER_EDGE_BLANK ) );
 	if( 1 == bEdgeBlank ){			LayerEdgeBlankSizeCheck( hWnd, EDGE_BLANK_NARROW );	}
 	else if( 2 ==  bEdgeBlank ){	LayerEdgeBlankSizeCheck( hWnd, EDGE_BLANK_WIDE );	}
 
 
-	//白ヌキするには狭い透過領域を消す
+	//���k�L����ɂ͋������ߗ̈������
 
 
-//各行毎に挿入位置をみて、字をよけて、スキマを埋める
-//そこまでに足りないならパディング・レイヤ側のOffsetと行頭ピィリヲド～も考慮
-//上書きの場合は、ドット数に合わせてスキマを入れて、前後ズレないように
-//挿入・上書きいずれの場合も、レイヤ内の前空白を考慮してパディングする
+//�e�s���ɑ}���ʒu���݂āA�����悯�āA�X�L�}�𖄂߂�
+//�����܂łɑ���Ȃ��Ȃ�p�f�B���O�E���C������Offset�ƍs���s�B�����h�`���l��
+//�㏑���̏ꍇ�́A�h�b�g���ɍ��킹�ăX�L�}�����āA�O��Y���Ȃ��悤��
+//�}���E�㏑��������̏ꍇ���A���C�����̑O�󔒂��l�����ăp�f�B���O����
 	for( dWkLine = yTgLine, dLyLine = 0; (yTgLine+dNeedLine) > dWkLine; dWkLine++, dLyLine++ )
 	{
-		if( 0 > dWkLine )	continue;	//	上にめり込んでるのは処理しちゃいかん
+		if( 0 > dWkLine )	continue;	//	��ɂ߂荞��ł�̂͏��������Ⴂ����
 
 		TRACE( TEXT("Check Line V[%d] L[%d]"), dWkLine, dLyLine );
 
-		//	挿入内容の位置の確認・ここで、各部分毎にばらせばいい。
-		//	行単位ではなく、透過領域で区切られた文字領域毎に判定する
+		//	�}�����e�̈ʒu�̊m�F�E�����ŁA�e�������ɂ΂点�΂����B
+		//	�s�P�ʂł͂Ȃ��A���ߗ̈�ŋ�؂�ꂽ�����̈斈�ɔ��肷��
 
-		//	dLyLine：レイヤ内の行番号　dWkLine：ビューの行番号
-		iSpDot  = itLyr->vcLyrImg.at( dLyLine ).dFrtSpDot;	//	レイヤ内ドットオフセット
-		//	行頭から、初めて非空白が出てくるドット
+		//	dLyLine�F���C�����̍s�ԍ��@dWkLine�F�r���[�̍s�ԍ�
+		iSpDot  = itLyr->vcLyrImg.at( dLyLine ).dFrtSpDot;	//	���C�����h�b�g�I�t�Z�b�g
+		//	�s������A���߂Ĕ�󔒂��o�Ă���h�b�g
 
-		xDot   = xTgDot + iSpDot;	//	レイヤ内オブジェクトを挿入位置
-		//	マイナスだった場合レイヤ内文字列の開始位置をずらす
+		xDot   = xTgDot + iSpDot;	//	���C�����I�u�W�F�N�g��}���ʒu
+		//	�}�C�i�X�������ꍇ���C����������̊J�n�ʒu�����炷
 
-		//	必要な所を抽出・使用バイト数も確認しておく
+		//	�K�v�ȏ��𒊏o�E�g�p�o�C�g�����m�F���Ă���
 		itLtr  = itLyr->vcLyrImg.at( dLyLine ).vcLine.begin( );
-		itLtr += itLyr->vcLyrImg.at( dLyLine ).dFrtSpMozi;	//	空白以外の開始位置
-		//ここで開始位置までずらしている
+		itLtr += itLyr->vcLyrImg.at( dLyLine ).dFrtSpMozi;	//	�󔒈ȊO�̊J�n�ʒu
+		//�����ŊJ�n�ʒu�܂ł��炵�Ă���
 
-		//	壱行ずつ状況をみながら挿入していく
+		//	��s���󋵂��݂Ȃ���}�����Ă���
 		while( itLtr != itLyr->vcLyrImg.at( dLyLine ).vcLine.end( ) )
 		{
-			while( 0 > xDot )	//	マイナスだったら＋になるまでずらしていく
+			while( 0 > xDot )	//	�}�C�i�X��������{�ɂȂ�܂ł��炵�Ă���
 			{
-				//	該当行の末尾までイッたら終了
+				//	�Y���s�̖����܂ŃC�b����I��
 				if( itLtr == itLyr->vcLyrImg.at( dLyLine ).vcLine.end( ) )	break;
 
-				//透過フラグがあれば終了
+				//���߃t���O������ΏI��
 				if( itLtr->mzStyle & CT_LYR_TRNC )	break;
 
 				xDot   += itLtr->rdWidth;
@@ -1893,99 +1893,99 @@ HRESULT LayerContentsImportable( HWND hWnd, UINT cmdID, LPINT pXdot, LPINT pYlin
 				itLtr++;
 			}
 
-			//	挿入内容の確保
+			//	�}�����e�̊m��
 			wsBuff.clear( );	dInLen = 0;
 			for(  ; itLtr != itLyr->vcLyrImg.at( dLyLine ).vcLine.end( ); itLtr++ )
 			{
-				//透過フラグがあれば終了
+				//���߃t���O������ΏI��
 				if( itLtr->mzStyle & CT_LYR_TRNC )	break;
 
 				wsBuff += itLtr->cchMozi;	dInLen += itLtr->rdWidth;
-			}	//	そこから終わりまで
+			}	//	��������I���܂�
 
-			if( 0 != dInLen )	//	挿入できる内容がなかったらなにもせんでいい
+			if( 0 != dInLen )	//	�}���ł�����e���Ȃ�������Ȃɂ�����ł���
 			{
-				cchSize = wsBuff.size( ) + 1;	//	dInLen：挿入内容のドット幅
+				cchSize = wsBuff.size( ) + 1;	//	dInLen�F�}�����e�̃h�b�g��
 				ptStr = (LPTSTR)malloc( cchSize * sizeof(TCHAR) );
 				StringCchCopy( ptStr, cchSize, wsBuff.c_str( ) );
 
 				dGap = 0;
 
-				//	挿入位置の調整
-				iSrcDot = DocLineParamGet( dWkLine, NULL, NULL );	//	挿入行の末端ドット位置
-				iSabun  = xTgDot - iSrcDot;	//	＋なら足りてない
-				iDivid  = iSabun + iSpDot;	//	レイヤ内も考慮
-				if( 0 < iDivid )	//	行末端より後にきてる
+				//	�}���ʒu�̒���
+				iSrcDot = DocLineParamGet( dWkLine, NULL, NULL );	//	�}���s�̖��[�h�b�g�ʒu
+				iSabun  = xTgDot - iSrcDot;	//	�{�Ȃ瑫��ĂȂ�
+				iDivid  = iSabun + iSpDot;	//	���C�������l��
+				if( 0 < iDivid )	//	�s���[����ɂ��Ă�
 				{
 					xDot = iSrcDot;
 					ptBuffer = DocPaddingSpaceWithPeriod( iDivid, NULL, NULL, NULL, TRUE );
-					//	行末端からレイヤ内オブジェクトまでを埋める空白
+					//	�s���[���烌�C�����I�u�W�F�N�g�܂ł𖄂߂��
 					if( ptBuffer )
 					{
 						DocInsertString( &xDot, &dWkLine, NULL, ptBuffer, dStyle, bFirst );	bFirst = FALSE;
 						FREE(ptBuffer);
 					}
 
-					//余裕があるなら、白ヌキはあまり関係ないか？
+					//�]�T������Ȃ�A���k�L�͂��܂�֌W�Ȃ����H
 				}
-				else if( 0 > iDivid )	//	既存の文字列のほうが長い場合
+				else if( 0 > iDivid )	//	�����̕�����̂ق��������ꍇ
 				{
-					//	その地点の状況を確認して、空白エリアなら埋めに使う
-					//	文字エリアなら、直近からパディングできるところまでを埋め直す
-					iMozi = DocLetterPosGetAdjust( &xDot, dWkLine, -1 );	//	今の文字位置を確認
-				//	iMozi：挿入位置文字数			xDot：文字列挿入位置ドット
+					//	���̒n�_�̏󋵂��m�F���āA�󔒃G���A�Ȃ疄�߂Ɏg��
+					//	�����G���A�Ȃ�A���߂���p�f�B���O�ł���Ƃ���܂ł𖄂ߒ���
+					iMozi = DocLetterPosGetAdjust( &xDot, dWkLine, -1 );	//	���̕����ʒu���m�F
+				//	iMozi�F�}���ʒu������			xDot�F������}���ʒu�h�b�g
 
 #ifndef EDGE_BLANK_STYLE
-					//	そこの文字が空白か、空白ならどこまで続いてるか確認
+					//	�����̕������󔒂��A�󔒂Ȃ�ǂ��܂ő����Ă邩�m�F
 					DocLineStateCheckWithDot( xDot, dWkLine, &dLeft, &dRight, &iStMozi, NULL, &bSpace );
-					//	dRight 使ってない
+					//	dRight �g���ĂȂ�
 #endif
-					//	先に上書きエリアの処理しないと、パディング直したらずれる
-					//	上書きの場合ここから先をさらに削除してギャップパディング
+					//	��ɏ㏑���G���A�̏������Ȃ��ƁA�p�f�B���O�������炸���
+					//	�㏑���̏ꍇ��������������ɍ폜���ăM���b�v�p�f�B���O
 					if( IDM_LYB_OVERRIDE == cmdID )
 					{
-						dInBgn  = xTgDot + iSpDot;	//	ボックス左端＋内部オフセット＝文字列開始位置
-						dInEnd  = dInBgn + dInLen;	//	開始位置＋文字列幅＝文字列終端位置
+						dInBgn  = xTgDot + iSpDot;	//	�{�b�N�X���[�{�����I�t�Z�b�g��������J�n�ʒu
+						dInEnd  = dInBgn + dInLen;	//	�J�n�ʒu�{�����񕝁�������I�[�ʒu
 
-//白抜くには、ここで範囲を広げればいい？
-//透過領域の幅と巻き込む範囲によっては、前部分を巻き込む可能性？
-//先にピタリの位置に合わせてあるので、問題は無い？
+//�������ɂ́A�����Ŕ͈͂��L����΂����H
+//���ߗ̈�̕��Ɗ������ޔ͈͂ɂ���ẮA�O�������������މ\���H
+//��Ƀs�^���̈ʒu�ɍ��킹�Ă���̂ŁA���͖����H
 
-						//	20110817	時々ズレが出るのを修正＜処理手順間違い
+						//	20110817	���X�Y�����o��̂��C���������菇�ԈႢ
 						dEndot  = dInEnd;
 #ifdef EDGE_BLANK_STYLE
-						//	ここで dEndot をオフセットする？
+						//	������ dEndot ���I�t�Z�b�g����H
 						if( 1 == bEdgeBlank ){		dEndot += EDGE_BLANK_NARROW;	}
 						else if( 2 == bEdgeBlank ){	dEndot += EDGE_BLANK_WIDE;	}
 #endif
-						iEdMozi = DocLetterPosGetAdjust( &dEndot , dWkLine, 1 );	//	上書きされる領域
-						//	キャレット位置修正
+						iEdMozi = DocLetterPosGetAdjust( &dEndot , dWkLine, 1 );	//	�㏑�������̈�
+						//	�L�����b�g�ʒu�C��
 
-						//	後半の、あまってるSpaceも考慮してパディング調整
+						//	�㔼�́A���܂��Ă�Space���l�����ăp�f�B���O����
 						DocLineStateCheckWithDot( dEndot, dWkLine, &dBkLeft, &dBkRight, &dBkStMozi, &dBkEdMozi, &bBkSpase );
-						if( bBkSpase )	//	後半の空白再編
+						if( bBkSpase )	//	�㔼�̋󔒍ĕ�
 						{
 							dEndot  = dBkRight;
-							iEdMozi = DocLetterPosGetAdjust( &dEndot , dWkLine, 1 );	//	上書きされる領域
-							//↑は要らないかもだ
-							dGap    = dBkRight - dInEnd;	//	元の部分の維持のためのギャップ量
-							//	dBkRight：空白位置末端　dInEnd：挿入文字列リアル末端
+							iEdMozi = DocLetterPosGetAdjust( &dEndot , dWkLine, 1 );	//	�㏑�������̈�
+							//���͗v��Ȃ�������
+							dGap    = dBkRight - dInEnd;	//	���̕����̈ێ��̂��߂̃M���b�v��
+							//	dBkRight�F�󔒈ʒu���[�@dInEnd�F�}�������񃊃A�����[
 						}
 						else
 						{
 							//dEndot  = dInEnd;
-							//iEdMozi = DocLetterPosGetAdjust( &dEndot , dWkLine, 1 );	//	上書きされる領域
-							dGap    = dEndot - dInEnd;	//	元の部分の維持のためのギャップ量
-							//	dEndot：挿入文字列キャレット末端　dInEnd：挿入文字列リアル末端
+							//iEdMozi = DocLetterPosGetAdjust( &dEndot , dWkLine, 1 );	//	�㏑�������̈�
+							dGap    = dEndot - dInEnd;	//	���̕����̈ێ��̂��߂̃M���b�v��
+							//	dEndot�F�}��������L�����b�g���[�@dInEnd�F�}�������񃊃A�����[
 						}
 
-						//	該当部分を削除
+						//	�Y���������폜
 						DocRangeDeleteByMozi( xDot, dWkLine, iMozi, iEdMozi, &bFirst );
 
 						if( 0 < dGap )
 						{
 							dInBgn  = xDot;
-							//	レイヤ内オブジェクト末端から元絵の開始位置までを埋める数ドットの空白
+							//	���C�����I�u�W�F�N�g���[���猳�G�̊J�n�ʒu�܂ł𖄂߂鐔�h�b�g�̋�
 							ptBuffer = DocPaddingSpaceWithPeriod( dGap, NULL, NULL, NULL, TRUE );
 							if( ptBuffer )
 							{
@@ -1998,7 +1998,7 @@ HRESULT LayerContentsImportable( HWND hWnd, UINT cmdID, LPINT pXdot, LPINT pYlin
 #ifdef EDGE_BLANK_STYLE
 					if( bEdgeBlank )
 					{
-						//	オフセット位置確認
+						//	�I�t�Z�b�g�ʒu�m�F
 						xDotEx  = (xTgDot + iSpDot);
 
 						if( 1 == bEdgeBlank ){		xDotEx -= EDGE_BLANK_NARROW;	}
@@ -2007,38 +2007,38 @@ HRESULT LayerContentsImportable( HWND hWnd, UINT cmdID, LPINT pXdot, LPINT pYlin
 
 						if( 0 > xDotEx ){	xDotEx =  0;	}
 
-						iMoziEx = DocLetterPosGetAdjust( &xDotEx, dWkLine, -1 );	//	今の文字位置を確認
-					//	iMoziEx：挿入位置文字数			xDotEx：挿入位置オフセット
+						iMoziEx = DocLetterPosGetAdjust( &xDotEx, dWkLine, -1 );	//	���̕����ʒu���m�F
+					//	iMoziEx�F�}���ʒu������			xDotEx�F�}���ʒu�I�t�Z�b�g
 
-						//	そこの文字が空白か、空白ならどこまで続いてるか確認
+						//	�����̕������󔒂��A�󔒂Ȃ�ǂ��܂ő����Ă邩�m�F
 						DocLineStateCheckWithDot( xDotEx, dWkLine, &dLeft, &dRight, &iStMozi, NULL, &bSpace );
 
-						dGap = (xTgDot + iSpDot) - xDotEx;	//	前側の埋め処理
+						dGap = (xTgDot + iSpDot) - xDotEx;	//	�O���̖��ߏ���
 						xDot = xDotEx;
 					}
 					else
 					{
-						//	そこの文字が空白か、空白ならどこまで続いてるか確認
+						//	�����̕������󔒂��A�󔒂Ȃ�ǂ��܂ő����Ă邩�m�F
 						DocLineStateCheckWithDot( xDot, dWkLine, &dLeft, &dRight, &iStMozi, NULL, &bSpace );
-						iMoziEx = iStMozi;	//	特に意味はない
+						iMoziEx = iStMozi;	//	���ɈӖ��͂Ȃ�
 #endif
-						dGap = (xTgDot + iSpDot) - xDot;	//	前側の埋め処理
+						dGap = (xTgDot + iSpDot) - xDot;	//	�O���̖��ߏ���
 #ifdef EDGE_BLANK_STYLE
 					}
 #endif
-					if( bSpace )	//	空白なら、ギャップ分と合わせて入れ直す
+					if( bSpace )	//	�󔒂Ȃ�A�M���b�v���ƍ��킹�ē��꒼��
 					{
-						dGap  += (xDot - dLeft);	//	パディングドット数
-						//	既存の空白を一旦削除して
+						dGap  += (xDot - dLeft);	//	�p�f�B���O�h�b�g��
+						//	�����̋󔒂���U�폜����
 						DocRangeDeleteByMozi( dLeft, dWkLine, iStMozi, iMozi, &bFirst );
 					}
-					else	//	文字であるなら、なにもしない
+					else	//	�����ł���Ȃ�A�Ȃɂ����Ȃ�
 					{
 #ifdef EDGE_BLANK_STYLE
-						//	必要なら、既存の文字列を一旦削除して
+						//	�K�v�Ȃ�A�����̕��������U�폜����
 						if( bEdgeBlank )	DocRangeDeleteByMozi( xDot, dWkLine, iMoziEx, iMozi, &bFirst );
 #endif
-						dLeft = xDot;	//	ギャップ開始位置
+						dLeft = xDot;	//	�M���b�v�J�n�ʒu
 					}
 
 					ptBuffer = DocPaddingSpaceWithPeriod( dGap, NULL, NULL, NULL, TRUE );
@@ -2048,46 +2048,46 @@ HRESULT LayerContentsImportable( HWND hWnd, UINT cmdID, LPINT pXdot, LPINT pYlin
 						FREE(ptBuffer);
 					}
 
-					xDot = dLeft;	//	挿入位置であるように
+					xDot = dLeft;	//	�}���ʒu�ł���悤��
 				}
-				else	//	末端位置にピタリである
+				else	//	���[�ʒu�Ƀs�^���ł���
 				{
-					//	特にすることない？
+					//	���ɂ��邱�ƂȂ��H
 				}
 
 
-				//	該当の場所へ文字列挿入
+				//	�Y���̏ꏊ�֕�����}��
 				DocInsertString( &xDot, &dWkLine, NULL, ptStr, dStyle, bFirst );	bFirst = FALSE;
-				//	xDotには挿入終端ドットが入る
+				//	xDot�ɂ͑}���I�[�h�b�g������
 
 				FREE(ptStr);
 			}
 
-			//	この時点で、itLtrはendか透過開始位置である・xDotは透過開始ドットである
+			//	���̎��_�ŁAitLtr��end�����ߊJ�n�ʒu�ł���ExDot�͓��ߊJ�n�h�b�g�ł���
 			if( itLtr == itLyr->vcLyrImg.at( dLyLine ).vcLine.end( ) )	break;
-			//	終わってたらこの行の処理終わり
+			//	�I����Ă��炱�̍s�̏����I���
 
-			//	透過しないところまで進める
+			//	���߂��Ȃ��Ƃ���܂Ői�߂�
 			for(  ; itLtr != itLyr->vcLyrImg.at( dLyLine ).vcLine.end( ); itLtr++ )
 			{
-				//透過フラグが無くなれば終了
+				//���߃t���O�������Ȃ�ΏI��
 				if( !(itLtr->mzStyle & CT_LYR_TRNC) )	break;
 				xDot += itLtr->rdWidth;
-			}	//	そこから終わりまで
+			}	//	��������I���܂�
 
-			iSpDot = xDot;	//	挿入開始位置を調整
+			iSpDot = xDot;	//	�}���J�n�ʒu�𒲐�
 			iSpDot -= xTgDot;
 		}
 
-		//DocBadSpaceCheck( dWkLine );	//	バッド空白チェキ
-		//	DocInsertStringの中の方でやってるので、ここでは不要だと思われ
+		//DocBadSpaceCheck( dWkLine );	//	�o�b�h�󔒃`�F�L
+		//	DocInsertString�̒��̕��ł���Ă�̂ŁA�����ł͕s�v���Ǝv���
 	}
 
-	TRACE( TEXT("Layer Insert OK！") );
+	TRACE( TEXT("Layer Insert OK�I") );
 
-	//	最終的なキャレットの位置をリセット
+	//	�ŏI�I�ȃL�����b�g�̈ʒu�����Z�b�g
 	//	ViewPosResetCaret( xDot , dWkLine-1 );
-	//	ここでは処理しない
+	//	�����ł͏������Ȃ�
 #ifdef DO_TRY_CATCH
 	}
 	catch( exception &err ){	return (HRESULT)ETC_MSG( err.what(), E_UNEXPECTED );	}
@@ -2099,10 +2099,10 @@ HRESULT LayerContentsImportable( HWND hWnd, UINT cmdID, LPINT pXdot, LPINT pYlin
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	レイヤボックスの内容をクルップする
-	@param[in]	hWnd	ボックスのウインドウハンドル
-	@param[in]	bStyle	ユニコードかシフトJISで
-	@return		HRESULT	終了状態コード
+	���C���{�b�N�X�̓��e���N���b�v����
+	@param[in]	hWnd	�{�b�N�X�̃E�C���h�E�n���h��
+	@param[in]	bStyle	���j�R�[�h���V�t�gJIS��
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT LayerForClipboard( HWND hWnd, UINT bStyle )
 {
@@ -2114,7 +2114,7 @@ HRESULT LayerForClipboard( HWND hWnd, UINT bStyle )
 	string	srString;
 	wstring	wsString;
 
-	//	該当のレイヤーボックスを確認
+	//	�Y���̃��C���[�{�b�N�X���m�F
 	for( itLyr = gltLayer.begin(); itLyr != gltLayer.end(); itLyr++ )
 	{
 		if( itLyr->hBoxWnd == hWnd ){	break;	}
@@ -2122,14 +2122,14 @@ HRESULT LayerForClipboard( HWND hWnd, UINT bStyle )
 	if( itLyr == gltLayer.end( ) )	return E_OUTOFMEMORY;
 
 
-	iLines = itLyr->vcLyrImg.size( );	//	行数確認
+	iLines = itLyr->vcLyrImg.size( );	//	�s���m�F
 
 	srString.clear( );
 	wsString.clear( );
 
 	for( iL = 0; iLines > iL; iL++ )
 	{
-		//	文字をイテレータで確保
+		//	�������C�e���[�^�Ŋm��
 		for( itMozi = itLyr->vcLyrImg.at( iL ).vcLine.begin( ); itMozi != itLyr->vcLyrImg.at( iL ).vcLine.end( ); itMozi++ )
 		{
 			srString += string( itMozi->acSjis );
@@ -2140,7 +2140,7 @@ HRESULT LayerForClipboard( HWND hWnd, UINT bStyle )
 		wsString += wstring( CH_CRLFW );
 	}
 
-	if( bStyle & D_UNI )	//	ユニコードである
+	if( bStyle & D_UNI )	//	���j�R�[�h�ł���
 	{
 		cchSize = wsString.size( ) + 1;
 		DocClipboardDataSet( (LPTSTR)(wsString.c_str()), cchSize * sizeof(TCHAR), bStyle );
@@ -2156,9 +2156,9 @@ HRESULT LayerForClipboard( HWND hWnd, UINT bStyle )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	レイヤボックスの内容を削除する
-	@param[in]	hWnd	ボックスのウインドウハンドル
-	@return		HRESULT	終了状態コード
+	���C���{�b�N�X�̓��e���폜����
+	@param[in]	hWnd	�{�b�N�X�̃E�C���h�E�n���h��
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT LayerOnDelete( HWND hWnd )
 {
@@ -2170,16 +2170,16 @@ HRESULT LayerOnDelete( HWND hWnd )
 	try{
 #endif
 
-	//	該当のレイヤーボックスを確認
+	//	�Y���̃��C���[�{�b�N�X���m�F
 	for( itLyr = gltLayer.begin(); itLyr != gltLayer.end(); itLyr++ )
 	{
 		if( itLyr->hBoxWnd == hWnd ){	break;	}
 	}
 	if( itLyr == gltLayer.end( ) )	return E_OUTOFMEMORY;
 
-	LayerStringObliterate( itLyr );	//	中身破壊
+	LayerStringObliterate( itLyr );	//	���g�j��
 	ZeroONELINE( &stLine );
-	itLyr->vcLyrImg.push_back( stLine );	//	空データを作成しておく
+	itLyr->vcLyrImg.push_back( stLine );	//	��f�[�^���쐬���Ă���
 
 	InvalidateRect( hWnd, NULL, TRUE );
 
@@ -2196,10 +2196,10 @@ HRESULT LayerOnDelete( HWND hWnd )
 #ifdef EDGE_BLANK_STYLE
 
 /*!
-	白抜き指定したときに、幅の狭い透過領域をキャンセルする
-	@param[in]	hWnd	ボックスのウインドウハンドル
-	@param[in]	iCanWid	キャンセルする最大幅
-	@return		HRESULT	終了状態コード
+	�������w�肵���Ƃ��ɁA���̋������ߗ̈���L�����Z������
+	@param[in]	hWnd	�{�b�N�X�̃E�C���h�E�n���h��
+	@param[in]	iCanWid	�L�����Z������ő啝
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT LayerEdgeBlankSizeCheck( HWND hWnd, INT iCanWid )
 {
@@ -2215,33 +2215,33 @@ HRESULT LayerEdgeBlankSizeCheck( HWND hWnd, INT iCanWid )
 	try{
 #endif
 
-	//	該当のレイヤーボックスを確認
+	//	�Y���̃��C���[�{�b�N�X���m�F
 	for( itLyr = gltLayer.begin(); itLyr != gltLayer.end(); itLyr++ )
 	{
 		if( itLyr->hBoxWnd == hWnd ){	break;	}
 	}
 	if( itLyr == gltLayer.end( ) )	return E_OUTOFMEMORY;
 
-	iLines = itLyr->vcLyrImg.size( );	//	行数確認
+	iLines = itLyr->vcLyrImg.size( );	//	�s���m�F
 
 
-	//	壱行ずつ見ていく
+	//	��s�����Ă���
 	for( itLine = itLyr->vcLyrImg.begin( ); itLine != itLyr->vcLyrImg.end( ); itLine++ )
 	{
-		//	文字をイテレータで確保
+		//	�������C�e���[�^�Ŋm��
 		for( itMozi = itLine->vcLine.begin( ); itMozi != itLine->vcLine.end( ); itMozi++ )
 		{
-			if(  itMozi->mzStyle & CT_LYR_TRNC )	//	透過領域にヒットしたら
+			if(  itMozi->mzStyle & CT_LYR_TRNC )	//	���ߗ̈�Ƀq�b�g������
 			{
-				//	その領域の幅をゲッツする
+				//	���̗̈�̕����Q�b�c����
 				iWidth = 0;
 				for( itMzx = itMozi; itMzx != itLine->vcLine.end( ); itMzx++ )
 				{
-					if( !(itMzx->mzStyle & CT_LYR_TRNC) )	break;	//	外れたら終わり
+					if( !(itMzx->mzStyle & CT_LYR_TRNC) )	break;	//	�O�ꂽ��I���
 					iWidth += itMzx->rdWidth;
 				}
 
-				if( iCanWid >=  iWidth )	//	もしちっちゃいなら
+				if( iCanWid >=  iWidth )	//	�����������Ⴂ�Ȃ�
 				{
 					for( ; itMzx != itMozi; itMozi++ )
 					{
@@ -2252,12 +2252,12 @@ HRESULT LayerEdgeBlankSizeCheck( HWND hWnd, INT iCanWid )
 				{
 					itMozi = itMzx;
 				}
-				itMozi--;	//	ループ先頭でインクリするため、一旦戻る
+				itMozi--;	//	���[�v�擪�ŃC���N�����邽�߁A��U�߂�
 			}
 		}
 	}
 
-	InvalidateRect( hWnd , NULL, TRUE );	//	再描画
+	InvalidateRect( hWnd , NULL, TRUE );	//	�ĕ`��
 
 #ifdef DO_TRY_CATCH
 	}

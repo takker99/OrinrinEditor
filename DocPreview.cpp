@@ -1,6 +1,6 @@
-п»ї/*! @file
-	@brief гѓ–гѓ©г‚¦г‚¶г‚ігѓігѓќгѓјгѓЌгѓігѓ€дЅїгЃЈгЃ¦Previewг‚’гЃ—гЃѕгЃ™
-	гЃ“гЃ®гѓ•г‚Ўг‚¤гѓ«гЃЇ DocPreview.cpp гЃ§гЃ™гЂ‚
+/*! @file
+	@brief ѓuѓ‰ѓEѓUѓRѓ“ѓ|Ѓ[ѓlѓ“ѓgЋg‚Б‚ДPreview‚р‚µ‚Ь‚·
+	‚±‚Мѓtѓ@ѓCѓ‹‚Н DocPreview.cpp ‚Е‚·ЃB
 	@author	SikigamiHNQ
 	@date	2011/09/01
 */
@@ -22,65 +22,65 @@ If not, see <http://www.gnu.org/licenses/>.
 //-------------------------------------------------------------------------------------------------
 
 /*
-IEг‚ігѓігѓќгЃ¤гЃ‹гЃ†гЃ«гЃЇATLгЃЊи¦Ѓг‚‹
+IEѓRѓ“ѓ|‚В‚©‚¤‚Й‚НATL‚Є—v‚й
 ttp://ysmt.blog21.fc2.com/blog-entry-244.html
 
-VCExpressгЃ«гЃЇATLе…ҐгЃЈгЃ¦гЃЄгЃ„гЃ®гЃ§гЂЃе€ҐеЏЈгЃ§г‚Ігѓѓгѓ€гЃ™г‚‹гѓ»VCProгЃЁгЃ‹гЃ«гЃЇе…ҐгЃЈгЃ¦г‚‹гЃ‹г‚‚
+VCExpress‚Й‚НATL“ь‚Б‚Д‚И‚ў‚М‚ЕЃA•КЊы‚ЕѓQѓbѓg‚·‚йЃEVCPro‚Ж‚©‚Й‚Н“ь‚Б‚Д‚й‚©‚а
 
-WindowsDriverKit710гЃ«е…ҐгЃЈгЃ¦г‚‹
-гЃЊгЃ„гЃ©
+WindowsDriverKit710‚Й“ь‚Б‚Д‚й
+‚Є‚ў‚З
 ttp://www.microsoft.com/japan/whdc/DevTools/WDK/WDKpkg.mspx
-гѓЂг‚¦г‚Ѕ
+ѓ_ѓEѓ\
 ttp://www.microsoft.com/download/en/details.aspx?displaylang=en&id=11800
 
 
-г‚¤гѓіг‚Їгѓ«гѓјгѓ‰гѓ•г‚Ўг‚¤гѓ«гѓ‘г‚№гЃ«гЂЃ"(DDKгѓ•г‚©гѓ«гѓЂ)\inc\atl71"
-гѓ©г‚¤гѓ–гѓ©гѓЄгѓ•г‚Ўг‚¤гѓ«гѓ‘г‚№гЃ«гЂЃ"(DDKгѓ•г‚©гѓ«гѓЂ)\lib\atl\i386"г‚’иїЅеЉ гЂ‚
+ѓCѓ“ѓNѓ‹Ѓ[ѓhѓtѓ@ѓCѓ‹ѓpѓX‚ЙЃA"(DDKѓtѓHѓ‹ѓ_)\inc\atl71"
+ѓ‰ѓCѓuѓ‰ѓЉѓtѓ@ѓCѓ‹ѓpѓX‚ЙЃA"(DDKѓtѓHѓ‹ѓ_)\lib\atl\i386"‚р’З‰БЃB
 
-еђЌе‰ЌгЃЇATL71гЃ гЃ‘гЃ©гѓђгѓјг‚ёгѓ§гѓігЃЇ80
+–ј‘O‚НATL71‚ѕ‚Ї‚ЗѓoЃ[ѓWѓ‡ѓ“‚Н80
 
-гѓЄгѓіг‚ЇгЃ§г‚Ёгѓ©гѓјгЃЊе‡єг‚‹гЃЄг‚‰гЂЃ
-гѓЄгѓіг‚«гЃ®иїЅеЉ гЃ®дѕќе­гѓ•г‚Ўг‚¤гѓ«гЃ«гЂЃatlthunk.libг‚’д»гЃ‘г‚‹гЂ‚
+ѓЉѓ“ѓN‚ЕѓGѓ‰Ѓ[‚ЄЏo‚й‚И‚зЃA
+ѓЉѓ“ѓJ‚М’З‰Б‚М€Л‘¶ѓtѓ@ѓCѓ‹‚ЙЃAatlthunk.lib‚р•t‚Ї‚йЃB
 
 */
 
-#pragma warning( disable : 4995 )	//	ATLе†…гЃ®г‚¤г‚±гѓЉг‚¤е‡Ѕж•°и­¦е‘Љг‚’дё­ж­ўпјЃ
+#pragma warning( disable : 4995 )	//	ATL“а‚МѓCѓPѓiѓC”џђ”ЊxЌђ‚р’†Ћ~ЃI
 
 #include <atlbase.h>
 
 #ifndef _ATL
-#error IEг‚ігѓігѓќгЃ¤гЃ‹гЃ†гЃ«гЃЇATLгЃЊи¦Ѓг‚‹гЂ‚
+#error IEѓRѓ“ѓ|‚В‚©‚¤‚Й‚НATL‚Є—v‚йЃB
 #endif
 
-//	DDKгЃ®ATLдЅїгЃ†гЃЄг‚‰еї…и¦ЃгЃЄг‚€гЃ†гЃ 
+//	DDK‚МATLЋg‚¤‚И‚з•K—v‚И‚ж‚¤‚ѕ
 //#pragma comment(lib, "atlthunk.lib")
 
 
-//	ATLг‚’дЅїз”ЁгЃ™г‚‹гЃџг‚ЃгЃ«еї…и¦ЃгЃЄг‚°гѓ­гѓјгѓђгѓ«е¤‰ж•°
-//	гЃ“гЃ®е¤‰ж•°еђЌгЃЇгЂЃеї…гЃљгЂЃгЃ“гЃ®еђЌе‰ЌгЃ«гЃ™г‚‹гЃ“гЃЁгЂ‚
+//	ATL‚рЋg—p‚·‚й‚Ѕ‚Я‚Й•K—v‚ИѓOѓЌЃ[ѓoѓ‹•Пђ”
+//	‚±‚М•Пђ”–ј‚НЃA•K‚ёЃA‚±‚М–ј‘O‚Й‚·‚й‚±‚ЖЃB
 extern CComModule	_Module;
 
 #include <atlcom.h>
 #include <atlhost.h>
 
-#pragma warning( default : 4995 )	//	и­¦е‘Љеѕ©её°
+#pragma warning( default : 4995 )	//	ЊxЌђ•њ‹A
 
-//#if _MSC_VER >=1500 // VC2008(VC9.0)д»Ґй™Ќ
+//#if _MSC_VER >=1500 // VC2008(VC9.0)€ИЌ~
 
-//	DDKгЃЄг‚‰гЂЃAtlAxWin80 гЃЈгЃЅгЃ„
+//	DDK‚И‚зЃAAtlAxWin80 ‚Б‚Ы‚ў
 
 
 //#if _ATL_VER == 14
 #define ATL_AX_WIN	TEXT("AtlAxWin80")
 //#else
-//#error ATLгѓђгѓјг‚ёгѓ§гѓігЃ«еђ€г‚ЏгЃ›гЃ¦е®љзѕ©гЃ™г‚‹еї…и¦ЃгЃЊгЃ‚г‚‹ TEXT(_ATL_VER)
+//#error ATLѓoЃ[ѓWѓ‡ѓ“‚ЙЌ‡‚н‚№‚Д’и‹`‚·‚й•K—v‚Є‚ ‚й TEXT(_ATL_VER)
 //#endif
 
-//	ATLAXWIN_CLASS	е®љзѕ©гЃ•г‚ЊгЃ¦г‚‹гЃ‘гЃ©TEXTгЃ«гЃЄгЃЈгЃ¦гЃЄгЃ„
+//	ATLAXWIN_CLASS	’и‹`‚і‚к‚Д‚й‚Ї‚ЗTEXT‚Й‚И‚Б‚Д‚И‚ў
 
 CComModule	_Module;
 
-//	гЃЄг‚“гЃ‹и¦Ѓг‚‹гЃїгЃџгЃ„
+//	‚И‚с‚©—v‚й‚Э‚Ѕ‚ў
 BEGIN_OBJECT_MAP(ObjectMap)
 END_OBJECT_MAP( )
 
@@ -88,30 +88,30 @@ END_OBJECT_MAP( )
 
 #define REDRAW_ATSCROLL
 
-#define DOC_PREVIEW_CLASS	TEXT("PREVIEW_CLASS")	//!<	гѓ—гѓ¬гѓ“гѓҐгѓјзЄ“гЃ®г‚Їгѓ©г‚№еђЌ
+#define DOC_PREVIEW_CLASS	TEXT("PREVIEW_CLASS")	//!<	ѓvѓЊѓrѓ…Ѓ[‘‹‚МѓNѓ‰ѓX–ј
 
-#define PVW_WIDTH	 820	//!<	гѓ‡гѓ•г‚©гѓ«гѓ€з”»йќўе№…
-#define PVW_HEIGHT	 480	//!<	гѓ‡гѓ•г‚©гѓ«гѓ€з”»йќўй«гЃ•
+#define PVW_WIDTH	 820	//!<	ѓfѓtѓHѓ‹ѓg‰ж–К•ќ
+#define PVW_HEIGHT	 480	//!<	ѓfѓtѓHѓ‹ѓg‰ж–КЌ‚‚і
 //-------------------------------------------------------------------------------------------------
 
-static CComQIPtr<IHTMLDocument2>	gpDocument2;	//!<	пј©пјҐг‚ігѓігѓќгѓјгѓЌгѓігѓ€гЃ®гЃЄгЃ«гЃ‹
-static CComQIPtr<IWebBrowser2>		gpWebBrowser2;	//!<	пј©пјҐг‚ігѓігѓќгѓјгѓЌгѓігѓ€гЃ®гѓЉгѓ‹г‚«
-static  HWND	ghIEwnd;							//!<	пј©пјҐг‚ігѓігѓќгѓјгѓЌгѓігѓ€гЃ®гѓЏгѓігѓ‰гѓ«
+static CComQIPtr<IHTMLDocument2>	gpDocument2;	//!<	‚h‚dѓRѓ“ѓ|Ѓ[ѓlѓ“ѓg‚М‚И‚Й‚©
+static CComQIPtr<IWebBrowser2>		gpWebBrowser2;	//!<	‚h‚dѓRѓ“ѓ|Ѓ[ѓlѓ“ѓg‚МѓiѓjѓJ
+static  HWND	ghIEwnd;							//!<	‚h‚dѓRѓ“ѓ|Ѓ[ѓlѓ“ѓg‚Мѓnѓ“ѓhѓ‹
 
 
 
-static  HWND	ghPrevWnd;			//!<	гЃ“гЃ®г‚¦г‚¤гѓігѓ‰г‚¦гЃ®гѓЏгѓігѓ‰гѓ«
-static HINSTANCE	ghInst;			//!<	зЏѕењЁгЃ®г‚¤гѓіг‚їгѓјгѓ•г‚§г‚¤г‚№
+static  HWND	ghPrevWnd;			//!<	‚±‚МѓEѓCѓ“ѓhѓE‚Мѓnѓ“ѓhѓ‹
+static HINSTANCE	ghInst;			//!<	Њ»ЌЭ‚МѓCѓ“ѓ^Ѓ[ѓtѓFѓCѓX
 
-static  HWND	ghToolWnd;			//!<	гѓ„гѓјгѓ«гѓђгѓј
-static HIMAGELIST ghPrevwImgLst;	//!<	гѓ„гѓјгѓ«гѓђгѓјг‚ўг‚¤г‚ігѓігЃ®г‚¤гѓЎгѓјг‚ёгѓЄг‚№гѓ€
+static  HWND	ghToolWnd;			//!<	ѓcЃ[ѓ‹ѓoЃ[
+static HIMAGELIST ghPrevwImgLst;	//!<	ѓcЃ[ѓ‹ѓoЃ[ѓAѓCѓRѓ“‚МѓCѓЃЃ[ѓWѓЉѓXѓg
 
-static INT		giViewMode;			//!<	иЎЁз¤єзЉ¶ж…‹пјљпјђпЅћеЌдЅ“й ЃгЂЂпјЌпј‘е…Ёй Ѓ
+static INT		giViewMode;			//!<	•\Ћ¦Џу‘ФЃF‚OЃ`’P‘М•ЕЃ@Ѓ|‚P‘S•Е
 
-extern  HWND	ghPrntWnd;				//	и¦Єг‚¦г‚¤гѓігѓ‰г‚¦гѓЏгѓігѓ‰гѓ«
-extern list<ONEFILE>	gltMultiFiles;	//	и¤‡ж•°гѓ•г‚Ўг‚¤гѓ«дїќжЊЃ
-extern FILES_ITR	gitFileIt;			//	д»Љи¦‹гЃ¦г‚‹гѓ•г‚Ўг‚¤гѓ«гЃ®жњ¬дЅ“
-extern INT		gixFocusPage;			//	жіЁз›®дё­гЃ®гѓљгѓјг‚ёгѓ»гЃЁг‚ЉгЃ‚гЃ€гЃљпјђгѓ»пјђг‚¤гѓігѓ‡гѓѓг‚Їг‚№
+extern  HWND	ghPrntWnd;				//	ђeѓEѓCѓ“ѓhѓEѓnѓ“ѓhѓ‹
+extern list<ONEFILE>	gltMultiFiles;	//	•Ўђ”ѓtѓ@ѓCѓ‹•ЫЋќ
+extern FILES_ITR	gitFileIt;			//	ЌЎЊ©‚Д‚йѓtѓ@ѓCѓ‹‚М–{‘М
+extern INT		gixFocusPage;			//	’Ќ–Ъ’†‚МѓyЃ[ѓWЃE‚Ж‚и‚ ‚¦‚ё‚OЃE‚OѓCѓ“ѓfѓbѓNѓX
 //-------------------------------------------------------------------------------------------------
 
 #define TB_ITEMS	1
@@ -123,9 +123,9 @@ static  TBBUTTON	gstTBInfo[] = {
 #define PREV_HEADER_FILE	TEXT("Preview.htm")
 #define SEPARATE_TAG	("[SEPARATE]")
 
-static CONST CHAR	gcacWeek[7][4] = { ("ж—Ґ"), ("жњ€"), ("зЃ«"), ("ж°ґ"), ("жњЁ"), ("й‡‘"), ("ењџ") };
+static CONST CHAR	gcacWeek[7][4] = { ("“ъ"), ("ЊЋ"), ("‰О"), ("ђ…"), ("–Ш"), ("‹а"), ("“y") };
 
-static  CHAR	gacResHeaderFmt[] = { "<dt>%d еђЌе‰ЌпјљеђЌз„ЎгЃ—гЃ®е¦–зІѕгЃ•г‚“[sage] жЉ•зЁїж—Ґпјљ%d/%02d/%02d(%s) %02d:%02d:%02d ID:OrinEdit99</dt> <dd>" };	//	
+static  CHAR	gacResHeaderFmt[] = { "<dt>%d –ј‘OЃF–ј–і‚µ‚М—dђё‚і‚с[sage] “ЉЌe“ъЃF%d/%02d/%02d(%s) %02d:%02d:%02d ID:OrinEdit99</dt> <dd>" };	//	
 static  CHAR	gacResFooterFmt[] = { "<br></dd>\r\n" };
 
 
@@ -135,10 +135,10 @@ static LPSTR	gpcHtmlFtr;
 
 
 LRESULT	CALLBACK PreviewWndProc( HWND, UINT, WPARAM, LPARAM );	//!<	
-VOID	Pvw_OnCommand( HWND , INT, HWND, UINT );	//!<	WM_COMMAND гЃ®е‡¦зђ†
+VOID	Pvw_OnCommand( HWND , INT, HWND, UINT );	//!<	WM_COMMAND ‚МЏ€—ќ
 VOID	Pvw_OnSize( HWND , UINT, INT, INT );		//!<	
-VOID	Pvw_OnPaint( HWND );						//!<	WM_PAINT гЃ®е‡¦зђ†гѓ»жћ з·љжЏЏз”»гЃЁгЃ‹
-VOID	Pvw_OnDestroy( HWND );						//!<	WM_DESTROY гЃ®е‡¦зђ†гѓ»BRUSHгЃЁгЃ‹гЃ®г‚Єгѓ–г‚ёг‚§г‚Їгѓ€гЃ®з ґеЈЉг‚’еїг‚ЊгЃЄгЃ„г‚€гЃ†гЃ«
+VOID	Pvw_OnPaint( HWND );						//!<	WM_PAINT ‚МЏ€—ќЃEgђь•`‰ж‚Ж‚©
+VOID	Pvw_OnDestroy( HWND );						//!<	WM_DESTROY ‚МЏ€—ќЃEBRUSH‚Ж‚©‚МѓIѓuѓWѓFѓNѓg‚М”j‰у‚р–Y‚к‚И‚ў‚ж‚¤‚Й
 
 HRESULT	PreviewHeaderGet( VOID );	//!<	
 
@@ -146,10 +146,10 @@ HRESULT	PreviewPageWrite( INT );	//!<
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	гѓ—гѓ¬гѓ“гѓҐгѓјг‚¦г‚¤гѓігѓ‰г‚¦г‚Їгѓ©г‚№г‚’дЅњж€ђ
-	@param[in]	hInstance	г‚ўгѓ—гѓЄгЃ®г‚¤гѓіг‚№г‚їгѓіг‚№
-	@param[in]	hParentWnd	и¦Єг‚¦г‚¤гѓігѓ‰г‚¦гЃ®гѓЏгѓігѓ‰гѓ«
-	@return	гЃЄгЃ—
+	ѓvѓЊѓrѓ…Ѓ[ѓEѓCѓ“ѓhѓEѓNѓ‰ѓX‚рЌмђ¬
+	@param[in]	hInstance	ѓAѓvѓЉ‚МѓCѓ“ѓXѓ^ѓ“ѓX
+	@param[in]	hParentWnd	ђeѓEѓCѓ“ѓhѓE‚Мѓnѓ“ѓhѓ‹
+	@return	‚И‚µ
 */
 VOID PreviewInitialise( HINSTANCE hInstance, HWND hParentWnd )
 {
@@ -164,7 +164,7 @@ VOID PreviewInitialise( HINSTANCE hInstance, HWND hParentWnd )
 
 		_Module.Init( ObjectMap, hInstance, &guid );
 
-		//	е°‚з”ЁгЃ®г‚¦г‚¤гѓігѓ‰г‚¦г‚Їгѓ©г‚№дЅњж€ђ
+		//	ђк—p‚МѓEѓCѓ“ѓhѓEѓNѓ‰ѓXЌмђ¬
 		ZeroMemory( &wcex, sizeof(WNDCLASSEX) );
 		wcex.cbSize			= sizeof(WNDCLASSEX);
 		wcex.style			= CS_HREDRAW | CS_VREDRAW;
@@ -192,12 +192,12 @@ VOID PreviewInitialise( HINSTANCE hInstance, HWND hParentWnd )
 		ghPrevwImgLst = ImageList_Create( 16, 16, ILC_COLOR24 | ILC_MASK, 1, 1 );
 		hImg = LoadBitmap( ghInst, MAKEINTRESOURCE( (IDBMP_PREVIEW_ALL) ) );
 		hMsq = LoadBitmap( ghInst, MAKEINTRESOURCE( (IDBMQ_PREVIEW_ALL) ) );
-		ImageList_Add( ghPrevwImgLst , hImg, hMsq );	//	г‚¤гѓЎгѓјг‚ёгѓЄг‚№гѓ€гЃ«г‚¤гѓЎгѓјг‚ёг‚’иїЅеЉ 
+		ImageList_Add( ghPrevwImgLst , hImg, hMsq );	//	ѓCѓЃЃ[ѓWѓЉѓXѓg‚ЙѓCѓЃЃ[ѓW‚р’З‰Б
 		DeleteBitmap( hImg );	DeleteBitmap( hMsq );
 	}
 	else
 	{
-		//	г‚‚гЃ—й–‹гЃ‘гЃџгЃѕгЃѕгЃ гЃЈгЃџг‚‰з¶єйє—гЃ«й–‰гЃгЃЄгЃ„гЃЁгѓЎгѓўгѓЄгѓЄгѓјг‚Ї
+		//	‚а‚µЉJ‚Ї‚Ѕ‚Ь‚Ь‚ѕ‚Б‚Ѕ‚згY—н‚Й•В‚¶‚И‚ў‚ЖѓЃѓ‚ѓЉѓЉЃ[ѓN
 		if( ghPrevWnd ){	SendMessage( ghPrevWnd, WM_CLOSE, 0, 0 );	}
 
 		CoUninitialize( );
@@ -212,7 +212,7 @@ VOID PreviewInitialise( HINSTANCE hInstance, HWND hParentWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	гѓ†гѓігѓ—гѓ¬гѓ‡г‚Јгѓ¬г‚Їгѓ€гѓЄгЃ«е…ҐгЃЈгЃ¦г‚‹HeaderFooterгѓ•г‚Ўг‚¤гѓ«гЃ®дё­иє«г‚’г‚Ігѓѓгѓ€гЃ™г‚‹
+	ѓeѓ“ѓvѓЊѓfѓBѓЊѓNѓgѓЉ‚Й“ь‚Б‚Д‚йHeaderFooterѓtѓ@ѓCѓ‹‚М’†ђg‚рѓQѓbѓg‚·‚й
 */
 HRESULT PreviewHeaderGet( VOID )
 {
@@ -228,7 +228,7 @@ HRESULT PreviewHeaderGet( VOID )
 	gpcHtmlHdr = NULL;
 	gpcHtmlFtr = NULL;
 
-	//	гѓгѓѓгѓЂгѓ»гѓ•гѓѓг‚їг‚’зўєдїќ
+	//	ѓwѓbѓ_ЃEѓtѓbѓ^‚рЉm•Ы
 	StringCchCopy( atPrevFile, MAX_PATH, ExePathGet() );
 	PathAppend( atPrevFile, TEMPLATE_DIR );
 	PathAppend( atPrevFile, PREV_HEADER_FILE );
@@ -242,14 +242,14 @@ HRESULT PreviewHeaderGet( VOID )
 
 	SetFilePointer( hFile, 0, NULL, FILE_BEGIN );
 	ReadFile( hFile, pcText, iByteSize, &readed, NULL );
-	CloseHandle( hFile );	//	е†…е®№е…ЁйѓЁеЏ–г‚Љиѕјг‚“гЃ гЃ‹г‚‰й–‹ж”ѕ
+	CloseHandle( hFile );	//	“а—e‘S•”Ћж‚иЌћ‚с‚ѕ‚©‚зЉJ•ъ
 
-	gpcHtmlHdr = pcText;	//	HEADERйѓЁе€†гѓ»freeгЃ«г‚‚гЃ¤гЃ‹гЃ†
+	gpcHtmlHdr = pcText;	//	HEADER•”•ЄЃEfree‚Й‚а‚В‚©‚¤
 
 	pcNext = StrStrA( pcText, SEPARATE_TAG );
-	pcNext[0] = NULL;	//	HEADERгЃЁFOOTERгЃ®еўѓз•ЊгЃ«гѓЊгѓ«г‚їгѓјгѓџгѓЌгѓјг‚ї
+	pcNext[0] = NULL;	//	HEADER‚ЖFOOTER‚М‹«ЉE‚Йѓkѓ‹ѓ^Ѓ[ѓ~ѓlЃ[ѓ^
 	pcNext++;
-	gpcHtmlFtr = NextLineA( pcNext );	//	ж¬ЎгЃ®иЎЊгЃ‹г‚‰гЃЊжњ¬з•Є
+	gpcHtmlFtr = NextLineA( pcNext );	//	Ћџ‚МЌs‚©‚з‚Є–{”Ф
 
 
 
@@ -257,11 +257,11 @@ HRESULT PreviewHeaderGet( VOID )
 }
 //-------------------------------------------------------------------------------------------------
 
-/*пјЃ
-	г‚¦г‚¤гѓігѓ‰г‚¦г‚’дЅњж€ђ
-	@param[in]	iNowPage	гѓ—гѓ¬гѓ“гѓҐг‚ЉгЃџгЃ„й Ѓз•ЄеЏ·
-	@param[in]	bForeg		йќћпјђгЃЄг‚‰е†Ќгѓ—гѓ¬гѓ“гѓҐгѓјгЃ®гЃЁгЃЌгЃ«гѓ•г‚©г‚ўг‚°гѓ©гѓігѓ‰гЃ«гЃ™г‚‹гѓ»пјђгЃЄг‚‰гЃ—гЃЄгЃ„гѓ»гѓ—гѓ¬гѓ“гѓҐгѓјй–‹гЃ„гЃ¦гЃЄгЃ„гЃЄг‚‰дЅ•г‚‚гЃ—гЃЄгЃ„
-	@return	HRESULT	зµ‚дє†зЉ¶ж…‹г‚ігѓјгѓ‰
+/*ЃI
+	ѓEѓCѓ“ѓhѓE‚рЌмђ¬
+	@param[in]	iNowPage	ѓvѓЊѓrѓ…‚и‚Ѕ‚ў•Е”ФЌ†
+	@param[in]	bForeg		”с‚O‚И‚зЌДѓvѓЊѓrѓ…Ѓ[‚М‚Ж‚«‚ЙѓtѓHѓAѓOѓ‰ѓ“ѓh‚Й‚·‚йЃE‚O‚И‚з‚µ‚И‚ўЃEѓvѓЊѓrѓ…Ѓ[ЉJ‚ў‚Д‚И‚ў‚И‚з‰Ѕ‚а‚µ‚И‚ў
+	@return	HRESULT	ЏI—№Џу‘ФѓRЃ[ѓh
 */
 HRESULT PreviewVisibalise( INT iNowPage, BOOLEAN bForeg )
 {
@@ -285,26 +285,26 @@ HRESULT PreviewVisibalise( INT iNowPage, BOOLEAN bForeg )
 	CComQIPtr<IHTMLElement2>	pElement2;
 #endif
 
-	if( ghPrevWnd )	//	е·ІгЃ«PreviewзЄ“жњ‰гЃЈгЃџг‚‰
+	if( ghPrevWnd )	//	›Я‚ЙPreview‘‹—L‚Б‚Ѕ‚з
 	{
 	//	SendMessage( ghToolWnd, TB_CHECKBUTTON, IDM_PVW_ALLVW, FALSE );
 
-#pragma message ("е…Ёгѓ—гѓ¬ж›ёжЏ›ж™‚гЃ«гЂЃг‚№г‚Їгѓ­гѓјгѓ«гѓђгѓјгЃ®дЅЌзЅ®и¦љгЃ€гЃ¦гЃЉгЃ„гЃ¦гЂЃгЃќгЃ“гЃѕгЃ§ScrollгЃ•гЃ›г‚‹пјџ")
+#pragma message ("‘SѓvѓЊЏ‘Љ·Ћћ‚ЙЃAѓXѓNѓЌЃ[ѓ‹ѓoЃ[‚М€К’uЉo‚¦‚Д‚Ё‚ў‚ДЃA‚»‚±‚Ь‚ЕScroll‚і‚№‚йЃH")
 
 #ifdef REDRAW_ATSCROLL
-		gpWebBrowser2->get_Height( &height );	//	е¤ље€†г‚ігѓігѓќгѓјгѓЌгѓігѓ€гЃ®й«гЃ•
+		gpWebBrowser2->get_Height( &height );	//	‘Ѕ•ЄѓRѓ“ѓ|Ѓ[ѓlѓ“ѓg‚МЌ‚‚і
 
 		gpDocument2->get_body( &pElement );
 		pElement.QueryInterface( &pElement2 );
 		pElement.Release(  );
 
-		pElement2->get_scrollHeight( &offhei );	//	е…ЁдЅ“гЃ®й«гЃ•
-		pElement2->get_scrollTop( &scrtop );	//	иЎЁз¤єдЅЌзЅ®гЃ®г‚№г‚Їгѓ­гѓјгѓ«й‡Џ
+		pElement2->get_scrollHeight( &offhei );	//	‘S‘М‚МЌ‚‚і
+		pElement2->get_scrollTop( &scrtop );	//	•\Ћ¦€К’u‚МѓXѓNѓЌЃ[ѓ‹—К
 		pElement2.Release(  );
 
 #endif
 
-		//	е†…е®№ж›ёгЃЌжЏ›гЃ€
+		//	“а—eЏ‘‚«Љ·‚¦
 		if( 0 > giViewMode ){	PreviewPageWrite(  -1 );	}
 		else{	PreviewPageWrite( iNowPage );	}
 
@@ -315,9 +315,9 @@ HRESULT PreviewVisibalise( INT iNowPage, BOOLEAN bForeg )
 		pElement.QueryInterface( &pElement2 );
 		pElement.Release(  );
 
-		pElement2->get_scrollHeight( &offhei );	//	е…ЁдЅ“гЃ®й«гЃ•
+		pElement2->get_scrollHeight( &offhei );	//	‘S‘М‚МЌ‚‚і
 
-		pElement2->put_scrollTop(  scrtop );	//	иЎЁз¤єдЅЌзЅ®гЃ®г‚№г‚Їгѓ­гѓјгѓ«й‡Џ
+		pElement2->put_scrollTop(  scrtop );	//	•\Ћ¦€К’u‚МѓXѓNѓЌЃ[ѓ‹—К
 		pElement2.Release(  );
 #endif
 
@@ -328,12 +328,12 @@ HRESULT PreviewVisibalise( INT iNowPage, BOOLEAN bForeg )
 		return S_FALSE;
 	}
 
-	//	гѓ—гѓ¬гѓ“гѓҐгѓјй–‹гЃ„гЃ¦гЃЄгЃ„гЃЁгЃЌгЃ«гЂЃйќћгѓ•г‚©г‚ўг‚°гѓ©гѓігѓ‰гЃЄг‚‰дЅ•г‚‚гЃ—гЃЄгЃ„
+	//	ѓvѓЊѓrѓ…Ѓ[ЉJ‚ў‚Д‚И‚ў‚Ж‚«‚ЙЃA”сѓtѓHѓAѓOѓ‰ѓ“ѓh‚И‚з‰Ѕ‚а‚µ‚И‚ў
 	if( !(bForeg) ){	return  E_ABORT;	}
 
 
 	InitWindowPos( INIT_LOAD, WDP_PREVIEW, &rect );
-	if( 0 >= rect.right || 0 >= rect.bottom )	//	е№…й«гЃ•гЃЊпјђгЃЇгѓ‡гѓјг‚їз„ЎгЃ—
+	if( 0 >= rect.right || 0 >= rect.bottom )	//	•ќЌ‚‚і‚Є‚O‚НѓfЃ[ѓ^–і‚µ
 	{
 		hWnd = GetDesktopWindow( );
 		GetWindowRect( hWnd, &rect );
@@ -341,20 +341,20 @@ HRESULT PreviewVisibalise( INT iNowPage, BOOLEAN bForeg )
 		rect.top    = ( rect.bottom - PVW_HEIGHT ) / 2;
 		rect.right  = PVW_WIDTH;
 		rect.bottom = PVW_HEIGHT;
-		InitWindowPos( INIT_SAVE , WDP_PREVIEW, &rect );	//	иµ·е‹•ж™‚дїќе­
+		InitWindowPos( INIT_SAVE , WDP_PREVIEW, &rect );	//	‹N“®Ћћ•Ы‘¶
 	}
 
 
-	ghPrevWnd = CreateWindowEx( WS_EX_TOOLWINDOW, DOC_PREVIEW_CLASS, TEXT("IEг‚ігѓігѓќгѓјгѓЌгѓігѓ€гЃ«г‚€г‚‹гѓ—гѓ¬гѓ“гѓҐгѓј"),
+	ghPrevWnd = CreateWindowEx( WS_EX_TOOLWINDOW, DOC_PREVIEW_CLASS, TEXT("IEѓRѓ“ѓ|Ѓ[ѓlѓ“ѓg‚Й‚ж‚йѓvѓЊѓrѓ…Ѓ["),
 		WS_POPUP | WS_THICKFRAME | WS_CAPTION | WS_VISIBLE | WS_SYSMENU,
 		rect.left, rect.top, rect.right, rect.bottom, NULL, NULL, ghInst, NULL );
 
-	//гѓ„гѓјгѓ«гѓђгѓјдЅњг‚‹
+	//ѓcЃ[ѓ‹ѓoЃ[Ќм‚й
 	ghToolWnd = CreateWindowEx( 0, TOOLBARCLASSNAME, TEXT("toolbar"),
 		WS_CHILD | WS_VISIBLE | TBSTYLE_FLAT | TBSTYLE_LIST | TBSTYLE_TOOLTIPS | CCS_NODIVIDER,
 		0, 0, 0, 0, ghPrevWnd, (HMENU)IDW_PVW_TOOL_BAR, ghInst, NULL );
 
-	//	и‡Єе‹•гѓ„гѓјгѓ«гѓЃгѓѓгѓ—г‚№г‚їг‚¤гѓ«г‚’иїЅеЉ 
+	//	Ћ©“®ѓcЃ[ѓ‹ѓ`ѓbѓvѓXѓ^ѓCѓ‹‚р’З‰Б
 	SendMessage( ghToolWnd, TB_SETEXTENDEDSTYLE, 0, TBSTYLE_EX_MIXEDBUTTONS );
 
 	SendMessage( ghToolWnd, TB_SETIMAGELIST, 0, (LPARAM)ghPrevwImgLst );
@@ -362,15 +362,15 @@ HRESULT PreviewVisibalise( INT iNowPage, BOOLEAN bForeg )
 	SendMessage( ghToolWnd, TB_SETBUTTONSIZE, 0, MAKELPARAM(16,16) );
 
 	SendMessage( ghToolWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0 );
-	//	гѓ„гѓјгѓ«гѓЃгѓѓгѓ—ж–‡е­—е€—г‚’иЁ­е®љгѓ»гѓњг‚їгѓігѓ†г‚­г‚№гѓ€гЃЊгѓ„гѓјгѓ«гѓЃгѓѓгѓ—гЃ«гЃЄг‚‹
-	StringCchCopy( atBuffer, MAX_STRING, TEXT("е…Ёгѓ—гѓ¬гѓ“гѓҐгѓјг‚№г‚їг‚¤гѓ«") );	gstTBInfo[0].iString = SendMessage( ghToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuffer );
+	//	ѓcЃ[ѓ‹ѓ`ѓbѓv•¶Ћљ—с‚рђЭ’иЃEѓ{ѓ^ѓ“ѓeѓLѓXѓg‚ЄѓcЃ[ѓ‹ѓ`ѓbѓv‚Й‚И‚й
+	StringCchCopy( atBuffer, MAX_STRING, TEXT("‘SѓvѓЊѓrѓ…Ѓ[ѓXѓ^ѓCѓ‹") );	gstTBInfo[0].iString = SendMessage( ghToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuffer );
 
-	SendMessage( ghToolWnd , TB_ADDBUTTONS, (WPARAM)TB_ITEMS, (LPARAM)&gstTBInfo );	//	гѓ„гѓјгѓ«гѓђгѓјгЃ«гѓњг‚їгѓіг‚’жЊїе…Ґ
+	SendMessage( ghToolWnd , TB_ADDBUTTONS, (WPARAM)TB_ITEMS, (LPARAM)&gstTBInfo );	//	ѓcЃ[ѓ‹ѓoЃ[‚Йѓ{ѓ^ѓ“‚р‘}“ь
 
-	SendMessage( ghToolWnd , TB_AUTOSIZE, 0, 0 );	//	гѓњг‚їгѓігЃ®г‚µг‚¤г‚єгЃ«еђ€г‚ЏгЃ›гЃ¦гѓ„гѓјгѓ«гѓђгѓјг‚’гѓЄг‚µг‚¤г‚є
-	InvalidateRect( ghToolWnd , NULL, TRUE );		//	г‚Їгѓ©г‚¤г‚ўгѓігѓ€е…ЁдЅ“г‚’е†ЌжЏЏз”»гЃ™г‚‹е‘Ѕд»¤
+	SendMessage( ghToolWnd , TB_AUTOSIZE, 0, 0 );	//	ѓ{ѓ^ѓ“‚МѓTѓCѓY‚ЙЌ‡‚н‚№‚ДѓcЃ[ѓ‹ѓoЃ[‚рѓЉѓTѓCѓY
+	InvalidateRect( ghToolWnd , NULL, TRUE );		//	ѓNѓ‰ѓCѓAѓ“ѓg‘S‘М‚рЌД•`‰ж‚·‚й–Ѕ—Я
 
-	//	гѓ„гѓјгѓ«гѓђгѓјг‚µгѓ–г‚Їгѓ©г‚№еЊ–гЃЊеї…и¦Ѓ
+	//	ѓcЃ[ѓ‹ѓoЃ[ѓTѓuѓNѓ‰ѓX‰»‚Є•K—v
 
 	GetWindowRect( ghToolWnd, &tbRect );
 	tbRect.right  -= tbRect.left;
@@ -388,10 +388,10 @@ HRESULT PreviewVisibalise( INT iNowPage, BOOLEAN bForeg )
 		WS_CHILD | WS_VISIBLE, rect.left, rect.top, rect.right, rect.bottom,
 		ghPrevWnd, (HMENU)IDW_PVW_VIEW_WNDW, ghInst, NULL );
 
-	//	ActiveXг‚ігѓігѓ€гѓ­гѓјгѓ«гЃ®г‚¤гѓіг‚їгѓјгѓ•г‚§гѓјг‚№г‚’и¦Ѓж±‚
+	//	ActiveXѓRѓ“ѓgѓЌЃ[ѓ‹‚МѓCѓ“ѓ^Ѓ[ѓtѓFЃ[ѓX‚р—v‹Ѓ
 	if( SUCCEEDED( AtlAxGetControl( ghIEwnd, &comPunkIE ) ) )
 	{
-		gpWebBrowser2 = comPunkIE;	//	гѓќг‚¤гѓіг‚їгЃ«ж јзґЌ
+		gpWebBrowser2 = comPunkIE;	//	ѓ|ѓCѓ“ѓ^‚ЙЉi”[
 
 		if( gpWebBrowser2 )
 		{
@@ -410,7 +410,7 @@ HRESULT PreviewVisibalise( INT iNowPage, BOOLEAN bForeg )
 		}
 		else
 		{
-			NotifyBalloonExist( TEXT("пј©пјҐг‚ігѓігѓќгѓјгѓЌгѓігѓ€г‚’е€ќжњџеЊ–е‡єжќҐгЃЄгЃ‹гЃЈгЃџг‚€гѓ»гѓ»гѓ»"), TEXT("гЃЉз‡ђгЃ‹г‚‰гЃ®гЃЉзџҐг‚‰гЃ›"), NIIF_ERROR );
+			NotifyBalloonExist( TEXT("‚h‚dѓRѓ“ѓ|Ѓ[ѓlѓ“ѓg‚рЏ‰Љъ‰»Џo—€‚И‚©‚Б‚Ѕ‚жЃEЃEЃE"), TEXT("‚Ё—У‚©‚з‚М‚Ё’m‚з‚№"), NIIF_ERROR );
 			hRslt = E_ACCESSDENIED;
 		}
 	}
@@ -425,13 +425,13 @@ HRESULT PreviewVisibalise( INT iNowPage, BOOLEAN bForeg )
 
 
 /*!
-	г‚¦г‚¤гѓігѓ‰г‚¦гѓ—гѓ­г‚·гѓјг‚ёгѓЈ
-	@param[in]	hWnd	и¦Єг‚¦г‚¤гѓігѓ‰г‚¦гЃ®гѓЏгѓігѓ‰гѓ«
-	@param[in]	message	г‚¦г‚¤гѓігѓ‰г‚¦гѓЎгѓѓг‚»гѓјг‚ёгЃ®и­е€Ґз•ЄеЏ·
-	@param[in]	wParam	иїЅеЉ гЃ®жѓ…е ±пј‘
-	@param[in]	lParam	иїЅеЉ гЃ®жѓ…е ±пј’
-	@retval 0	гѓЎгѓѓг‚»гѓјг‚ёе‡¦зђ†жё€гЃї
-	@retval no0	гЃ“гЃ“гЃ§гЃЇе‡¦зђ†гЃ›гЃљж¬ЎгЃ«е›ћгЃ™
+	ѓEѓCѓ“ѓhѓEѓvѓЌѓVЃ[ѓWѓѓ
+	@param[in]	hWnd	ђeѓEѓCѓ“ѓhѓE‚Мѓnѓ“ѓhѓ‹
+	@param[in]	message	ѓEѓCѓ“ѓhѓEѓЃѓbѓZЃ[ѓW‚МЋЇ•К”ФЌ†
+	@param[in]	wParam	’З‰Б‚МЏо•с‚P
+	@param[in]	lParam	’З‰Б‚МЏо•с‚Q
+	@retval 0	ѓЃѓbѓZЃ[ѓWЏ€—ќЌП‚Э
+	@retval no0	‚±‚±‚Е‚НЏ€—ќ‚№‚ёЋџ‚Й‰с‚·
 */
 LRESULT CALLBACK PreviewWndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
@@ -450,12 +450,12 @@ LRESULT CALLBACK PreviewWndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	COMMANDгѓЎгѓѓг‚»гѓјг‚ёгЃ®еЏ—гЃ‘еЏ–г‚ЉгЂ‚гѓњг‚їгѓіжЉјгЃ•г‚ЊгЃџгЃЁгЃ‹гЃ§з™єз”џ
-	@param[in]	hWnd		г‚¦г‚¤гѓігѓ‰г‚¦гѓЏгѓігѓ‰гѓ«
-	@param[in]	id			гѓЎгѓѓг‚»гѓјг‚ёг‚’з™єз”џгЃ•гЃ›гЃџе­ђг‚¦г‚¤гѓігѓ‰г‚¦гЃ®и­е€Ґе­ђ	LOWORD(wParam)
-	@param[in]	hWndCtl		гѓЎгѓѓг‚»гѓјг‚ёг‚’з™єз”џгЃ•гЃ›гЃџе­ђг‚¦г‚¤гѓігѓ‰г‚¦гЃ®гѓЏгѓігѓ‰гѓ«	lParam
-	@param[in]	codeNotify	йЂљзџҐгѓЎгѓѓг‚»гѓјг‚ё	HIWORD(wParam)
-	@return		гЃЄгЃ—
+	COMMANDѓЃѓbѓZЃ[ѓW‚МЋу‚ЇЋж‚иЃBѓ{ѓ^ѓ“‰џ‚і‚к‚Ѕ‚Ж‚©‚Е”­ђ¶
+	@param[in]	hWnd		ѓEѓCѓ“ѓhѓEѓnѓ“ѓhѓ‹
+	@param[in]	id			ѓЃѓbѓZЃ[ѓW‚р”­ђ¶‚і‚№‚ЅЋqѓEѓCѓ“ѓhѓE‚МЋЇ•КЋq	LOWORD(wParam)
+	@param[in]	hWndCtl		ѓЃѓbѓZЃ[ѓW‚р”­ђ¶‚і‚№‚ЅЋqѓEѓCѓ“ѓhѓE‚Мѓnѓ“ѓhѓ‹	lParam
+	@param[in]	codeNotify	’К’mѓЃѓbѓZЃ[ѓW	HIWORD(wParam)
+	@return		‚И‚µ
 */
 VOID Pvw_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 {
@@ -463,7 +463,7 @@ VOID Pvw_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 
 	switch( id )
 	{
-		case IDM_PVW_ALLVW:	//	е…Ёгѓ—гѓ¬ON/OFF
+		case IDM_PVW_ALLVW:	//	‘SѓvѓЊON/OFF
 			lRslt = SendMessage( ghToolWnd, TB_ISBUTTONCHECKED, IDM_PVW_ALLVW, 0 );
 			if( lRslt )	PreviewPageWrite(  -1 );
 			else		PreviewPageWrite( gixFocusPage );
@@ -478,11 +478,11 @@ VOID Pvw_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	г‚µг‚¤г‚єе¤‰ж›ґгЃ•г‚ЊгЃџ
-	@param[in]	hWnd	г‚¦г‚¤гѓігѓ‰г‚¦гѓЏгѓігѓ‰гѓ«
-	@param[in]	state	гЃЄгЃ«гЃ‹гЃ®зЉ¶ж…‹
-	@param[in]	cx		е¤‰ж›ґгЃ•г‚ЊгЃџг‚Їгѓ©г‚¤гѓ¤гѓігѓ€е№…
-	@param[in]	cy		е¤‰ж›ґгЃ•г‚ЊгЃџг‚Їгѓ©г‚¤гѓ¤гѓігѓ€й«гЃ•
+	ѓTѓCѓY•ПЌX‚і‚к‚Ѕ
+	@param[in]	hWnd	ѓEѓCѓ“ѓhѓEѓnѓ“ѓhѓ‹
+	@param[in]	state	‚И‚Й‚©‚МЏу‘Ф
+	@param[in]	cx		•ПЌX‚і‚к‚ЅѓNѓ‰ѓCѓ„ѓ“ѓg•ќ
+	@param[in]	cy		•ПЌX‚і‚к‚ЅѓNѓ‰ѓCѓ„ѓ“ѓgЌ‚‚і
 */
 VOID Pvw_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 {
@@ -491,7 +491,7 @@ VOID Pvw_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 
 	hWorkWnd = GetDlgItem( hWnd, IDW_PVW_TOOL_BAR );
 
-	MoveWindow( hWorkWnd, 0, 0, 0, 0, TRUE );	//	гѓ„гѓјгѓ«гѓђгѓјгЃЇж•°еЂ¤гЃЄгЃЏгЃ¦г‚‚е‹ќж‰‹гЃ«еђ€г‚ЏгЃ›гЃ¦гЃЏг‚Њг‚‹
+	MoveWindow( hWorkWnd, 0, 0, 0, 0, TRUE );	//	ѓcЃ[ѓ‹ѓoЃ[‚Нђ”’l‚И‚­‚Д‚аЏџЋи‚ЙЌ‡‚н‚№‚Д‚­‚к‚й
 
 	GetWindowRect( hWorkWnd, &tbRect );
 	tbRect.right  -= tbRect.left;
@@ -512,9 +512,9 @@ VOID Pvw_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	PAINTгЂ‚з„ЎеЉ№й еџџгЃЊе‡єжќҐгЃџгЃЁгЃЌгЃ«з™єз”џгЂ‚иѓЊж™ЇгЃ®ж‰±гЃ„гЃ«жіЁж„ЏгЂ‚иѓЊж™Їг‚’еЎ—г‚ЉгЃ¤гЃ¶гЃ—гЃ¦гЃ‹г‚‰гЂЃг‚Єгѓ–г‚ёг‚§г‚Їгѓ€г‚’жЏЏз”»
-	@param[in]	hWnd	и¦Єг‚¦г‚¤гѓігѓ‰г‚¦гЃ®гѓЏгѓігѓ‰гѓ«
-	@return		з„ЎгЃ—
+	PAINTЃB–іЊш—М€ж‚ЄЏo—€‚Ѕ‚Ж‚«‚Й”­ђ¶ЃB”wЊi‚М€µ‚ў‚Й’Ќ€УЃB”wЊi‚р“h‚и‚В‚Ф‚µ‚Д‚©‚зЃAѓIѓuѓWѓFѓNѓg‚р•`‰ж
+	@param[in]	hWnd	ђeѓEѓCѓ“ѓhѓE‚Мѓnѓ“ѓhѓ‹
+	@return		–і‚µ
 */
 VOID Pvw_OnPaint( HWND hWnd )
 {
@@ -530,19 +530,19 @@ VOID Pvw_OnPaint( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	г‚¦г‚¤гѓігѓ‰г‚¦г‚’й–‰гЃг‚‹гЃЁгЃЌгЃ«з™єз”џгЂ‚гѓ‡гѓђг‚¤г‚№г‚ігѓігѓ†г‚­г‚№гѓ€гЃЁгЃ‹зўєдїќгЃ—гЃџз”»йќўж§‹йЂ гЃ®гѓЎгѓўгѓЄгЃЁгЃ‹г‚‚зµ‚дє†гЂ‚
-	@param[in]	hWnd	и¦Єг‚¦г‚¤гѓігѓ‰г‚¦гЃ®гѓЏгѓігѓ‰гѓ«
-	@return		з„ЎгЃ—
+	ѓEѓCѓ“ѓhѓE‚р•В‚¶‚й‚Ж‚«‚Й”­ђ¶ЃBѓfѓoѓCѓXѓRѓ“ѓeѓLѓXѓg‚Ж‚©Љm•Ы‚µ‚Ѕ‰ж–КЌ\‘ў‚МѓЃѓ‚ѓЉ‚Ж‚©‚аЏI—№ЃB
+	@param[in]	hWnd	ђeѓEѓCѓ“ѓhѓE‚Мѓnѓ“ѓhѓ‹
+	@return		–і‚µ
 */
 VOID Pvw_OnDestroy( HWND hWnd )
 {
 	RECT	rect;
 
-	//	г‚¦г‚¤гѓігѓ‰г‚¦дЅЌзЅ®г‚‚иЁйЊІ
+	//	ѓEѓCѓ“ѓhѓE€К’u‚а‹L^
 	GetWindowRect( ghPrevWnd, &rect );
 	rect.right  -= rect.left;
 	rect.bottom -= rect.top;
-	InitWindowPos( INIT_SAVE , WDP_PREVIEW, &rect );	//	зµ‚дє†ж™‚дїќе­
+	InitWindowPos( INIT_SAVE , WDP_PREVIEW, &rect );	//	ЏI—№Ћћ•Ы‘¶
 
 	ghPrevWnd = NULL;
 
@@ -557,8 +557,8 @@ VOID Pvw_OnDestroy( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	й Ѓг‚’иЎЁз¤єгЃ™г‚‹
-	@param[in]	iViewPage	й Ѓз•ЄеЏ·гѓ»пјЌпј‘гЃЄг‚‰е…Ёй Ѓ
+	•Е‚р•\Ћ¦‚·‚й
+	@param[in]	iViewPage	•Е”ФЌ†ЃEЃ|‚P‚И‚з‘S•Е
 */
 HRESULT PreviewPageWrite( INT iViewPage )
 {
@@ -585,18 +585,18 @@ HRESULT PreviewPageWrite( INT iViewPage )
 
 	if( !(gpcHtmlHdr) )
 	{
-		NotifyBalloonExist( TEXT("гѓ—гѓ¬гѓ“гѓҐгѓјз”Ёгѓ†гѓігѓ—гѓ¬гѓјгѓ€гѓ•г‚Ўг‚¤гѓ«гЃЊи¦‹гЃ¤гЃ‹г‚‰гЃЄгЃ„г‚€"), TEXT("гЃЉз‡ђгЃ‹г‚‰гЃ®гЃЉзџҐг‚‰гЃ›"), NIIF_ERROR );
+		NotifyBalloonExist( TEXT("ѓvѓЊѓrѓ…Ѓ[—pѓeѓ“ѓvѓЊЃ[ѓgѓtѓ@ѓCѓ‹‚ЄЊ©‚В‚©‚з‚И‚ў‚ж"), TEXT("‚Ё—У‚©‚з‚М‚Ё’m‚з‚№"), NIIF_ERROR );
 		return E_HANDLE;
 	}
 
-	//	иЎЁз¤єе†…е®№г‚’пјіпјЄпј©пјігЃ§гЃ¤гЃЏг‚‹
+	//	•\Ћ¦“а—e‚р‚r‚i‚h‚r‚Е‚В‚­‚й
 	GetLocalTime( &stTime );
 
-	if( 0 >  iViewPage )	//	е…Ёгѓ—гѓ¬
+	if( 0 >  iViewPage )	//	‘SѓvѓЊ
 	{
 		asString  = string( gpcHtmlHdr );
 
-		iPage = DocNowFilePageCount(  );	//	й Ѓж•°зўєиЄЌгЃ—гЃ¦
+		iPage = DocNowFilePageCount(  );	//	•Еђ”Љm”F‚µ‚Д
 		for( i = 0; iPage > i; i++ )
 		{
 			StringCchPrintfA( acSeper, MAX_STRING, gacResHeaderFmt, (i+1),
@@ -633,14 +633,14 @@ HRESULT PreviewPageWrite( INT iViewPage )
 		FREE(pcContent);
 	}
 
-	//	BSTRгЃ«еї…и¦ЃгЃЄг‚µг‚¤г‚єзўєиЄЌ
+	//	BSTR‚Й•K—v‚ИѓTѓCѓYЉm”F
 	szSize = asString.size( );
 	bstrLen = MultiByteToWideChar( CP_ACP, 0, asString.c_str( ), szSize, NULL, 0 );
 
-	//	гѓђгѓѓгѓ•г‚Ўг‚’зўєдїќ
+	//	ѓoѓbѓtѓ@‚рЉm•Ы
 	bstr = SysAllocStringLen( NULL, bstrLen );
 
-	//	BSTRгЃ«гѓ–гѓЃгЃ“г‚Ђ
+	//	BSTR‚Йѓuѓ`‚±‚Ю
 	MultiByteToWideChar( CP_ACP, 0, asString.c_str( ), szSize, bstr, bstrLen );
 
 	sfArray = SafeArrayCreateVector( VT_VARIANT, 0, 1 );

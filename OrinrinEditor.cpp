@@ -1,6 +1,6 @@
-﻿/*! @file
-	@brief アプリケーションのエントリ ポイントを定義します。
-	このファイルは OrinrinEditor.cpp です。
+/*! @file
+	@brief �A�v���P�[�V�����̃G���g�� �|�C���g���`���܂��B
+	���̃t�@�C���� OrinrinEditor.cpp �ł��B
 	@author	SikigamiHNQ
 	@date	2011/05/10
 */
@@ -15,65 +15,65 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with this program.
 If not, see <http://www.gnu.org/licenses/>.
 */
-//	大日本帝国公用語は↓を見られたい
+//	����{�鍑���p��́�������ꂽ��
 //-------------------------------------------------------------------------------------------------
 
-//	注意・コマンドのリソースＩＤ番号は変更不可！
+//	���ӁE�R�}���h�̃��\�[�X�h�c�ԍ��͕ύX�s�I
 
 
-//	TODO:	BIG_TEXT_SEPARATE	頁区切りのないTXTかどうかを確認する・もしそうなら適当なところで分ける
-//			ASTでないなら内容確認して、区切りがあるかどうか確認。１００行以上あり、かつ区切りがないなら、巨大テキストとみなす
-//			この場合は、巨大ファイルなので分割読込するか、やめるかにする。
-//			同じ所に、ｔｘｔをｍｌｔにしてファイルつくって、そこに出力し直して、これを開き直す？
-//			４０行以上かつ４行以上の空白改行があれば、そこで分割する
+//	TODO:	BIG_TEXT_SEPARATE	�ŋ�؂�̂Ȃ�TXT���ǂ������m�F����E���������Ȃ�K���ȂƂ���ŕ�����
+//			AST�łȂ��Ȃ���e�m�F���āA��؂肪���邩�ǂ����m�F�B�P�O�O�s�ȏ゠��A����؂肪�Ȃ��Ȃ�A����e�L�X�g�Ƃ݂Ȃ�
+//			���̏ꍇ�́A����t�@�C���Ȃ̂ŕ����Ǎ����邩�A��߂邩�ɂ���B
+//			�������ɁA���������������ɂ��ăt�@�C�������āA�����ɏo�͂������āA������J�������H
+//			�S�O�s�ȏォ�S�s�ȏ�̋󔒉��s������΁A�����ŕ�������
 
 
 
 
 
-//	TODO:	カーソル位置から左右を入れ替える。左右配置に使う。
-//改行のみの行で囲まれた範囲を対象。
+//	TODO:	�J�[�\���ʒu���獶�E�����ւ���B���E�z�u�Ɏg���B
+//���s�݂̂̍s�ň͂܂ꂽ�͈͂�ΏہB
 
-//	TODO:	ＯＫ？	保存したときのバルーンメッセージもON/OFFできるように
-//	TODO:	ＯＫ？	MLTの副タブ、多段とスクロール、選択出来るように
-//	TODO:	ＯＫ？	MLTの副タブ、ダブルクリックで名称変更が出せるように
+//	TODO:	�n�j�H	�ۑ������Ƃ��̃o���[�����b�Z�[�W��ON/OFF�ł���悤��
+//	TODO:	�n�j�H	MLT�̕��^�u�A���i�ƃX�N���[���A�I���o����悤��
+//	TODO:	�n�j�H	MLT�̕��^�u�A�_�u���N���b�N�Ŗ��̕ύX���o����悤��
 
-//	TODO:	ＯＫ？	MAAファイルのコマの削除処理作ってる	MaaItems.cpp
-//	TODO:	ＯＫ？	MAA表示中のヤツから文字列検索する機能
-//	TODO:	ＯＫ？	ドラフト・サムネのサイズ変更機能
-//	TODO:	ＯＫ？	最大化したり画面サイズかえると、右の頁一覧が見えなくなる
-//	TODO:	ＯＫ？	最大化して終わる＞起動して、最大化解除すると、メインスプリットバーが見えなくなる//右にイッちゃってるまま
+//	TODO:	�n�j�H	MAA�t�@�C���̃R�}�̍폜��������Ă�	MaaItems.cpp
+//	TODO:	�n�j�H	MAA�\�����̃��c���當���񌟍�����@�\
+//	TODO:	�n�j�H	�h���t�g�E�T���l�̃T�C�Y�ύX�@�\
+//	TODO:	�n�j�H	�ő剻�������ʃT�C�Y������ƁA�E�̕ňꗗ�������Ȃ��Ȃ�
+//	TODO:	�n�j�H	�ő剻���ďI��遄�N�����āA�ő剻��������ƁA���C���X�v���b�g�o�[�������Ȃ��Ȃ�//�E�ɃC�b������Ă�܂�
 
-//	TODO:	ＯＫ？	位置情報のリセット機能・システムメニューに搭載する
-//	TODO:	ＯＫ？	メインスプリットバーの位置情報リセットが居るかも
+//	TODO:	�n�j�H	�ʒu���̃��Z�b�g�@�\�E�V�X�e�����j���[�ɓ��ڂ���
+//	TODO:	�n�j�H	���C���X�v���b�g�o�[�̈ʒu��񃊃Z�b�g�����邩��
 
-//	TODO:	ＯＫ？	本文の途中から左右にずらす機能。キャレット位置を基準に、そこから右を、左右にずらす。
-//			もしくは選択範囲のみ。開始位置に注意
-//			まんなかの空白を伸び縮みさせる感じか
+//	TODO:	�n�j�H	�{���̓r�����獶�E�ɂ��炷�@�\�B�L�����b�g�ʒu����ɁA��������E���A���E�ɂ��炷�B
+//			�������͑I��͈͂̂݁B�J�n�ʒu�ɒ���
+//			�܂�Ȃ��̋󔒂�L�яk�݂����銴����
 //	#ifdef DOT_SPLIT_MODE
 
 
-//	TODO:	ＯＫ？	MAA窓で、この欄で右クリックし「ここにアイテムを追加」でAAを追加した際、
-//			そのmltの他AA全ての末尾に改行が何個か勝手に追加される
+//	TODO:	�n�j�H	MAA���ŁA���̗��ŉE�N���b�N���u�����ɃA�C�e����ǉ��v��AA��ǉ������ہA
+//			����mlt�̑�AA�S�Ă̖����ɉ��s����������ɒǉ������
 
 
-//本文検索、Ｆ３で表示更新？
+//�{�������A�e�R�ŕ\���X�V�H
 
 
-//	TODO:	起動中に外部からのコマンドでもう一つファイルを開けるようにできない？
-//プロセスがあるときに「"～\OrinrinEditor.exe" "～.mlt"」というコマンドラインが実行されると
-//エラーが出て、こういう場合に起動中の別タブに読み込むか、もう一つ別に立ち上がって欲しい
-//今の仕様だと、関連付けでエディターとして登録してもファイルからは一つしか開けないし、
-//Ayaya ViewerやMLTViewで外部編集プログラムとして登録しても起動中だと使用できないので、
-//投下用ASTの編集と作品用自分まとめMLTのメンテナンスが不便ですので。
+//	TODO:	�N�����ɊO������̃R�}���h�ł�����t�@�C�����J����悤�ɂł��Ȃ��H
+//�v���Z�X������Ƃ��Ɂu"�`\OrinrinEditor.exe" "�`.mlt"�v�Ƃ����R�}���h���C�������s������
+//�G���[���o�āA���������ꍇ�ɋN�����̕ʃ^�u�ɓǂݍ��ނ��A������ʂɗ����オ���ė~����
+//���̎d�l���ƁA�֘A�t���ŃG�f�B�^�[�Ƃ��ēo�^���Ă��t�@�C������͈�����J���Ȃ����A
+//Ayaya Viewer��MLTView�ŊO���ҏW�v���O�����Ƃ��ēo�^���Ă��N�������Ǝg�p�ł��Ȃ��̂ŁA
+//�����pAST�̕ҏW�ƍ�i�p�����܂Ƃ�MLT�̃����e�i���X���s�ւł��̂ŁB
 
-//ノート（1280*800）と外付け（1920*1080）の2画面構成でノートを
-//メインディスプレイにしたときサブディスプレイで文字AA変換ボックス、
-//縦書き変換ボックスを表示するとメインディスプレイ側の移動できない位置に
-//ボックスが表示され使えなくなります。
+//�m�[�g�i1280*800�j�ƊO�t���i1920*1080�j��2��ʍ\���Ńm�[�g��
+//���C���f�B�X�v���C�ɂ����Ƃ��T�u�f�B�X�v���C�ŕ���AA�ϊ��{�b�N�X�A
+//�c�����ϊ��{�b�N�X��\������ƃ��C���f�B�X�v���C���̈ړ��ł��Ȃ��ʒu��
+//�{�b�N�X���\������g���Ȃ��Ȃ�܂��B
 
-//それとエディタの横幅を狭めた時にブラシなどが表示されているパレットが
-//移動されず消えてしまうのでそちらも表示され続ける設定ができるようにお願いします
+//����ƃG�f�B�^�̉��������߂����Ƀu���V�Ȃǂ��\������Ă���p���b�g��
+//�ړ����ꂸ�����Ă��܂��̂ł�������\�����ꑱ����ݒ肪�ł���悤�ɂ��肢���܂�
 
 //MonitorFromPoint
 //multimon.h
@@ -81,480 +81,480 @@ If not, see <http://www.gnu.org/licenses/>.
 //GetSystemMetrics(SM_CMONITORS)
 
 
-//直したのでチェキせよ
-//	TODO:	追加されるページセパレーターが「[AA][[AA][<追加時に入力したページタイトル>]<改行>]」ってなるみたい。
-//	TODO:	頁切り替えた時、最後の頁のところまで頁一覧をスクロール
+//�������̂Ń`�F�L����
+//	TODO:	�ǉ������y�[�W�Z�p���[�^�[���u[AA][[AA][<�ǉ����ɓ��͂����y�[�W�^�C�g��>]<���s>]�v���ĂȂ�݂����B
+//	TODO:	�Ő؂�ւ������A�Ō�̕ł̂Ƃ���܂ŕňꗗ���X�N���[��
 
 
-//	TODO:	ディレイロード・Ctrl Shift D の動作は問題無いか
+//	TODO:	�f�B���C���[�h�ECtrl Shift D �̓���͖�薳����
 
-//	TODO:	保存時の拡張子指定選択・オート、MLT、AST＜TXTを使わなければそれでいい感じ
-//	TODO:	全文字の幅を先に計算しておけば速いかもだ＜さして影響ないかもだ
+//	TODO:	�ۑ����̊g���q�w��I���E�I�[�g�AMLT�AAST��TXT���g��Ȃ���΂���ł�������
+//	TODO:	�S�����̕����Ɍv�Z���Ă����Α����������������ĉe���Ȃ�������
 
-//	TODO:	最小化から復帰すると、MAA非表示でも表示になっちゃう
-//	メイン窓のWM_ACTIVATEに来る前に表示されてる？MAA窓のACTIVATEを捕まえる必要があるか
-//	なぜか一瞬見える。どのタイミングか？
+//	TODO:	�ŏ������畜�A����ƁAMAA��\���ł��\���ɂȂ����Ⴄ
+//	���C������WM_ACTIVATE�ɗ���O�ɕ\������Ă�HMAA����ACTIVATE��߂܂���K�v�����邩
+//	�Ȃ�����u������B�ǂ̃^�C�~���O���H
 
-//	TODO:	汎用ＡＡディレクトリにジャンプできるように、とか・ブックマーク機能？
+//	TODO:	�ėp�`�`�f�B���N�g���ɃW�����v�ł���悤�ɁA�Ƃ��E�u�b�N�}�[�N�@�\�H
 
-//	TODO:	右揃え線の文字変更できない？
+//	TODO:	�E�������̕����ύX�ł��Ȃ��H
 
-//	TODO:	ＭＡＡテンプレ検索ショートカットつけとく
+//	TODO:	�l�`�`�e���v�������V���[�g�J�b�g���Ƃ�
 
-//	TODO:	viewerのMLTリストアップ、チェックボックスは灰色できないか
-//			ディレクトリ内の選択非選択がややこしい
-//			ルートディレクトリの更新日時をみて、修正か新規か判断？
+//	TODO:	viewer��MLT���X�g�A�b�v�A�`�F�b�N�{�b�N�X�͊D�F�ł��Ȃ���
+//			�f�B���N�g�����̑I���I������₱����
+//			���[�g�f�B���N�g���̍X�V�������݂āA�C�����V�K�����f�H
 
-//	TODO:	MAAのＡＡ表示は高さが狭い
+//	TODO:	MAA�̂`�`�\���͍���������
 
-//	TODO:	メニューのヘルプから、説明書ASTをいつでも呼べるようになってるといい
+//	TODO:	���j���[�̃w���v����A������AST�����ł��Ăׂ�悤�ɂȂ��Ă�Ƃ���
 
-//	TODO:	最終行の枠いれると落ちる？
-
-
-
-
-//	TODO:	メインのファイルタブに、このファイル意外を閉じる機能をつける
-//	TODO:	頁一覧、選択が移動したら表示頁も追随する＜複数選択つくってから
-//	TODO:	全ピリヲドを消去する機能・ピリヲドの前後を確認して、空白であれば幅に合わせて置き換え・単独なら3dotユニコードで置き換える
-
-//	TODO:	MAAの一コマの編集機能・ファイル名工夫するかフラグで管理
-//			保存するには、そのMAAの開きを維持しておく必要がある
-
-//	TODO:	ページリストも、ばらしたとき閉じられるように
-
-//	TODO:	挿入にある色指定をカスタマイズ出来る
-
-
-//考え中
-
-//	レイヤー機能とは？
-
-//	頁削除メッセージの確認無しは、起動中だけにしたほうがいい？
-//	キーバインド・メニューに入ってない機能に注意
-//	枠編集DIALOGUE、オフセットでENTERとか直書換に対応セヨ
-//	ドッキングテンプレ、左に置けないか
-//	セーブ時メッセージON/OFFできるように
-//	ファイル履歴は、いじった順番になるようにすべき＜ＯＫ？
-//	プレビューの更新ボタンつける
-//	プレビュー開いてる時に、開く操作したら閉じる？
-
-//	デカいファイル開こうとしたときはメッセージ出すとか
-//	SQLのINSERT、prepareは重い。クエリつくって、resetしながら回すのがいいんじゃ
-//	IEプレビュー、CSSでフォント表示を正規化する http://b4t.jp/823
-
-
-
-//ファイル開くとき、ページデータは生のテキストデータだけゲットしておいて、メモリ展開はしない
-//ページが選択されたら、本体に展開して、生データは消しておく・これをフラグにする
-//保存するときは、生データか、本体データを保存する
-//頁表示のステータスのほうは？バイト数計算だけならそんなに重くない？
-
-//頁番号挿入みたいに、複数頁にわたる処理がヤバイ
-//全プレビューもヤバイ
-
-//	ファイルオーポン時にプログレス的なものを。バイト数表示のやつ。ディレイロードできれば要らないか
-
-
-//確認：Viewer側、↑↓PageUpDownつかえてるか
-
-//	ファイルを読み込むとランタイムエラーでることがある・なんか変更してから？
-//	スクロールが発生した場合、画面全体書換必要か
-
-//影響ないようにした
-//選択範囲がある状態でCtrlU＞アンドゥ＞選択範囲がおかしくなる。さらに切り取りとかすると落ちる
-//アンドゥリドゥしたら、選択範囲解除する・DocInsDelCtrl.cpp:559あたりでおかしい？
-
-//非ユニコードの埋めパターン、半角空白気にしない用にする？＜ちゅっと変更してみた
+//	TODO:	�ŏI�s�̘g�����Ɨ�����H
 
 
 
 
-//バグ
+//	TODO:	���C���̃t�@�C���^�u�ɁA���̃t�@�C���ӊO�����@�\������
+//	TODO:	�ňꗗ�A�I�����ړ�������\���ł��ǐ����遃�����I�������Ă���
+//	TODO:	�S�s�����h����������@�\�E�s�����h�̑O����m�F���āA�󔒂ł���Ε��ɍ��킹�Ēu�������E�P�ƂȂ�3dot���j�R�[�h�Œu��������
 
-//	TODO:	矩形選択範囲バイトカウントが遅い
-//	TODO:	描画更新タイミングがおかしい場合が多々ある
-//	TODO:	「矩形選択」と「部分抽出」の両方にチェックを入れた状態でドラッグするとエラー
+//	TODO:	MAA�̈�R�}�̕ҏW�@�\�E�t�@�C�����H�v���邩�t���O�ŊǗ�
+//			�ۑ�����ɂ́A����MAA�̊J�����ێ����Ă����K�v������
 
-//	TODO:	複数行テンプレ窓の主タブでホイールスクロールが効かない？フォーカスの問題か？
-//			メイン窓の編集スペース、Page List、複数行テンプレ窓のAA一覧ツリーなど、他の場所では問題ない
+//	TODO:	�y�[�W���X�g���A�΂炵���Ƃ�������悤��
 
-//	TODO:	Viewer、右クリメニューからのドラフトボードが開かない？・追加されない？
-
-
+//	TODO:	�}���ɂ���F�w����J�X�^�}�C�Y�o����
 
 
-//機能追加・変更
-//	TODO:	全頁の一括行末削除
-//	TODO:	複数機能をまとめて実行するマクロのようなもの＜プラグインでいけるか？
+//�l����
 
-//	TODO:	頁の複数選択して移動、Ｄ＆Ｄも
-//	TODO:	ALT+Nを、頁名称一括編集にする？
-//	TODO:	頁一覧を、複数選択して一発削除できるように
+//	���C���[�@�\�Ƃ́H
 
-//	TODO:	履歴から開こうとしたファイル・プロフが無かったらリストから消すべき
+//	�ō폜���b�Z�[�W�̊m�F�����́A�N���������ɂ����ق��������H
+//	�L�[�o�C���h�E���j���[�ɓ����ĂȂ��@�\�ɒ���
+//	�g�ҏWDIALOGUE�A�I�t�Z�b�g��ENTER�Ƃ��������ɑΉ��Z��
+//	�h�b�L���O�e���v���A���ɒu���Ȃ���
+//	�Z�[�u�����b�Z�[�WON/OFF�ł���悤��
+//	�t�@�C�������́A�����������ԂɂȂ�悤�ɂ��ׂ����n�j�H
+//	�v���r���[�̍X�V�{�^������
+//	�v���r���[�J���Ă鎞�ɁA�J�����삵�������H
 
-//	TODO:	フリーカーソルモード
-//	TODO:	レイヤボックス自体の操作、上書き実行とかもキボドショトカトで出来るように
-
-//	TODO:	右揃え線消し
-//	TODO:	文字の検索・痴漢機能	ユニコード空白一括検索とか
-//	TODO:	ファイルを開き直す機能
-//	TODO:	起動中に、ラインテンプレートのリストを開く＆再読み込みできるようにして欲しい//	Brushも同じか。右クリメニューで
-
-//	TODO:	複数ファイルタブ、右クリメニューでファイル情報出す
-//	TODO:	Ctrl+Kの統計機能・PageListの項目増やして対処・Ctrl+Kでリフレッシュとか・連続半角とか、行末空白とか・いろんな情報をだす・リヤルタイムだと重いので操作でリフレッシュ
-//	TODO:	ファイル内容統計機能が欲しい。全バイト数、頁数とか
+//	�f�J���t�@�C���J�����Ƃ����Ƃ��̓��b�Z�[�W�o���Ƃ�
+//	SQL��INSERT�Aprepare�͏d���B�N�G�������āAreset���Ȃ���񂷂̂������񂶂�
+//	IE�v���r���[�ACSS�Ńt�H���g�\���𐳋K������ http://b4t.jp/823
 
 
-//	TODO:	使用をファイル出力できるように
-//	TODO:	DocBadSpaceCheck内の更新指令の最適化が必要
-//	TODO:	バックアップ機能の強化・上書き保存したらバックアップとか・頁新規作成したら保存
-//	TODO:	保存するとき、同名ファイルがあったら、日時くっつけてバックアップとか
-//	TODO:	切り抜きリファレンスAAを使って、文字のとこだけ切り抜き、ないところだけ切り抜き、とかできるようにしたい
-//	TODO:	バックアップメッセージ、ステータスバーに出せないか
-//	TODO:	全部保存作る
-//	TODO:	テンプレのコンボックスを、リストボックス型と切り替えられるとか
-//	TODO:	プレビューをリヤルタイムに変更する
-//	TODO:	非ユニコのときは、ピリヲドの量の選択を？もしくは設定出来るようにするか
-//	TODO:	ミニ複数行テンプレ・壱行ブラシのサブダイヤログに増やすか
 
-//	TODO:	View部分をサムネ表示できるように
-//	TODO:	テンプレの「常に最前面に表示」Orinrinediterを表示している時だけ最前面に来るように//もしくは、メイン窓に統合とか
-//	TODO:	Viewer側、Ctrl↑↓で、MLTのセクション間移動する
-//	TODO:	viewerの主タブをマウスとスクロールバーだけでなく、ホウィール、キーボードの矢印やPageUp,PageDnキーで操作出来る様にならない？
-//	TODO:	Viewer側、ポップアップで、容量も出せないか
-//	TODO:	MLTのブックマーク機能・タブ増やすか、ツリーに増やすか・副タブじゃいけない？
-//	TODO:	viewの使用のグループ名の変更機能・グループ自体、単体両方で
-//	TODO:	Viewの右クリメニューも編集出来るように
-//	TODO:	MMAビュー、AAのスクロールをアイテム区切りでなく行スクロールも出来るように
-//	TODO:	MAA窓も統合できないか
+//�t�@�C���J���Ƃ��A�y�[�W�f�[�^�͐��̃e�L�X�g�f�[�^�����Q�b�g���Ă����āA�������W�J�͂��Ȃ�
+//�y�[�W���I�����ꂽ��A�{�̂ɓW�J���āA���f�[�^�͏����Ă����E������t���O�ɂ���
+//�ۑ�����Ƃ��́A���f�[�^���A�{�̃f�[�^��ۑ�����
+//�ŕ\���̃X�e�[�^�X�̂ق��́H�o�C�g���v�Z�����Ȃ炻��Ȃɏd���Ȃ��H
 
-//	TODO:	ASD対応＜読込は作ったがどこで使う？
-//	TODO:	ツールチップ付けたい
+//�Ŕԍ��}���݂����ɁA�����łɂ킽�鏈�������o�C
+//�S�v���r���[�����o�C
 
-//	TODO:	トレスの１画面、２画面切り替えモード
-//	TODO:	トレスの２画面だと、背景絵はどっちのペインでも表示出来るようにしたい
-//	TODO:	トレスで、画像をつまんで直接移動できるように
-//	TODO:	トレス機能、点滅コントラスト？と輝度調整の幅が狭いのがちょいと苦しいらしい
-//	TODO:	トレスモード窓に、グリッドON/OFFを付ける
-//	TODO:	トレスモード、各入力値は直入力できるように
-//	TODO:	トレスモードボタンは、TOGGLEできるようにする
+//	�t�@�C���I�[�|�����Ƀv���O���X�I�Ȃ��̂��B�o�C�g���\���̂�B�f�B���C���[�h�ł���Ηv��Ȃ���
 
-//	TODO:	プロファイルのツリーの編集、もっと手軽にできないか
+
+//�m�F�FViewer���A����PageUpDown�����Ă邩
+
+//	�t�@�C����ǂݍ��ނƃ����^�C���G���[�ł邱�Ƃ�����E�Ȃ񂩕ύX���Ă���H
+//	�X�N���[�������������ꍇ�A��ʑS�̏����K�v��
+
+//�e���Ȃ��悤�ɂ���
+//�I��͈͂������Ԃ�CtrlU���A���h�D���I��͈͂����������Ȃ�B����ɐ؂���Ƃ�����Ɨ�����
+//�A���h�D���h�D������A�I��͈͉�������EDocInsDelCtrl.cpp:559������ł��������H
+
+//�񃆃j�R�[�h�̖��߃p�^�[���A���p�󔒋C�ɂ��Ȃ��p�ɂ���H��������ƕύX���Ă݂�
+
+
+
+
+//�o�O
+
+//	TODO:	��`�I��͈̓o�C�g�J�E���g���x��
+//	TODO:	�`��X�V�^�C�~���O�����������ꍇ�����X����
+//	TODO:	�u��`�I���v�Ɓu�������o�v�̗����Ƀ`�F�b�N����ꂽ��ԂŃh���b�O����ƃG���[
+
+//	TODO:	�����s�e���v�����̎�^�u�Ńz�C�[���X�N���[���������Ȃ��H�t�H�[�J�X�̖�肩�H
+//			���C�����̕ҏW�X�y�[�X�APage List�A�����s�e���v������AA�ꗗ�c���[�ȂǁA���̏ꏊ�ł͖��Ȃ�
+
+//	TODO:	Viewer�A�E�N�����j���[����̃h���t�g�{�[�h���J���Ȃ��H�E�ǉ�����Ȃ��H
+
+
+
+
+//�@�\�ǉ��E�ύX
+//	TODO:	�S�ł̈ꊇ�s���폜
+//	TODO:	�����@�\���܂Ƃ߂Ď��s����}�N���̂悤�Ȃ��́��v���O�C���ł����邩�H
+
+//	TODO:	�ł̕����I�����Ĉړ��A�c���c��
+//	TODO:	ALT+N���A�Ŗ��̈ꊇ�ҏW�ɂ���H
+//	TODO:	�ňꗗ���A�����I�����Ĉꔭ�폜�ł���悤��
+
+//	TODO:	��������J�����Ƃ����t�@�C���E�v���t�����������烊�X�g��������ׂ�
+
+//	TODO:	�t���[�J�[�\�����[�h
+//	TODO:	���C���{�b�N�X���̂̑���A�㏑�����s�Ƃ����L�{�h�V���g�J�g�ŏo����悤��
+
+//	TODO:	�E����������
+//	TODO:	�����̌����E�s���@�\	���j�R�[�h�󔒈ꊇ�����Ƃ�
+//	TODO:	�t�@�C�����J�������@�\
+//	TODO:	�N�����ɁA���C���e���v���[�g�̃��X�g���J�����ēǂݍ��݂ł���悤�ɂ��ė~����//	Brush���������B�E�N�����j���[��
+
+//	TODO:	�����t�@�C���^�u�A�E�N�����j���[�Ńt�@�C�����o��
+//	TODO:	Ctrl+K�̓��v�@�\�EPageList�̍��ڑ��₵�đΏ��ECtrl+K�Ń��t���b�V���Ƃ��E�A�����p�Ƃ��A�s���󔒂Ƃ��E�����ȏ��������E�������^�C�����Əd���̂ő���Ń��t���b�V��
+//	TODO:	�t�@�C�����e���v�@�\���~�����B�S�o�C�g���A�Ő��Ƃ�
+
+
+//	TODO:	�g�p���t�@�C���o�͂ł���悤��
+//	TODO:	DocBadSpaceCheck���̍X�V�w�߂̍œK�����K�v
+//	TODO:	�o�b�N�A�b�v�@�\�̋����E�㏑���ۑ�������o�b�N�A�b�v�Ƃ��E�ŐV�K�쐬������ۑ�
+//	TODO:	�ۑ�����Ƃ��A�����t�@�C������������A�����������ăo�b�N�A�b�v�Ƃ�
+//	TODO:	�؂蔲�����t�@�����XAA���g���āA�����̂Ƃ������؂蔲���A�Ȃ��Ƃ��낾���؂蔲���A�Ƃ��ł���悤�ɂ�����
+//	TODO:	�o�b�N�A�b�v���b�Z�[�W�A�X�e�[�^�X�o�[�ɏo���Ȃ���
+//	TODO:	�S���ۑ����
+//	TODO:	�e���v���̃R���{�b�N�X���A���X�g�{�b�N�X�^�Ɛ؂�ւ�����Ƃ�
+//	TODO:	�v���r���[���������^�C���ɕύX����
+//	TODO:	�񃆃j�R�̂Ƃ��́A�s�����h�̗ʂ̑I�����H�������͐ݒ�o����悤�ɂ��邩
+//	TODO:	�~�j�����s�e���v���E��s�u���V�̃T�u�_�C�����O�ɑ��₷��
+
+//	TODO:	View�������T���l�\���ł���悤��
+//	TODO:	�e���v���́u��ɍőO�ʂɕ\���vOrinrinediter��\�����Ă��鎞�����őO�ʂɗ���悤��//�������́A���C�����ɓ����Ƃ�
+//	TODO:	Viewer���ACtrl�����ŁAMLT�̃Z�N�V�����Ԉړ�����
+//	TODO:	viewer�̎�^�u���}�E�X�ƃX�N���[���o�[�����łȂ��A�z�E�B�[���A�L�[�{�[�h�̖���PageUp,PageDn�L�[�ő���o����l�ɂȂ�Ȃ��H
+//	TODO:	Viewer���A�|�b�v�A�b�v�ŁA�e�ʂ��o���Ȃ���
+//	TODO:	MLT�̃u�b�N�}�[�N�@�\�E�^�u���₷���A�c���[�ɑ��₷���E���^�u���Ⴂ���Ȃ��H
+//	TODO:	view�̎g�p�̃O���[�v���̕ύX�@�\�E�O���[�v���́A�P�̗�����
+//	TODO:	View�̉E�N�����j���[���ҏW�o����悤��
+//	TODO:	MMA�r���[�AAA�̃X�N���[�����A�C�e����؂�łȂ��s�X�N���[�����o����悤��
+//	TODO:	MAA���������ł��Ȃ���
+
+//	TODO:	ASD�Ή����Ǎ��͍�������ǂ��Ŏg���H
+//	TODO:	�c�[���`�b�v�t������
+
+//	TODO:	�g���X�̂P��ʁA�Q��ʐ؂�ւ����[�h
+//	TODO:	�g���X�̂Q��ʂ��ƁA�w�i�G�͂ǂ����̃y�C���ł��\���o����悤�ɂ�����
+//	TODO:	�g���X�ŁA�摜���܂�Œ��ڈړ��ł���悤��
+//	TODO:	�g���X�@�\�A�_�ŃR���g���X�g�H�ƋP�x�����̕��������̂����傢�Ƌꂵ���炵��
+//	TODO:	�g���X���[�h���ɁA�O���b�hON/OFF��t����
+//	TODO:	�g���X���[�h�A�e���͒l�͒����͂ł���悤��
+//	TODO:	�g���X���[�h�{�^���́ATOGGLE�ł���悤�ɂ���
+
+//	TODO:	�v���t�@�C���̃c���[�̕ҏW�A�����Ǝ�y�ɂł��Ȃ���
 
 
 
 
 //OK?
-//	新規で開いて、それを名づけ保存したファイルは、履歴に入いってない
-//	頁削除のAlt+D付ける。注意ダイヤログ出す。
-//	サムネからだと使用履歴に反映されない
-//	文字ＡＡの入力とか、レイヤボックスの編集とかで、キーボードショートカット使えるように
-//	トレス窓が、最大化してると隠れてしまう
-//	頁挿入ダイヤログのチェックボックス覚えておくように
+//	�V�K�ŊJ���āA����𖼂Â��ۑ������t�@�C���́A�����ɓ������ĂȂ�
+//	�ō폜��Alt+D�t����B���Ӄ_�C�����O�o���B
+//	�T���l���炾�Ǝg�p�����ɔ��f����Ȃ�
+//	�����`�`�̓��͂Ƃ��A���C���{�b�N�X�̕ҏW�Ƃ��ŁA�L�[�{�[�h�V���[�g�J�b�g�g����悤��
+//	�g���X�����A�ő剻���Ă�ƉB��Ă��܂�
+//	�ő}���_�C�����O�̃`�F�b�N�{�b�N�X�o���Ă����悤��
 
 
-//	TODO:	ＯＫ？	ＭＡＡテンプレのステータスバーページ番号の表示が０基準なので１にする
+//	TODO:	�n�j�H	�l�`�`�e���v���̃X�e�[�^�X�o�[�y�[�W�ԍ��̕\�����O��Ȃ̂łP�ɂ���
 
-//	TODO:	ＯＫ？	ツールバーにもAcceleratorキー表示する
-//	TODO:	ＯＫ？	バイト数警告の4096は調整出来るように
-//	TODO:	ＯＫ？	右ルーラーみたいな、行ルーラー（３０行とか）を	IDM_UNDER_RULER_TOGGLE
-//	TODO:	ＯＫ？	ユニコードリスト・使ったヤツの記録とか
+//	TODO:	�n�j�H	�c�[���o�[�ɂ�Accelerator�L�[�\������
+//	TODO:	�n�j�H	�o�C�g���x����4096�͒����o����悤��
+//	TODO:	�n�j�H	�E���[���[�݂����ȁA�s���[���[�i�R�O�s�Ƃ��j��	IDM_UNDER_RULER_TOGGLE
+//	TODO:	�n�j�H	���j�R�[�h���X�g�E�g�������c�̋L�^�Ƃ�
 
-//	TODO:	ＯＫ？	ディレイロード・未ロード頁の全プレビューがおかしい
-//	TODO:	ＯＫ？	枠作るときはピリヲド幅を使う
-//	TODO:	ＯＫ？	最大化から戻したら、MAAが非表示でも表示になる
-//	TODO:	ＯＫ？	MAAと頁一覧、選択したらメイン窓にフォーカス戻すかどうか選択出来るようにする
-//					右クリメニューにON/OFF付ければいい
-//	TODO:	ＯＫ？	ドラッグ移動させた後、キャレットの位置がおかしい
-//	TODO:	ＯＫ？	ドラフトボード・サムネイル・移動出来るように
-//	TODO:	ＯＫ？	ユーザー定義をアクセラキーで設定出来る
-//	TODO:	ＯＫ？	セリフ改行、文章の途中で半角全角スペース一個あった場合、ソコは無視して文章の先端に行頭を揃える
-//	TODO:	ＯＫ？	ツールチップ、マウスカーソルが重なるとちらつくのは仕様。自作しかないか。
-//	TODO:	ＯＫ？	右クリメニューの個別枠やユーザアイテムに各個の名前を付けるように
-//	TODO:	ＯＫ？	副タブの名称編集出来るように
-//	TODO:	ＯＫ？	空白の表示非表示をメモリする
-//	TODO:	ＯＫ？	合成するとき、上絵の周囲を白ヌキする機能
-//	TODO:	ＯＫ？	レイヤボックス白ヌキ、１６・２２とか、いくつかパヤーン作っておく
-//	TODO:	ＯＫ？	MLT検索、文字列ないなら検索しないようにする
-//	TODO:	ＯＫ？	viewer側の表示色変更・背景とか
-//	TODO:	ＯＫ？	選択範囲をASTの頁名にする機能	IDM_PAGENAME_SELASSIGN
-//	TODO:	ＯＫ？	プレビュー再描画しても、ALLと表示位置を維持する
+//	TODO:	�n�j�H	�f�B���C���[�h�E�����[�h�ł̑S�v���r���[����������
+//	TODO:	�n�j�H	�g���Ƃ��̓s�����h�����g��
+//	TODO:	�n�j�H	�ő剻����߂�����AMAA����\���ł��\���ɂȂ�
+//	TODO:	�n�j�H	MAA�ƕňꗗ�A�I�������烁�C�����Ƀt�H�[�J�X�߂����ǂ����I���o����悤�ɂ���
+//					�E�N�����j���[��ON/OFF�t����΂���
+//	TODO:	�n�j�H	�h���b�O�ړ���������A�L�����b�g�̈ʒu����������
+//	TODO:	�n�j�H	�h���t�g�{�[�h�E�T���l�C���E�ړ��o����悤��
+//	TODO:	�n�j�H	���[�U�[��`���A�N�Z���L�[�Őݒ�o����
+//	TODO:	�n�j�H	�Z���t���s�A���͂̓r���Ŕ��p�S�p�X�y�[�X��������ꍇ�A�\�R�͖������ĕ��͂̐�[�ɍs���𑵂���
+//	TODO:	�n�j�H	�c�[���`�b�v�A�}�E�X�J�[�\�����d�Ȃ�Ƃ�����͎̂d�l�B���삵���Ȃ����B
+//	TODO:	�n�j�H	�E�N�����j���[�̌ʘg�⃆�[�U�A�C�e���Ɋe�̖��O��t����悤��
+//	TODO:	�n�j�H	���^�u�̖��̕ҏW�o����悤��
+//	TODO:	�n�j�H	�󔒂̕\����\��������������
+//	TODO:	�n�j�H	��������Ƃ��A��G�̎��͂𔒃k�L����@�\
+//	TODO:	�n�j�H	���C���{�b�N�X���k�L�A�P�U�E�Q�Q�Ƃ��A�������p���[������Ă���
+//	TODO:	�n�j�H	MLT�����A������Ȃ��Ȃ猟�����Ȃ��悤�ɂ���
+//	TODO:	�n�j�H	viewer���̕\���F�ύX�E�w�i�Ƃ�
+//	TODO:	�n�j�H	�I��͈͂�AST�̕Ŗ��ɂ���@�\	IDM_PAGENAME_SELASSIGN
+//	TODO:	�n�j�H	�v���r���[�ĕ`�悵�Ă��AALL�ƕ\���ʒu���ێ�����
 
 
 /*
 
-ASDファイル　　壱行が壱コンテンツ
+ASD�t�@�C���@�@��s����R���e���c
 
-内容の改行　　　　　0x01,0x01
-内容と説明の区切り　0x02,0x02
+���e�̉��s�@�@�@�@�@0x01,0x01
+���e�Ɛ����̋�؂�@0x02,0x02
 
 */
-//	v ^ (v >> 1)	グレイコード
+//	v ^ (v >> 1)	�O���C�R�[�h
 
 /*
-2011/06/30	0.10	初リリース、プレアルファ版
-2011/07/04	0.11	選択中に右クリすると解除されちゃうのを修正
-					全選択してコピーしたときの末端改行増殖を修正
-					レイヤボックスで、編集ビューのスクロールが考慮されてなかったのを修正
-					MAAで複数ファイルをタブで開けられるようにした
-2011/07/19	0.12	枠の保持を１０個にした
-					終了時の副タブを復帰出来るようにした
-					新規保存やリネーム保存だと、ラストオーポンが記録されないのを修正
-					PageListで、削除・移動できるようにした
-2011/07/20	0.13	MLTツリーで、ASTも読めるようにした
-					ブラシ、壱行テンプレのコンボックスはマウスホイールしないようにした
-					選択状態解除されてるけどフラグが解除されてないのを修正したつもり
-					矩形選択範囲を、カーソル位置に準じるようになった？
-					切り取りのキーボードアクセラレータが無かった・単なる入れ忘れ
-					０文字の行でAlt＋←→やるとあぼーんしてたのを修正
-					MAAテンプレで、ツールチップのON/OFF出来るようにした
-					枠に名前付けられるようにした
-					トレス機能つけた・多分改善が必要
-					選択範囲を反転表示しちゃう
-					テンプレファイルを、Templatesディレクトリに移動
-2011/08/01	0.14	コンテキストメニューにもアクセラレータキーを付けた
-					トレス：表示非表示を Alt+I で出来るようにした☆
-					トレス：非表示中は文字色戻すようにした
-					トレス：特定の操作したらフォーカスが描画ビューに戻るようにした
-					ブラシと壱行テンプレの表示を格子状にした・でも選択の色変えがヘン
-					MAAのツールチップ文字サイズを９と１２で選択出来るようにした
-					レイヤボックス、貼り付けたらすぐ閉じるかどうかの選択チェックつけた
-					ユニコードパディングを使えるようにした
-2011/08/09	0.15	トレス中はタイトルバーに[トレスモード]がつく
-					トレスの表示非表示をAlt+Hに変更
-					トレスで、絵を開いたらズームを１００％に戻すようにした
-					トレスの画像開く窓にサムネイル付けた
-					頁一覧にツールバー付けた
-					頁の複製機能を実装
-					Alt左右の場合にもユニコードつかってパディングするようにした
-					Ctrl+Home,Endを効くようにした
-					MAA窓にフォーカスがあるとき、TAB,Shift+TABでタブを切り替わるようにした
-					MAAの副タブを削除・追加したら選択がおかしくなってるのを修正
-					ユニコード数値参照、１６進数型に対応
-					レイヤボックス、ブッ込む内容に合わせて、窓の大きさを拡大するようにした
-					自動バックアップ機能を付けた
-2011/08/18	0.16	キャプションバーの開いてるファイル名が変更されない時があるのを修正
-					実体参照の読込をするようにした。ただし内部でユニコードにしてる
-					ファイル開いたときに、ページリストにバイト数とかが反映されないのを修正
-					レイヤ合成、ずれることがあったのを修正
-					レイヤボックスの透過合成を出来るようにした
-					クリップボード内テキストのユニコード判別出来るようにした
-					ツールチップが、Win7だとチラつくのをしないようにできた？
-					ページリストに、各頁のサムネイルっぽいのをポッパップするようにした
-					MAAウインドウのAA表示を、ユニコードに変換して表示するようにした・問題ないと思うけど
-					レイヤボックスのサイズ変更がおかしいのを直した
-					AAViewer部分を分離して単独Projectもいけるようにした
-2011/08/24	0.17	バックアップディレクトリを常に作成するようにした
-					バックアップしたメッセージのON/OFF出来るようにした・ミスは常に表示
-					頁を新規作成したときもバックアップするようにした
-					バイト数計算の作り直し・多分正確に出せるようになった
-					ALT上下で頁切換できる
-					ドラッグ選択をやりやすくした
-					頁の統合と分割を出来るようにした
-					副タブの、最後に見ていた位置を覚えておけるようにした・終了したら消える
-2011/08/31	0.18	複数ファイルオーポン出来るようになったはず・大丈夫かこれ
-					Ctrl+F4 でタブ閉じできる
-					ALT＋↑↓で頁移動したら、PageListもスクロールするようにした
-					ツールバーに「やり直し」を追加
-					空白の表示・非表示を切り替えられるようにした
-					選択範囲を、空白かブラシで塗りつぶせるようにした
-					各独立窓を、最前面表示出来るようにした
-					部分抽出できるようになったかも
-					カレントディレクトリを、EXEファイルのある場所で取るようにした
-					バグ修正いろいろ
-2011/09/06	0.19	コマンドラインからのファイルオーポンに対応した？最初の一つだけ
-					空白警告があったら、行番号が紅くなるようにした
-					最終頁削除したら吹っ飛ぶのを修正
-					グリッド線を表示出来るようにした
-					右端ルーラを表示できるようにした
-					背景色等変更できるようにした。でもGUIがない
-					この頁の前に挿入、を、後に挿入にした・末尾作成のキーバインド変更
-					右クリメニュー色々追加
-					マウスホイールのスクロール量をＯＳ標準を使うようにした・多分いける
-					PageUp,PageDnで１０行ずつスクロールするようにした
-					行が増えると重くなるのをないようにした・多分イケてる
-					行数桁数を６桁まで対応
-					複数ファイル間の移動を、Ctrl+PageUp,Downで移動できるようにした
-					IEコンポーネントを使った簡易プレビュー搭載
-					Ctrl+Home,Endで、スクロールが上手くいかないのを修正
-					頁順番移動の上下が逆だったのを修正
-					頁リスト、ヘッダの幅変更してもリストのほうが変わらないのを修正・大丈夫かな？
-					バグ修正いろいろ
-2011/09/16	0.20	レイヤボックスの内容をクリップボードできるようにした
-					複数行テンプレから編集ビューに開けられるようにした
-					プレビュー機能を、<DD>とか使って実際の画面っぽくなるようにした
-					大量のALLプレビューしても堕ちなくなったかもだ
-					投下支援機能として、頁送りSJISコピー機能を追加。ホットキー[Ctrl+Shift+D]を使用。
-					改行マーク[CrLfMark]、非SJIS文字[CantSjis]の色変更出来るようにした
-					ツールバーをリバーにした。でも変更の復元ができてねぇ
-					右クリメニューの枠の名称が表示されるようにした
-					抽出中にAlt+Spaceを押したら、抽出レイヤボックス開くでござる
-					これに伴い、抽出してレイヤボックスへ機能は取りやめ
-					抽出中にUNICODEコピーを出来るようになったかも
-					矩形・塗潰・抽出・空白の状態をステータスバーに表示
-					末端空白削除しても、行数表示が赤いままだったのを修正
-					今見てる頁を、BMPとPNGで保存出来るようにした
-2011/09/30	0.21	スペースを非表示にしても、警告は表示するようにした
-					トレスモードの絵の上に、グリッド線出すようにした
-					ツールバー、メニューの、トレスモード・ユニコード表はTOGGLE動作にした
-					ユニコード表でダブルクルックしたら挿入されるようにした
-					頁分割・統合・削除の確認メッセージに、次から表示しないオプション
-					カーソル位置を覚えるようにした・太ましくなった
-					全体のドットシフト機能・選択範囲のみ処理もできる
-					複数行テンプレの区切りを、線と色違いを切り替えられるようにした
-					複数行テンプレで、プロファイル機能で切り替えられるようにした
-					複数行テンプレプロファイルに、ツリー内容をキャッシュした
-					複数行テンプレの使用リストの分類を詳しくした
-					複数行テンプレで、使用リストをタブで開けるようにした
-					Viewerをバージョンアップ
-2011/10/20	0.22	既存の拡張子が、ASTならそれを維持するようにした
-					トレスモード、スライダをスクロールバーにしてみた
-					編集エリアのスクロールに合わせて絵も動くようにした
-					ちらつきをある程度押さえられたかもだ
-					ブラシ・壱行テンプレで、各アイテムの横幅をツールチップに表示・でもなんかヘン
-					選択して入力＞削除、矩形選択＞塗り潰し、するようにできたかもだ
-					枠挿入窓を作成
-					レイヤボックス、枠挿入窓を、カーソルキーで異動出来るようにした
-					内容変更したら、ファイルタブが[変更]
-					頁全体を空白で埋める機能
-					頁番号挿入機能
-					壱行テンプレ、ブラシテンプレ、頁リストをメイン窓にくっつける機能
-					複数行テンプレのタブを、複数段表示出来るようにした
-					バグ修正いくつか
-2011/11/07	0.23	選択範囲のバイト数表示するようにした
-					枠挿入窓に、挿入したら閉じるスイッチを搭載
-					複数行テンプレからの割込挿入を、ちゃんと矩形挿入なるようにした
-					レイヤボックス開くとき、カーソル位置に開くようにした▲
-					複数行テンプレに見出し機能を付けた。ASTと行頭の【】に反応
-					複数行テンプレのツリーのファイルへの、内容追加できるようにした☆
-					ブラシするときに、ドットがはみ出しても気にしないようにした
-					コピーモードを、UnicodeとShiftJISを入れ替えられるようにした
-					文字ＡＡ変換機能出来たかも
-					バグ修正いくつか
-2011/11/11	0.24	コンテキストメニュー編集機能を搭載できたか？
-					Ctrl＋↑↓で、テンプレグループの頁操作
-					複数行テンプレの見出し機能を強化。マシになったか？
-					バグ修正いろいろ
-2011/11/14	0.24.1	文字ＡＡ変換窓が、画面外に行かないようにした
-					多重起動防止いれた
-					プレビューウインドウの位置と大きさを覚えておくようにした
-					枠挿入したときに下の方が更新されないのを修正
-					バグ修正いろいろ
-2011/11/28	0.25	MAAのファイル名検索機能
-					MAAのツリー展開が早くなった気がする（Viewer込み）
-					プロファイル構築で、既存のプロフと一致するならチェキするようにした（Viewer込み）
-					プロファイル作るときの時間が短縮できた気がする（Viewer込み）
-					メイン窓のテンプレエリアのサイズ可変になった
-					最大化状態を覚えておくようにした
-					4096バイト超えたら、頁リストのバイト数のところ赤くするようにした
-2011/12/22	0.26	ドラフトボード機能（Viewer込み）
-					MAAサムネイル機能（Viewer込み）
-					MAAの使用のグループ一括削除（Viewer込み）
-					配色変更をＧＵＩで出来るようにした
-					オーポン記録がなければ、説明ASTを表示するようにした
-					ファイル毎のCaret位置を保存するようにした
-					起動したまま、壱行テンプレ、ブラシテンプレのリロードできるようんした
-					起動するとき、最後に開けてたファイルを開くとか選択できるようにした
-2012/01/16	0.27	編集窓のファイルタブで、マウスオーバーでフルパス表示
-					ＭＡＡとドラフトボードで、中クルックの場合処理を増やした（Viewer込み）
-					台詞用Enter機能。Shift+Enterで、改行挿入ではなく次の行に空白とかで台詞位置合わせできる
-					縦書き機能
-					バグ修正いろいろ
-2012/02/29	0.28	ＵＴＦ８でエクスポート出来るようにした
-					フォント変更機能
-					頁削除のAlt+D追加
-					サムネから使ったら、使用タブに追加されないのを修正
-					リバーの位置記憶と初期状態に戻す実装
-					ファイル開いた履歴を保持できるようにした
-					MAA部分に↑↓PageUpDownとか追加できたかもしれない
-					MAAのリストアップ対象にTXTを追加
-					改行が多いとパフォーマンスが落ちるのが少し改善できた気がする
-					終了時の確認メッセージ変更
-					IEプレビューのCSSを少し変更・行間について
-					バグ修正いろいろ
-2012/03/24	0.29	台詞改行、空白行で実行した場合は、キャレット位置で次の行を確保するようにした
-					Editorで効いてなかったプロファイル履歴を修正
-					右揃え線、ユニコードに対応
-					行頭半角空白をユニコード空白に置き換える機能搭載
-					Ctrl+Bでプレビュー開くようにした
-					壱行、ブラシテンプレの表示/非表示ができる
-					アクセラキー編集機能を搭載
-					アンドゥリドゥをするときは選択範囲解除するようにした
-					已に開いているファイルを開こうとしたら、そのタブに移るようにした
-2012/05/15	0.30	MAA窓でENTER押したら、そのときトップに見えてるAAを左クリック動作するようにした
-					文字列若しくは空白列でダブルクルックすると、その範囲を選択状態にする
-					選択範囲をドラッグ移動出来るようにした・ちゅっと挙動怪しいかも？
-					プレビュー開いてたら、保存したときに再描画するようにした
-					枠作成に、複数行使えるようにした
-					枠の個数を２０個保持できるようにした
-					ツールバーに、ユニコード空白の使用／不使用トグルボタンつけた
-					左右反転、上下反転機能を追加
-					レイヤボックスに、内容削除ボタンを追加
-					4096byte超えたら、ステータスバーのバイト表示位置が赤くなる。
-					頁挿入ダイヤログのチェックボックス覚えておくようにした
-					キャレットの位置に矩形貼付機能を追加
-					壱行テンプレで中クルックしたらレイヤボックスが開く
-					MAAツリーでファイル名を中クリックしたら、副タブに追加できる
-					バグ修正いろいろ
-2012/09/10	0.31	MAAに、ファイルの途中にアイテムを追加できるようにした
-					MAAの内容表示側にＤ＆Ｄすると、そのファイルを副タブで開く（Viewer込み）
-					※使用には入らないし復元もされない
-					MAAツリーにＤ＆Ｄすると、追加アイテムとしてツリーに追加（Viewer込み）
-					※再構築すると消える
-					MAAの使用で、複数のMLTに同じAAが有る場合にキョドるのを修正。多分（Viewer込み）
-					枠挿入BOXを縮めすぎるとエラーになるのを修正
-					台詞改行で、単独スペースはノーカンにした
-					ユーザアイテムを右クリメニューに追加できるようにした
-					ドラッグ移動させたらキャレット位置がおかしくなるのを修正
-					MAA窓と頁一覧で、選択したらフォーカスを編集窓に戻す機能
-					ドラフトボード・サムネイルの窓を移動出来るようにした
-					ツールチップがチラつくのをなんとか出来た気がする
-					副タブの名称変更を出来るようにした（Viewer込み）
-					ファイルオーポンを高速化出来た気がする
-					空白の表示/非表示状態を覚えておくようにした。
-					レイヤボックス貼付に白ヌキ機能追加
-					中クリックで、MAAの副タブや編集ファイルを閉じれるようにした（Viewer込み）
-					行数ルーラーを付けた
-					バイト数オーバー警告を設定できるようにした
-					ユニコード表に、使用履歴をつけた
-					ＭＡＡ窓の背景色変更出来るようにした
-					プレビューを再描画しても、そのとき開いていた位置と状態を維持できる、はず
-					選択範囲をAST頁名称にする機能追加
-2013/05/31	0.32	MAAのツリー側のAA頁を削除出来るようにした
-					新規保存時の拡張子を、MLTかASTを適用するようにした
-					ドラフトボード・サムネイルのサイズを４段階で変えれるようにした
-					MAA窓に、開いてる頁内の文字列検索を付けた・
-					ASTに追加するとセパレータがおかしくなるのを修正
-					頁切り替えた時、最後の頁のところまで頁一覧をスクロール
-					任意の場所から右の部分を、左右にずらす機能
-					MAAテンプレにアイテム追加したら全アイテムに改行が増えるのを修正
-					二つ目を起動したとき、引数に渡されてたら、既存のやつでそれを開くようにした
-					多重起動を選択できるようにしたが・検証が必要
-					保存したときのバルーンメッセージの表示のON/OFF出来るようにした
-					MAA窓の副タブを、多段表示と壱行表示を切り替えられるようにした
-					メイン窓サイズ変えたときに、スプリットバーが追随するようになったかな
-					未ロードの頁を統合したら、内容が消えるのを修正
-2014/04/01	0.33	今日のヒント機能を追加
-					本文の単語検索機能を実装。多分イケてる。
-					したらば仕様変更による文字化けする機種依存文字を、ユニコード数値参照としてコピー出来るようにしてみた（場当たり的対応）
-2015/01/23	0.34	枠編集で、幅０になるような指定がされるとアプリ毎ブッ飛ぶのを修正。ただし枠構造はおかしくなる。
-					ASTでもMLTでもなく、１００行以上あるファイル（多分ベタテキスト）について、分割して取り込む機能を追加
-					　（分割条件）４０行以降で４行以上の空きがあるか、１００行以降で１行以上の空きがあるか、２５６行以上続いている
-					MLT2HTMLを使ったHTMLエクスポート機能を追加
-					したらば仕様変更による文字化け文字の拡大に対応。多分いける気がする。
-2015/01/26	0341	分割読込したらぶっとぶ場合があるのを修正
+2011/06/30	0.10	�������[�X�A�v���A���t�@��
+2011/07/04	0.11	�I�𒆂ɉE�N������Ɖ������ꂿ�Ⴄ�̂��C��
+					�S�I�����ăR�s�[�����Ƃ��̖��[���s���B���C��
+					���C���{�b�N�X�ŁA�ҏW�r���[�̃X�N���[�����l������ĂȂ������̂��C��
+					MAA�ŕ����t�@�C�����^�u�ŊJ������悤�ɂ���
+2011/07/19	0.12	�g�̕ێ����P�O�ɂ���
+					�I�����̕��^�u�𕜋A�o����悤�ɂ���
+					�V�K�ۑ��⃊�l�[���ۑ����ƁA���X�g�I�[�|�����L�^����Ȃ��̂��C��
+					PageList�ŁA�폜�E�ړ��ł���悤�ɂ���
+2011/07/20	0.13	MLT�c���[�ŁAAST���ǂ߂�悤�ɂ���
+					�u���V�A��s�e���v���̃R���{�b�N�X�̓}�E�X�z�C�[�����Ȃ��悤�ɂ���
+					�I����ԉ�������Ă邯�ǃt���O����������ĂȂ��̂��C����������
+					��`�I��͈͂��A�J�[�\���ʒu�ɏ�����悤�ɂȂ����H
+					�؂���̃L�[�{�[�h�A�N�Z�����[�^�����������E�P�Ȃ����Y��
+					�O�����̍s��Alt�{�������Ƃ��ځ[�񂵂Ă��̂��C��
+					MAA�e���v���ŁA�c�[���`�b�v��ON/OFF�o����悤�ɂ���
+					�g�ɖ��O�t������悤�ɂ���
+					�g���X�@�\�����E�������P���K�v
+					�I��͈͂𔽓]�\�������Ⴄ
+					�e���v���t�@�C�����ATemplates�f�B���N�g���Ɉړ�
+2011/08/01	0.14	�R���e�L�X�g���j���[�ɂ��A�N�Z�����[�^�L�[��t����
+					�g���X�F�\����\���� Alt+I �ŏo����悤�ɂ�����
+					�g���X�F��\�����͕����F�߂��悤�ɂ���
+					�g���X�F����̑��삵����t�H�[�J�X���`��r���[�ɖ߂�悤�ɂ���
+					�u���V�ƈ�s�e���v���̕\�����i�q��ɂ����E�ł��I���̐F�ς����w��
+					MAA�̃c�[���`�b�v�����T�C�Y���X�ƂP�Q�őI���o����悤�ɂ���
+					���C���{�b�N�X�A�\��t�����炷�����邩�ǂ����̑I���`�F�b�N����
+					���j�R�[�h�p�f�B���O���g����悤�ɂ���
+2011/08/09	0.15	�g���X���̓^�C�g���o�[��[�g���X���[�h]����
+					�g���X�̕\����\����Alt+H�ɕύX
+					�g���X�ŁA�G���J������Y�[�����P�O�O���ɖ߂��悤�ɂ���
+					�g���X�̉摜�J�����ɃT���l�C���t����
+					�ňꗗ�Ƀc�[���o�[�t����
+					�ł̕����@�\������
+					Alt���E�̏ꍇ�ɂ����j�R�[�h�����ăp�f�B���O����悤�ɂ���
+					Ctrl+Home,End�������悤�ɂ���
+					MAA���Ƀt�H�[�J�X������Ƃ��ATAB,Shift+TAB�Ń^�u��؂�ւ��悤�ɂ���
+					MAA�̕��^�u���폜�E�ǉ�������I�������������Ȃ��Ă�̂��C��
+					���j�R�[�h���l�Q�ƁA�P�U�i���^�ɑΉ�
+					���C���{�b�N�X�A�u�b���ޓ��e�ɍ��킹�āA���̑傫�����g�傷��悤�ɂ���
+					�����o�b�N�A�b�v�@�\��t����
+2011/08/18	0.16	�L���v�V�����o�[�̊J���Ă�t�@�C�������ύX����Ȃ���������̂��C��
+					���̎Q�Ƃ̓Ǎ�������悤�ɂ����B�����������Ń��j�R�[�h�ɂ��Ă�
+					�t�@�C���J�����Ƃ��ɁA�y�[�W���X�g�Ƀo�C�g���Ƃ������f����Ȃ��̂��C��
+					���C�������A����邱�Ƃ��������̂��C��
+					���C���{�b�N�X�̓��ߍ������o����悤�ɂ���
+					�N���b�v�{�[�h���e�L�X�g�̃��j�R�[�h���ʏo����悤�ɂ���
+					�c�[���`�b�v���AWin7���ƃ`�����̂����Ȃ��悤�ɂł����H
+					�y�[�W���X�g�ɁA�e�ł̃T���l�C�����ۂ��̂��|�b�p�b�v����悤�ɂ���
+					MAA�E�C���h�E��AA�\�����A���j�R�[�h�ɕϊ����ĕ\������悤�ɂ����E���Ȃ��Ǝv������
+					���C���{�b�N�X�̃T�C�Y�ύX�����������̂𒼂���
+					AAViewer�����𕪗����ĒP��Project��������悤�ɂ���
+2011/08/24	0.17	�o�b�N�A�b�v�f�B���N�g������ɍ쐬����悤�ɂ���
+					�o�b�N�A�b�v�������b�Z�[�W��ON/OFF�o����悤�ɂ����E�~�X�͏�ɕ\��
+					�ł�V�K�쐬�����Ƃ����o�b�N�A�b�v����悤�ɂ���
+					�o�C�g���v�Z�̍�蒼���E�������m�ɏo����悤�ɂȂ���
+					ALT�㉺�ŕŐ؊��ł���
+					�h���b�O�I�������₷������
+					�ł̓����ƕ������o����悤�ɂ���
+					���^�u�́A�Ō�Ɍ��Ă����ʒu���o���Ă�����悤�ɂ����E�I�������������
+2011/08/31	0.18	�����t�@�C���I�[�|���o����悤�ɂȂ����͂��E���v������
+					Ctrl+F4 �Ń^�u���ł���
+					ALT�{�����ŕňړ�������APageList���X�N���[������悤�ɂ���
+					�c�[���o�[�Ɂu��蒼���v��ǉ�
+					�󔒂̕\���E��\����؂�ւ�����悤�ɂ���
+					�I��͈͂��A�󔒂��u���V�œh��Ԃ���悤�ɂ���
+					�e�Ɨ������A�őO�ʕ\���o����悤�ɂ���
+					�������o�ł���悤�ɂȂ�������
+					�J�����g�f�B���N�g�����AEXE�t�@�C���̂���ꏊ�Ŏ��悤�ɂ���
+					�o�O�C�����낢��
+2011/09/06	0.19	�R�}���h���C������̃t�@�C���I�[�|���ɑΉ������H�ŏ��̈����
+					�󔒌x������������A�s�ԍ����g���Ȃ�悤�ɂ���
+					�ŏI�ō폜�����琁����Ԃ̂��C��
+					�O���b�h����\���o����悤�ɂ���
+					�E�[���[����\���ł���悤�ɂ���
+					�w�i�F���ύX�ł���悤�ɂ����B�ł�GUI���Ȃ�
+					���̕ł̑O�ɑ}���A���A��ɑ}���ɂ����E�����쐬�̃L�[�o�C���h�ύX
+					�E�N�����j���[�F�X�ǉ�
+					�}�E�X�z�C�[���̃X�N���[���ʂ��n�r�W�����g���悤�ɂ����E����������
+					PageUp,PageDn�łP�O�s���X�N���[������悤�ɂ���
+					�s��������Əd���Ȃ�̂��Ȃ��悤�ɂ����E�����C�P�Ă�
+					�s���������U���܂őΉ�
+					�����t�@�C���Ԃ̈ړ����ACtrl+PageUp,Down�ňړ��ł���悤�ɂ���
+					IE�R���|�[�l���g���g�����ȈՃv���r���[����
+					Ctrl+Home,End�ŁA�X�N���[������肭�����Ȃ��̂��C��
+					�ŏ��Ԉړ��̏㉺���t�������̂��C��
+					�Ń��X�g�A�w�b�_�̕��ύX���Ă����X�g�̂ق����ς��Ȃ��̂��C���E���v���ȁH
+					�o�O�C�����낢��
+2011/09/16	0.20	���C���{�b�N�X�̓��e���N���b�v�{�[�h�ł���悤�ɂ���
+					�����s�e���v������ҏW�r���[�ɊJ������悤�ɂ���
+					�v���r���[�@�\���A<DD>�Ƃ��g���Ď��ۂ̉�ʂ��ۂ��Ȃ�悤�ɂ���
+					��ʂ�ALL�v���r���[���Ă����Ȃ��Ȃ���������
+					�����x���@�\�Ƃ��āA�ő���SJIS�R�s�[�@�\��ǉ��B�z�b�g�L�[[Ctrl+Shift+D]���g�p�B
+					���s�}�[�N[CrLfMark]�A��SJIS����[CantSjis]�̐F�ύX�o����悤�ɂ���
+					�c�[���o�[�����o�[�ɂ����B�ł��ύX�̕������ł��Ă˂�
+					�E�N�����j���[�̘g�̖��̂��\�������悤�ɂ���
+					���o����Alt+Space����������A���o���C���{�b�N�X�J���ł�����
+					����ɔ����A���o���ă��C���{�b�N�X�֋@�\�͎����
+					���o����UNICODE�R�s�[���o����悤�ɂȂ�������
+					��`�E�h�ׁE���o�E�󔒂̏�Ԃ��X�e�[�^�X�o�[�ɕ\��
+					���[�󔒍폜���Ă��A�s���\�����Ԃ��܂܂������̂��C��
+					�����Ă�ł��ABMP��PNG�ŕۑ��o����悤�ɂ���
+2011/09/30	0.21	�X�y�[�X���\���ɂ��Ă��A�x���͕\������悤�ɂ���
+					�g���X���[�h�̊G�̏�ɁA�O���b�h���o���悤�ɂ���
+					�c�[���o�[�A���j���[�́A�g���X���[�h�E���j�R�[�h�\��TOGGLE����ɂ���
+					���j�R�[�h�\�Ń_�u���N���b�N������}�������悤�ɂ���
+					�ŕ����E�����E�폜�̊m�F���b�Z�[�W�ɁA������\�����Ȃ��I�v�V����
+					�J�[�\���ʒu���o����悤�ɂ����E���܂����Ȃ���
+					�S�̂̃h�b�g�V�t�g�@�\�E�I��͈͂̂ݏ������ł���
+					�����s�e���v���̋�؂���A���ƐF�Ⴂ��؂�ւ�����悤�ɂ���
+					�����s�e���v���ŁA�v���t�@�C���@�\�Ő؂�ւ�����悤�ɂ���
+					�����s�e���v���v���t�@�C���ɁA�c���[���e���L���b�V������
+					�����s�e���v���̎g�p���X�g�̕��ނ��ڂ�������
+					�����s�e���v���ŁA�g�p���X�g���^�u�ŊJ����悤�ɂ���
+					Viewer���o�[�W�����A�b�v
+2011/10/20	0.22	�����̊g���q���AAST�Ȃ炻����ێ�����悤�ɂ���
+					�g���X���[�h�A�X���C�_���X�N���[���o�[�ɂ��Ă݂�
+					�ҏW�G���A�̃X�N���[���ɍ��킹�ĊG�������悤�ɂ���
+					�������������x��������ꂽ������
+					�u���V�E��s�e���v���ŁA�e�A�C�e���̉������c�[���`�b�v�ɕ\���E�ł��Ȃ񂩃w��
+					�I�����ē��́��폜�A��`�I�����h��ׂ��A����悤�ɂł���������
+					�g�}�������쐬
+					���C���{�b�N�X�A�g�}�������A�J�[�\���L�[�ňٓ��o����悤�ɂ���
+					���e�ύX������A�t�@�C���^�u��[�ύX]
+					�őS�̂��󔒂Ŗ��߂�@�\
+					�Ŕԍ��}���@�\
+					��s�e���v���A�u���V�e���v���A�Ń��X�g�����C�����ɂ�������@�\
+					�����s�e���v���̃^�u���A�����i�\���o����悤�ɂ���
+					�o�O�C��������
+2011/11/07	0.23	�I��͈͂̃o�C�g���\������悤�ɂ���
+					�g�}�����ɁA�}�����������X�C�b�`�𓋍�
+					�����s�e���v������̊����}�����A�����Ƌ�`�}���Ȃ�悤�ɂ���
+					���C���{�b�N�X�J���Ƃ��A�J�[�\���ʒu�ɊJ���悤�ɂ�����
+					�����s�e���v���Ɍ��o���@�\��t�����BAST�ƍs���́y�z�ɔ���
+					�����s�e���v���̃c���[�̃t�@�C���ւ́A���e�ǉ��ł���悤�ɂ�����
+					�u���V����Ƃ��ɁA�h�b�g���͂ݏo���Ă��C�ɂ��Ȃ��悤�ɂ���
+					�R�s�[���[�h���AUnicode��ShiftJIS�����ւ�����悤�ɂ���
+					�����`�`�ϊ��@�\�o��������
+					�o�O�C��������
+2011/11/11	0.24	�R���e�L�X�g���j���[�ҏW�@�\�𓋍ڂł������H
+					Ctrl�{�����ŁA�e���v���O���[�v�̕ő���
+					�����s�e���v���̌��o���@�\�������B�}�V�ɂȂ������H
+					�o�O�C�����낢��
+2011/11/14	0.24.1	�����`�`�ϊ������A��ʊO�ɍs���Ȃ��悤�ɂ���
+					���d�N���h�~���ꂽ
+					�v���r���[�E�C���h�E�̈ʒu�Ƒ傫�����o���Ă����悤�ɂ���
+					�g�}�������Ƃ��ɉ��̕����X�V����Ȃ��̂��C��
+					�o�O�C�����낢��
+2011/11/28	0.25	MAA�̃t�@�C���������@�\
+					MAA�̃c���[�W�J�������Ȃ����C������iViewer���݁j
+					�v���t�@�C���\�z�ŁA�����̃v���t�ƈ�v����Ȃ�`�F�L����悤�ɂ����iViewer���݁j
+					�v���t�@�C�����Ƃ��̎��Ԃ��Z�k�ł����C������iViewer���݁j
+					���C�����̃e���v���G���A�̃T�C�Y�ςɂȂ���
+					�ő剻��Ԃ��o���Ă����悤�ɂ���
+					4096�o�C�g��������A�Ń��X�g�̃o�C�g���̂Ƃ���Ԃ�����悤�ɂ���
+2011/12/22	0.26	�h���t�g�{�[�h�@�\�iViewer���݁j
+					MAA�T���l�C���@�\�iViewer���݁j
+					MAA�̎g�p�̃O���[�v�ꊇ�폜�iViewer���݁j
+					�z�F�ύX���f�t�h�ŏo����悤�ɂ���
+					�I�[�|���L�^���Ȃ���΁A����AST��\������悤�ɂ���
+					�t�@�C������Caret�ʒu��ۑ�����悤�ɂ���
+					�N�������܂܁A��s�e���v���A�u���V�e���v���̃����[�h�ł���悤�񂵂�
+					�N������Ƃ��A�Ō�ɊJ���Ă��t�@�C�����J���Ƃ��I���ł���悤�ɂ���
+2012/01/16	0.27	�ҏW���̃t�@�C���^�u�ŁA�}�E�X�I�[�o�[�Ńt���p�X�\��
+					�l�`�`�ƃh���t�g�{�[�h�ŁA���N���b�N�̏ꍇ�����𑝂₵���iViewer���݁j
+					�䎌�pEnter�@�\�BShift+Enter�ŁA���s�}���ł͂Ȃ����̍s�ɋ󔒂Ƃ��ő䎌�ʒu���킹�ł���
+					�c�����@�\
+					�o�O�C�����낢��
+2012/02/29	0.28	�t�s�e�W�ŃG�N�X�|�[�g�o����悤�ɂ���
+					�t�H���g�ύX�@�\
+					�ō폜��Alt+D�ǉ�
+					�T���l����g������A�g�p�^�u�ɒǉ�����Ȃ��̂��C��
+					���o�[�̈ʒu�L���Ə�����Ԃɖ߂�����
+					�t�@�C���J����������ێ��ł���悤�ɂ���
+					MAA�����Ɂ���PageUpDown�Ƃ��ǉ��ł�����������Ȃ�
+					MAA�̃��X�g�A�b�v�Ώۂ�TXT��ǉ�
+					���s�������ƃp�t�H�[�}���X��������̂��������P�ł����C������
+					�I�����̊m�F���b�Z�[�W�ύX
+					IE�v���r���[��CSS�������ύX�E�s�Ԃɂ���
+					�o�O�C�����낢��
+2012/03/24	0.29	�䎌���s�A�󔒍s�Ŏ��s�����ꍇ�́A�L�����b�g�ʒu�Ŏ��̍s���m�ۂ���悤�ɂ���
+					Editor�Ō����ĂȂ������v���t�@�C���������C��
+					�E�������A���j�R�[�h�ɑΉ�
+					�s�����p�󔒂����j�R�[�h�󔒂ɒu��������@�\����
+					Ctrl+B�Ńv���r���[�J���悤�ɂ���
+					��s�A�u���V�e���v���̕\��/��\�����ł���
+					�A�N�Z���L�[�ҏW�@�\�𓋍�
+					�A���h�D���h�D������Ƃ��͑I��͈͉�������悤�ɂ���
+					�߂ɊJ���Ă���t�@�C�����J�����Ƃ�����A���̃^�u�Ɉڂ�悤�ɂ���
+2012/05/15	0.30	MAA����ENTER��������A���̂Ƃ��g�b�v�Ɍ����Ă�AA�����N���b�N���삷��悤�ɂ���
+					������Ⴕ���͋󔒗�Ń_�u���N���b�N����ƁA���͈̔͂�I����Ԃɂ���
+					�I��͈͂��h���b�O�ړ��o����悤�ɂ����E������Ƌ��������������H
+					�v���r���[�J���Ă���A�ۑ������Ƃ��ɍĕ`�悷��悤�ɂ���
+					�g�쐬�ɁA�����s�g����悤�ɂ���
+					�g�̌����Q�O�ێ��ł���悤�ɂ���
+					�c�[���o�[�ɁA���j�R�[�h�󔒂̎g�p�^�s�g�p�g�O���{�^������
+					���E���]�A�㉺���]�@�\��ǉ�
+					���C���{�b�N�X�ɁA���e�폜�{�^����ǉ�
+					4096byte��������A�X�e�[�^�X�o�[�̃o�C�g�\���ʒu���Ԃ��Ȃ�B
+					�ő}���_�C�����O�̃`�F�b�N�{�b�N�X�o���Ă����悤�ɂ���
+					�L�����b�g�̈ʒu�ɋ�`�\�t�@�\��ǉ�
+					��s�e���v���Œ��N���b�N�����烌�C���{�b�N�X���J��
+					MAA�c���[�Ńt�@�C�����𒆃N���b�N������A���^�u�ɒǉ��ł���
+					�o�O�C�����낢��
+2012/09/10	0.31	MAA�ɁA�t�@�C���̓r���ɃA�C�e����ǉ��ł���悤�ɂ���
+					MAA�̓��e�\�����ɂc���c����ƁA���̃t�@�C���𕛃^�u�ŊJ���iViewer���݁j
+					���g�p�ɂ͓���Ȃ�������������Ȃ�
+					MAA�c���[�ɂc���c����ƁA�ǉ��A�C�e���Ƃ��ăc���[�ɒǉ��iViewer���݁j
+					���č\�z����Ə�����
+					MAA�̎g�p�ŁA������MLT�ɓ���AA���L��ꍇ�ɃL���h��̂��C���B�����iViewer���݁j
+					�g�}��BOX���k�߂�����ƃG���[�ɂȂ�̂��C��
+					�䎌���s�ŁA�P�ƃX�y�[�X�̓m�[�J���ɂ���
+					���[�U�A�C�e�����E�N�����j���[�ɒǉ��ł���悤�ɂ���
+					�h���b�O�ړ���������L�����b�g�ʒu�����������Ȃ�̂��C��
+					MAA���ƕňꗗ�ŁA�I��������t�H�[�J�X��ҏW���ɖ߂��@�\
+					�h���t�g�{�[�h�E�T���l�C���̑����ړ��o����悤�ɂ���
+					�c�[���`�b�v���`�����̂��Ȃ�Ƃ��o�����C������
+					���^�u�̖��̕ύX���o����悤�ɂ����iViewer���݁j
+					�t�@�C���I�[�|�����������o�����C������
+					�󔒂̕\��/��\����Ԃ��o���Ă����悤�ɂ����B
+					���C���{�b�N�X�\�t�ɔ��k�L�@�\�ǉ�
+					���N���b�N�ŁAMAA�̕��^�u��ҏW�t�@�C��������悤�ɂ����iViewer���݁j
+					�s�����[���[��t����
+					�o�C�g���I�[�o�[�x����ݒ�ł���悤�ɂ���
+					���j�R�[�h�\�ɁA�g�p����������
+					�l�`�`���̔w�i�F�ύX�o����悤�ɂ���
+					�v���r���[���ĕ`�悵�Ă��A���̂Ƃ��J���Ă����ʒu�Ə�Ԃ��ێ��ł���A�͂�
+					�I��͈͂�AST�Ŗ��̂ɂ���@�\�ǉ�
+2013/05/31	0.32	MAA�̃c���[����AA�ł��폜�o����悤�ɂ���
+					�V�K�ۑ����̊g���q���AMLT��AST��K�p����悤�ɂ���
+					�h���t�g�{�[�h�E�T���l�C���̃T�C�Y���S�i�K�ŕς����悤�ɂ���
+					MAA���ɁA�J���Ă�œ��̕����񌟍���t�����E
+					AST�ɒǉ�����ƃZ�p���[�^�����������Ȃ�̂��C��
+					�Ő؂�ւ������A�Ō�̕ł̂Ƃ���܂ŕňꗗ���X�N���[��
+					�C�ӂ̏ꏊ����E�̕������A���E�ɂ��炷�@�\
+					MAA�e���v���ɃA�C�e���ǉ�������S�A�C�e���ɉ��s��������̂��C��
+					��ڂ��N�������Ƃ��A�����ɓn����Ă���A�����̂�ł�����J���悤�ɂ���
+					���d�N����I���ł���悤�ɂ������E���؂��K�v
+					�ۑ������Ƃ��̃o���[�����b�Z�[�W�̕\����ON/OFF�o����悤�ɂ���
+					MAA���̕��^�u���A���i�\���ƈ�s�\����؂�ւ�����悤�ɂ���
+					���C�����T�C�Y�ς����Ƃ��ɁA�X�v���b�g�o�[���ǐ�����悤�ɂȂ�������
+					�����[�h�̕ł𓝍�������A���e��������̂��C��
+2014/04/01	0.33	�����̃q���g�@�\��ǉ�
+					�{���̒P�ꌟ���@�\�������B�����C�P�Ă�B
+					������Ύd�l�ύX�ɂ�镶����������@��ˑ��������A���j�R�[�h���l�Q�ƂƂ��ăR�s�[�o����悤�ɂ��Ă݂��i�ꓖ����I�Ή��j
+2015/01/23	0.34	�g�ҏW�ŁA���O�ɂȂ�悤�Ȏw�肪�����ƃA�v�����u�b��Ԃ̂��C���B�������g�\���͂��������Ȃ�B
+					AST�ł�MLT�ł��Ȃ��A�P�O�O�s�ȏ゠��t�@�C���i�����x�^�e�L�X�g�j�ɂ��āA�������Ď�荞�ދ@�\��ǉ�
+					�@�i���������j�S�O�s�ȍ~�łS�s�ȏ�̋󂫂����邩�A�P�O�O�s�ȍ~�łP�s�ȏ�̋󂫂����邩�A�Q�T�U�s�ȏ㑱���Ă���
+					MLT2HTML���g����HTML�G�N�X�|�[�g�@�\��ǉ�
+					������Ύd�l�ύX�ɂ�镶�����������̊g��ɑΉ��B����������C������B
+2015/01/26	0341	�����Ǎ�������Ԃ��Ƃԏꍇ������̂��C��
 
-機種依存文字のバイトカウントを反映するのは、アプリ再起動が必要
+�@��ˑ������̃o�C�g�J�E���g�𔽉f����̂́A�A�v���ċN�����K�v
 
 
-更新日時注意
+�X�V��������
 
 */
 
 /*
-IME名称ゲット
+IME���̃Q�b�g
 
 	HKL	hKl;
 	TCHAR	atImeName[MAX_STRING];
@@ -569,139 +569,139 @@ IME名称ゲット
 //-------------------------------------------------------------------------------------------------
 
 static CONST TCHAR	gcatLicense[] = {
-TEXT("このプログラムはフリーソフトウェアです。あなたはこれを、フリーソフトウェア財団によって発行されたGNU一般公衆利用許諾書(バージョン3か、それ以降のバージョンのうちどれか)が定める条件の下で再頒布または改変することができます。\r\n\r\n")
-TEXT("このプログラムは有用であることを願って頒布されますが、*全くの無保証*です。商業可能性の保証や特定目的への適合性は、言外に示されたものも含め、全く存在しません。\r\n\r\n")
-TEXT("詳しくはGNU一般公衆利用許諾書をご覧ください。\r\n\r\n")
-TEXT("あなたはこのプログラムと共に、GNU一般公衆利用許諾書のコピーを一部受け取っているはずです。\r\n\r\n")
-TEXT("もし受け取っていなければ、<http://www.gnu.org/licenses/> をご覧ください。\r\n\r\n")
+TEXT("���̃v���O�����̓t���[�\�t�g�E�F�A�ł��B���Ȃ��͂�����A�t���[�\�t�g�E�F�A���c�ɂ���Ĕ��s���ꂽGNU��ʌ��O���p������(�o�[�W����3���A����ȍ~�̃o�[�W�����̂����ǂꂩ)����߂�����̉��ōĔЕz�܂��͉��ς��邱�Ƃ��ł��܂��B\r\n\r\n")
+TEXT("���̃v���O�����͗L�p�ł��邱�Ƃ�����ĔЕz����܂����A*�S���̖��ۏ�*�ł��B���Ɖ\���̕ۏ؂����ړI�ւ̓K�����́A���O�Ɏ����ꂽ���̂��܂߁A�S�����݂��܂���B\r\n\r\n")
+TEXT("�ڂ�����GNU��ʌ��O���p���������������������B\r\n\r\n")
+TEXT("���Ȃ��͂��̃v���O�����Ƌ��ɁAGNU��ʌ��O���p�������̃R�s�[���ꕔ�󂯎���Ă���͂��ł��B\r\n\r\n")
+TEXT("�����󂯎���Ă��Ȃ���΁A<http://www.gnu.org/licenses/> ���������������B\r\n\r\n")
 };
 //-------------------------------------------------------------------------------------------------
 
-//	表示用フォントベーステーブル・これをコピーして使う
+//	�\���p�t�H���g�x�[�X�e�[�u���E������R�s�[���Ďg��
 static LOGFONT	gstBaseFont = {
-	FONTSZ_NORMAL,			//	フォントの高さ
-	0,						//	平均幅
-	0,						//	文字送りの方向とX軸との角度
-	0,						//	ベースラインとX軸との角度
-	FW_NORMAL,				//	文字の太さ(0~1000まで・400=nomal)
-	FALSE,					//	イタリック体
-	FALSE,					//	アンダーライン
-	FALSE,					//	打ち消し線
-	DEFAULT_CHARSET,		//	文字セット
-	OUT_OUTLINE_PRECIS,		//	出力精度
-	CLIP_DEFAULT_PRECIS,	//	クリッピング精度
-	PROOF_QUALITY,			//	出力品質
-	VARIABLE_PITCH,			//	固定幅か可変幅
-	TEXT("ＭＳ Ｐゴシック")	//	フォント名
+	FONTSZ_NORMAL,			//	�t�H���g�̍���
+	0,						//	���ϕ�
+	0,						//	��������̕�����X���Ƃ̊p�x
+	0,						//	�x�[�X���C����X���Ƃ̊p�x
+	FW_NORMAL,				//	�����̑���(0~1000�܂ŁE400=nomal)
+	FALSE,					//	�C�^���b�N��
+	FALSE,					//	�A���_�[���C��
+	FALSE,					//	�ł�������
+	DEFAULT_CHARSET,		//	�����Z�b�g
+	OUT_OUTLINE_PRECIS,		//	�o�͐��x
+	CLIP_DEFAULT_PRECIS,	//	�N���b�s���O���x
+	PROOF_QUALITY,			//	�o�͕i��
+	VARIABLE_PITCH,			//	�Œ蕝���ϕ�
+	TEXT("�l�r �o�S�V�b�N")	//	�t�H���g��
 };
 //-------------------------------------------------------------------------------------------------
 
-// グローバル変数:
-static  HINSTANCE	ghInst;						//!<	現在のインターフェイス
-static  TCHAR		gszTitle[MAX_STRING];		//!<	タイトルバーのテキスト
-static  TCHAR		gszWindowClass[MAX_STRING];	//!<	メインウィンドウクラス名
+// �O���[�o���ϐ�:
+static  HINSTANCE	ghInst;						//!<	���݂̃C���^�[�t�F�C�X
+static  TCHAR		gszTitle[MAX_STRING];		//!<	�^�C�g���o�[�̃e�L�X�g
+static  TCHAR		gszWindowClass[MAX_STRING];	//!<	���C���E�B���h�E�N���X��
 
-static  HMENU		ghMenu;			//!<	メニュー
+static  HMENU		ghMenu;			//!<	���j���[
 
-static	HACCEL		ghAccelTable;	//!<	キーボードアクセラレータハンドル
+static	HACCEL		ghAccelTable;	//!<	�L�[�{�[�h�A�N�Z�����[�^�n���h��
 
-static  HWND		ghFileTabWnd;	//!<	複数ファイルタブ
-static  HWND		ghFileTabTip;	//!<	複数ファイルタブツールチップ
-static WNDPROC		gpfOriginFileTabProc;	//!<	複数ファイルタブの元プロシージャ
+static  HWND		ghFileTabWnd;	//!<	�����t�@�C���^�u
+static  HWND		ghFileTabTip;	//!<	�����t�@�C���^�u�c�[���`�b�v
+static WNDPROC		gpfOriginFileTabProc;	//!<	�����t�@�C���^�u�̌��v���V�[�W��
 
-static  HWND		ghMainWnd;		//!<	メインウインドウハンドル
-static  HWND		ghStsBarWnd;	//!<	ステータスバー
-static  HBRUSH		ghStsRedBrush;	//!<	ステータスバー用紅ブラシ
+static  HWND		ghMainWnd;		//!<	���C���E�C���h�E�n���h��
+static  HWND		ghStsBarWnd;	//!<	�X�e�[�^�X�o�[
+static  HBRUSH		ghStsRedBrush;	//!<	�X�e�[�^�X�o�[�p�g�u���V
 
-static HANDLE		ghMutex;		//!<	多重起動防止用Mutex
+static HANDLE		ghMutex;		//!<	���d�N���h�~�pMutex
 
-static INT			giResizeWide;	//!<	ウインドウサイズ変更したとき、変更前との差分・使ってない
+static INT			giResizeWide;	//!<	�E�C���h�E�T�C�Y�ύX�����Ƃ��A�ύX�O�Ƃ̍����E�g���ĂȂ�
 
 #ifdef WORK_LOG_OUT
-static HANDLE		ghLogFlie;		//!<	ログ出力
+static HANDLE		ghLogFlie;		//!<	���O�o��
 #endif
 
-EXTERNED HFONT		ghNameFont;		//!<	ファイルタブ用フォント
+EXTERNED HFONT		ghNameFont;		//!<	�t�@�C���^�u�p�t�H���g
 
-EXTERNED HWND		ghMaaWnd;		//!<	複数行ＡＡテンプレ
-EXTERNED HWND		ghPgVwWnd;		//!<	ページリスト
-EXTERNED HWND		ghLnTmplWnd;	//!<	壱行テンプレ
-EXTERNED HWND		ghBrTmplWnd;	//!<	ブラシテンプレ
-EXTERNED BOOLEAN	gbDockTmplView;	//!<	くっついてるテンプレは見えているか
+EXTERNED HWND		ghMaaWnd;		//!<	�����s�`�`�e���v��
+EXTERNED HWND		ghPgVwWnd;		//!<	�y�[�W���X�g
+EXTERNED HWND		ghLnTmplWnd;	//!<	��s�e���v��
+EXTERNED HWND		ghBrTmplWnd;	//!<	�u���V�e���v��
+EXTERNED BOOLEAN	gbDockTmplView;	//!<	�������Ă�e���v���͌����Ă��邩
 
-EXTERNED HWND		ghMainSplitWnd;	//!<	メインのスプリットバーハンドル
-EXTERNED LONG		grdSplitPos;	//!<	スプリットバーの、左側の、画面右からのオフセット
+EXTERNED HWND		ghMainSplitWnd;	//!<	���C���̃X�v���b�g�o�[�n���h��
+EXTERNED LONG		grdSplitPos;	//!<	�X�v���b�g�o�[�́A�����́A��ʉE����̃I�t�Z�b�g
 
-EXTERNED UINT		gbUniPad;		//!<	パディングにユニコードをつかって、ドットを見せないようにする
-EXTERNED UINT		gbUniRadixHex;	//!<	ユニコード数値参照が１６進数であるか
+EXTERNED UINT		gbUniPad;		//!<	�p�f�B���O�Ƀ��j�R�[�h�������āA�h�b�g�������Ȃ��悤�ɂ���
+EXTERNED UINT		gbUniRadixHex;	//!<	���j�R�[�h���l�Q�Ƃ��P�U�i���ł��邩
 
-static   UINT		gdBUInterval;	//!<	バックアップ感覚・デフォ３分くらい？
-EXTERNED UINT		gbAutoBUmsg;	//!<	自動バックアップメッセージ出すか？
-EXTERNED UINT		gbCrLfCode;		//!<	改行コード：０したらば・非０ＹＹ 
+static   UINT		gdBUInterval;	//!<	�o�b�N�A�b�v���o�E�f�t�H�R�����炢�H
+EXTERNED UINT		gbAutoBUmsg;	//!<	�����o�b�N�A�b�v���b�Z�[�W�o�����H
+EXTERNED UINT		gbCrLfCode;		//!<	���s�R�[�h�F�O������΁E��O�x�x 
 
-EXTERNED UINT		gbSaveMsgOn;	//!<	保存メッセージ出すか？
+EXTERNED UINT		gbSaveMsgOn;	//!<	�ۑ����b�Z�[�W�o�����H
 
-EXTERNED UINT		gdPageByteMax;	//!<	壱レスの最大バイト数
+EXTERNED UINT		gdPageByteMax;	//!<	�냌�X�̍ő�o�C�g��
 
-static TCHAR		gatExePath[MAX_PATH];	//!<	実行ファイルの位置
-static TCHAR		gatIniPath[MAX_PATH];	//!<	ＩＮＩファイルの位置
+static TCHAR		gatExePath[MAX_PATH];	//!<	���s�t�@�C���̈ʒu
+static TCHAR		gatIniPath[MAX_PATH];	//!<	�h�m�h�t�@�C���̈ʒu
 
-EXTERNED INT		gbTmpltDock;	//!<	テンプレのドッキング
+EXTERNED INT		gbTmpltDock;	//!<	�e���v���̃h�b�L���O
 
-static list<OPENHIST>	gltOpenHist;	//!<	ファイル開いた履歴・
-EXTERNED HMENU		ghHistyMenu;		//!<	履歴表示する部分・動的に内容作成せないかん
+static list<OPENHIST>	gltOpenHist;	//!<	�t�@�C���J���������E
+EXTERNED HMENU		ghHistyMenu;		//!<	����\�����镔���E���I�ɓ��e�쐬���Ȃ�����
 
 
 static BOOLEAN		gbDummy;		//
 
 #ifdef BIG_TEXT_SEPARATE
-static BOOLEAN		gbSeparateMod;	//!<	分割読込したタブに変更マーク必要
+static BOOLEAN		gbSeparateMod;	//!<	�����Ǎ������^�u�ɕύX�}�[�N�K�v
 #endif
 
 #ifdef FIND_STRINGS
-extern  HWND		ghFindDlg;		//	検索ダイヤログのハンドル
+extern  HWND		ghFindDlg;		//	�����_�C�����O�̃n���h��
 #endif
-extern  HWND		ghMoziWnd;		//	文字ＡＡ変換ダイヤログのハンドル
+extern  HWND		ghMoziWnd;		//	�����`�`�ϊ��_�C�����O�̃n���h��
 
-extern  HWND		ghMaaFindDlg;	//	MAA検索ダイヤログハンドル
+extern  HWND		ghMaaFindDlg;	//	MAA�����_�C�����O�n���h��
 
-extern  UINT		 gdClickDrt;	//	ドラフトボードクルックスタイル
+extern  UINT		 gdClickDrt;	//	�h���t�g�{�[�h�N���b�N�X�^�C��
 extern  UINT		gdSubClickDrt;	//
 
-extern  HWND		ghViewWnd;		//	ビュー
+extern  HWND		ghViewWnd;		//	�r���[
 
-extern  UINT		 gdGridXpos;	//	グリッド線のＸ間隔
-extern  UINT		 gdGridYpos;	//	グリッド線のＹ間隔
-extern  UINT		gdRightRuler;	//	右線の位置ドット
-extern  UINT		gdUnderRuler;	//	下線の位置行数
+extern  UINT		 gdGridXpos;	//	�O���b�h���̂w�Ԋu
+extern  UINT		 gdGridYpos;	//	�O���b�h���̂x�Ԋu
+extern  UINT		gdRightRuler;	//	�E���̈ʒu�h�b�g
+extern  UINT		gdUnderRuler;	//	�����̈ʒu�s��
 
 #ifdef SPMOZI_ENCODE
-extern  UINT		gbSpMoziEnc;	//!<	機種依存文字を数値参照コピーする
+extern  UINT		gbSpMoziEnc;	//!<	�@��ˑ������𐔒l�Q�ƃR�s�[����
 #endif
 //-------------------------------------------------------------------------------------------------
 
 #ifdef PLUGIN_ENABLE
 
 //[_16in] Add - 2012/05/01
-//-- プラグイン関係
+//-- �v���O�C���֌W
 plugin::PLUGIN_FILE_LIST	gPluginList;
 #include "Plugin/PluginCtrlAsync.h"
 
 #endif
 
 
-//	ステータスバーの区切り
+//	�X�e�[�^�X�o�[�̋�؂�
 #define SB_ITEMS	8
 CONST INT	gadStsBarSize[] = { 50, 200, 350, 500, 700, 800, 900, -1 };
 //-------------------------------------------------------------------------------------------------
 
 VOID	Cls_OnActivate( HWND, UINT, HWND, BOOL );		//!<	
-BOOLEAN	Cls_OnCreate( HWND, LPCREATESTRUCT );			//!<	本体の WM_CREATE の処理・固定Editとかつくる
-VOID	Cls_OnCommand( HWND , INT, HWND, UINT );		//!<	本体の WM_COMMAND の処理
-VOID	Cls_OnPaint( HWND );							//!<	本体の WM_PAINT の処理・枠線描画とか
+BOOLEAN	Cls_OnCreate( HWND, LPCREATESTRUCT );			//!<	�{�̂� WM_CREATE �̏����E�Œ�Edit�Ƃ�����
+VOID	Cls_OnCommand( HWND , INT, HWND, UINT );		//!<	�{�̂� WM_COMMAND �̏���
+VOID	Cls_OnPaint( HWND );							//!<	�{�̂� WM_PAINT �̏����E�g���`��Ƃ�
 VOID	Cls_OnSize( HWND , UINT, INT, INT );			//!<	
 VOID	Cls_OnMove( HWND, INT, INT );					//!<	
-VOID	Cls_OnDestroy( HWND );							//!<	本体の WM_DESTROY の処理・BRUSHとかのオブジェクトの破壊を忘れないように
+VOID	Cls_OnDestroy( HWND );							//!<	�{�̂� WM_DESTROY �̏����EBRUSH�Ƃ��̃I�u�W�F�N�g�̔j���Y��Ȃ��悤��
 LRESULT	Cls_OnNotify( HWND , INT, LPNMHDR );			//!<	
 VOID	Cls_OnTimer( HWND, UINT );						//!<	
 VOID	Cls_OnDropFiles( HWND , HDROP );				//!<	
@@ -717,7 +717,7 @@ void	Cls_OnCopyData( HWND, HWND, PCOPYDATASTRUCT );	//!<
 
 INT_PTR	CALLBACK OptionDlgProc( HWND, UINT, WPARAM, LPARAM );	//!<	
 
-LRESULT	CALLBACK gpfFileTabProc( HWND, UINT, WPARAM, LPARAM );	//!<	複数ファイルタブのサブクラスプロシージャ
+LRESULT	CALLBACK gpfFileTabProc( HWND, UINT, WPARAM, LPARAM );	//!<	�����t�@�C���^�u�̃T�u�N���X�v���V�[�W��
 VOID	Ftb_OnMButtonUp( HWND, INT, INT, UINT );	//!<	
 
 HRESULT	ViewingFontNameLoad( VOID );	//!<	
@@ -729,12 +729,12 @@ VOID	TaskTrayIconEvent( HWND, UINT, UINT );	//!<
 
 
 /*!
-	アプリケーションのエントリポイント
-	@param[in]	hInstance		このモジュールのインスタンスハンドル
-	@param[in]	hPrevInstance	前のインスタンス。今は未使用
-	@param[in]	lpCmdLine		コマンドライン。トークン分解はされてない、ただの文字列
-	@param[in]	nCmdShow		起動時の表示状態が入ってる。表示とかそういうの
-	@retval FALSE	途中終了
+	�A�v���P�[�V�����̃G���g���|�C���g
+	@param[in]	hInstance		���̃��W���[���̃C���X�^���X�n���h��
+	@param[in]	hPrevInstance	�O�̃C���X�^���X�B���͖��g�p
+	@param[in]	lpCmdLine		�R�}���h���C���B�g�[�N�������͂���ĂȂ��A�����̕�����
+	@param[in]	nCmdShow		�N�����̕\����Ԃ������Ă�B�\���Ƃ�����������
+	@retval FALSE	�r���I��
 */
 INT APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow )
 {
@@ -757,22 +757,22 @@ INT APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	SYSTEMTIME	stTime;
 #endif
 #ifdef MULTIACT_RELAY
-	HWND	hWndActed;	//	起動済のやつのハンドル確保
+	HWND	hWndActed;	//	�N���ς̂�̃n���h���m��
 	COPYDATASTRUCT	stCopyData;
 #endif
 
 #ifdef _DEBUG
-	//_CRTDBG_ALLOC_MEM_DF;		//	指定が必要なフラグ
-	//_CRTDBG_CHECK_ALWAYS_DF;	//	メモリをチェック		_CRTDBG_CHECK_EVERY_128_DF
-	//_CRTDBG_LEAK_CHECK_DF;		//	終了時にメモリリークをチェック
+	//_CRTDBG_ALLOC_MEM_DF;		//	�w�肪�K�v�ȃt���O
+	//_CRTDBG_CHECK_ALWAYS_DF;	//	���������`�F�b�N		_CRTDBG_CHECK_EVERY_128_DF
+	//_CRTDBG_LEAK_CHECK_DF;		//	�I�����Ƀ��������[�N���`�F�b�N
 	//_CRTDBG_DELAY_FREE_MEM_DF;	//	
-	//	ここで使用するフラグを指定
+	//	�����Ŏg�p����t���O���w��
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_LEAK_CHECK_DF );
 	//_CrtSetBreakAlloc( 1979 );
-	//	数値はメモリ割当番号。リークしてたら、その表示のところに
-	//	書いてあるから、この関数で数値を宣言してもう一回実行すると、
-	//	リークする確保をしてるところで止まる
-	//	結構奥の方だから注意
+	//	���l�̓����������ԍ��B���[�N���Ă���A���̕\���̂Ƃ����
+	//	�����Ă��邩��A���̊֐��Ő��l��錾���Ă��������s����ƁA
+	//	���[�N����m�ۂ����Ă�Ƃ���Ŏ~�܂�
+	//	���\���̕������璍��
 #endif
 
 	INITCOMMONCONTROLSEX	iccex;
@@ -781,35 +781,35 @@ INT APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	InitCommonControlsEx( &iccex );
 
 
-	// グローバル文字列を初期化しています。
+	// �O���[�o������������������Ă��܂��B
 	LoadString(hInstance, IDS_APP_TITLE, gszTitle, MAX_STRING);
 	LoadString(hInstance, IDC_ORINRINEDITOR, gszWindowClass, MAX_STRING);
 
 
-	//	コマンドライン引数を確認・０は実行ファイル名、１以降に引数入ってる
+	//	�R�}���h���C���������m�F�E�O�͎��s�t�@�C�����A�P�ȍ~�Ɉ��������Ă�
 	ZeroMemory( atArgv, sizeof(atArgv) );
 	pptArgs = CommandLineToArgvW( GetCommandLine( ), &iArgc );
-	//	最初の一つ目だけ有効
+	//	�ŏ��̈�ڂ����L��
 	if( 2 <= iArgc ){	StringCchCopy( atArgv, MAX_PATH, pptArgs[1] );	}
 	LocalFree( pptArgs );
 
 	ghMutex = NULL;
 
-	//	実行ファイル位置確認
+	//	���s�t�@�C���ʒu�m�F
 	GetModuleFileName( hInstance, gatExePath, MAX_PATH );
 	PathRemoveFileSpec( gatExePath );
 
-	//	設定ファイル位置確認
+	//	�ݒ�t�@�C���ʒu�m�F
 	StringCchCopy( gatIniPath, MAX_PATH, gatExePath );
 	PathAppend( gatIniPath, INI_FILE );
 
 #ifdef MULTIACT_RELAY
 	dMultiEna = InitParamValue( INIT_LOAD, VL_MULTI_ACT_E, 0 );
-	if( !(dMultiEna) )	//	多重起動有効ならミューテックスチェック不要
+	if( !(dMultiEna) )	//	���d�N���L���Ȃ�~���[�e�b�N�X�`�F�b�N�s�v
 	{
 #endif
 
-		//	フルアクセス
+		//	�t���A�N�Z�X
 		SECURITY_DESCRIPTOR	stSeqDes;
 		SECURITY_ATTRIBUTES	secAttribute;
 		InitializeSecurityDescriptor( &stSeqDes, SECURITY_DESCRIPTOR_REVISION );
@@ -818,19 +818,19 @@ INT APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 		secAttribute.lpSecurityDescriptor	= &stSeqDes;
 		secAttribute.bInheritHandle			= TRUE; 
 
-		//	多重起動防止
-		ghMutex = CreateMutex( &secAttribute, TRUE, TEXT("OrinrinEditor") );	//	すでに起動しているか判定
+		//	���d�N���h�~
+		ghMutex = CreateMutex( &secAttribute, TRUE, TEXT("OrinrinEditor") );	//	���łɋN�����Ă��邩����
 		if( !(ghMutex) )
 		{
-			//	オープン失敗、とりあえず起動
+			//	�I�[�v�����s�A�Ƃ肠�����N��
 		}
-		else if( GetLastError() == ERROR_ALREADY_EXISTS )	//	すでに起動している
+		else if( GetLastError() == ERROR_ALREADY_EXISTS )	//	���łɋN�����Ă���
 		{
 	#ifdef MULTIACT_RELAY
 			hWndActed = FindWindow( gszWindowClass, NULL );
-			SetForegroundWindow( hWndActed );	//	先に起動のやつをフォアグラウンドにする
+			SetForegroundWindow( hWndActed );	//	��ɋN���̂���t�H�A�O���E���h�ɂ���
 
-			//	コマンド引数（ファイル名）あったら、ファイル名を送る
+			//	�R�}���h�����i�t�@�C�����j��������A�t�@�C�����𑗂�
 			if( 0 != atArgv[0] )
 			{
 				stCopyData.dwData = 1;
@@ -840,7 +840,7 @@ INT APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 				SendMessage( hWndActed, WM_COPYDATA, NULL, (LPARAM)(&stCopyData) );
 			}
 	#else
-			MessageBox( NULL, TEXT("已にアプリは起動してるよ！"), TEXT("お燐からのお知らせ"), MB_OK|MB_ICONINFORMATION );
+			MessageBox( NULL, TEXT("�߂ɃA�v���͋N�����Ă��I"), TEXT("���ӂ���̂��m�点"), MB_OK|MB_ICONINFORMATION );
 	#endif
 			ReleaseMutex( ghMutex );
 			CloseHandle( ghMutex );
@@ -865,7 +865,7 @@ INT APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	gbDummy = 0;
 
 #ifdef BIG_TEXT_SEPARATE
-	gbSeparateMod = FALSE;	//	分割読込したタブに変更マーク必要
+	gbSeparateMod = FALSE;	//	�����Ǎ������^�u�ɕύX�}�[�N�K�v
 #endif
 
 #ifdef WORK_LOG_OUT
@@ -891,27 +891,27 @@ INT APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	iCode = InitParamValue( INIT_LOAD, VL_CLASHCOVER, 0 );
 	if( iCode )
 	{
-		TRACE( TEXT("異常終了の可能性アリ") );
-		iCode = MessageBox( NULL, TEXT("エディタが正しく終了出来なかった気配があるよ。\r\nバックアップが残っているかもしれないから、先に確認してみて！\r\nこのまま起動してもいいかい？　「いいえ」を選ぶと、ここで終了するよ。"), TEXT("ごめんね"), MB_YESNO|MB_ICONWARNING|MB_DEFBUTTON2 );
+		TRACE( TEXT("�ُ�I���̉\���A��") );
+		iCode = MessageBox( NULL, TEXT("�G�f�B�^���������I���o���Ȃ������C�z�������B\r\n�o�b�N�A�b�v���c���Ă��邩������Ȃ�����A��Ɋm�F���Ă݂āI\r\n���̂܂܋N�����Ă����������H�@�u�������v��I�ԂƁA�����ŏI�������B"), TEXT("���߂��"), MB_YESNO|MB_ICONWARNING|MB_DEFBUTTON2 );
 		if( IDNO == iCode ){	return 0;	}
 	}
 	InitParamValue( INIT_SAVE, VL_CLASHCOVER, 1 );
 
-	ViewingFontNameLoad(  );	//	フォント名確保
+	ViewingFontNameLoad(  );	//	�t�H���g���m��
 
-	// アプリケーションの初期化を実行します:
+	// �A�v���P�[�V�����̏����������s���܂�:
 	if( !InitInstance( hInstance, nCmdShow , atArgv ) ){	return FALSE;	}
 
-	CntxEditInitialise( gatExePath, hInstance );	//	初期化の後でないといかん
+	CntxEditInitialise( gatExePath, hInstance );	//	�������̌�łȂ��Ƃ�����
 
 	VertInitialise( gatExePath, hInstance );
 
 	RegisterHotKey( ghMainWnd, IDHK_THREAD_DROP, MOD_CONTROL | MOD_SHIFT, VK_D );
 
-	//	読み込むテーブルに注意
+	//	�ǂݍ��ރe�[�u���ɒ���
 	pstAccel = AccelKeyTableLoadAlloc( &iEntry );
 	AccelKeyTableCreate( pstAccel, iEntry );
-	ToolBarInfoChange( pstAccel, iEntry );	//	ツールバーのツールチップテキストにもキーを表示せる
+	ToolBarInfoChange( pstAccel, iEntry );	//	�c�[���o�[�̃c�[���`�b�v�e�L�X�g�ɂ��L�[��\������
 	FREE( pstAccel );
 
 #ifdef TODAY_HINT_STYLE
@@ -922,20 +922,20 @@ INT APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 #ifdef PLUGIN_ENABLE
 	//---------------------------------------
 	//[_16in] Add - 2012/04/30
-	//	プラグイン初期化処理
+	//	�v���O�C������������
 
-	// プラグインへ渡すパラメータの設定
-	// ウィンドウハンドル
+	// �v���O�C���֓n���p�����[�^�̐ݒ�
+	// �E�B���h�E�n���h��
 	plugin::PluginInputParam	param;
 	param.hMainWnd    = ghMainWnd;
 	param.hMlutAAWnd  = ghMaaWnd;
 	param.hFileTabWnd = ghFileTabWnd;
 	param.hViewWnd    = ghViewWnd;
 
-	// メニューハンドル
+	// ���j���[�n���h��
 	param.hMainMenu   = ghMenu;
 
-	// プラグインの初期化
+	// �v���O�C���̏�����
 	plugin::InitializePlugin( param );
 	plugin::InitializePluginFileListAsync( ghMainWnd );
 
@@ -943,15 +943,15 @@ INT APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 #endif
 
 
-	//	メインメッセージループ
+	//	���C�����b�Z�[�W���[�v
 	for(;;)
 	{
 		msRslt = GetMessage( &msg, NULL, 0, 0 );
 		if( 1 != msRslt )	break;
 
-#ifdef FIND_STRINGS	//	文字列検索ダイヤログ
+#ifdef FIND_STRINGS	//	�����񌟍��_�C�����O
 		if( ghFindDlg )
-		{	//トップに来てるかどうか判断する
+		{	//�g�b�v�ɗ��Ă邩�ǂ������f����
 			if( ghFindDlg == GetForegroundWindow(  ) )
 			{
 				if( TranslateAccelerator( ghFindDlg, ghAccelTable, &msg ) )	continue;
@@ -959,9 +959,9 @@ INT APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 			}
 		}
 #endif
-		//	MAA検索ダイヤログ
+		//	MAA�����_�C�����O
 		if( ghMaaFindDlg )
-		{	//トップに来てるかどうか判断する
+		{	//�g�b�v�ɗ��Ă邩�ǂ������f����
 			if( ghMaaFindDlg == GetForegroundWindow(  ) )
 			{
 				if( TranslateAccelerator( ghMaaFindDlg, ghAccelTable, &msg ) )	continue;
@@ -980,7 +980,7 @@ INT APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	//---------------------------------------------------------------------
 	//[_16in] Add - 2012/05/01
 	//
-	//-- プラグインの廃棄処理
+	//-- �v���O�C���̔p������
 	plugin::FinalizePluginList( gPluginList );
 	plugin::FinalizePlugin();
 
@@ -1019,13 +1019,13 @@ LPTSTR ExePathGet( VOID )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ウインドウクラス生成
-	この関数および使い方は、'RegisterClassEx' 関数が追加された
-	Windows 95 より前の Win32 システムと互換させる場合にのみ必要です。
-	アプリケーションが、関連付けられた正しい形式の小さいアイコンを
-	取得できるようにするには、この関数を呼び出してください。
-	@param[in]	hInstance	このモジュールのインスタンスハンドル
-	@return 登録したクラスアトム
+	�E�C���h�E�N���X����
+	���̊֐�����юg�����́A'RegisterClassEx' �֐����ǉ����ꂽ
+	Windows 95 ���O�� Win32 �V�X�e���ƌ݊�������ꍇ�ɂ̂ݕK�v�ł��B
+	�A�v���P�[�V�������A�֘A�t����ꂽ�������`���̏������A�C�R����
+	�擾�ł���悤�ɂ���ɂ́A���̊֐����Ăяo���Ă��������B
+	@param[in]	hInstance	���̃��W���[���̃C���X�^���X�n���h��
+	@return �o�^�����N���X�A�g��
 */
 ATOM InitWndwClass( HINSTANCE hInstance )
 {
@@ -1049,12 +1049,12 @@ ATOM InitWndwClass( HINSTANCE hInstance )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	インスタンスハンドルを保存して、メインウィンドウを作成します。
-	この函数で、グローバル変数でインスタンスハンドルを保存し、
-	メインプログラムウィンドウを作成および表示します。
-	@param[in]	hInstance	インスタンスハンドル
-	@param[in]	nCmdShow	起動時の表示状態
-	@param[in]	ptArgv		コマンドラインで渡されたファイル名・無ければ０クルヤ状態・NULLではない
+	�C���X�^���X�n���h����ۑ����āA���C���E�B���h�E���쐬���܂��B
+	���̔����ŁA�O���[�o���ϐ��ŃC���X�^���X�n���h����ۑ����A
+	���C���v���O�����E�B���h�E���쐬����ѕ\�����܂��B
+	@param[in]	hInstance	�C���X�^���X�n���h��
+	@param[in]	nCmdShow	�N�����̕\�����
+	@param[in]	ptArgv		�R�}���h���C���œn���ꂽ�t�@�C�����E������΂O�N������ԁENULL�ł͂Ȃ�
 */
 BOOL InitInstance( HINSTANCE hInstance, INT nCmdShow, LPTSTR ptArgv )
 {
@@ -1067,18 +1067,18 @@ BOOL InitInstance( HINSTANCE hInstance, INT nCmdShow, LPTSTR ptArgv )
 
 
 
-	ghInst = hInstance;	//	グローバル変数にインスタンス処理を格納します。
+	ghInst = hInstance;	//	�O���[�o���ϐ��ɃC���X�^���X�������i�[���܂��B
 
-	SplitBarClass( hInstance );	//	スプリットバーの準備
+	SplitBarClass( hInstance );	//	�X�v���b�g�o�[�̏���
 
 	isMaxim = InitParamValue( INIT_LOAD, VL_MAXIMISED, 0 );
 
 	InitWindowPos( INIT_LOAD, WDP_MVIEW, &rect );
-	if( 0 == rect.right || 0 == rect.bottom )	//	幅高さが０はデータ無し
+	if( 0 == rect.right || 0 == rect.bottom )	//	���������O�̓f�[�^����
 	{
 		hWnd = GetDesktopWindow( );
 		GetWindowRect( hWnd, &rect );
-		rect.left   = ( rect.right  - W_WIDTH ) / 3;	//	左より
+		rect.left   = ( rect.right  - W_WIDTH ) / 3;	//	�����
 		rect.top    = ( rect.bottom - W_HEIGHT ) / 2;
 		rect.right  = W_WIDTH;
 		rect.bottom = W_HEIGHT;
@@ -1089,52 +1089,52 @@ BOOL InitInstance( HINSTANCE hInstance, INT nCmdShow, LPTSTR ptArgv )
 
 	if( !hWnd ){	return FALSE;	}
 
-	gbUniPad      = InitParamValue( INIT_LOAD, VL_USE_UNICODE,  1 );	//	ユニコ空白使う
+	gbUniPad      = InitParamValue( INIT_LOAD, VL_USE_UNICODE,  1 );	//	���j�R�󔒎g��
 
-	gbUniRadixHex = InitParamValue( INIT_LOAD, VL_UNIRADIX_HEX, 1 );	//	ユニコ表現１６進数
+	gbUniRadixHex = InitParamValue( INIT_LOAD, VL_UNIRADIX_HEX, 1 );	//	���j�R�\���P�U�i��
 
-	gdBUInterval  = InitParamValue( INIT_LOAD, VL_BACKUP_INTVL, 3 );	//	バックアップ３分毎
-	gbAutoBUmsg   = InitParamValue( INIT_LOAD, VL_BACKUP_MSGON, 1 );	//	バックアップメッセージ表示
-	gbCrLfCode    = InitParamValue( INIT_LOAD, VL_CRLF_CODE, 0 );		//	したらば改行
+	gdBUInterval  = InitParamValue( INIT_LOAD, VL_BACKUP_INTVL, 3 );	//	�o�b�N�A�b�v�R����
+	gbAutoBUmsg   = InitParamValue( INIT_LOAD, VL_BACKUP_MSGON, 1 );	//	�o�b�N�A�b�v���b�Z�[�W�\��
+	gbCrLfCode    = InitParamValue( INIT_LOAD, VL_CRLF_CODE, 0 );		//	������Ή��s
 
-	gbSaveMsgOn   = InitParamValue( INIT_LOAD, VL_SAVE_MSGON, 1 );		//	保存メッセージ表示
+	gbSaveMsgOn   = InitParamValue( INIT_LOAD, VL_SAVE_MSGON, 1 );		//	�ۑ����b�Z�[�W�\��
 
-	gbTmpltDock   = InitParamValue( INIT_LOAD, VL_PLS_LN_DOCK,  1 );	//	壱行ブラシテンプレ頁一覧くっつける
+	gbTmpltDock   = InitParamValue( INIT_LOAD, VL_PLS_LN_DOCK,  1 );	//	��s�u���V�e���v���ňꗗ��������
 
-	gdPageByteMax = InitParamValue( INIT_LOAD, VL_PAGEBYTE_MAX, PAGE_BYTE_MAX );	//	最大バイト数４０９６
+	gdPageByteMax = InitParamValue( INIT_LOAD, VL_PAGEBYTE_MAX, PAGE_BYTE_MAX );	//	�ő�o�C�g���S�O�X�U
 
 #ifdef SPMOZI_ENCODE
-	gbSpMoziEnc   = InitParamValue( INIT_LOAD, VL_SPMOZI_ENC, 0 );	//	機種依存文字を数値参照コピーする
+	gbSpMoziEnc   = InitParamValue( INIT_LOAD, VL_SPMOZI_ENC, 0 );	//	�@��ˑ������𐔒l�Q�ƃR�s�[����
 #endif
 
 	ghMainWnd = hWnd;
 
-	//	システムメニューに機能追加
+	//	�V�X�e�����j���[�ɋ@�\�ǉ�
 	hSubMenu = GetSystemMenu( hWnd, FALSE );
 	InsertMenu( hSubMenu, 0, MF_BYPOSITION | MF_SEPARATOR, 0, 0 );
-	InsertMenu( hSubMenu, 0, MF_BYPOSITION, IDM_POSITION_RESET, TEXT("窓配置リセット") );
+	InsertMenu( hSubMenu, 0, MF_BYPOSITION, IDM_POSITION_RESET, TEXT("���z�u���Z�b�g") );
 
 	ghMenu = GetMenu( hWnd );
 
-	//	メニューにツリー構築はいらないのでカット
-	hSubMenu = GetSubMenu( ghMenu , 0 );	//	ファイル
+	//	���j���[�Ƀc���[�\�z�͂���Ȃ��̂ŃJ�b�g
+	hSubMenu = GetSubMenu( ghMenu , 0 );	//	�t�@�C��
 	DeleteMenu( hSubMenu, IDM_TREE_RECONSTRUCT, MF_BYCOMMAND );
 #ifndef ACCELERATOR_EDIT
 	DeleteMenu( hSubMenu, IDM_ACCELKEY_EDIT_DLG_OPEN, MF_BYCOMMAND );
 #endif
 
-	hSubMenu = GetSubMenu( ghMenu , 1 );	//	編集
+	hSubMenu = GetSubMenu( ghMenu , 1 );	//	�ҏW
 #ifndef SEARCH_HIGHLIGHT
 	DeleteMenu( hSubMenu, IDM_FIND_HIGHLIGHT_OFF, MF_BYCOMMAND );
 #endif
 #ifndef FIND_STRINGS
 	DeleteMenu( hSubMenu, IDM_FIND_DLG_OPEN, MF_BYCOMMAND );
-//	DeleteMenu( hSubMenu, 19, MF_BYPOSITION );	//	削除順番注意
+//	DeleteMenu( hSubMenu, 19, MF_BYPOSITION );	//	�폜���Ԓ���
 #endif
 
-//	hSubMenu = GetSubMenu( ghMenu , 2 );	//	挿入
+//	hSubMenu = GetSubMenu( ghMenu , 2 );	//	�}��
 
-	hSubMenu = GetSubMenu( ghMenu , 4 );	//	表示
+	hSubMenu = GetSubMenu( ghMenu , 4 );	//	�\��
 	if( gbTmpltDock )
 	{
 		DeleteMenu( hSubMenu, IDM_PAGELIST_VIEW, MF_BYCOMMAND );
@@ -1148,9 +1148,9 @@ BOOL InitInstance( HINSTANCE hInstance, INT nCmdShow, LPTSTR ptArgv )
 
 	SqnSetting(  );
 
-	if( gbTmpltDock )	//	ドッキング設定であるか
+	if( gbTmpltDock )	//	�h�b�L���O�ݒ�ł��邩
 	{
-		//	設定からスプリットバーの位置を引っ張る
+		//	�ݒ肩��X�v���b�g�o�[�̈ʒu����������
 		grdSplitPos = InitParamValue( INIT_LOAD, VL_MAIN_SPLIT, PLIST_DOCK );
 		if( grdSplitPos < SPLITBAR_WIDTH || rect.right <= grdSplitPos ){	grdSplitPos = PLIST_DOCK;	}
 		sptBuf = grdSplitPos;
@@ -1160,14 +1160,14 @@ BOOL InitInstance( HINSTANCE hInstance, INT nCmdShow, LPTSTR ptArgv )
 	else{	ghMainSplitWnd = NULL;	grdSplitPos = 0;	}
 
 
-	ghPgVwWnd = PageListInitialise( hInstance, hWnd, &rect );	//	頁一覧
+	ghPgVwWnd = PageListInitialise( hInstance, hWnd, &rect );	//	�ňꗗ
 
-	ghLnTmplWnd = LineTmpleInitialise( hInstance, hWnd, &rect );	//	壱行テンプレ
+	ghLnTmplWnd = LineTmpleInitialise( hInstance, hWnd, &rect );	//	��s�e���v��
 
-	ViewInitialise( hInstance, hWnd, &rect, ptArgv );	//	編集ビュー作成
+	ViewInitialise( hInstance, hWnd, &rect, ptArgv );	//	�ҏW�r���[�쐬
 	ViewMaaItemsModeSet( InitParamValue( INIT_LOAD, VL_MAA_LCLICK, MAA_INSERT ), InitParamValue( INIT_LOAD, VL_MAA_MCLICK, MAA_INSERT ) );
 
-	LayerBoxInitialise( hInstance, &rect );	//	レイヤボックス作成
+	LayerBoxInitialise( hInstance, &rect );	//	���C���{�b�N�X�쐬
 	LayerBoxAlphaSet( InitParamValue( INIT_LOAD, VL_LAYER_TRANS, 192 ) );
 
 	UniDlgInitialise( hWnd, TRUE );
@@ -1203,14 +1203,14 @@ BOOL InitInstance( HINSTANCE hInstance, INT nCmdShow, LPTSTR ptArgv )
 		SetTimer( hWnd, IDT_BACKUP_TIMER, (gdBUInterval * 60000), NULL );
 	}
 
-	ghBrTmplWnd = BrushTmpleInitialise( hInstance, hWnd, &rect, ghMaaWnd );	//	ブラシ窓
+	ghBrTmplWnd = BrushTmpleInitialise( hInstance, hWnd, &rect, ghMaaWnd );	//	�u���V��
 
 
 	ghMaaWnd = MaaTmpltInitialise( hInstance, hWnd, &wnRect );
 
-	MenuItemCheckOnOff( IDM_MAATMPLE_VIEW, MaaViewToggle( 0 ) );	//	複数行テンプレ窓の表示・非表示のチェキ
+	MenuItemCheckOnOff( IDM_MAATMPLE_VIEW, MaaViewToggle( 0 ) );	//	�����s�e���v�����̕\���E��\���̃`�F�L
 
-	MenuItemCheckOnOff( IDM_UNICODE_TOGGLE , gbUniPad );	 //	ユニコードON/OFFのチェキ
+	MenuItemCheckOnOff( IDM_UNICODE_TOGGLE , gbUniPad );	 //	���j�R�[�hON/OFF�̃`�F�L
 
 	DraughtInitialise( hInstance, hWnd );
 
@@ -1236,9 +1236,9 @@ BOOL InitInstance( HINSTANCE hInstance, INT nCmdShow, LPTSTR ptArgv )
 #ifdef ACCELERATOR_EDIT
 
 /*!
-	アクセラテーブルをダイナミックに確保
-	@param[out]	piEntry	確保したエントリ数を戻す
-	@return		確保したテーブル構造体のポインター・freeに注意
+	�A�N�Z���e�[�u�����_�C�i�~�b�N�Ɋm��
+	@param[out]	piEntry	�m�ۂ����G���g������߂�
+	@return		�m�ۂ����e�[�u���\���̂̃|�C���^�[�Efree�ɒ���
 */
 LPACCEL AccelKeyTableGetAlloc( LPINT piEntry )
 {
@@ -1248,7 +1248,7 @@ LPACCEL AccelKeyTableGetAlloc( LPINT piEntry )
 	if( !(piEntry) )	return NULL;
 	*piEntry = 0;
 
-	//	まず個数確保
+	//	�܂����m��
 	iItems = CopyAcceleratorTable( ghAccelTable, NULL, 0 );
 	if( 0 >= iItems )	return NULL;
 
@@ -1264,10 +1264,10 @@ LPACCEL AccelKeyTableGetAlloc( LPINT piEntry )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	構造体テーブルを受け取って、それをアクセラハンドルにする・NULLならResourceから
-	@param[in]	pstAccel	内容テーブル・無い時はNULL
-	@param[in]	iEntry		テーブルのエントリ数
-	@return	アクセラハンドル
+	�\���̃e�[�u�����󂯎���āA������A�N�Z���n���h���ɂ���ENULL�Ȃ�Resource����
+	@param[in]	pstAccel	���e�e�[�u���E��������NULL
+	@param[in]	iEntry		�e�[�u���̃G���g����
+	@return	�A�N�Z���n���h��
 */
 HACCEL AccelKeyTableCreate( LPACCEL pstAccel, INT iEntry )
 {
@@ -1275,7 +1275,7 @@ HACCEL AccelKeyTableCreate( LPACCEL pstAccel, INT iEntry )
 	
 	if( pstAccel )
 	{
-		DestroyAcceleratorTable( ghAccelTable );	//	前のヤツぶっ壊して
+		DestroyAcceleratorTable( ghAccelTable );	//	�O�̃��c�Ԃ��󂵂�
 
 		hAccel = CreateAcceleratorTable( pstAccel, iEntry );
 	}
@@ -1284,7 +1284,7 @@ HACCEL AccelKeyTableCreate( LPACCEL pstAccel, INT iEntry )
 		hAccel = LoadAccelerators( ghInst, MAKEINTRESOURCE(IDC_ORINRINEDITOR) );
 	}
 
-	ghAccelTable = hAccel;	//	大域変数にいれる・本当はこういうやり方は良くないと思われ
+	ghAccelTable = hAccel;	//	���ϐ��ɂ����E�{���͂������������͗ǂ��Ȃ��Ǝv���
 
 	AccelKeyMenuRewrite( ghMainWnd, pstAccel, iEntry );
 
@@ -1294,9 +1294,9 @@ HACCEL AccelKeyTableCreate( LPACCEL pstAccel, INT iEntry )
 #endif
 
 /*!
-	タイトルバーを変更する
-	@param[in]	ptText	タイトルにくっつける文字列・NULLで終わってないと酷い目にあうぞ
-	@return		HRESULT	終了状態コード
+	�^�C�g���o�[��ύX����
+	@param[in]	ptText	�^�C�g���ɂ������镶����ENULL�ŏI����ĂȂ��ƍ����ڂɂ�����
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT AppTitleChange( LPTSTR ptText )
 {
@@ -1321,9 +1321,9 @@ HRESULT AppTitleChange( LPTSTR ptText )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	タイトルバーにトレスモード表記を漬けたり消したり
-	@param[in]	bMode	非０トレスモード開始　０終わり
-	@return		HRESULT	終了状態コード
+	�^�C�g���o�[�Ƀg���X���[�h�\�L��Ђ������������
+	@param[in]	bMode	��O�g���X���[�h�J�n�@�O�I���
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT AppTitleTrace( UINT bMode )
 {
@@ -1333,7 +1333,7 @@ HRESULT AppTitleTrace( UINT bMode )
 	if( bMode )
 	{
 		GetWindowText( ghMainWnd, atOrig, MAX_PATH );
-		StringCchPrintf( atBuff, MAX_PATH, TEXT("%s [トレスモード]"), atOrig );
+		StringCchPrintf( atBuff, MAX_PATH, TEXT("%s [�g���X���[�h]"), atOrig );
 		SetWindowText( ghMainWnd, atBuff );
 	}
 	else
@@ -1347,13 +1347,13 @@ HRESULT AppTitleTrace( UINT bMode )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	バージョン情報ボックスのメッセージハンドラです。
-	@param[in]	hDlg		ダイヤログハンドル
-	@param[in]	message		ウインドウメッセージの識別番号
-	@param[in]	wParam		追加の情報１
-	@param[in]	lParam		追加の情報２
-	@retval 0	メッセージは処理していない
-	@retval no0	なんか処理された
+	�o�[�W�������{�b�N�X�̃��b�Z�[�W�n���h���ł��B
+	@param[in]	hDlg		�_�C�����O�n���h��
+	@param[in]	message		�E�C���h�E���b�Z�[�W�̎��ʔԍ�
+	@param[in]	wParam		�ǉ��̏��P
+	@param[in]	lParam		�ǉ��̏��Q
+	@retval 0	���b�Z�[�W�͏������Ă��Ȃ�
+	@retval no0	�Ȃ񂩏������ꂽ
 */
 INT_PTR CALLBACK About( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
@@ -1376,13 +1376,13 @@ INT_PTR CALLBACK About( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	メインのウインドウプロシージャ
-	@param[in]	hWnd		親ウインドウのハンドル
-	@param[in]	message		ウインドウメッセージの識別番号
-	@param[in]	wParam		追加の情報１
-	@param[in]	lParam		追加の情報２
-	@retval 0	メッセージ処理済み
-	@retval no0	ここでは処理せず次に回す
+	���C���̃E�C���h�E�v���V�[�W��
+	@param[in]	hWnd		�e�E�C���h�E�̃n���h��
+	@param[in]	message		�E�C���h�E���b�Z�[�W�̎��ʔԍ�
+	@param[in]	wParam		�ǉ��̏��P
+	@param[in]	lParam		�ǉ��̏��Q
+	@retval 0	���b�Z�[�W�����ς�
+	@retval no0	�����ł͏����������ɉ�
 */
 LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
@@ -1393,20 +1393,20 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 
 	switch( message )
 	{
-		HANDLE_MSG( hWnd, WM_CREATE,		Cls_OnCreate );		//	画面の構成パーツを作る。ボタンとか
-		HANDLE_MSG( hWnd, WM_PAINT,			Cls_OnPaint );		//	画面の更新とか
-		HANDLE_MSG( hWnd, WM_COMMAND,		Cls_OnCommand );	//	ボタン押されたとかのコマンド処理
-		HANDLE_MSG( hWnd, WM_DESTROY,		Cls_OnDestroy );	//	ソフト終了時の処理
-		HANDLE_MSG( hWnd, WM_SIZE,			Cls_OnSize );		//	サイズ変更されたら
-		HANDLE_MSG( hWnd, WM_MOVE,			Cls_OnMove );		//	位置変更されたら
-		HANDLE_MSG( hWnd, WM_DROPFILES,		Cls_OnDropFiles );	//	ドラッグンドロッペ
-		HANDLE_MSG( hWnd, WM_ACTIVATE,		Cls_OnActivate );	//	アクティブになったりはずれたり
-		HANDLE_MSG( hWnd, WM_NOTIFY,		Cls_OnNotify  );	//	コモンコントロールの個別イベント
-		HANDLE_MSG( hWnd, WM_TIMER,			Cls_OnTimer );		//	タイマ
-		HANDLE_MSG( hWnd, WM_CONTEXTMENU,	Cls_OnContextMenu );//	右クリめにう
-		HANDLE_MSG( hWnd, WM_HOTKEY,		Cls_OnHotKey  );	//	ホットキーが押された
+		HANDLE_MSG( hWnd, WM_CREATE,		Cls_OnCreate );		//	��ʂ̍\���p�[�c�����B�{�^���Ƃ�
+		HANDLE_MSG( hWnd, WM_PAINT,			Cls_OnPaint );		//	��ʂ̍X�V�Ƃ�
+		HANDLE_MSG( hWnd, WM_COMMAND,		Cls_OnCommand );	//	�{�^�������ꂽ�Ƃ��̃R�}���h����
+		HANDLE_MSG( hWnd, WM_DESTROY,		Cls_OnDestroy );	//	�\�t�g�I�����̏���
+		HANDLE_MSG( hWnd, WM_SIZE,			Cls_OnSize );		//	�T�C�Y�ύX���ꂽ��
+		HANDLE_MSG( hWnd, WM_MOVE,			Cls_OnMove );		//	�ʒu�ύX���ꂽ��
+		HANDLE_MSG( hWnd, WM_DROPFILES,		Cls_OnDropFiles );	//	�h���b�O���h���b�y
+		HANDLE_MSG( hWnd, WM_ACTIVATE,		Cls_OnActivate );	//	�A�N�e�B�u�ɂȂ�����͂��ꂽ��
+		HANDLE_MSG( hWnd, WM_NOTIFY,		Cls_OnNotify  );	//	�R�����R���g���[���̌ʃC�x���g
+		HANDLE_MSG( hWnd, WM_TIMER,			Cls_OnTimer );		//	�^�C�}
+		HANDLE_MSG( hWnd, WM_CONTEXTMENU,	Cls_OnContextMenu );//	�E�N���߂ɂ�
+		HANDLE_MSG( hWnd, WM_HOTKEY,		Cls_OnHotKey  );	//	�z�b�g�L�[�������ꂽ
 
-		HANDLE_MSG( hWnd, WM_DRAWITEM,		Cls_OnDrawItem );	//	オーナードロー
+		HANDLE_MSG( hWnd, WM_DRAWITEM,		Cls_OnDrawItem );	//	�I�[�i�[�h���[
 #ifdef MULTIACT_RELAY
 		HANDLE_MSG( hWnd, WM_COPYDATA,		Cls_OnCopyData );
 #endif
@@ -1435,7 +1435,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 #endif
 
 #ifdef USE_NOTIFYICON
-		//	タスクトレイのアイコンでエベンツ発生
+		//	�^�X�N�g���C�̃A�C�R���ŃG�x���c����
 		case WMP_TRAYNOTIFYICON:
 			TaskTrayIconEvent( hWnd, (UINT)wParam, (UINT)lParam );
 			return 0;
@@ -1460,11 +1460,11 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	あくちぶなったら呼ばれる
-	@param[in]	hWnd			ウインドウハンドル
-	@param[in]	state			状態
-	@param[in]	hWndActDeact	あくちぶ又は非あくちぶになるやつ・NULLでも可
-	@param[in]	fMinimized		最小化ならNULL
+	�������ԂȂ�����Ă΂��
+	@param[in]	hWnd			�E�C���h�E�n���h��
+	@param[in]	state			���
+	@param[in]	hWndActDeact	�������Ԗ��͔񂠂����ԂɂȂ��ENULL�ł���
+	@param[in]	fMinimized		�ŏ����Ȃ�NULL
 */
 VOID Cls_OnActivate( HWND hWnd, UINT state, HWND hWndActDeact, BOOL fMinimized )
 {
@@ -1473,9 +1473,9 @@ VOID Cls_OnActivate( HWND hWnd, UINT state, HWND hWndActDeact, BOOL fMinimized )
 //	BOOLEAN		bRslt;
 
 /*
-WA_INACTIVE		0	ウィンドウが非アクティブになります。
-WA_ACTIVE		1	マウスをクリックする以外の方法 (ウィンドウの選択にキーボード インターフェイスを使用する方法など) で、ウィンドウがアクティブになります。
-WA_CLICKACTIVE	2	マウスクリックによって、ウィンドウがアクティブになります。
+WA_INACTIVE		0	�E�B���h�E����A�N�e�B�u�ɂȂ�܂��B
+WA_ACTIVE		1	�}�E�X���N���b�N����ȊO�̕��@ (�E�B���h�E�̑I���ɃL�[�{�[�h �C���^�[�t�F�C�X���g�p������@�Ȃ�) �ŁA�E�B���h�E���A�N�e�B�u�ɂȂ�܂��B
+WA_CLICKACTIVE	2	�}�E�X�N���b�N�ɂ���āA�E�B���h�E���A�N�e�B�u�ɂȂ�܂��B
 */
 	TRACE( TEXT("MAIN ACTIVATE STATE[%u] HWND[%X] MIN[%u]"), state, hWndActDeact, fMinimized );
 
@@ -1490,14 +1490,14 @@ WA_CLICKACTIVE	2	マウスクリックによって、ウィンドウがアクテ
 		else							hWorkWnd = hWnd;
 		SetWindowPos( ghPgVwWnd, hWorkWnd, 0, 0, 0, 0, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE );
 
-		if( InitParamValue( INIT_LOAD, VL_MAA_TOPMOST, 1 ) )	//	ＭＡＡ窓
+		if( InitParamValue( INIT_LOAD, VL_MAA_TOPMOST, 1 ) )	//	�l�`�`��
 		{
-			rdExStyle = GetWindowLongPtr( ghMaaWnd, GWL_EXSTYLE );	//	常手前の処理は不要
+			rdExStyle = GetWindowLongPtr( ghMaaWnd, GWL_EXSTYLE );	//	���O�̏����͕s�v
 			if( WS_EX_TOPMOST & rdExStyle )	hWorkWnd = HWND_TOPMOST;
 			else							hWorkWnd = hWnd;
 			SetWindowPos( ghMaaWnd, hWorkWnd, 0, 0, 0, 0, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE );
 		}
-		else	//	明示的にＯＦＦ？
+		else	//	�����I�ɂn�e�e�H
 		{
 			ShowWindow( ghMaaWnd, SW_HIDE );
 		}
@@ -1527,10 +1527,10 @@ WA_CLICKACTIVE	2	マウスクリックによって、ウィンドウがアクテ
 
 
 /*!
-	メインのクリエイト。
-	@param[in]	hWnd			親ウインドウのハンドル
-	@param[in]	lpCreateStruct	アプリケーションの初期化内容
-	@return	TRUE	特になし
+	���C���̃N���G�C�g�B
+	@param[in]	hWnd			�e�E�C���h�E�̃n���h��
+	@param[in]	lpCreateStruct	�A�v���P�[�V�����̏��������e
+	@return	TRUE	���ɂȂ�
 */
 BOOLEAN Cls_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 {
@@ -1540,7 +1540,7 @@ BOOLEAN Cls_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 	TCITEM	stTcItem;
 	TTTOOLINFO	stToolInfo;
 
-	HINSTANCE lcInst = lpCreateStruct->hInstance;	//	受け取った初期化情報から、インスタンスハンドルをひっぱる
+	HINSTANCE lcInst = lpCreateStruct->hInstance;	//	�󂯎������������񂩂�A�C���X�^���X�n���h�����Ђ��ς�
 
 
 	DragAcceptFiles( hWnd, TRUE );
@@ -1549,7 +1549,7 @@ BOOLEAN Cls_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 
 #ifdef USE_NOTIFYICON
 	NOTIFYICONDATA	nid;
-	//	タスクトレイアイコンとバルーンヘルプ
+	//	�^�X�N�g���C�A�C�R���ƃo���[���w���v
 	ZeroMemory( &nid, sizeof(NOTIFYICONDATA) );
 	nid.cbSize = sizeof(NOTIFYICONDATA);
 	nid.hWnd   = hWnd;
@@ -1561,16 +1561,16 @@ BOOLEAN Cls_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 	Shell_NotifyIcon( NIM_ADD, &nid );
 #endif
 
-//ツールバー作成
+//�c�[���o�[�쐬
 	ToolBarCreate( hWnd, lcInst );
 
 	ghNameFont = CreateFont( 12, 0, 0, 0, FW_REGULAR, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, PROOF_QUALITY, VARIABLE_PITCH, TEXT("MS UI Gothic") );
 
-//マルチファイルオーポン
+//�}���`�t�@�C���I�[�|��
 	ghFileTabWnd = CreateWindowEx( 0, WC_TABCONTROL, TEXT("filetab"), WS_VISIBLE | WS_CHILD | WS_CLIPSIBLINGS | TCS_SINGLELINE, 0, 0, clRect.right, 0, hWnd, (HMENU)IDTB_MULTIFILE, lcInst, NULL );
 	SetWindowFont( ghFileTabWnd, ghNameFont, FALSE );
 
-	//	サブクラス
+	//	�T�u�N���X
 	gpfOriginFileTabProc = SubclassWindow( ghFileTabWnd, gpfFileTabProc );
 
 	ZeroMemory( &stTcItem, sizeof(TCITEM) );
@@ -1583,9 +1583,9 @@ BOOLEAN Cls_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 	tiRect.bottom  += tiRect.top;
 	MoveWindow( ghFileTabWnd, 0, tbRect.bottom, clRect.right, tiRect.bottom, TRUE );
 
-	//	ツールチップ・ファイルパス表示汁
+	//	�c�[���`�b�v�E�t�@�C���p�X�\���`
 	ghFileTabTip = CreateWindowEx( WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL, TTS_NOPREFIX | TTS_ALWAYSTIP, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, ghFileTabWnd, NULL, lcInst, NULL );
-	//	ツールチップをコールバックで割り付け
+	//	�c�[���`�b�v���R�[���o�b�N�Ŋ���t��
 	ZeroMemory( &stToolInfo, sizeof(TTTOOLINFO) );
 	GetClientRect( ghFileTabWnd, &stToolInfo.rect );
 	stToolInfo.cbSize   = sizeof(TTTOOLINFO);
@@ -1593,9 +1593,9 @@ BOOLEAN Cls_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 	stToolInfo.hinst    = NULL;	//	
 	stToolInfo.hwnd     = ghFileTabWnd;
 	stToolInfo.uId      = IDTT_TILETAB_TIP;
-	stToolInfo.lpszText = LPSTR_TEXTCALLBACK;	//	コレを指定するとコールバックになる
+	stToolInfo.lpszText = LPSTR_TEXTCALLBACK;	//	�R�����w�肷��ƃR�[���o�b�N�ɂȂ�
 	SendMessage( ghFileTabTip, TTM_ADDTOOL, 0, (LPARAM)&stToolInfo );
-	SendMessage( ghFileTabTip, TTM_SETMAXTIPWIDTH, 0, 0 );	//	チップの幅。０設定でいい。これしとかないと改行されない
+	SendMessage( ghFileTabTip, TTM_SETMAXTIPWIDTH, 0, 0 );	//	�`�b�v�̕��B�O�ݒ�ł����B���ꂵ�Ƃ��Ȃ��Ɖ��s����Ȃ�
 
 
 	ghStsRedBrush = CreateSolidBrush( 0xFF );
@@ -1605,32 +1605,32 @@ BOOLEAN Cls_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 
 	StatusBar_SetText( ghStsBarWnd, 1 , TEXT("") );
 
-//	StatusBar_SetText( ghStsBarWnd, (SB_BYTECNT | SBT_OWNERDRAW) , 0 );	//	オーナードロー
+//	StatusBar_SetText( ghStsBarWnd, (SB_BYTECNT | SBT_OWNERDRAW) , 0 );	//	�I�[�i�[�h���[
 
 	return TRUE;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	メインのCOMMANDメッセージの受け取り。ボタン押されたとかで発生
-	@param[in]	hWnd		親ウインドウのハンドル
-	@param[in]	id			メッセージを発生させた子ウインドウの識別子	LOWORD(wParam)
-	@param[in]	hWndCtl		メッセージを発生させた子ウインドウのハンドル	lParam
-	@param[in]	codeNotify	通知メッセージ	HIWORD(wParam)
-	@return		なし
+	���C����COMMAND���b�Z�[�W�̎󂯎��B�{�^�������ꂽ�Ƃ��Ŕ���
+	@param[in]	hWnd		�e�E�C���h�E�̃n���h��
+	@param[in]	id			���b�Z�[�W�𔭐��������q�E�C���h�E�̎��ʎq	LOWORD(wParam)
+	@param[in]	hWndCtl		���b�Z�[�W�𔭐��������q�E�C���h�E�̃n���h��	lParam
+	@param[in]	codeNotify	�ʒm���b�Z�[�W	HIWORD(wParam)
+	@return		�Ȃ�
 */
 VOID Cls_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 {
 #ifdef NDEBUG
 	 INT	iRslt;
 #endif
-	//	キーボードショートカットは、そのときACTIVEなウインドウに行く
+	//	�L�[�{�[�h�V���[�g�J�b�g�́A���̂Ƃ�ACTIVE�ȃE�C���h�E�ɍs��
 
 	switch( id )
 	{
 		case  IDM_ABOUT:	DialogBox( ghInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About );	return;
 
-		case IDM_EXIT:	//	WM_CLOSEとの整合性に注意セヨ
+		case IDM_EXIT:	//	WM_CLOSE�Ƃ̐������ɒ��ӃZ��
 #ifdef NDEBUG
 			iRslt = DocFileCloseCheck( hWnd, TRUE );
 			if( iRslt ){	DestroyWindow( hWnd );	}
@@ -1647,9 +1647,9 @@ VOID Cls_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	PAINT。無効領域が出来たときに発生。背景の扱いに注意。背景を塗りつぶしてから、オブジェクトを描画
-	@param[in]	hWnd	親ウインドウのハンドル
-	@return		無し
+	PAINT�B�����̈悪�o�����Ƃ��ɔ����B�w�i�̈����ɒ��ӁB�w�i��h��Ԃ��Ă���A�I�u�W�F�N�g��`��
+	@param[in]	hWnd	�e�E�C���h�E�̃n���h��
+	@return		����
 */
 VOID Cls_OnPaint( HWND hWnd )
 {
@@ -1665,15 +1665,15 @@ VOID Cls_OnPaint( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	タイマのアレ
-	@param[in]	hWnd	親ウインドウのハンドル
-	@param[in]	id		タイマＩＤ
-	@return		無し
+	�^�C�}�̃A��
+	@param[in]	hWnd	�e�E�C���h�E�̃n���h��
+	@param[in]	id		�^�C�}�h�c
+	@return		����
 */
 VOID Cls_OnTimer( HWND hWnd, UINT id )
 {
 	if( IDT_BACKUP_TIMER != id )	return;
-	//	タイマ増えたら注意
+	//	�^�C�}�������璍��
 
 	DocFileBackup( hWnd );
 
@@ -1682,25 +1682,25 @@ VOID Cls_OnTimer( HWND hWnd, UINT id )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ウィンドウのサイズ変更が完了する前に送られてくる
-	@param[in]	hWnd	ウインドウハンドル
-	@param[in]	pstWpos	新しい位置と大きさが入ってる
-	@return		このMessageを処理したら０
+	�E�B���h�E�̃T�C�Y�ύX����������O�ɑ����Ă���
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@param[in]	pstWpos	�V�����ʒu�Ƒ傫���������Ă�
+	@return		����Message������������O
 */
 BOOL Cls_OnWindowPosChanging( HWND hWnd, LPWINDOWPOS pstWpos )
 {
 	RECT	winPos;
 
-	GetWindowRect( hWnd, &winPos );	//	サイズ変更前のがゲッツできる
+	GetWindowRect( hWnd, &winPos );	//	�T�C�Y�ύX�O�̂��Q�b�c�ł���
 	winPos.right  = winPos.right - winPos.left;
-	winPos.bottom = winPos.bottom - winPos.top;	//	左上位置と、幅高さにしておく
+	winPos.bottom = winPos.bottom - winPos.top;	//	����ʒu�ƁA�������ɂ��Ă���
 
 	TRACE( TEXT("MAIN WM_WINDOWPOSCHANGING [%d %d %d %d][%d %d %d %d]"), winPos.left, winPos.top, winPos.right, winPos.bottom, pstWpos->x, pstWpos->y, pstWpos->cx, pstWpos->cy );
 
-	giResizeWide = pstWpos->cx - winPos.right;	//	プラマイ方向注意。＋で幅広がってる
-	//	高さもとっとく
+	giResizeWide = pstWpos->cx - winPos.right;	//	�v���}�C�������ӁB�{�ŕ��L�����Ă�
+	//	�������Ƃ��Ƃ�
 
-	//	今のところ意味の無い処理
+	//	���̂Ƃ���Ӗ��̖�������
 
 	return TRUE;
 }
@@ -1708,12 +1708,12 @@ BOOL Cls_OnWindowPosChanging( HWND hWnd, LPWINDOWPOS pstWpos )
 
 
 /*!
-	ウインドウがサイズ変更されたとき
-	@param[in]	hWnd	親ウインドウのハンドル
-	@param[in]	state	変更の状態・SIZE_MINIMIZED とか
-	@param[in]	cx		クライヤントＸサイズ
-	@param[in]	cy		クライヤントＹサイズ
-	@return		無し
+	�E�C���h�E���T�C�Y�ύX���ꂽ�Ƃ�
+	@param[in]	hWnd	�e�E�C���h�E�̃n���h��
+	@param[in]	state	�ύX�̏�ԁESIZE_MINIMIZED �Ƃ�
+	@param[in]	cx		�N���C�����g�w�T�C�Y
+	@param[in]	cy		�N���C�����g�x�T�C�Y
+	@return		����
 */
 VOID Cls_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 {
@@ -1721,7 +1721,7 @@ VOID Cls_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 
 	RECT	rect;
 
-	if( SIZE_MINIMIZED == state )	//	最小化時
+	if( SIZE_MINIMIZED == state )	//	�ŏ�����
 	{
 		ShowWindow( ghMaaWnd, SW_HIDE );
 		if( !(gbTmpltDock) )
@@ -1735,7 +1735,7 @@ VOID Cls_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 		return;
 	}
 
-	if( SIZE_MINIMIZED == ccState &&  ccState != state )	//	最小化から復帰
+	if( SIZE_MINIMIZED == ccState &&  ccState != state )	//	�ŏ������畜�A
 	{
 		ShowWindow( ghMaaWnd, SW_SHOW );
 		if( !(gbTmpltDock) )
@@ -1747,26 +1747,26 @@ VOID Cls_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 		ccState = SIZE_RESTORED;
 	}
 
-	if( SIZE_MAXIMIZED == state )	//	最大化時
+	if( SIZE_MAXIMIZED == state )	//	�ő剻��
 	{
 #ifndef SPLIT_BAR_POS_FIX
 		if( ghMainSplitWnd )
 		{
-			AppClientAreaCalc( &rect  );	//	右に併せて移動
+			AppClientAreaCalc( &rect  );	//	�E�ɕ����Ĉړ�
 			SetWindowPos( ghMainSplitWnd, HWND_TOP, rect.right - grdSplitPos, rect.top, 0, 0, SWP_NOSIZE );
 		}
 #endif
 		ccState = SIZE_MAXIMIZED;
 	}
 
-	if( SIZE_RESTORED == state &&  SIZE_MAXIMIZED == ccState )	//	最大化から復帰か
+	if( SIZE_RESTORED == state &&  SIZE_MAXIMIZED == ccState )	//	�ő剻���畜�A��
 	{
-		if( !(IsZoomed( hWnd ) ) )	//	まだ最大化中なら、スプリットバー調整のはず
+		if( !(IsZoomed( hWnd ) ) )	//	�܂��ő剻���Ȃ�A�X�v���b�g�o�[�����̂͂�
 		{
 #ifndef SPLIT_BAR_POS_FIX
 			if( ghMainSplitWnd )
 			{
-				AppClientAreaCalc( &rect  );	//	右に併せて移動
+				AppClientAreaCalc( &rect  );	//	�E�ɕ����Ĉړ�
 				SetWindowPos( ghMainSplitWnd, HWND_TOP, rect.right - grdSplitPos, rect.top, 0, 0, SWP_NOSIZE );
 			}
 #endif
@@ -1774,19 +1774,19 @@ VOID Cls_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 		}
 	}
 
-	MoveWindow( ghStsBarWnd, 0, 0, 0, 0, TRUE );	//	ステータスバーは勝手に位置とか調整されるのでこれでいい
+	MoveWindow( ghStsBarWnd, 0, 0, 0, 0, TRUE );	//	�X�e�[�^�X�o�[�͏���Ɉʒu�Ƃ����������̂ł���ł���
 
 	ToolBarOnSize( hWnd, state, cx, cy );
 
-	AppClientAreaCalc( &rect  );	//	右に併せて移動
+	AppClientAreaCalc( &rect  );	//	�E�ɕ����Ĉړ�
 
 #ifdef SPLIT_BAR_POS_FIX
-	if( ghMainSplitWnd && (SIZE_SPLITBAR_MOVED != state) )	//	ここでスプリットバー調整？	
+	if( ghMainSplitWnd && (SIZE_SPLITBAR_MOVED != state) )	//	�����ŃX�v���b�g�o�[�����H	
 	{
 		SetWindowPos( ghMainSplitWnd, HWND_TOP, rect.right - grdSplitPos, rect.top, 0, 0, SWP_NOSIZE );
 	}
 #endif
-	ViewSizeMove( hWnd, &rect );	//	メイン窓のサイズ変更調整
+	ViewSizeMove( hWnd, &rect );	//	���C�����̃T�C�Y�ύX����
 
 
 
@@ -1795,11 +1795,11 @@ VOID Cls_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ウインドウが移動したとき
-	@param[in]	hWnd	親ウインドウのハンドル
+	�E�C���h�E���ړ������Ƃ�
+	@param[in]	hWnd	�e�E�C���h�E�̃n���h��
 	@param[in]	x		
 	@param[in]	y		
-	@return		無し
+	@return		����
 */
 VOID Cls_OnMove( HWND hWnd, INT x, INT y )
 {
@@ -1826,9 +1826,9 @@ VOID Cls_OnMove( HWND hWnd, INT x, INT y )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ウインドウを閉じるときに発生。デバイスコンテキストとか全部終了。
-	@param[in]	hWnd	親ウインドウのハンドル
-	@return		無し
+	�E�C���h�E�����Ƃ��ɔ����B�f�o�C�X�R���e�L�X�g�Ƃ��S���I���B
+	@param[in]	hWnd	�e�E�C���h�E�̃n���h��
+	@return		����
 */
 VOID Cls_OnDestroy( HWND hWnd )
 {
@@ -1878,18 +1878,18 @@ VOID Cls_OnDestroy( HWND hWnd )
 
 	CntxEditInitialise( NULL, NULL );
 
-	//	ウインドウの状態を確認して、最小化状態なら記録しない
+	//	�E�C���h�E�̏�Ԃ��m�F���āA�ŏ�����ԂȂ�L�^���Ȃ�
 	dwStyle = GetWindowStyle( hWnd );
 	if( !(dwStyle & WS_MINIMIZE) )
 	{
 		if( dwStyle & WS_MAXIMIZE ){	InitParamValue( INIT_SAVE, VL_MAXIMISED, 1 );	}
 		else
 		{
-			//	最大化してたら記録しない
+			//	�ő剻���Ă���L�^���Ȃ�
 			GetWindowRect( ghMainWnd, &rect );
 			rect.right  = rect.right  - rect.left;
 			rect.bottom = rect.bottom - rect.top;
-			InitWindowPos( INIT_SAVE, WDP_MVIEW, &rect );//終了時保存
+			InitWindowPos( INIT_SAVE, WDP_MVIEW, &rect );//�I�����ۑ�
 
 			InitParamValue( INIT_SAVE, VL_MAXIMISED, 0 );
 		}
@@ -1899,22 +1899,22 @@ VOID Cls_OnDestroy( HWND hWnd )
 			GetWindowRect( ghPgVwWnd, &rect );
 			rect.right  = rect.right  - rect.left;
 			rect.bottom = rect.bottom - rect.top;
-			InitWindowPos( INIT_SAVE, WDP_PLIST, &rect );//終了時保存
+			InitWindowPos( INIT_SAVE, WDP_PLIST, &rect );//�I�����ۑ�
 
 			GetWindowRect( ghLnTmplWnd, &rect );
 			rect.right  = rect.right  - rect.left;
 			rect.bottom = rect.bottom - rect.top;
-			InitWindowPos( INIT_SAVE, WDP_LNTMPL, &rect );//終了時保存
+			InitWindowPos( INIT_SAVE, WDP_LNTMPL, &rect );//�I�����ۑ�
 
 			GetWindowRect( ghBrTmplWnd, &rect );
 			rect.right  = rect.right  - rect.left;
 			rect.bottom = rect.bottom - rect.top;
-			InitWindowPos( INIT_SAVE, WDP_BRTMPL, &rect );//終了時保存
+			InitWindowPos( INIT_SAVE, WDP_BRTMPL, &rect );//�I�����ۑ�
 		}
 	}
 
 
-	//	MAAのはそっち側でやってる
+	//	MAA�̂͂��������ł���Ă�
 	DestroyWindow( ghMaaWnd );
 
 	DestroyWindow( ghPgVwWnd );
@@ -1942,12 +1942,12 @@ VOID Cls_OnDestroy( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	コンテキストメニュー呼びだしアクション(要は右クルック）
-	@param[in]	hWnd		ウインドウハンドル
-	@param[in]	hWndContext	コンテキストが発生したウインドウのハンドル
-	@param[in]	xPos		スクリーンＸ座標
-	@param[in]	yPos		スクリーンＹ座業
-	@return		無し
+	�R���e�L�X�g���j���[�Ăт����A�N�V����(�v�͉E�N���b�N�j
+	@param[in]	hWnd		�E�C���h�E�n���h��
+	@param[in]	hWndContext	�R���e�L�X�g�����������E�C���h�E�̃n���h��
+	@param[in]	xPos		�X�N���[���w���W
+	@param[in]	yPos		�X�N���[���x����
+	@return		����
 */
 VOID Cls_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 {
@@ -1964,17 +1964,17 @@ VOID Cls_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 	TCHAR	atText[MAX_PATH];
 	UINT	cchSize;
 
-	stPost.x = (SHORT)xPos;	//	画面座標はマイナスもありうる
+	stPost.x = (SHORT)xPos;	//	��ʍ��W�̓}�C�i�X�����肤��
 	stPost.y = (SHORT)yPos;
 
 	TRACE( TEXT("MAIN CONTEXT[%d x %d]"), stPost.x, stPost.y );
 
-	//リバーの、バー名称と左の取っ手のところは発生する・
+	//���o�[�́A�o�[���̂ƍ��̎����̂Ƃ���͔�������E
 	if( ToolBarOnContextMenu( hWnd, hWndContext, stPost.x, stPost.y ) ){	 return;	}
 
 	if( SUCCEEDED( DockingTabContextMenu( hWnd, hWndContext, stPost.x, stPost.y ) ) ){	 return;	}
 
-	//	複数タブ以外にはない
+	//	�����^�u�ȊO�ɂ͂Ȃ�
 	if( ghFileTabWnd != hWndContext ){	 return;	}
 
 	iCount = TabCtrl_GetItemCount( ghFileTabWnd );
@@ -1992,11 +1992,11 @@ VOID Cls_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 	stTcItem.cchTextMax = MAX_PATH;
 	TabCtrl_GetItem( ghFileTabWnd, curSel, &stTcItem );
 
-	//	右クリした奴を選択する
+	//	�E�N�������z��I������
 	TabCtrl_SetCurSel( ghFileTabWnd, curSel );
 	DocMultiFileSelect( stTcItem.lParam );
 
-	StringCchCat( atText, MAX_PATH, TEXT(" を閉じる(&Q)") );
+	StringCchCat( atText, MAX_PATH, TEXT(" �����(&Q)") );
 	StringCchLength( atText, MAX_PATH, &cchSize );
 
 	ZeroMemory( &stMenuItemInfo, sizeof(MENUITEMINFO) );
@@ -2006,7 +2006,7 @@ VOID Cls_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 	stMenuItemInfo.cch        = cchSize;
 	stMenuItemInfo.dwTypeData = atText;
 
-	if( 1 >= iCount )	//	残りファイルがいっこの時は閉じれない
+	if( 1 >= iCount )	//	�c��t�@�C�����������̎��͕���Ȃ�
 	{
 		stMenuItemInfo.fMask |= MIIM_STATE;
 		stMenuItemInfo.fState = MFS_GRAYED;
@@ -2024,11 +2024,11 @@ VOID Cls_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	メインウインドウのノーティファイメッセージの処理
-	@param[in]	hWnd		親ウインドウのハンドル
-	@param[in]	idFrom		NOTIFYを発生させたコントロールのＩＤ
-	@param[in]	pstNmhdr	NOTIFYの詳細
-	@return		処理した内容とか
+	���C���E�C���h�E�̃m�[�e�B�t�@�C���b�Z�[�W�̏���
+	@param[in]	hWnd		�e�E�C���h�E�̃n���h��
+	@param[in]	idFrom		NOTIFY�𔭐��������R���g���[���̂h�c
+	@param[in]	pstNmhdr	NOTIFY�̏ڍ�
+	@return		�����������e�Ƃ�
 */
 LRESULT Cls_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 {
@@ -2039,7 +2039,7 @@ LRESULT Cls_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 	TCHITTESTINFO	stTcHitTest;
 
 
-	ToolBarOnNotify( hWnd, idFrom, pstNmhdr );	//	ツールバーの処理
+	ToolBarOnNotify( hWnd, idFrom, pstNmhdr );	//	�c�[���o�[�̏���
 
 	if( IDTB_DOCK_TAB == idFrom )
 	{
@@ -2049,10 +2049,10 @@ LRESULT Cls_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 
 			TRACE( TEXT("TMPL TAB sel [%d]"), curSel );
 
-			//	非表示時は何もしない
+			//	��\�����͉������Ȃ�
 			if( gbDockTmplView )
 			{
-				//	フォーカス入れ替え
+				//	�t�H�[�J�X����ւ�
 				switch( curSel )
 				{
 					case  0:	ShowWindow( ghLnTmplWnd , SW_SHOW );	ShowWindow( ghBrTmplWnd , SW_HIDE );	break;
@@ -2063,7 +2063,7 @@ LRESULT Cls_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 		}
 	}
 
-	if( IDTB_MULTIFILE == idFrom )	//	ファイルタブ選択
+	if( IDTB_MULTIFILE == idFrom )	//	�t�@�C���^�u�I��
 	{
 		if( TCN_SELCHANGE == pstNmhdr->code )
 		{
@@ -2083,12 +2083,12 @@ LRESULT Cls_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 		}
 	}
 
-	if( IDTT_TILETAB_TIP == idFrom )	//	ツールチップの場合
+	if( IDTT_TILETAB_TIP == idFrom )	//	�c�[���`�b�v�̏ꍇ
 	{
-		if( TTN_GETDISPINFO ==  pstNmhdr->code )	//	内容の問い合わせだったら
+		if( TTN_GETDISPINFO ==  pstNmhdr->code )	//	���e�̖₢���킹��������
 		{
-			GetCursorPos( &(stTcHitTest.pt) );	//	スクリーン座標
-			ScreenToClient( ghFileTabWnd, &(stTcHitTest.pt) );	//	クライヤント座標に変換
+			GetCursorPos( &(stTcHitTest.pt) );	//	�X�N���[�����W
+			ScreenToClient( ghFileTabWnd, &(stTcHitTest.pt) );	//	�N���C�����g���W�ɕϊ�
 
 			curSel = TabCtrl_HitTest( ghFileTabWnd, &stTcHitTest );
 			TRACE( TEXT("FILE TAB under [%d]"), curSel );
@@ -2106,17 +2106,17 @@ LRESULT Cls_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 		}
 	}
 
-	return 0;	//	何もないなら０を戻す
+	return 0;	//	�����Ȃ��Ȃ�O��߂�
 }
 //-------------------------------------------------------------------------------------------------
 
 #ifdef MULTIACT_RELAY
 
 /*!
-	別に起動したやつからの送信を受け取る
-	@param[in]	hWnd		親ウインドウのハンドル
-	@param[in]	hWndFrom	発生源のハンドル
-	@param[in]	pstCopyData	トンできた内容
+	�ʂɋN�����������̑��M���󂯎��
+	@param[in]	hWnd		�e�E�C���h�E�̃n���h��
+	@param[in]	hWndFrom	�������̃n���h��
+	@param[in]	pstCopyData	�g���ł������e
 */
 void Cls_OnCopyData( HWND hWnd, HWND hWndFrom, PCOPYDATASTRUCT pstCopyData )
 {
@@ -2126,7 +2126,7 @@ void Cls_OnCopyData( HWND hWnd, HWND hWndFrom, PCOPYDATASTRUCT pstCopyData )
 
 	TRACE( TEXT("COPYDATA[%s]"), atBuff );
 
-	DocDoOpenFile( hWnd, atBuff );	//	別に起動したやつから飛んできたファイルを開く
+	DocDoOpenFile( hWnd, atBuff );	//	�ʂɋN�������������ł����t�@�C�����J��
 
 	return;
 }
@@ -2134,9 +2134,9 @@ void Cls_OnCopyData( HWND hWnd, HWND hWndFrom, PCOPYDATASTRUCT pstCopyData )
 #endif
 
 /*!
-	ドラッグンドロップの受け入れ
-	@param[in]	hWnd	親ウインドウのハンドル
-	@param[in]	hDrop	ドロッピンオブジェクトハンドゥ
+	�h���b�O���h���b�v�̎󂯓���
+	@param[in]	hWnd	�e�E�C���h�E�̃n���h��
+	@param[in]	hDrop	�h���b�s���I�u�W�F�N�g�n���h�D
 */
 VOID Cls_OnDropFiles( HWND hWnd, HDROP hDrop )
 {
@@ -2150,19 +2150,19 @@ VOID Cls_OnDropFiles( HWND hWnd, HDROP hDrop )
 
 	TRACE( TEXT("DROP[%s]"), atFileName );
 
-	DocDoOpenFile( hWnd, atFileName );	//	Ｄ＆Ｄで開く
+	DocDoOpenFile( hWnd, atFileName );	//	�c���c�ŊJ��
 
 	return;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ホットキー押されたら呼ばれる
-	@param[in]	hWnd		親ウインドウのハンドル
-	@param[in]	idHotKey	登録してあるＩＤ
-	@param[in]	fuModifiers	CTRL、SHIFT、ALT の組み合わせ状態
-	@param[in]	vk			押されている一般キー
-	@return		無し
+	�z�b�g�L�[�����ꂽ��Ă΂��
+	@param[in]	hWnd		�e�E�C���h�E�̃n���h��
+	@param[in]	idHotKey	�o�^���Ă���h�c
+	@param[in]	fuModifiers	CTRL�ASHIFT�AALT �̑g�ݍ��킹���
+	@param[in]	vk			������Ă����ʃL�[
+	@return		����
 */
 VOID Cls_OnHotKey(HWND hWnd, INT idHotKey, UINT fuModifiers, UINT vk )
 {
@@ -2177,10 +2177,10 @@ VOID Cls_OnHotKey(HWND hWnd, INT idHotKey, UINT fuModifiers, UINT vk )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	オーナードローの処理
-	@param[in]	hWnd			ウインドウハンドル
-	@param[in]	*pstDrawItem	オーナドローデータ
-	@return		無し
+	�I�[�i�[�h���[�̏���
+	@param[in]	hWnd			�E�C���h�E�n���h��
+	@param[in]	*pstDrawItem	�I�[�i�h���[�f�[�^
+	@return		����
 */
 VOID Cls_OnDrawItem( HWND hWnd, CONST DRAWITEMSTRUCT *pstDrawItem )
 {
@@ -2188,7 +2188,7 @@ VOID Cls_OnDrawItem( HWND hWnd, CONST DRAWITEMSTRUCT *pstDrawItem )
 	TCHAR	atBuff[SUB_STRING];
 	RECT	rect;
 
-	//	ステータスバー以外は関係ないので放置
+	//	�X�e�[�^�X�o�[�ȊO�͊֌W�Ȃ��̂ŕ��u
 	if( IDSB_VIEW_STATUS_BAR != pstDrawItem->CtlID )	return;
 
 	if( SB_BYTECNT == pstDrawItem->itemID )
@@ -2196,7 +2196,7 @@ VOID Cls_OnDrawItem( HWND hWnd, CONST DRAWITEMSTRUCT *pstDrawItem )
 		SetBkMode( pstDrawItem->hDC, TRANSPARENT );
 		rect = pstDrawItem->rcItem;
 
-		dBytes =  pstDrawItem->itemData;	//	文字列ポインタとか入ってる
+		dBytes =  pstDrawItem->itemData;	//	������|�C���^�Ƃ������Ă�
 		StringCchPrintf( atBuff, SUB_STRING, TEXT("%d Bytes"), dBytes );
 
 		if( gdPageByteMax < dBytes )	FillRect( pstDrawItem->hDC, &(pstDrawItem->rcItem), ghStsRedBrush );
@@ -2209,10 +2209,10 @@ VOID Cls_OnDrawItem( HWND hWnd, CONST DRAWITEMSTRUCT *pstDrawItem )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ステータスバーに文字列追加
-	@param[in]	room	入れる枠０インデックス
-	@param[in]	ptText	入れる文字列
-	@return		HRESULT	終了状態コード
+	�X�e�[�^�X�o�[�ɕ�����ǉ�
+	@param[in]	room	�����g�O�C���f�b�N�X
+	@param[in]	ptText	����镶����
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT MainStatusBarSetText( INT room, LPCTSTR ptText )
 {
@@ -2223,9 +2223,9 @@ HRESULT MainStatusBarSetText( INT room, LPCTSTR ptText )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ステータスバーにバイト数をオーナードローで乳力
-	@param[in]	dByte	バイト数
-	@return		HRESULT	終了状態コード
+	�X�e�[�^�X�o�[�Ƀo�C�g�����I�[�i�[�h���[�œ���
+	@param[in]	dByte	�o�C�g��
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT MainSttBarSetByteCount( UINT dByte )
 {
@@ -2239,10 +2239,10 @@ HRESULT MainSttBarSetByteCount( UINT dByte )
 
 
 /*!
-	メニュー項目をチェックしたり外したり
-	@param[in]	itemID	操作するメニューのＩＤ
-	@param[in]	bCheck	非０チェック・０はずす
-	@return		HRESULT	終了状態コード
+	���j���[���ڂ��`�F�b�N������O������
+	@param[in]	itemID	���삷�郁�j���[�̂h�c
+	@param[in]	bCheck	��O�`�F�b�N�E�O�͂���
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT MenuItemCheckOnOff( UINT itemID, UINT bCheck )
 {
@@ -2255,8 +2255,8 @@ HRESULT MenuItemCheckOnOff( UINT itemID, UINT bCheck )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	外部でブラシ機能ON/OFFした場合
-	@return		HRESULT	終了状態コード
+	�O���Ńu���V�@�\ON/OFF�����ꍇ
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT BrushModeToggle( VOID )
 {
@@ -2272,8 +2272,8 @@ HRESULT BrushModeToggle( VOID )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	メインウインドウのクライヤント領域を求める
-	@param[out]	pstRect	領域いれる構造体ポインター
+	���C���E�C���h�E�̃N���C�����g�̈�����߂�
+	@param[out]	pstRect	�̈悢���\���̃|�C���^�[
 */
 UINT AppClientAreaCalc( LPRECT pstRect )
 {
@@ -2287,18 +2287,18 @@ UINT AppClientAreaCalc( LPRECT pstRect )
 
 	GetClientRect( ghMainWnd, &rect );	//	
 
-	ToolBarSizeGet( &tbRect );	//	ツールバーのサイズとって
+	ToolBarSizeGet( &tbRect );	//	�c�[���o�[�̃T�C�Y�Ƃ���
 	rect.top      += tbRect.bottom;
 	rect.bottom   -= tbRect.bottom;
 
-	GetClientRect( ghStsBarWnd, &sbRect );	//	ステータスバーのサイズ確認
+	GetClientRect( ghStsBarWnd, &sbRect );	//	�X�e�[�^�X�o�[�̃T�C�Y�m�F
 	rect.bottom   -= sbRect.bottom;
 
-	GetWindowRect( ghFileTabWnd, &ftRect );	//	タブバーのサイズ確認
+	GetWindowRect( ghFileTabWnd, &ftRect );	//	�^�u�o�[�̃T�C�Y�m�F
 	ftRect.bottom -= ftRect.top;
 	SetWindowPos( ghFileTabWnd, HWND_TOP, 0, tbRect.bottom, rect.right, ftRect.bottom, SWP_NOZORDER );
 	rect.top      += ftRect.bottom;
-	rect.bottom   -= ftRect.bottom;	//	タブバーの分縮める
+	rect.bottom   -= ftRect.bottom;	//	�^�u�o�[�̕��k�߂�
 
 	SetRect( pstRect, rect.left, rect.top, rect.right, rect.bottom );
 
@@ -2307,17 +2307,17 @@ UINT AppClientAreaCalc( LPRECT pstRect )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	トレスの各モードの数値
-	@param[in]	dMode	非０ロード　０セーブ
-	@param[in]	pstInfo	ロードセーブの内容保存
-	@return		比０ロードＯＫ　０なかった
+	�g���X�̊e���[�h�̐��l
+	@param[in]	dMode	��O���[�h�@�O�Z�[�u
+	@param[in]	pstInfo	���[�h�Z�[�u�̓��e�ۑ�
+	@return		��O���[�h�n�j�@�O�Ȃ�����
 */
 INT InitTraceValue( UINT dMode, LPTRACEPARAM pstInfo )
 {
 	TCHAR	atBuff[MIN_STRING];
 	INT	iBuff = 0;
 
-	if( dMode )	//	ロード
+	if( dMode )	//	���[�h
 	{
 		iBuff = GetPrivateProfileInt( TEXT("Trace"), TEXT("Turning"), -1, gatIniPath );
 		if( 0 > iBuff )	return 0;
@@ -2333,7 +2333,7 @@ INT InitTraceValue( UINT dMode, LPTRACEPARAM pstInfo )
 		pstInfo->bMirror      = GetPrivateProfileInt( TEXT("Trace"), TEXT("Mirror"), 0, gatIniPath );
 		pstInfo->dMoziColour  = GetPrivateProfileInt( TEXT("Trace"), TEXT("MoziColour"), 0, gatIniPath );
 	}
-	else	//	セーブ
+	else	//	�Z�[�u
 	{
 		StringCchPrintf( atBuff, MIN_STRING, TEXT("%d"), pstInfo->stOffsetPt.x );
 		WritePrivateProfileString( TEXT("Trace"), TEXT("OffsetX"), atBuff, gatIniPath );
@@ -2372,11 +2372,11 @@ INT InitTraceValue( UINT dMode, LPTRACEPARAM pstInfo )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	色設定のセーブロード
-	@param[in]	dMode	非０ロード　０セーブ
-	@param[in]	dStyle	パラメータの種類
-	@param[in]	nColour	ロード：デフォ値　セーブ：値
-	@return	COLORREF	ロード：値　セーブ：０
+	�F�ݒ�̃Z�[�u���[�h
+	@param[in]	dMode	��O���[�h�@�O�Z�[�u
+	@param[in]	dStyle	�p�����[�^�̎��
+	@param[in]	nColour	���[�h�F�f�t�H�l�@�Z�[�u�F�l
+	@return	COLORREF	���[�h�F�l�@�Z�[�u�F�O
 */
 COLORREF InitColourValue( UINT dMode, UINT dStyle, COLORREF nColour )
 {
@@ -2385,22 +2385,22 @@ COLORREF InitColourValue( UINT dMode, UINT dStyle, COLORREF nColour )
 
 	switch( dStyle )
 	{
-		case CLRV_BASICPEN:	StringCchCopy( atKeyName, SUB_STRING, TEXT("BasicPen") );	break;	//	文字色
-		case CLRV_BASICBK:	StringCchCopy( atKeyName, SUB_STRING, TEXT("BasicBack") );	break;	//	背景色
-		case CLRV_GRIDLINE:	StringCchCopy( atKeyName, SUB_STRING, TEXT("GridLine") );	break;	//	グリッド
-		case CLRV_CRLFMARK:	StringCchCopy( atKeyName, SUB_STRING, TEXT("CrLfMark") );	break;	//	改行マーク
-		case CLRV_CANTSJIS:	StringCchCopy( atKeyName, SUB_STRING, TEXT("CantSjis") );	break;	//	Unicode文字
+		case CLRV_BASICPEN:	StringCchCopy( atKeyName, SUB_STRING, TEXT("BasicPen") );	break;	//	�����F
+		case CLRV_BASICBK:	StringCchCopy( atKeyName, SUB_STRING, TEXT("BasicBack") );	break;	//	�w�i�F
+		case CLRV_GRIDLINE:	StringCchCopy( atKeyName, SUB_STRING, TEXT("GridLine") );	break;	//	�O���b�h
+		case CLRV_CRLFMARK:	StringCchCopy( atKeyName, SUB_STRING, TEXT("CrLfMark") );	break;	//	���s�}�[�N
+		case CLRV_CANTSJIS:	StringCchCopy( atKeyName, SUB_STRING, TEXT("CantSjis") );	break;	//	Unicode����
 		default:	return nColour;
 	}
 
 	StringCchPrintf( atBuff, MIN_STRING, TEXT("%08X"), nColour );
 
-	if( dMode )	//	ロード
+	if( dMode )	//	���[�h
 	{
 		GetPrivateProfileString( TEXT("Colour"), atKeyName, atBuff, atBuff, MIN_STRING, gatIniPath );
 		nColour = (COLORREF)_tcstoul( atBuff, &ptEnd, 16 );
 	}
-	else	//	セーブ
+	else	//	�Z�[�u
 	{
 		WritePrivateProfileString( TEXT("Colour"), atKeyName, atBuff, gatIniPath );
 	}
@@ -2410,11 +2410,11 @@ COLORREF InitColourValue( UINT dMode, UINT dStyle, COLORREF nColour )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	リバー配置のセーブロード
-	@param[in]		dMode	非０ロード　０セーブ
-	@param[in]		items	バンドの数
-	@param[in,out]	pstInfo	データを出したり入れたりする構造体配列へのポインター
-	@return	HRESULT	終了状態コード
+	���o�[�z�u�̃Z�[�u���[�h
+	@param[in]		dMode	��O���[�h�@�O�Z�[�u
+	@param[in]		items	�o���h�̐�
+	@param[in,out]	pstInfo	�f�[�^���o��������ꂽ�肷��\���̔z��ւ̃|�C���^�[
+	@return	HRESULT	�I����ԃR�[�h
 */
 HRESULT InitToolBarLayout( UINT dMode, INT items, LPREBARLAYOUTINFO pstInfo )
 {
@@ -2423,13 +2423,13 @@ HRESULT InitToolBarLayout( UINT dMode, INT items, LPREBARLAYOUTINFO pstInfo )
 	INT	i;
 
 
-	if( dMode )	//	ロード
+	if( dMode )	//	���[�h
 	{
-		//	存在確認
+		//	���݊m�F
 		dValue = GetPrivateProfileInt( TEXT("ReBar"), TEXT("IDX0_ID"), 0, gatIniPath );
-		if( 0 == dValue ){	return E_NOTIMPL;	}	//	ＩＤなので０にはならない
+		if( 0 == dValue ){	return E_NOTIMPL;	}	//	�h�c�Ȃ̂łO�ɂ͂Ȃ�Ȃ�
 
-		for( i = 0; items > i; i++ )	//	インデックス順
+		for( i = 0; items > i; i++ )	//	�C���f�b�N�X��
 		{
 			StringCchPrintf( atKeyName, MIN_STRING, TEXT("IDX%d_ID"), i );
 			pstInfo[i].wID = GetPrivateProfileInt( TEXT("ReBar"), atKeyName, pstInfo[i].wID, gatIniPath );
@@ -2441,11 +2441,11 @@ HRESULT InitToolBarLayout( UINT dMode, INT items, LPREBARLAYOUTINFO pstInfo )
 			pstInfo[i].fStyle = GetPrivateProfileInt( TEXT("ReBar"), atKeyName, pstInfo[i].fStyle, gatIniPath );
 		}
 	}
-	else	//	セーブ
+	else	//	�Z�[�u
 	{
-		WritePrivateProfileSection( TEXT("ReBar"), NULL, gatIniPath );	//	一旦全削除
+		WritePrivateProfileSection( TEXT("ReBar"), NULL, gatIniPath );	//	��U�S�폜
 
-		for( i = 0; items > i; i++ )	//	インデックス順
+		for( i = 0; items > i; i++ )	//	�C���f�b�N�X��
 		{
 			StringCchPrintf( atKeyName, MIN_STRING, TEXT("IDX%d_ID"), i );
 			StringCchPrintf( atBuff, MIN_STRING, TEXT("%u"), pstInfo[i].wID );
@@ -2466,11 +2466,11 @@ HRESULT InitToolBarLayout( UINT dMode, INT items, LPREBARLAYOUTINFO pstInfo )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	パラメータ値のセーブロード
-	@param[in]	dMode	非０ロード　０セーブ
-	@param[in]	dStyle	パラメータの種類
-	@param[in]	nValue	ロード：デフォ値　セーブ：値
-	@return		INT	ロード：値　セーブ：０
+	�p�����[�^�l�̃Z�[�u���[�h
+	@param[in]	dMode	��O���[�h�@�O�Z�[�u
+	@param[in]	dStyle	�p�����[�^�̎��
+	@param[in]	nValue	���[�h�F�f�t�H�l�@�Z�[�u�F�l
+	@return		INT	���[�h�F�l�@�Z�[�u�F�O
 */
 INT InitParamValue( UINT dMode, UINT dStyle, INT nValue )
 {
@@ -2538,12 +2538,12 @@ INT InitParamValue( UINT dMode, UINT dStyle, INT nValue )
 
 	StringCchPrintf( atBuff, MIN_STRING, TEXT("%d"), nValue );
 
-	if( dMode )	//	ロード
+	if( dMode )	//	���[�h
 	{
 		GetPrivateProfileString( TEXT("General"), atKeyName, atBuff, atBuff, MIN_STRING, gatIniPath );
 		iBuff = StrToInt( atBuff );
 	}
-	else	//	セーブ
+	else	//	�Z�[�u
 	{
 		WritePrivateProfileString( TEXT("General"), atKeyName, atBuff, gatIniPath );
 	}
@@ -2553,11 +2553,11 @@ INT InitParamValue( UINT dMode, UINT dStyle, INT nValue )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	文字列の設定内容をセーブロード
-	@param[in]		dMode	非０ロード　０セーブ
-	@param[in]		dStyle	パラメータの種類
-	@param[in,out]	ptStr	ロード：デフォルト文字列　セーブ：保存する文字列　MAX_PATHであること
-	@return			HRESULT	終了状態コード
+	������̐ݒ���e���Z�[�u���[�h
+	@param[in]		dMode	��O���[�h�@�O�Z�[�u
+	@param[in]		dStyle	�p�����[�^�̎��
+	@param[in,out]	ptStr	���[�h�F�f�t�H���g������@�Z�[�u�F�ۑ����镶����@MAX_PATH�ł��邱��
+	@return			HRESULT	�I����ԃR�[�h
 */
 HRESULT InitParamString( UINT dMode, UINT dStyle, LPTSTR ptStr )
 {
@@ -2576,7 +2576,7 @@ HRESULT InitParamString( UINT dMode, UINT dStyle, LPTSTR ptStr )
 		default:	return E_INVALIDARG;
 	}
 
-	if( dMode )	//	ロード
+	if( dMode )	//	���[�h
 	{
 		StringCchCopy( atDefault, MAX_PATH, ptStr );
 		GetPrivateProfileString( TEXT("General"), atKeyName, atDefault, ptStr, MAX_PATH, gatIniPath );
@@ -2591,11 +2591,11 @@ HRESULT InitParamString( UINT dMode, UINT dStyle, LPTSTR ptStr )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	最前面状態のセーブロード
-	@param[in]	dMode	非０ロード　０セーブ
-	@param[in]	dStyle	２頁一覧　３壱行　３ブラシ　４複数行
-	@param[in]	nValue	ロード：デフォ値　セーブ：値
-	@return		INT	ロード：値　セーブ：０
+	�őO�ʏ�Ԃ̃Z�[�u���[�h
+	@param[in]	dMode	��O���[�h�@�O�Z�[�u
+	@param[in]	dStyle	�Q�ňꗗ�@�R��s�@�R�u���V�@�S�����s
+	@param[in]	nValue	���[�h�F�f�t�H�l�@�Z�[�u�F�l
+	@return		INT	���[�h�F�l�@�Z�[�u�F�O
 */
 INT InitWindowTopMost( UINT dMode, UINT dStyle, INT nValue )
 {
@@ -2613,12 +2613,12 @@ INT InitWindowTopMost( UINT dMode, UINT dStyle, INT nValue )
 
 	StringCchPrintf( atBuff, MIN_STRING, TEXT("%d"), nValue );
 
-	if( dMode )	//	ロード
+	if( dMode )	//	���[�h
 	{
 		GetPrivateProfileString( atAppName, TEXT("TopMost"), atBuff, atBuff, MIN_STRING, gatIniPath );
 		iBuff = StrToInt( atBuff );
 	}
-	else	//	セーブ
+	else	//	�Z�[�u
 	{
 		WritePrivateProfileString( atAppName, TEXT("TopMost"), atBuff, gatIniPath );
 	}
@@ -2628,11 +2628,11 @@ INT InitWindowTopMost( UINT dMode, UINT dStyle, INT nValue )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ウインドウ位置のセーブロード
-	@param[in]	dMode	非０ロード　０セーブ
-	@param[in]	dStyle	１ビュー　２頁一覧　３壱行　３ブラシ　４複数行
-	@param[in]	pstRect	ロード結果を入れるか、セーブ内容を入れる
-	@return		HRESULT	終了状態コード
+	�E�C���h�E�ʒu�̃Z�[�u���[�h
+	@param[in]	dMode	��O���[�h�@�O�Z�[�u
+	@param[in]	dStyle	�P�r���[�@�Q�ňꗗ�@�R��s�@�R�u���V�@�S�����s
+	@param[in]	pstRect	���[�h���ʂ����邩�A�Z�[�u���e������
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT InitWindowPos( UINT dMode, UINT dStyle, LPRECT pstRect )
 {
@@ -2652,7 +2652,7 @@ HRESULT InitWindowPos( UINT dMode, UINT dStyle, LPRECT pstRect )
 		default:	return E_INVALIDARG;
 	}
 
-	if( dMode )	//	ロード
+	if( dMode )	//	���[�h
 	{
 		GetPrivateProfileString( atAppName, TEXT("LEFT"), TEXT("0"), atBuff, MIN_STRING, gatIniPath );
 		pstRect->left   = StrToInt( atBuff );
@@ -2663,7 +2663,7 @@ HRESULT InitWindowPos( UINT dMode, UINT dStyle, LPRECT pstRect )
 		GetPrivateProfileString( atAppName, TEXT("BOTTOM"), TEXT("0"), atBuff, MIN_STRING, gatIniPath );
 		pstRect->bottom = StrToInt( atBuff );
 	}
-	else	//	セーブ
+	else	//	�Z�[�u
 	{
 		StringCchPrintf( atBuff, MIN_STRING, TEXT("%d"), pstRect->left );
 		WritePrivateProfileString( atAppName, TEXT("LEFT"), atBuff, gatIniPath );
@@ -2681,10 +2681,10 @@ HRESULT InitWindowPos( UINT dMode, UINT dStyle, LPRECT pstRect )
 
 #if 0
 /*!
-	最終使用ファイルのセーブロード
-	@param[in]	dMode	非０ロード　０セーブ
-	@param[out]	ptFile	フルパス・MAX_PATHであること
-	@return	HRESULT	終了状態コード
+	�ŏI�g�p�t�@�C���̃Z�[�u���[�h
+	@param[in]	dMode	��O���[�h�@�O�Z�[�u
+	@param[out]	ptFile	�t���p�X�EMAX_PATH�ł��邱��
+	@return	HRESULT	�I����ԃR�[�h
 */
 HRESULT InitLastOpen( UINT dMode, LPTSTR ptFile )
 {
@@ -2698,16 +2698,16 @@ HRESULT InitLastOpen( UINT dMode, LPTSTR ptFile )
 #endif
 
 /*!
-	枠情報のセーブロード
-	@param[in]	nowWnd	今の窓番号
-	@param[in]	iDir	ジャンプ方向・＋１か－１で・０は不可
-	@return	HRESULT	終了状態コード
+	�g���̃Z�[�u���[�h
+	@param[in]	nowWnd	���̑��ԍ�
+	@param[in]	iDir	�W�����v�����E�{�P���|�P�ŁE�O�͕s��
+	@return	HRESULT	�I����ԃR�[�h
 */
 HRESULT WindowFocusChange( INT nowWnd, INT iDir )
 {
 	INT	nextWnd;
 
-	if( gbTmpltDock )	//	くっついたら二つだけ
+	if( gbTmpltDock )	//	��������������
 	{
 		if( WND_MAIN == nowWnd )	nextWnd = WND_MAAT;
 		else						nextWnd = WND_MAIN;
@@ -2717,7 +2717,7 @@ HRESULT WindowFocusChange( INT nowWnd, INT iDir )
 		nextWnd = nowWnd + iDir;
 		if( 0 >= nextWnd )			nextWnd = WND_BRUSH;	//	WND_BRUSH
 		if( WND_BRUSH < nextWnd )	nextWnd = WND_MAIN;
-		//	末端に注意・多分もう増えないと思う
+		//	���[�ɒ��ӁE�������������Ȃ��Ǝv��
 	}
 
 	switch( nextWnd )
@@ -2735,35 +2735,35 @@ HRESULT WindowFocusChange( INT nowWnd, INT iDir )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	プロフ履歴をINIから読んだり書いたり
-	@param[in]		dMode	非０ロード　０セーブ
-	@param[in]		dNumber	ロードセーブ番号
-	@param[in,out]	ptFile	ロード：中身を入れる　セーブ：保存する文字列　MAX_PATHであること・NULLなら内容消去
-	@return			HRESULT	終了状態コード
+	�v���t������INI����ǂ񂾂菑������
+	@param[in]		dMode	��O���[�h�@�O�Z�[�u
+	@param[in]		dNumber	���[�h�Z�[�u�ԍ�
+	@param[in,out]	ptFile	���[�h�F���g������@�Z�[�u�F�ۑ����镶����@MAX_PATH�ł��邱�ƁENULL�Ȃ���e����
+	@return			HRESULT	�I����ԃR�[�h
 */
 HRESULT InitProfHistory( UINT dMode, UINT dNumber, LPTSTR ptFile )
 {
 	TCHAR	atKeyName[MIN_STRING], atDefault[MAX_PATH];
 
-	if( dMode  )	//	ロード
+	if( dMode  )	//	���[�h
 	{
 		ZeroMemory( ptFile, sizeof(TCHAR) * MAX_PATH );
 
 		StringCchPrintf( atKeyName, MIN_STRING, TEXT("Hist%X"), dNumber );
 		GetPrivateProfileString( TEXT("ProfHistory"), atKeyName, TEXT(""), atDefault, MAX_PATH, gatIniPath );
 
-		if( NULL == atDefault[0] )	return E_NOTIMPL;	//	記録無し
+		if( NULL == atDefault[0] )	return E_NOTIMPL;	//	�L�^����
 
 		StringCchCopy( ptFile, MAX_PATH, atDefault );
 	}
-	else	//	セーブ
+	else	//	�Z�[�u
 	{
 		if( ptFile )
 		{
 			StringCchPrintf( atKeyName, MIN_STRING, TEXT("Hist%X"), dNumber );
 			WritePrivateProfileString( TEXT("ProfHistory"), atKeyName, ptFile, gatIniPath );
 		}
-		else	//	一旦全削除
+		else	//	��U�S�폜
 		{
 			WritePrivateProfileSection( TEXT("ProfHistory"), NULL, gatIniPath );
 		}
@@ -2774,52 +2774,52 @@ HRESULT InitProfHistory( UINT dMode, UINT dNumber, LPTSTR ptFile )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	各窓の表示位置と大きさをデフォルトに戻す
-	@param[in]	hWnd	ウインドウハンドル
-	@return	HRESULT	終了状態コード
+	�e���̕\���ʒu�Ƒ傫�����f�t�H���g�ɖ߂�
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@return	HRESULT	�I����ԃR�[�h
 */
 HRESULT WindowPositionReset( HWND hWnd )
 {
 	HWND	hWorkWnd;
 	RECT	rect;
 
-	TRACE(TEXT("★位置情報リセット") );
+	TRACE(TEXT("���ʒu��񃊃Z�b�g") );
 
-	//	メイン窓
+	//	���C����
 	hWorkWnd = GetDesktopWindow( );
 	GetWindowRect( hWorkWnd, &rect );
-	rect.left   = ( rect.right  - W_WIDTH ) / 3;	//	左より
+	rect.left   = ( rect.right  - W_WIDTH ) / 3;	//	�����
 	rect.top    = ( rect.bottom - W_HEIGHT ) / 2;
 	rect.right  = W_WIDTH;
 	rect.bottom = W_HEIGHT;
-	//	位置変更
+	//	�ʒu�ύX
 	SetWindowPos( ghMainWnd, HWND_TOP, rect.left, rect.top, rect.right, rect.bottom, SWP_SHOWWINDOW );
 
-	//	メインスプリットバー
+	//	���C���X�v���b�g�o�[
 	if( ghMainSplitWnd )
 	{
-		AppClientAreaCalc( &rect  );	//	右に併せて移動
+		AppClientAreaCalc( &rect  );	//	�E�ɕ����Ĉړ�
 		SetWindowPos( ghMainSplitWnd, HWND_TOP, rect.right - PLIST_DOCK, rect.top, 0, 0, SWP_NOSIZE );
 
-		ViewSizeMove( hWnd, &rect );	//	位置情報リセットした
+		ViewSizeMove( hWnd, &rect );	//	�ʒu��񃊃Z�b�g����
 	}
-	else	//	フローティングウインドウ
+	else	//	�t���[�e�B���O�E�C���h�E
 	{
 		PageListPositionReset( ghMainWnd );
 		LineTmplePositionReset( ghMainWnd );
 		BrushTmplePositionReset( ghMainWnd );
 	}
 
-	MaaTmpltPositionReset( ghMainWnd );	//	ＭＡＡ窓
+	MaaTmpltPositionReset( ghMainWnd );	//	�l�`�`��
 
 	return S_OK;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ファイルから履歴取り込んだり書き込んだり
-	@param[in]	hWnd	ウインドウハンドル・NULLならデストロイ
-	@return	HRESULT	終了状態コード
+	�t�@�C�����痚����荞�񂾂菑�����񂾂�
+	@param[in]	hWnd	�E�C���h�E�n���h���ENULL�Ȃ�f�X�g���C
+	@return	HRESULT	�I����ԃR�[�h
 */
 HRESULT OpenHistoryInitialise( HWND hWnd )
 {
@@ -2832,34 +2832,34 @@ HRESULT OpenHistoryInitialise( HWND hWnd )
 
 	if( hWnd )
 	{
-		gltOpenHist.clear( );	//	とりあえず全削除
+		gltOpenHist.clear( );	//	�Ƃ肠�����S�폜
 
 		for( d = 0; OPENHIST_MAX > d; d++ )
 		{
 			ZeroMemory( &stOpenHist, sizeof(OPENHIST) );
 			StringCchPrintf( atKeyName, MIN_STRING, TEXT("Hist%X"), d );
 			GetPrivateProfileString( TEXT("OpenHistory"), atKeyName, TEXT(""), stOpenHist.atFile, MAX_PATH, gatIniPath );
-			if( NULL == stOpenHist.atFile[0] )	break;	//	記録無くなったらそこで終了だよ
+			if( NULL == stOpenHist.atFile[0] )	break;	//	�L�^�����Ȃ����炻���ŏI������
 
 			gltOpenHist.push_back( stOpenHist );
 		}
 
 		if( ghHistyMenu )	DestroyMenu( ghHistyMenu );
-		//	メニュー作成
+		//	���j���[�쐬
 		ghHistyMenu = CreatePopupMenu(  );
-		AppendMenu( ghHistyMenu, MF_SEPARATOR, 0, NULL );	//	セッパレター
-		AppendMenu( ghHistyMenu, MF_STRING, IDM_OPEN_HIS_CLEAR, TEXT("履歴クリヤ") );
-		//文字列固定はあまりイクナイ
+		AppendMenu( ghHistyMenu, MF_SEPARATOR, 0, NULL );	//	�Z�b�p���^�[
+		AppendMenu( ghHistyMenu, MF_STRING, IDM_OPEN_HIS_CLEAR, TEXT("�����N����") );
+		//������Œ�͂��܂�C�N�i�C
 
 		dItems = gltOpenHist.size( );
 		if( 0 == dItems )
 		{
-			//	オーポン履歴が無い場合
-			InsertMenu( ghHistyMenu, 0, MF_STRING | MF_BYPOSITION | MF_GRAYED, IDM_OPEN_HIS_FIRST, TEXT("(无)") );
+			//	�I�[�|�������������ꍇ
+			InsertMenu( ghHistyMenu, 0, MF_STRING | MF_BYPOSITION | MF_GRAYED, IDM_OPEN_HIS_FIRST, TEXT("(��)") );
 		}
 		else
 		{
-			//	オーポン履歴を並べる
+			//	�I�[�|����������ׂ�
 			for( itHist = gltOpenHist.begin(), d = dItems-1; gltOpenHist.end() != itHist; itHist++, d-- )
 			{
 				StringCchPrintf( atString, MAX_PATH+10, TEXT("(&%X) %s"), d, itHist->atFile );
@@ -2868,21 +2868,21 @@ HRESULT OpenHistoryInitialise( HWND hWnd )
 			}
 		}
 
-#pragma message ("ファイルオーポン履歴の基点メニュー、位置に注意")
-		//	メニュー情報の書換
+#pragma message ("�t�@�C���I�[�|�������̊�_���j���[�A�ʒu�ɒ���")
+		//	���j���[���̏���
 		hSubMenu = GetSubMenu( ghMenu, 0 );
-		ModifyMenu( hSubMenu, 2, MF_BYPOSITION | MF_POPUP, (UINT_PTR)ghHistyMenu, TEXT("ファイル使用履歴(&H)") );
-		//文字列固定はあまりイクナイ
+		ModifyMenu( hSubMenu, 2, MF_BYPOSITION | MF_POPUP, (UINT_PTR)ghHistyMenu, TEXT("�t�@�C���g�p����(&H)") );
+		//������Œ�͂��܂�C�N�i�C
 
-		DrawMenuBar( hWnd );	//	要らないかも？
+		DrawMenuBar( hWnd );	//	�v��Ȃ������H
 	}
-	else	//	APPZ終了時
+	else	//	APPZ�I����
 	{
 		if( ghHistyMenu )	DestroyMenu( ghHistyMenu );
 
-		WritePrivateProfileSection( TEXT("OpenHistory"), NULL, gatIniPath );	//	一旦全削除
+		WritePrivateProfileSection( TEXT("OpenHistory"), NULL, gatIniPath );	//	��U�S�폜
 
-		//	中身を保存
+		//	���g��ۑ�
 		for( itHist = gltOpenHist.begin(), d = 0; gltOpenHist.end() != itHist; itHist++, d++ )
 		{
 			StringCchPrintf( atKeyName, MIN_STRING, TEXT("Hist%X"), d );
@@ -2896,10 +2896,10 @@ HRESULT OpenHistoryInitialise( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	開いた履歴を番号指定して読み込む
-	@param[in]	hWnd	ウインドウハンドル
-	@param[in]	id		履歴指定メッセージ・メニューＩＤである
-	@return	HRESULT	終了状態コード
+	�J����������ԍ��w�肵�ēǂݍ���
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@param[in]	id		�����w�胁�b�Z�[�W�E���j���[�h�c�ł���
+	@return	HRESULT	�I����ԃR�[�h
 */
 HRESULT OpenHistoryLoad( HWND hWnd, INT id )
 {
@@ -2909,26 +2909,26 @@ HRESULT OpenHistoryLoad( HWND hWnd, INT id )
 
 	dNumber = id - IDM_OPEN_HIS_FIRST;
 
-	TRACE( TEXT("履歴 -> %d"), dNumber );
+	TRACE( TEXT("���� -> %d"), dNumber );
 	if( OPENHIST_MAX <= dNumber ){	return E_OUTOFMEMORY;	}
 
 	dItems = gltOpenHist.size();
 	dNumber = (dItems-1) - dNumber;
 
 	itHist = gltOpenHist.begin();
-	std::advance( itHist , dNumber );	//	個数分進める
+	std::advance( itHist , dNumber );	//	�����i�߂�
 
 	lUnique = DocOpendFileCheck( itHist->atFile );
-	if( 1 <= lUnique )	//	既存のファイルヒット・そっちに移動する
+	if( 1 <= lUnique )	//	�����̃t�@�C���q�b�g�E�������Ɉړ�����
 	{
 		if( SUCCEEDED( MultiFileTabSelect( dNumber ) ) )
 		{
-			DocMultiFileSelect( lUnique );	//	そのタブのファイルを表示
+			DocMultiFileSelect( lUnique );	//	���̃^�u�̃t�@�C����\��
 		}
 	}
 	else
 	{
-		DocDoOpenFile( hWnd, itHist->atFile );	//	履歴から選択したファイルを開く
+		DocDoOpenFile( hWnd, itHist->atFile );	//	��������I�������t�@�C�����J��
 	}
 
 	return S_OK;
@@ -2936,10 +2936,10 @@ HRESULT OpenHistoryLoad( HWND hWnd, INT id )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	開いたファイルを記録する
-	@param[in]	hWnd	ウインドウハンドル
-	@param[out]	ptFile	開いたファイルのれるバッファ・MAX_PATHであること・NULLなら履歴クルヤー
-	@return	HRESULT	終了状態コード
+	�J�����t�@�C�����L�^����
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@param[out]	ptFile	�J�����t�@�C���̂��o�b�t�@�EMAX_PATH�ł��邱�ƁENULL�Ȃ痚���N�����[
+	@return	HRESULT	�I����ԃR�[�h
 */
 HRESULT OpenHistoryLogging( HWND hWnd, LPTSTR ptFile )
 {
@@ -2952,32 +2952,32 @@ HRESULT OpenHistoryLogging( HWND hWnd, LPTSTR ptFile )
 		ZeroMemory( &stOpenHist, sizeof(OPENHIST) );
 
 		StringCchCopy( stOpenHist.atFile, MAX_PATH, ptFile );
-		//既存の内容なら最新に入れ替えるので、検索しておく
+		//�����̓��e�Ȃ�ŐV�ɓ���ւ���̂ŁA�������Ă���
 		for( itHist = gltOpenHist.begin(); gltOpenHist.end() != itHist; itHist++ )
 		{
-			if( !StrCmp( itHist->atFile, stOpenHist.atFile ) )	//	同じものがあったら削除する
+			if( !StrCmp( itHist->atFile, stOpenHist.atFile ) )	//	�������̂���������폜����
 			{
 				gltOpenHist.erase( itHist );
 				break;
 			}
 		}
 
-		gltOpenHist.push_back( stOpenHist );	//	リスト末尾ほど新しい
+		gltOpenHist.push_back( stOpenHist );	//	���X�g�����قǐV����
 
-		//	もしはみ出すようなら古いのを削除する
+		//	�����͂ݏo���悤�Ȃ�Â��̂��폜����
 		dItems = gltOpenHist.size( );
 		if( OPENHIST_MAX <  dItems )
 		{
 			gltOpenHist.pop_front(  );
 		}
 	}
-	else	//	文字列指定無い場合は全クリ
+	else	//	������w�薳���ꍇ�͑S�N��
 	{
 		gltOpenHist.clear();
 	}
 
-	OpenHistoryInitialise( NULL );	//	古いの破壊して
-	OpenHistoryInitialise( hWnd );	//	最新の内容で作り直し
+	OpenHistoryInitialise( NULL );	//	�Â��̔j�󂵂�
+	OpenHistoryInitialise( hWnd );	//	�ŐV�̓��e�ō�蒼��
 
 	return S_OK;
 }
@@ -2986,22 +2986,22 @@ HRESULT OpenHistoryLogging( HWND hWnd, LPTSTR ptFile )
 
 
 /*!
-	おぷしょんダイヤログ開く
+	���Ղ����_�C�����O�J��
 */
 HRESULT OptionDialogueOpen( VOID )
 {
 	UINT	bURHbuff, bABUIbuff;
-	TCHAR	atFontName[LF_FACESIZE];	//	フォント名変更に備える
-	//	項目増えたら、構造体にしちゃう
+	TCHAR	atFontName[LF_FACESIZE];	//	�t�H���g���ύX�ɔ�����
+	//	���ڑ�������A�\���̂ɂ����Ⴄ
 
 	ZeroMemory( atFontName, sizeof(atFontName) );
 
 	bURHbuff  = gbUniRadixHex;
 	bABUIbuff = gdBUInterval;
-	//	改行コード変更ならバイト数再計算が必要か
+	//	���s�R�[�h�ύX�Ȃ�o�C�g���Čv�Z���K�v��
 	DialogBoxParam( ghInst, MAKEINTRESOURCE(IDD_GENERAL_OPTION_DLG), ghMainWnd, OptionDlgProc, (LPARAM)atFontName );
 
-	//	設定変更されてたら内容入替
+	//	�ݒ�ύX����Ă�����e����
 	if( bURHbuff != gbUniRadixHex ){	UnicodeRadixExchange( NULL );	};
 	if( bABUIbuff != gdBUInterval )
 	{
@@ -3009,14 +3009,14 @@ HRESULT OptionDialogueOpen( VOID )
 		if( 1 <= gdBUInterval )	SetTimer(  ghMainWnd, IDT_BACKUP_TIMER, (gdBUInterval * 60000), NULL );
 	}
 
-	MenuItemCheckOnOff( IDM_UNICODE_TOGGLE , gbUniPad );	 //	ユニコードON/OFFのチェキ
+	MenuItemCheckOnOff( IDM_UNICODE_TOGGLE , gbUniPad );	 //	���j�R�[�hON/OFF�̃`�F�L
 
-	SqnSetting(   );	//	グループアンドゥのアレ
+	SqnSetting(   );	//	�O���[�v�A���h�D�̃A��
 
-	if( NULL != atFontName[ 0] )	//	フォント名、なんか入ってたら変更されたと見なす
+	if( NULL != atFontName[ 0] )	//	�t�H���g���A�Ȃ񂩓����Ă���ύX���ꂽ�ƌ��Ȃ�
 	{
 		InitParamString( INIT_SAVE, VS_FONT_NAME, atFontName );
-		//	記録する・書換はあとで
+		//	�L�^����E�����͂��Ƃ�
 	}
 
 	return S_OK;
@@ -3024,8 +3024,8 @@ HRESULT OptionDialogueOpen( VOID )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	外部ツールMLT2HTMLのパス設定
-	@param[in]	hDlg	ダイヤログハンドル
+	�O���c�[��MLT2HTML�̃p�X�ݒ�
+	@param[in]	hDlg	�_�C�����O�n���h��
 */
 VOID OptionExtMlt2HtmlPath( HWND hDlg )
 {
@@ -3042,19 +3042,19 @@ VOID OptionExtMlt2HtmlPath( HWND hDlg )
 
 	stOpenFile.lStructSize     = sizeof(OPENFILENAME);
 	stOpenFile.hwndOwner       = hDlg;
-	stOpenFile.lpstrFilter     = TEXT("実行ファイル\0*.exe\0\0");
+	stOpenFile.lpstrFilter     = TEXT("���s�t�@�C��\0*.exe\0\0");
 	stOpenFile.lpstrFile       = atFilePath;
 	stOpenFile.nMaxFile        = MAX_PATH;
 	stOpenFile.lpstrFileTitle  = atFileName;
 	stOpenFile.nMaxFileTitle   = MAX_STRING;
-	stOpenFile.lpstrTitle      = TEXT("実行ファイルを指定しておくれ");
+	stOpenFile.lpstrTitle      = TEXT("���s�t�@�C�����w�肵�Ă�����");
 	stOpenFile.Flags           = OFN_EXPLORER | OFN_HIDEREADONLY;
 	stOpenFile.lpstrDefExt     = TEXT("exe");
 
-	//ここで FileOpenDialogue を出す
+	//������ FileOpenDialogue ���o��
 	bOpened = GetOpenFileName( &stOpenFile );
 
-	if( !(bOpened) ){	 return;	}	//	キャンセルしてたら何もしない
+	if( !(bOpened) ){	 return;	}	//	�L�����Z�����Ă��牽�����Ȃ�
 
 	SetDlgItemText( hDlg, IDE_EXTERNAL_M2H_PATH, atFilePath );
 
@@ -3063,13 +3063,13 @@ VOID OptionExtMlt2HtmlPath( HWND hDlg )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	おぷしょんダイヤログのプロシージャ
-	@param[in]	hDlg		ダイヤログハンドル
-	@param[in]	message		ウインドウメッセージの識別番号
-	@param[in]	wParam		追加の情報１
-	@param[in]	lParam		追加の情報２
-	@retval 0	メッセージは処理していない
-	@retval no0	なんか処理された
+	���Ղ����_�C�����O�̃v���V�[�W��
+	@param[in]	hDlg		�_�C�����O�n���h��
+	@param[in]	message		�E�C���h�E���b�Z�[�W�̎��ʔԍ�
+	@param[in]	wParam		�ǉ��̏��P
+	@param[in]	lParam		�ǉ��̏��Q
+	@retval 0	���b�Z�[�W�͏������Ă��Ȃ�
+	@retval no0	�Ȃ񂩏������ꂽ
 */
 INT_PTR CALLBACK OptionDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
@@ -3087,29 +3087,29 @@ INT_PTR CALLBACK OptionDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 	switch( message )
 	{
 		case WM_INITDIALOG:
-			ptFontName = (LPTSTR)lParam;	//	フォント名入れるやつ
+			ptFontName = (LPTSTR)lParam;	//	�t�H���g���������
 
-			//	スライダ初期値・小さいほど薄くなる
+			//	�X���C�_�����l�E�������قǔ����Ȃ�
 			SendDlgItemMessage( hDlg, IDSL_LAYERBOX_TRANCED, TBM_SETRANGE, TRUE, MAKELPARAM( 0, 0xE0 ) );	//	0xE0
 
-			//	アイテム削除
-			//Edit_SetText( GetDlgItem(hDlg,IDE_AA_DIRECTORY), TEXT("ＡＡディレクトリはプロファイルから設定してね") );
+			//	�A�C�e���폜
+			//Edit_SetText( GetDlgItem(hDlg,IDE_AA_DIRECTORY), TEXT("�`�`�f�B���N�g���̓v���t�@�C������ݒ肵�Ă�") );
 			//EnableWindow( GetDlgItem(hDlg,IDE_AA_DIRECTORY), FALSE );
 			//ShowWindow( GetDlgItem(hDlg,IDB_AADIR_SEARCH), SW_HIDE );
 
-			//	MAAポップアップについて
-			dValue = InitParamValue( INIT_LOAD, VL_MAATIP_SIZE, 16 );	//	サイズ確認
+			//	MAA�|�b�v�A�b�v�ɂ���
+			dValue = InitParamValue( INIT_LOAD, VL_MAATIP_SIZE, 16 );	//	�T�C�Y�m�F
 			if( FONTSZ_REDUCE == dValue )	CheckRadioButton( hDlg, IDRB_POPUP_NOMAL, IDRB_POPUP_REDUCE, IDRB_POPUP_REDUCE );
 			else							CheckRadioButton( hDlg, IDRB_POPUP_NOMAL, IDRB_POPUP_REDUCE, IDRB_POPUP_NOMAL );
-			dValue = InitParamValue( INIT_LOAD, VL_MAATIP_VIEW, 1 );	//	ポッパップするか
+			dValue = InitParamValue( INIT_LOAD, VL_MAATIP_VIEW, 1 );	//	�|�b�p�b�v���邩
 			CheckDlgButton( hDlg, IDCB_POPUP_VISIBLE, dValue ? BST_CHECKED : BST_UNCHECKED );
 
-			//	右寄せドット位置
+			//	�E�񂹃h�b�g�ʒu
 			dValue = InitParamValue( INIT_LOAD, VL_RIGHT_SLIDE, 790 );
 			StringCchPrintf( atBuff, SUB_STRING, TEXT("%d"), dValue );
 			Edit_SetText( GetDlgItem(hDlg,IDE_RIGHTSLIDE_DOT), atBuff );
 
-			//	グリッド位置
+			//	�O���b�h�ʒu
 			cdGrXp = gdGridXpos;
 			StringCchPrintf( atBuff, SUB_STRING, TEXT("%d"), gdGridXpos );
 			Edit_SetText( GetDlgItem(hDlg,IDE_GRID_X_POS), atBuff );
@@ -3118,74 +3118,74 @@ INT_PTR CALLBACK OptionDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			StringCchPrintf( atBuff, SUB_STRING, TEXT("%d"), gdGridYpos );
 			Edit_SetText( GetDlgItem(hDlg,IDE_GRID_Y_POS), atBuff );
 
-			//	右ルーラ位置ドット
+			//	�E���[���ʒu�h�b�g
 			cdRtRr = gdRightRuler;
 			StringCchPrintf( atBuff, SUB_STRING, TEXT("%d"), gdRightRuler );
 			Edit_SetText( GetDlgItem(hDlg,IDE_RIGHT_RULER_POS), atBuff );
 
-			//	下ルーラ位置行数
+			//	�����[���ʒu�s��
 			cdUdRr = gdUnderRuler;
 			StringCchPrintf( atBuff, SUB_STRING, TEXT("%d"), gdUnderRuler );
 			Edit_SetText( GetDlgItem(hDlg,IDE_UNDER_RULER_POS), atBuff );
 
-			//	頁最大バイト数
+			//	�ōő�o�C�g��
 			StringCchPrintf( atBuff, SUB_STRING, TEXT("%d"), gdPageByteMax );
 			Edit_SetText( GetDlgItem(hDlg,IDE_PAGE_BYTE_MAX), atBuff );
 
-			//	自動保存間隔
+			//	�����ۑ��Ԋu
 			dValue = InitParamValue( INIT_LOAD, VL_BACKUP_INTVL, 3 );
 			StringCchPrintf( atBuff, SUB_STRING, TEXT("%d"), dValue );
 			Edit_SetText( GetDlgItem(hDlg,IDE_AUTO_BU_INTVL), atBuff );
 
-			//	バックアップメッセージ
+			//	�o�b�N�A�b�v���b�Z�[�W
 			CheckDlgButton( hDlg, IDCB_AUTOBU_MSG_ON, gbAutoBUmsg ? BST_CHECKED : BST_UNCHECKED );
 
-			//	保存メッセージ
+			//	�ۑ����b�Z�[�W
 			CheckDlgButton( hDlg, IDCB_SAVE_MSG_ON, gbSaveMsgOn ? BST_CHECKED : BST_UNCHECKED );
 
-			//	改行コード選択
+			//	���s�R�[�h�I��
 			CheckRadioButton( hDlg, IDRB_CRLF_STRB, IDRB_CRLF_2CH_YY, gbCrLfCode ? IDRB_CRLF_2CH_YY : IDRB_CRLF_STRB );
 
-			//	空白ユニコードパディング
+			//	�󔒃��j�R�[�h�p�f�B���O
 			CheckDlgButton( hDlg, IDCB_USE_UNISPACE_SET, gbUniPad ? BST_CHECKED : BST_UNCHECKED );
 
-			//	ユニコード１６進数
+			//	���j�R�[�h�P�U�i��
 			CheckDlgButton( hDlg, IDCB_UNIRADIX_HEX, gbUniRadixHex ? BST_CHECKED : BST_UNCHECKED );
 
-			//	グループアンドゥ
+			//	�O���[�v�A���h�D
 			dValue = InitParamValue( INIT_LOAD, VL_GROUP_UNDO, 1 );
 			CheckDlgButton( hDlg, IDCB_GROUPUNDO_SET, dValue ? BST_CHECKED : BST_UNCHECKED );
 
-			//	多重起動有効
+			//	���d�N���L��
 			dValue = InitParamValue( INIT_LOAD, VL_MULTI_ACT_E, 0 );
 			CheckDlgButton( hDlg, IDCB_MULTIACT_ENA, dValue ? BST_CHECKED : BST_UNCHECKED );
 
-			//	アイテム削除
+			//	�A�C�e���폜
 			//EnableWindow( GetDlgItem(hDlg,IDCB_COPY_STYLE_SWAP), FALSE );
 
-			//	ドッキングスタイル
+			//	�h�b�L���O�X�^�C��
 			dValue = InitParamValue( INIT_LOAD, VL_PLS_LN_DOCK, 1 );
 			CheckDlgButton( hDlg, IDCB_DOCKING_STYLE, dValue ? BST_CHECKED : BST_UNCHECKED );
 
-			//	起動時オーポン
+			//	�N�����I�[�|��
 			dValue = InitParamValue( INIT_LOAD, VL_LAST_OPEN, LASTOPEN_DO );
 			CheckRadioButton( hDlg, IDRB_LASTOPEN_DO, IDRB_LASTOPEN_ASK, (IDRB_LASTOPEN_DO + dValue) );
 
 #ifdef TODAY_HINT_STYLE
-			//	今日のヒント
+			//	�����̃q���g
 			dValue = InitParamValue( INIT_LOAD, VL_HINT_ENABLE, 1 );
 			CheckDlgButton( hDlg, IDCB_POPHINT_VIEW, dValue ? BST_CHECKED : BST_UNCHECKED );
 #endif
 #ifdef SPMOZI_ENCODE
-			//	機種依存文字を数値参照コピー
+			//	�@��ˑ������𐔒l�Q�ƃR�s�[
 			dValue = InitParamValue( INIT_LOAD, VL_SPMOZI_ENC, 0 );
 			CheckDlgButton( hDlg, IDCB_SPMOZI_ENCODE, dValue ? BST_CHECKED : BST_UNCHECKED );
 #endif
-			//	レイヤボックスの透明度
+			//	���C���{�b�N�X�̓����x
 			dValue = InitParamValue( INIT_LOAD, VL_LAYER_TRANS, 192 );
 			SendDlgItemMessage( hDlg, IDSL_LAYERBOX_TRANCED, TBM_SETPOS, TRUE, (dValue - 0x1F) );
 
-			//	複数行テンプレをクルックしたときの動作
+			//	�����s�e���v�����N���b�N�����Ƃ��̓���
 			dValue = InitParamValue( INIT_LOAD, VL_MAA_LCLICK, MAA_INSERT );
 			switch( dValue )
 			{
@@ -3199,7 +3199,7 @@ INT_PTR CALLBACK OptionDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			}
 			CheckRadioButton( hDlg, IDRB_SEL_INS_EDIT, IDRB_SEL_DRAUGHT, id );
 
-			//	複数行テンプレをミッドクルックしたときの動作
+			//	�����s�e���v�����~�b�h�N���b�N�����Ƃ��̓���
 			dValue = InitParamValue( INIT_LOAD, VL_MAA_MCLICK, MAA_INSERT );
 			switch( dValue )
 			{
@@ -3213,7 +3213,7 @@ INT_PTR CALLBACK OptionDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			}
 			CheckRadioButton( hDlg, IDRB_SELSUB_INS_EDIT, IDRB_SELSUB_DRAUGHT, id );
 
-			//	ドラフトボードでクリックしたときの動作
+			//	�h���t�g�{�[�h�ŃN���b�N�����Ƃ��̓���
 			switch( gdClickDrt )
 			{
 				case MAA_INSERT:	id =  IDRB_DRT_INS_EDIT;	break;
@@ -3234,7 +3234,7 @@ INT_PTR CALLBACK OptionDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			}
 			CheckRadioButton( hDlg, IDRB_DRTSUB_INS_EDIT, IDRB_DRTSUB_CLIP_SJIS, id );
 
-			//	MLT2HTMLのパス
+			//	MLT2HTML�̃p�X
 			ZeroMemory( atPath, sizeof(atPath) );
 			InitParamString( INIT_LOAD, VS_EXT_M2H_PATH, atPath );
 			SetDlgItemText( hDlg, IDE_EXTERNAL_M2H_PATH, atPath );
@@ -3245,43 +3245,43 @@ INT_PTR CALLBACK OptionDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			id = LOWORD(wParam);
 			switch( id )
 			{
-				case IDB_CHOOSEFONT:	//	フォント変更のアレ
+				case IDB_CHOOSEFONT:	//	�t�H���g�ύX�̃A��
 					ViewingFontGet( &stLogFont );
 					ZeroMemory( &stChooseFont, sizeof(CHOOSEFONT) );
 					stChooseFont.lStructSize = sizeof(CHOOSEFONT);
 					stChooseFont.hwndOwner = hDlg;
 					stChooseFont.lpLogFont = &stLogFont;
 					stChooseFont.Flags = CF_SCREENFONTS | CF_INITTOLOGFONTSTRUCT;
-					if( ChooseFont(&stChooseFont) )	//	確定したのなら中身コピっておく
+					if( ChooseFont(&stChooseFont) )	//	�m�肵���̂Ȃ璆�g�R�s���Ă���
 					{
 						StringCchCopy( ptFontName, LF_FACESIZE, stLogFont.lfFaceName );
 					}
 					break;
 
-				case IDB_EXTERNAL_M2H_SEL:	//	外部ツールのパス設定のアレ
+				case IDB_EXTERNAL_M2H_SEL:	//	�O���c�[���̃p�X�ݒ�̃A��
 					OptionExtMlt2HtmlPath( hDlg );
 					break;
 
-				case IDB_APPLY://適用
+				case IDB_APPLY://�K�p
 				case IDOK:
-					//	ツールチップの文字サイズ
+					//	�c�[���`�b�v�̕����T�C�Y
 					dValue = FONTSZ_NORMAL;
 					if( IsDlgButtonChecked( hDlg, IDRB_POPUP_REDUCE ) ){	dValue =  FONTSZ_REDUCE;	}
 					InitParamValue( INIT_SAVE, VL_MAATIP_SIZE, dValue );
 #ifdef USE_HOVERTIP
-					HoverTipSizeChange( dValue );	//	ポッパップ全体
+					HoverTipSizeChange( dValue );	//	�|�b�p�b�v�S��
 #endif
-					//	ＭＡＡで表示するかどうか・いらない？
+					//	�l�`�`�ŕ\�����邩�ǂ����E����Ȃ��H
 					iBuff = IsDlgButtonChecked( hDlg, IDCB_POPUP_VISIBLE );
 					AaItemsTipSizeChange( dValue, iBuff );
 					InitParamValue( INIT_SAVE, VL_MAATIP_VIEW, iBuff );
 
-					//	右寄せ基準ドット
+					//	�E�񂹊�h�b�g
 					Edit_GetText( GetDlgItem(hDlg,IDE_RIGHTSLIDE_DOT), atBuff, SUB_STRING );
 					dValue = StrToInt( atBuff );
 					InitParamValue( INIT_SAVE, VL_RIGHT_SLIDE, dValue );
 
-					//	グリッド位置
+					//	�O���b�h�ʒu
 					Edit_GetText( GetDlgItem(hDlg,IDE_GRID_X_POS), atBuff, SUB_STRING );
 					gdGridXpos = StrToInt( atBuff );
 					InitParamValue( INIT_SAVE, VL_GRID_X_POS, gdGridXpos );
@@ -3292,89 +3292,89 @@ INT_PTR CALLBACK OptionDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					InitParamValue( INIT_SAVE, VL_GRID_Y_POS, gdGridYpos );
 					if( cdGrYp != gdGridYpos )	ViewRedrawSetLine( -1 );
 
-					//	右ルーラ位置
+					//	�E���[���ʒu
 					Edit_GetText( GetDlgItem(hDlg,IDE_RIGHT_RULER_POS), atBuff, SUB_STRING );
 					gdRightRuler = StrToInt( atBuff );
 					InitParamValue( INIT_SAVE, VL_R_RULER_POS, gdRightRuler );
 					if( cdRtRr != gdRightRuler )	ViewRedrawSetLine( -1 );
 
-					//	下ルーラ位置行数
+					//	�����[���ʒu�s��
 					Edit_GetText( GetDlgItem(hDlg,IDE_UNDER_RULER_POS), atBuff, SUB_STRING );
 					gdUnderRuler = StrToInt( atBuff );
 					InitParamValue( INIT_SAVE, VL_U_RULER_POS, gdUnderRuler );
 					if( cdUdRr != gdUnderRuler )	ViewRedrawSetLine( -1 );
 
-					//	頁最大バイト数
+					//	�ōő�o�C�g��
 					Edit_GetText( GetDlgItem(hDlg,IDE_PAGE_BYTE_MAX), atBuff, SUB_STRING );
 					gdPageByteMax = StrToInt( atBuff );
 					InitParamValue( INIT_SAVE, VL_PAGEBYTE_MAX, gdPageByteMax );
 
 
-					//	自動保存間隔
+					//	�����ۑ��Ԋu
 					Edit_GetText( GetDlgItem(hDlg,IDE_AUTO_BU_INTVL), atBuff, SUB_STRING );
 					gdBUInterval = StrToInt( atBuff );
 					InitParamValue( INIT_SAVE, VL_BACKUP_INTVL, gdBUInterval );
-					//	バックアップメッセージ
+					//	�o�b�N�A�b�v���b�Z�[�W
 					dValue = IsDlgButtonChecked( hDlg, IDCB_AUTOBU_MSG_ON );
 					gbAutoBUmsg = dValue ? 1 : 0;
 					InitParamValue( INIT_SAVE, VL_BACKUP_MSGON, gbAutoBUmsg );
 
-					//	保存メッセージ
+					//	�ۑ����b�Z�[�W
 					dValue = IsDlgButtonChecked( hDlg, IDCB_SAVE_MSG_ON );
 					gbSaveMsgOn = dValue ? 1 : 0;
 					InitParamValue( INIT_SAVE, VL_SAVE_MSGON, gbSaveMsgOn );
 
-					//	改行コード選択
+					//	���s�R�[�h�I��
 					gbCrLfCode = 0;
 					if( IsDlgButtonChecked( hDlg , IDRB_CRLF_2CH_YY ) ){	gbCrLfCode =  1;	}
 					InitParamValue( INIT_SAVE, VL_CRLF_CODE, gbCrLfCode );
 
-					//	ユニコードスペース
+					//	���j�R�[�h�X�y�[�X
 					dValue = IsDlgButtonChecked( hDlg, IDCB_USE_UNISPACE_SET );
 					gbUniPad = dValue ? 1 : 0;
 					InitParamValue( INIT_SAVE, VL_USE_UNICODE, gbUniPad );
 
-					//	ユニコード１６進数
+					//	���j�R�[�h�P�U�i��
 					dValue = IsDlgButtonChecked( hDlg, IDCB_UNIRADIX_HEX );
 					gbUniRadixHex = dValue ? 1 : 0;
 					InitParamValue( INIT_SAVE, VL_UNIRADIX_HEX, gbUniRadixHex );
 
-					//	グループアンドゥ
+					//	�O���[�v�A���h�D
 					dValue = IsDlgButtonChecked( hDlg, IDCB_GROUPUNDO_SET );
 					InitParamValue( INIT_SAVE, VL_GROUP_UNDO, dValue ? 1 : 0 );
 
-					//	20130116	多重起動有効
+					//	20130116	���d�N���L��
 					dValue = IsDlgButtonChecked( hDlg, IDCB_MULTIACT_ENA );
 					InitParamValue( INIT_SAVE, VL_MULTI_ACT_E, dValue ? 1 : 0 );
 
-					//	ドッキングスタイル・変更しても、再起動するまでは無効
+					//	�h�b�L���O�X�^�C���E�ύX���Ă��A�ċN������܂ł͖���
 					dValue = IsDlgButtonChecked( hDlg, IDCB_DOCKING_STYLE );
 					InitParamValue( INIT_SAVE, VL_PLS_LN_DOCK, dValue ? 1 : 0 );
 
 #ifdef TODAY_HINT_STYLE
-					//	今日のヒント
+					//	�����̃q���g
 					dValue = IsDlgButtonChecked( hDlg, IDCB_POPHINT_VIEW );
 					InitParamValue( INIT_SAVE, VL_HINT_ENABLE, dValue );
 #endif
 #ifdef SPMOZI_ENCODE
-					//	機種依存文字を数値参照コピーする
+					//	�@��ˑ������𐔒l�Q�ƃR�s�[����
 					dValue = IsDlgButtonChecked( hDlg, IDCB_SPMOZI_ENCODE );
 					gbSpMoziEnc = dValue ? 1 : 0;
 					InitParamValue( INIT_SAVE, VL_SPMOZI_ENC, gbSpMoziEnc );
 #endif
-					//	起動時オーポン
+					//	�N�����I�[�|��
 					if( IsDlgButtonChecked( hDlg, IDRB_LASTOPEN_NON ) ){	dValue = LASTOPEN_NON;	}
 					else if( IsDlgButtonChecked( hDlg, IDRB_LASTOPEN_ASK ) ){	dValue = LASTOPEN_ASK;	}
 					else{	dValue = LASTOPEN_DO;	}	//	IDRB_LASTOPEN_DO
 					InitParamValue( INIT_SAVE, VL_LAST_OPEN, dValue );
 
-					//	透明度
+					//	�����x
 					dValue = SendDlgItemMessage( hDlg, IDSL_LAYERBOX_TRANCED, TBM_GETPOS, 0, 0 );
 					dValue += 0x1F;
 					InitParamValue( INIT_SAVE, VL_LAYER_TRANS, dValue );
 					LayerBoxAlphaSet( dValue );
 
-					//	MAAの操作
+					//	MAA�̑���
 					if( IsDlgButtonChecked( hDlg, IDRB_SEL_INTRPT_EDIT )  ){	dValue = MAA_INTERRUPT;	}
 					else if( IsDlgButtonChecked( hDlg, IDRB_SEL_SET_LAYER ) ){	dValue = MAA_LAYERED;	}
 					else if( IsDlgButtonChecked( hDlg, IDRB_SEL_CLIP_UNI ) ){	dValue = MAA_UNICLIP;	}
@@ -3391,9 +3391,9 @@ INT_PTR CALLBACK OptionDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					else{	iBuff =  MAA_INSERT;	}	//	IDRB_SEL_INS_EDIT
 					InitParamValue( INIT_SAVE, VL_MAA_MCLICK, iBuff );
 
-					ViewMaaItemsModeSet( dValue, iBuff );	//	MAAにも設定おくる
+					ViewMaaItemsModeSet( dValue, iBuff );	//	MAA�ɂ��ݒ肨����
 
-					//	ドラフトボードの操作
+					//	�h���t�g�{�[�h�̑���
 					if( IsDlgButtonChecked( hDlg, IDRB_DRT_INTRPT_EDIT )  ){	gdClickDrt = MAA_INTERRUPT;	}
 					else if( IsDlgButtonChecked( hDlg, IDRB_DRT_SET_LAYER ) ){	gdClickDrt = MAA_LAYERED;	}
 					else if( IsDlgButtonChecked( hDlg, IDRB_DRT_CLIP_UNI ) ){	gdClickDrt = MAA_UNICLIP;	}
@@ -3408,11 +3408,11 @@ INT_PTR CALLBACK OptionDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					else{	gdSubClickDrt = MAA_INSERT;	}	//	IDRB_DRTSUB_INS_EDIT
 					InitParamValue( INIT_SAVE, VL_DRT_MCLICK, gdSubClickDrt );
 
-					//	MLT2HTMLのパス
+					//	MLT2HTML�̃p�X
 					GetDlgItemText( hDlg, IDE_EXTERNAL_M2H_PATH, atPath, MAX_PATH );
 					InitParamString( INIT_SAVE, VS_EXT_M2H_PATH, atPath );
 
-					//	ＯＫなら閉じちゃう
+					//	�n�j�Ȃ�����Ⴄ
 					if( IDOK == id ){	EndDialog( hDlg, IDOK );	}
 					return (INT_PTR)TRUE;
 
@@ -3432,11 +3432,11 @@ INT_PTR CALLBACK OptionDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ユニコード空白の使用・不使用
+	���j�R�[�h�󔒂̎g�p�E�s�g�p
 */
 UINT UnicodeUseToggle( LPVOID pVoid )
 {
-	gbUniPad =  !(gbUniPad);	//	トグル
+	gbUniPad =  !(gbUniPad);	//	�g�O��
 	InitParamValue( INIT_SAVE, VL_USE_UNICODE, gbUniPad );
 	MenuItemCheckOnOff( IDM_UNICODE_TOGGLE, gbUniPad );
 
@@ -3445,11 +3445,11 @@ UINT UnicodeUseToggle( LPVOID pVoid )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ディレクトリ選択ダイアログの表示
-	@param[in]	hWnd		親ウインドウのハンドル
-	@param[in]	ptSelDir	ディレクトリ名を入れるバッファへのポインター
-	@param[in]	cchLen		バッファの文字数。バイト数じゃないぞ
-	@return		非０：ディレクトリとった　０：キャンセルした
+	�f�B���N�g���I���_�C�A���O�̕\��
+	@param[in]	hWnd		�e�E�C���h�E�̃n���h��
+	@param[in]	ptSelDir	�f�B���N�g����������o�b�t�@�ւ̃|�C���^�[
+	@param[in]	cchLen		�o�b�t�@�̕������B�o�C�g������Ȃ���
+	@return		��O�F�f�B���N�g���Ƃ����@�O�F�L�����Z������
 */
 BOOLEAN SelectDirectoryDlg( HWND hWnd, LPTSTR ptSelDir, UINT_PTR cchLen )
 {
@@ -3460,34 +3460,34 @@ BOOLEAN SelectDirectoryDlg( HWND hWnd, LPTSTR ptSelDir, UINT_PTR cchLen )
 	if( !(ptSelDir) )	return FALSE;
 	ZeroMemory( ptSelDir, sizeof(TCHAR) * cchLen );
 
-	//	BROWSEINFO構造体に値を設定
-	stBrowseInfo.hwndOwner		 = hWnd;	//	ダイアログの親ウインドウのハンドル
-	stBrowseInfo.pidlRoot		 = NULL;	//	ルートディレクトリを示すITEMIDLISTのポインタ・NULLの場合デスクトップ
-	stBrowseInfo.pszDisplayName	 = atDisplayName;	//	選択されたディレクトリ名を受け取るバッファのポインタ
-	stBrowseInfo.lpszTitle		 = TEXT("ＡＡの入ってるディレクトリを選択するのー！");	//	ツリービューの上部に表示される文字列
-	stBrowseInfo.ulFlags		 = BIF_RETURNONLYFSDIRS;	//	表示されるディレクトリの種類を示すフラグ
-	stBrowseInfo.lpfn			 = NULL;		//	BrowseCallbackProc関数のポインタ
-	stBrowseInfo.lParam			 = (LPARAM)0;	//	コールバック関数に渡す値
+	//	BROWSEINFO�\���̂ɒl��ݒ�
+	stBrowseInfo.hwndOwner		 = hWnd;	//	�_�C�A���O�̐e�E�C���h�E�̃n���h��
+	stBrowseInfo.pidlRoot		 = NULL;	//	���[�g�f�B���N�g��������ITEMIDLIST�̃|�C���^�ENULL�̏ꍇ�f�X�N�g�b�v
+	stBrowseInfo.pszDisplayName	 = atDisplayName;	//	�I�����ꂽ�f�B���N�g�������󂯎��o�b�t�@�̃|�C���^
+	stBrowseInfo.lpszTitle		 = TEXT("�`�`�̓����Ă�f�B���N�g����I������́[�I");	//	�c���[�r���[�̏㕔�ɕ\������镶����
+	stBrowseInfo.ulFlags		 = BIF_RETURNONLYFSDIRS;	//	�\�������f�B���N�g���̎�ނ������t���O
+	stBrowseInfo.lpfn			 = NULL;		//	BrowseCallbackProc�֐��̃|�C���^
+	stBrowseInfo.lParam			 = (LPARAM)0;	//	�R�[���o�b�N�֐��ɓn���l
 
-	//	ディレクトリ選択ダイアログを表示
+	//	�f�B���N�g���I���_�C�A���O��\��
 	pstItemIDList = SHBrowseForFolder( &stBrowseInfo );
 	if( !(pstItemIDList) )
 	{
-		//	戻り値がNULLの場合、ディレクトリが選択されずにダイアログが閉じられたということ
+		//	�߂�l��NULL�̏ꍇ�A�f�B���N�g�����I�����ꂸ�Ƀ_�C�A���O������ꂽ�Ƃ�������
 		return FALSE;
 	}
 	else
 	{
-		//	ItemIDListをパス名に変換
+		//	ItemIDList���p�X���ɕϊ�
 		if( !SHGetPathFromIDList( pstItemIDList, atDisplayName ) )
 		{
-			//	エラー処理
+			//	�G���[����
 			return FALSE;
 		}
-		//	atDisplayNameに選択されたディレクトリのパスが入ってる
+		//	atDisplayName�ɑI�����ꂽ�f�B���N�g���̃p�X�������Ă�
 		StringCchCopy( ptSelDir, cchLen, atDisplayName );
 
-		//	pstItemIDListを開放せしめる
+		//	pstItemIDList���J�������߂�
 		CoTaskMemFree( pstItemIDList );
 	}
 
@@ -3497,12 +3497,12 @@ BOOLEAN SelectDirectoryDlg( HWND hWnd, LPTSTR ptSelDir, UINT_PTR cchLen )
 
 
 /*!
-	複数ファイルタブのサブクラスプロシージャ
-	@param[in]	hWnd	リストのハンドル
-	@param[in]	msg		ウインドウメッセージの識別番号
-	@param[in]	wParam	追加の情報１
-	@param[in]	lParam	追加の情報２
-	@return	処理結果とか
+	�����t�@�C���^�u�̃T�u�N���X�v���V�[�W��
+	@param[in]	hWnd	���X�g�̃n���h��
+	@param[in]	msg		�E�C���h�E���b�Z�[�W�̎��ʔԍ�
+	@param[in]	wParam	�ǉ��̏��P
+	@param[in]	lParam	�ǉ��̏��Q
+	@return	�������ʂƂ�
 */
 LRESULT	CALLBACK gpfFileTabProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
@@ -3518,11 +3518,11 @@ LRESULT	CALLBACK gpfFileTabProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	複数ファイルタブでマウスの中ボタンがうｐされたとき
-	@param[in]	hWnd		ウインドウハンドル
-	@param[in]	x			発生したクライヤントＸ座標値
-	@param[in]	y			発生したクライヤントＹ座標値
-	@param[in]	keyFlags	他に押されてるキーについて
+	�����t�@�C���^�u�Ń}�E�X�̒��{�^�����������ꂽ�Ƃ�
+	@param[in]	hWnd		�E�C���h�E�n���h��
+	@param[in]	x			���������N���C�����g�w���W�l
+	@param[in]	y			���������N���C�����g�x���W�l
+	@param[in]	keyFlags	���ɉ�����Ă�L�[�ɂ���
 */
 VOID Ftb_OnMButtonUp( HWND hWnd, INT x, INT y, UINT flags )
 {
@@ -3542,9 +3542,9 @@ VOID Ftb_OnMButtonUp( HWND hWnd, INT x, INT y, UINT flags )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	起動時の最初の一個のファイルタブを追加
-	@param[in]	ptName	ファイル名
-	@return		HRESULT	終了状態コード
+	�N�����̍ŏ��̈�̃t�@�C���^�u��ǉ�
+	@param[in]	ptName	�t�@�C����
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT MultiFileTabFirst( LPTSTR ptName )
 {
@@ -3557,7 +3557,7 @@ HRESULT MultiFileTabFirst( LPTSTR ptName )
 	ZeroMemory( &stTcItem, sizeof(TCITEM) );
 	stTcItem.mask = TCIF_TEXT | TCIF_PARAM;
 	stTcItem.pszText = atName;
-	stTcItem.lParam  = 1;	//	ユニーク番号・常にINCREMENT
+	stTcItem.lParam  = 1;	//	���j�[�N�ԍ��E���INCREMENT
 	TabCtrl_InsertItem( ghFileTabWnd, 1, &stTcItem );
 
 	TabCtrl_DeleteItem( ghFileTabWnd, 0 );
@@ -3565,12 +3565,12 @@ HRESULT MultiFileTabFirst( LPTSTR ptName )
 	TabCtrl_SetCurSel( ghFileTabWnd, 0 );
 
 #ifdef BIG_TEXT_SEPARATE
-	if( gbSeparateMod )	//	分割読込したので変更マークを付ける
+	if( gbSeparateMod )	//	�����Ǎ������̂ŕύX�}�[�N��t����
 	{
 		DocModifyContent( 1 );
 		gbSeparateMod = FALSE;
 	}
-	//	タブができあがってから処理する必要がある
+	//	�^�u���ł��������Ă��珈������K�v������
 #endif
 
 	return S_OK;
@@ -3578,10 +3578,10 @@ HRESULT MultiFileTabFirst( LPTSTR ptName )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	二つ目以降のファイルを追加
-	@param[in]	dNumber	通し番号
-	@param[in]	ptName	ファイル名
-	@return		HRESULT	終了状態コード
+	��ڈȍ~�̃t�@�C����ǉ�
+	@param[in]	dNumber	�ʂ��ԍ�
+	@param[in]	ptName	�t�@�C����
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT MultiFileTabAppend( LPARAM dNumber, LPTSTR ptName )
 {
@@ -3597,20 +3597,20 @@ HRESULT MultiFileTabAppend( LPARAM dNumber, LPTSTR ptName )
 	ZeroMemory( &stTcItem, sizeof(TCITEM) );
 	stTcItem.mask = TCIF_TEXT | TCIF_PARAM;
 	stTcItem.pszText = atName;
-	stTcItem.lParam  = dNumber;	//	ユニーク番号
+	stTcItem.lParam  = dNumber;	//	���j�[�N�ԍ�
 	TabCtrl_InsertItem( ghFileTabWnd, iCount, &stTcItem );
 
 	TabCtrl_SetCurSel( ghFileTabWnd, iCount );
 
-//	ここでファイルオーポンを記録すると、関係無いのまで無差別に記録してまう
+//	�����Ńt�@�C���I�[�|�����L�^����ƁA�֌W�����̂܂Ŗ����ʂɋL�^���Ă܂�
 
 #ifdef BIG_TEXT_SEPARATE
-	if( gbSeparateMod )	//	分割読込したので変更マークを付ける
+	if( gbSeparateMod )	//	�����Ǎ������̂ŕύX�}�[�N��t����
 	{
 		DocModifyContent( 1 );
 		gbSeparateMod = FALSE;
 	}
-	//	タブができあがってから処理する必要がある
+	//	�^�u���ł��������Ă��珈������K�v������
 #endif
 
 	return S_OK;
@@ -3618,9 +3618,9 @@ HRESULT MultiFileTabAppend( LPARAM dNumber, LPTSTR ptName )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	指定の通し番号をもったタブをさがしてタブインデックスを返す
-	@param[in]	dNumber	通し番号
-	@return		INT		タブインデックス・該当なかったら－１
+	�w��̒ʂ��ԍ����������^�u���������ă^�u�C���f�b�N�X��Ԃ�
+	@param[in]	dNumber	�ʂ��ԍ�
+	@return		INT		�^�u�C���f�b�N�X�E�Y���Ȃ�������|�P
 */
 INT MultiFileTabSearch( LPARAM dNumber )
 {
@@ -3644,19 +3644,19 @@ INT MultiFileTabSearch( LPARAM dNumber )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	指定の通し番号をもったタブを選択状態にする
-	@param[in]	dNumber	通し番号
-	@return		HRESULT	終了状態コード
+	�w��̒ʂ��ԍ����������^�u��I����Ԃɂ���
+	@param[in]	dNumber	�ʂ��ԍ�
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT MultiFileTabSelect( LPARAM dNumber )
 {
 	INT	iRslt;
 
-	iRslt = MultiFileTabSearch( dNumber );	//	指定の通し番号をもったタブをさがす
+	iRslt = MultiFileTabSearch( dNumber );	//	�w��̒ʂ��ԍ����������^�u��������
 
 	if( 0 <= iRslt )
 	{
-		TabCtrl_SetCurSel( ghFileTabWnd, iRslt );	//	該当のタブにフォーカス移して
+		TabCtrl_SetCurSel( ghFileTabWnd, iRslt );	//	�Y���̃^�u�Ƀt�H�[�J�X�ڂ���
 		return S_OK;
 	}
 
@@ -3665,9 +3665,9 @@ HRESULT MultiFileTabSelect( LPARAM dNumber )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	キーボードからのタブ移動操作・隣のタブに移動
-	@param[in]	xDir	正数：右へ　負数：左へ　０なにもしない
-	@return		HRESULT	終了状態コード
+	�L�[�{�[�h����̃^�u�ړ�����E�ׂ̃^�u�Ɉړ�
+	@param[in]	xDir	�����F�E�ց@�����F���ց@�O�Ȃɂ����Ȃ�
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT MultiFileTabSlide( INT xDir )
 {
@@ -3677,13 +3677,13 @@ HRESULT MultiFileTabSlide( INT xDir )
 
 	if( 0 == xDir ){	return  S_FALSE;	}
 
-	//	タブの総数
+	//	�^�u�̑���
 	iCount = TabCtrl_GetItemCount( ghFileTabWnd );
 
-	//	選択してる奴を選択する
+	//	�I�����Ă�z��I������
 	curSel = TabCtrl_GetCurSel( ghFileTabWnd );
 
-	//	移動先タブを検索
+	//	�ړ���^�u������
 	if( 0 < xDir )
 	{
 		iTarget = curSel + 1;
@@ -3695,16 +3695,16 @@ HRESULT MultiFileTabSlide( INT xDir )
 		if( 0 > iTarget ){	iTarget = iCount - 1;	}
 	}
 
-	//	そのタブを選択状態にして
+	//	���̃^�u��I����Ԃɂ���
 	TabCtrl_SetCurSel( ghFileTabWnd, iTarget );
 
-	//	そのタブのファイル番号を確認して
+	//	���̃^�u�̃t�@�C���ԍ����m�F����
 	ZeroMemory( &stTcItem, sizeof(TCITEM) );
 	stTcItem.mask = TCIF_PARAM;
 	TabCtrl_GetItem( ghFileTabWnd, iTarget, &stTcItem );
 	dSele = stTcItem.lParam;
 
-	//	該当のファイルをフォーカスする
+	//	�Y���̃t�@�C�����t�H�[�J�X����
 	DocMultiFileSelect( dSele );
 
 	return S_OK;
@@ -3712,10 +3712,10 @@ HRESULT MultiFileTabSlide( INT xDir )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	指定の通し番号をもったタブの名称を変更
-	@param[in]	dNumber	ファイルのUNIQUE番号
-	@param[in]	ptName	ファイル名
-	@return		HRESULT	終了状態コード
+	�w��̒ʂ��ԍ����������^�u�̖��̂�ύX
+	@param[in]	dNumber	�t�@�C����UNIQUE�ԍ�
+	@param[in]	ptName	�t�@�C����
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT MultiFileTabRename( LPARAM dNumber, LPTSTR ptName )
 {
@@ -3739,19 +3739,19 @@ HRESULT MultiFileTabRename( LPARAM dNumber, LPTSTR ptName )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	開いてるタブを保存したりよびだしたり
-	@param[in]	dMode	非０ロード　０セーブ
-	@param[in]	iTgt	読み出す番号・０インデックス・負数ならファイル数のみ確保
-	@param[out]	ptFile	フルパス・MAX_PATHであること
-	@return		INT	セーブ：０　ロード：記録数
+	�J���Ă�^�u��ۑ��������т�������
+	@param[in]	dMode	��O���[�h�@�O�Z�[�u
+	@param[in]	iTgt	�ǂݏo���ԍ��E�O�C���f�b�N�X�E�����Ȃ�t�@�C�����̂݊m��
+	@param[out]	ptFile	�t���p�X�EMAX_PATH�ł��邱��
+	@return		INT	�Z�[�u�F�O�@���[�h�F�L�^��
 */
 INT InitMultiFileTabOpen( UINT dMode, INT iTgt, LPTSTR ptFile )
 {
-	if( dMode )	//	よびだし
+	if( dMode )	//	��т���
 	{
 		return DocMultiFileFetch( iTgt, ptFile, gatIniPath );
 	}
-	else	//	セーブ
+	else	//	�Z�[�u
 	{
 		DocMultiFileStore( gatIniPath );
 	}
@@ -3761,9 +3761,9 @@ INT InitMultiFileTabOpen( UINT dMode, INT iTgt, LPTSTR ptFile )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	開いてるタブを閉じるCommando
-	@param[in]	iSelTab	閉じたいタブ番号・デフォ動作なら－１
-	@return		HRESULT	終了状態コード
+	�J���Ă�^�u�����Commando
+	@param[in]	iSelTab	�������^�u�ԍ��E�f�t�H����Ȃ�|�P
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT MultiFileTabClose( INT iSelTab )
 {
@@ -3773,18 +3773,18 @@ HRESULT MultiFileTabClose( INT iSelTab )
 
 	nowSel = TabCtrl_GetCurSel( ghFileTabWnd );
 
-	if( 0 > iSelTab ){	curSel = nowSel;	}	//	選択してる奴を削除する
-	else{				curSel = iSelTab;	}	//	指定のタブを削除する
+	if( 0 > iSelTab ){	curSel = nowSel;	}	//	�I�����Ă�z���폜����
+	else{				curSel = iSelTab;	}	//	�w��̃^�u���폜����
 
 	ZeroMemory( &stTcItem, sizeof(TCITEM) );
 	stTcItem.mask = TCIF_PARAM;
 	TabCtrl_GetItem( ghFileTabWnd, curSel, &stTcItem );
 
 	dSele = DocMultiFileClose( ghMainWnd, stTcItem.lParam );
-	if( dSele )	//	値は、タブ番号ではなくファイルの通し番号であることに注意
+	if( dSele )	//	�l�́A�^�u�ԍ��ł͂Ȃ��t�@�C���̒ʂ��ԍ��ł��邱�Ƃɒ���
 	{
 		TabCtrl_DeleteItem( ghFileTabWnd, curSel );
-		//	開いてるのを消したら、隣のに開き直す
+		//	�J���Ă�̂���������A�ׂ̂ɊJ������
 		if( curSel ==  nowSel ){	MultiFileTabSelect( dSele );	}
 	}
 
@@ -3793,16 +3793,16 @@ HRESULT MultiFileTabClose( INT iSelTab )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	表示用フォントの名前を頂く
+	�\���p�t�H���g�̖��O�𒸂�
 */
 HRESULT ViewingFontNameLoad( VOID )
 {
 	TCHAR	atName[LF_FACESIZE];
 
-	ZeroMemory( atName, sizeof(atName) );	//	デフォネーム
-	StringCchCopy( atName, LF_FACESIZE, TEXT("ＭＳ Ｐゴシック") );
+	ZeroMemory( atName, sizeof(atName) );	//	�f�t�H�l�[��
+	StringCchCopy( atName, LF_FACESIZE, TEXT("�l�r �o�S�V�b�N") );
 
-	InitParamString( INIT_LOAD, VS_FONT_NAME, atName );	//	ゲッツ！
+	InitParamString( INIT_LOAD, VS_FONT_NAME, atName );	//	�Q�b�c�I
 
 	StringCchCopy( gstBaseFont.lfFaceName, LF_FACESIZE, atName );
 
@@ -3811,24 +3811,24 @@ HRESULT ViewingFontNameLoad( VOID )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	表示用フォントデータをコピーする
-	@param[in]	pstLogFont	データコピる構造体へのポインター
+	�\���p�t�H���g�f�[�^���R�s�[����
+	@param[in]	pstLogFont	�f�[�^�R�s��\���̂ւ̃|�C���^�[
 */
 HRESULT ViewingFontGet( LPLOGFONT pstLogFont )
 {
-	ZeroMemory( pstLogFont, sizeof(LOGFONT) );	//	念のため空白にする
+	ZeroMemory( pstLogFont, sizeof(LOGFONT) );	//	�O�̂��ߋ󔒂ɂ���
 
 	*pstLogFont = gstBaseFont;
-	//	構造体はコピーでおｋ
+	//	�\���̂̓R�s�[�ł���
 	return S_OK;
 }
 //-------------------------------------------------------------------------------------------------
 
 #ifdef BIG_TEXT_SEPARATE
 /*!
-	巨大ファイルを開くときの処理について問合せダイヤログ
-	@param[in]	dStyle	メッセージタイプ・１巨大ファイル問合せ　２改行無しエラー
-	@return	０なにもしない　１分割モード　２読込中止
+	����t�@�C�����J���Ƃ��̏����ɂ��Ė⍇���_�C�����O
+	@param[in]	dStyle	���b�Z�[�W�^�C�v�E�P����t�@�C���⍇���@�Q���s�����G���[
+	@return	�O�Ȃɂ����Ȃ��@�P�������[�h�@�Q�Ǎ����~
 */
 UINT DocHugeFileTreatment( UINT dStyle )
 {
@@ -3840,19 +3840,19 @@ UINT DocHugeFileTreatment( UINT dStyle )
 
 	if( 1 == dStyle )
 	{
-		iRslt = MessageBox( bVisible ? ghMainWnd : NULL, TEXT("大きなファイルを開こうとしてるよ。適当に分割して読み込むかい？\r\n\r\n　　はい：分割読込（すぐ保存してね）\t\n　　いいえ：そのまま読込（時間かかるかも）\r\n　　キャンセル：読込中止"), TEXT("一枚板のテキストっぽいよ"), MB_YESNOCANCEL | MB_ICONQUESTION );
-		//	有効になってないウインドウハンドルを親につかうとぶっとぶ
+		iRslt = MessageBox( bVisible ? ghMainWnd : NULL, TEXT("�傫�ȃt�@�C�����J�����Ƃ��Ă��B�K���ɕ������ēǂݍ��ނ����H\r\n\r\n�@�@�͂��F�����Ǎ��i�����ۑ����Ăˁj\t\n�@�@�������F���̂܂ܓǍ��i���Ԃ����邩���j\r\n�@�@�L�����Z���F�Ǎ����~"), TEXT("�ꖇ�̃e�L�X�g���ۂ���"), MB_YESNOCANCEL | MB_ICONQUESTION );
+		//	�L���ɂȂ��ĂȂ��E�C���h�E�n���h����e�ɂ����ƂԂ��Ƃ�
 
 		switch( iRslt )
 		{
-			case IDYES:	dMode = 1;	gbSeparateMod = TRUE;	break;	//	分割
-			case IDNO:	dMode = 0;	break;	//	なにもしない
-			default:	dMode = 2;	break;	//	読込中止
+			case IDYES:	dMode = 1;	gbSeparateMod = TRUE;	break;	//	����
+			case IDNO:	dMode = 0;	break;	//	�Ȃɂ����Ȃ�
+			default:	dMode = 2;	break;	//	�Ǎ����~
 		}
 	}
 	else if( 2 == dStyle )
 	{
-		MessageBox( bVisible ? ghMainWnd : NULL, TEXT("ファイルの中身がなんかおかしいよ。読込を中止するよ。"), TEXT("改行がないかも"), MB_OK | MB_ICONERROR );
+		MessageBox( bVisible ? ghMainWnd : NULL, TEXT("�t�@�C���̒��g���Ȃ񂩂���������B�Ǎ��𒆎~�����B"), TEXT("���s���Ȃ�����"), MB_OK | MB_ICONERROR );
 		dMode = 2;
 	}
 	else
@@ -3868,11 +3868,11 @@ UINT DocHugeFileTreatment( UINT dStyle )
 #ifdef USE_NOTIFYICON
 
 /*!
-	タスクトレイアイコンでイベントが発生したら
-	@param[in]	hWnd	ウインドウハンドル
-	@param[in]	uID		イベントが発生したトレイアイコンのＩＤ
-	@param[in]	message	マウス、キーボードの操作のWMmessage
-	@return 特になし
+	�^�X�N�g���C�A�C�R���ŃC�x���g������������
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@param[in]	uID		�C�x���g�����������g���C�A�C�R���̂h�c
+	@param[in]	message	�}�E�X�A�L�[�{�[�h�̑����WMmessage
+	@return ���ɂȂ�
 */
 VOID TaskTrayIconEvent( HWND hWnd, UINT uID, UINT message )
 {
@@ -3884,11 +3884,11 @@ VOID TaskTrayIconEvent( HWND hWnd, UINT uID, UINT message )
 #endif
 
 /*!
-	タスクトレイアイコンにばりゅ～んめせーじを載せる
-	@param[in]	ptInfo	バルーンの本文
-	@param[in]	ptTitle	バルーンのタイトル
-	@param[in]	dIconTy	くっつくアイコン、１情報、２警告、３エラー
-	@return		HRESULT	終了状態コード
+	�^�X�N�g���C�A�C�R���ɂ΂��`��߂��[�����ڂ���
+	@param[in]	ptInfo	�o���[���̖{��
+	@param[in]	ptTitle	�o���[���̃^�C�g��
+	@param[in]	dIconTy	�������A�C�R���A�P���A�Q�x���A�R�G���[
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT NotifyBalloonExist( LPTSTR ptInfo, LPTSTR ptTitle, DWORD dIconTy )
 {
@@ -3901,8 +3901,8 @@ HRESULT NotifyBalloonExist( LPTSTR ptInfo, LPTSTR ptTitle, DWORD dIconTy )
 	nid.hWnd        = ghMainWnd;
 	StringCchCopy( nid.szInfoTitle, 64, ptTitle );
 	StringCchCopy( nid.szInfo, 256, ptInfo );
-	nid.uTimeout    = 15000;	//	ｍｓで１５秒表示させてみる
-	nid.dwInfoFlags = dIconTy;	//	用いるアイコンタイプ
+	nid.uTimeout    = 15000;	//	�����łP�T�b�\�������Ă݂�
+	nid.dwInfoFlags = dIconTy;	//	�p����A�C�R���^�C�v
 	Shell_NotifyIcon( NIM_MODIFY, &nid );
 
 //	NIIF_INFO       0x00000001
@@ -3914,7 +3914,7 @@ HRESULT NotifyBalloonExist( LPTSTR ptInfo, LPTSTR ptTitle, DWORD dIconTy )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ドッキングしてる壱行ブラシテンプレを表示/非表示
+	�h�b�L���O���Ă��s�u���V�e���v����\��/��\��
 */
 HRESULT DockingTmplViewToggle( UINT bMode )
 {
@@ -3924,40 +3924,40 @@ HRESULT DockingTmplViewToggle( UINT bMode )
 	INT		iHeight, curSel;
 
 	hDockWnd = DockingTabGet( );
-	//	分離状態ならタブは無い
+	//	������ԂȂ�^�u�͖���
 	if( !(hDockWnd) )	return E_ABORT;
 
 	GetClientRect( ghMainWnd, &clntRect );
 	GetClientRect( hDockWnd,  &tabRect );
 	GetClientRect( ghPgVwWnd, &pageRect );
 
-	GetClientRect( ghStsBarWnd, &sbRect );	//	ステータスバーのサイズ確認
+	GetClientRect( ghStsBarWnd, &sbRect );	//	�X�e�[�^�X�o�[�̃T�C�Y�m�F
 
 	AppClientAreaCalc( &rect );
 
-	if( gbDockTmplView )	//	見えてるなら閉じればいい
+	if( gbDockTmplView )	//	�����Ă�Ȃ����΂���
 	{
 		gbDockTmplView = FALSE;
 		ShowWindow( ghLnTmplWnd, SW_HIDE );
 		ShowWindow( ghBrTmplWnd, SW_HIDE );
 
-		//	場所を変えないといかん
+		//	�ꏊ��ς��Ȃ��Ƃ�����
 		iHeight = clntRect.bottom - tabRect.bottom - sbRect.bottom;
 
-		//	壱行ブラシタブは下へ
+		//	��s�u���V�^�u�͉���
 		SetWindowPos( hDockWnd, HWND_TOP, rect.right - tabRect.right, iHeight, 0, 0, SWP_NOSIZE | SWP_NOZORDER );
 
-		//	Pageリストは広げる
+		//	Page���X�g�͍L����
 		SetWindowPos( ghPgVwWnd, HWND_TOP, 0, 0, pageRect.right, iHeight - rect.top, SWP_NOMOVE | SWP_NOZORDER );
 	}
 	else
 	{
 		gbDockTmplView = TRUE;
 
-		//	位置合わせ
-		ViewSizeMove( ghMainWnd, &rect );	//	ドッキングしてる壱行ブラシテンプレを表示/非表示
+		//	�ʒu���킹
+		ViewSizeMove( ghMainWnd, &rect );	//	�h�b�L���O���Ă��s�u���V�e���v����\��/��\��
 
-		//	今の状態に合わせて復帰
+		//	���̏�Ԃɍ��킹�ĕ��A
 		curSel = TabCtrl_GetCurSel( hDockWnd );
 		switch( curSel )
 		{
@@ -3995,8 +3995,8 @@ VOID OutputDebugStringPlus( DWORD rixError, LPTSTR ptFile, INT rdLine, LPTSTR pt
 
 //	ZeroMemory( atFiFu, sizeof(atFiFu) );
 //	MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, acFiFu, length, atFiFu, MAX_PATH );
-	//	コードページ,文字の種類を指定するフラグ,マップ元文字列のアドレス,マップ元文字列のバイト数,
-	//	マップ先ワイド文字列を入れるバッファのアドレス,バッファのサイズ
+	//	�R�[�h�y�[�W,�����̎�ނ��w�肷��t���O,�}�b�v��������̃A�h���X,�}�b�v��������̃o�C�g��,
+	//	�}�b�v�惏�C�h�����������o�b�t�@�̃A�h���X,�o�b�t�@�̃T�C�Y
 
 	va_start(argp, ptFormat);
 	StringCchVPrintf( atBuf, MAX_PATH, ptFormat, argp );
@@ -4021,7 +4021,7 @@ VOID OutputDebugStringPlus( DWORD rixError, LPTSTR ptFile, INT rdLine, LPTSTR pt
 	{
 		FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 			NULL, rixError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), atErrMsg, MAX_PATH, NULL );
-		//	メッセージには改行が含まれているようだ
+		//	���b�Z�[�W�ɂ͉��s���܂܂�Ă���悤��
 		StringCchPrintf( atBuf, MAX_PATH, TEXT("[%d]%s"), rixError, atErrMsg );//
 
 #ifdef _DEBUG
@@ -4041,4 +4041,4 @@ VOID OutputDebugStringPlus( DWORD rixError, LPTSTR ptFile, INT rdLine, LPTSTR pt
 //-------------------------------------------------------------------------------------------------
 #endif
 
-//	Dirty Deeds Done Dirt Cheap 自分のスタンドに「いとも容易く行われるえげつない行為」なんて名前を付けるのはどうかと思う。
+//	Dirty Deeds Done Dirt Cheap �����̃X�^���h�Ɂu���Ƃ��e�Ղ��s���邦���Ȃ��s�ׁv�Ȃ�Ė��O��t����̂͂ǂ����Ǝv���B

@@ -1,6 +1,6 @@
-ï»¿/*! @file
-	@brief æ“ä½œã®ãƒ­ã‚°ã‚’ä½œã‚Šã¾ã™ãƒ»ã‚¢ãƒ³ãƒ‰ã‚¥ãƒªãƒ‰ã‚¥ç”¨
-	ã“ã®ãƒ•ã‚¡ã‚¤ãƒ«ã¯ DocOperateLog.cpp ã§ã™ã€‚
+/*! @file
+	@brief ‘€ì‚ÌƒƒO‚ğì‚è‚Ü‚·EƒAƒ“ƒhƒDƒŠƒhƒD—p
+	‚±‚Ìƒtƒ@ƒCƒ‹‚Í DocOperateLog.cpp ‚Å‚·B
 	@author	SikigamiHNQ
 	@date	2011/05/21
 */
@@ -21,12 +21,12 @@ If not, see <http://www.gnu.org/licenses/>.
 #include "OrinrinEditor.h"
 //-------------------------------------------------------------------------------------------------
 
-extern FILES_ITR	gitFileIt;	//!<	ä»Šè¦‹ã¦ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã®æœ¬ä½“
-//#define gstFile	(*gitFileIt)	//!<	ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ã‚’æ§‹é€ ä½“ã¨è¦‹ãªã™
+extern FILES_ITR	gitFileIt;	//!<	¡Œ©‚Ä‚éƒtƒ@ƒCƒ‹‚Ì–{‘Ì
+//#define gstFile	(*gitFileIt)	//!<	ƒCƒeƒŒ[ƒ^‚ğ\‘¢‘Ì‚ÆŒ©‚È‚·
 
-extern INT		gixFocusPage;	//!<	æ³¨ç›®ä¸­ã®ãƒšãƒ¼ã‚¸ãƒ»ã¨ã‚Šã‚ãˆãšï¼ãƒ»ï¼ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+extern INT		gixFocusPage;	//!<	’–Ú’†‚Ìƒy[ƒWE‚Æ‚è‚ ‚¦‚¸‚OE‚OƒCƒ“ƒfƒbƒNƒX
 
-static BOOLEAN	gbGroupUndo;	//!<	çœŸãªã‚‰ã‚°ãƒ«ãƒ¼ãƒ—ã‚¢ãƒ³ãƒ‰ã‚¥ã‚’ã™ã‚‹
+static BOOLEAN	gbGroupUndo;	//!<	^‚È‚çƒOƒ‹[ƒvƒAƒ“ƒhƒD‚ğ‚·‚é
 //-------------------------------------------------------------------------------------------------
 
 INT	SqnUndoExec( LPUNDOBUFF, PINT, PINT );
@@ -34,10 +34,10 @@ INT	SqnRedoExec( LPUNDOBUFF, PINT, PINT );
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚¢ãƒ³ãƒ‰ã‚¥ã‚’å®Ÿè¡Œã™ã‚‹ã®ã‹ã‚’å—ã‘ã‚‹
-	@param[in,out]	pxDot	ãƒ‰ãƒƒãƒˆä½ç½®
-	@param[in,out]	pyLine	è¡Œ
-	@return		INT			æ”¹è¡Œå‡¦ç†ãŒã‚ã£ãŸã‹ã©ã†ã‹
+	ƒAƒ“ƒhƒD‚ğÀs‚·‚é‚Ì‚©‚ğó‚¯‚é
+	@param[in,out]	pxDot	ƒhƒbƒgˆÊ’u
+	@param[in,out]	pyLine	s
+	@return		INT			‰üsˆ—‚ª‚ ‚Á‚½‚©‚Ç‚¤‚©
 */
 INT DocUndoExecute( PINT pxDot, PINT pyLine )
 {
@@ -52,10 +52,10 @@ INT DocUndoExecute( PINT pxDot, PINT pyLine )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒªãƒ‰ã‚¥ã‚’å®Ÿè¡Œã™ã‚‹ã®ã‹ã‚’å—ã‘ã‚‹
-	@param[in,out]	pxDot	ãƒ‰ãƒƒãƒˆä½ç½®
-	@param[in,out]	pyLine	è¡Œ
-	@return		INT			æ”¹è¡Œå‡¦ç†ãŒã‚ã£ãŸã‹ã©ã†ã‹
+	ƒŠƒhƒD‚ğÀs‚·‚é‚Ì‚©‚ğó‚¯‚é
+	@param[in,out]	pxDot	ƒhƒbƒgˆÊ’u
+	@param[in,out]	pyLine	s
+	@return		INT			‰üsˆ—‚ª‚ ‚Á‚½‚©‚Ç‚¤‚©
 */
 INT DocRedoExecute( PINT pxDot, PINT pyLine )
 {
@@ -70,8 +70,8 @@ INT DocRedoExecute( PINT pxDot, PINT pyLine )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚¢ãƒ³ãƒ‰ã‚¥ã®å‹•ä½œè¨­å®šã‚’ã„ãŸã ã
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	ƒAƒ“ƒhƒD‚Ì“®ìİ’è‚ğ‚¢‚½‚¾‚­
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT SqnSetting( VOID )
 {
@@ -82,9 +82,9 @@ HRESULT SqnSetting( VOID )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	é ãƒ‡ãƒ¼ã‚¿ã®åˆæœŸåŒ–ãƒ»é ä½œæˆæ™‚ã«å‘¼ã¶
-	@param[in]	pstBuff	å±ã™ã‚‹ã‚¢ãƒ³ãƒ‰ã‚¥ãƒãƒƒãƒ•ã‚¡
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	•Åƒf[ƒ^‚Ì‰Šú‰»E•Åì¬‚ÉŒÄ‚Ô
+	@param[in]	pstBuff	‘®‚·‚éƒAƒ“ƒhƒDƒoƒbƒtƒ@
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT SqnInitialise( LPUNDOBUFF pstBuff )
 {
@@ -99,9 +99,9 @@ HRESULT SqnInitialise( LPUNDOBUFF pstBuff )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	å…¨ãƒ­ã‚°ç ´å£Š
-	@param[in]	pstBuff	å±ã™ã‚‹ã‚¢ãƒ³ãƒ‰ã‚¥ãƒãƒƒãƒ•ã‚¡
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	‘SƒƒO”j‰ó
+	@param[in]	pstBuff	‘®‚·‚éƒAƒ“ƒhƒDƒoƒbƒtƒ@
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT SqnFreeAll( LPUNDOBUFF pstBuff )
 {
@@ -121,24 +121,24 @@ HRESULT SqnFreeAll( LPUNDOBUFF pstBuff )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒãƒƒãƒ•ã‚¡é€”ä¸­ã‹ã©ã†ã‹ç¢ºèªã—ã¦ã€é€”ä¸­ãªã‚‰ãã“ã‹ã‚‰å¾Œã‚’å‰Šé™¤
-	@param[in]	pstBuff	å±ã™ã‚‹ã‚¢ãƒ³ãƒ‰ã‚¥ãƒãƒƒãƒ•ã‚¡
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	ƒoƒbƒtƒ@“r’†‚©‚Ç‚¤‚©Šm”F‚µ‚ÄA“r’†‚È‚ç‚»‚±‚©‚çŒã‚ğíœ
+	@param[in]	pstBuff	‘®‚·‚éƒAƒ“ƒhƒDƒoƒbƒtƒ@
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT SqnNumberCheck( LPUNDOBUFF pstBuff )
 {
 	OPSQ_ITR	itOpe, itBuf;
 
-	//	ä½•ã‚‚ç„¡ã—
+	//	‰½‚à–³‚µ
 	if( pstBuff->dNowSqn == pstBuff->dTopSqn )	return S_FALSE;
 
-	//	ä½•ã‚‚ç„¡ã„
+	//	‰½‚à–³‚¢
 	if( 0 == pstBuff->dNowSqn ){	SqnFreeAll( pstBuff );	return  S_FALSE;	}
 
 	TRACE( TEXT("UNDO BUF err %d %d"), pstBuff->dNowSqn, pstBuff->dTopSqn );
 
 	itOpe = pstBuff->vcOpeSqn.end( );
-	itOpe--;	//	æœ€å¾Œã®ã„ã£ã“
+	itOpe--;	//	ÅŒã‚Ì‚¢‚Á‚±
 
 	do
 	{
@@ -162,14 +162,14 @@ HRESULT SqnNumberCheck( LPUNDOBUFF pstBuff )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	å£±æ–‡å­—è¿½åŠ ã€åˆã¯å‰Šé™¤
-	@param[in]	pstBuff	å±ã™ã‚‹ã‚¢ãƒ³ãƒ‰ã‚¥ãƒãƒƒãƒ•ã‚¡
-	@param[in]	dCmd	æ“ä½œç¨®é¡
-	@param[in]	ch		æ–‡å­—ãƒ»å‰Šé™¤ã®ã¨ãã¯ç„¡åŠ¹
-	@param[in]	xDot	æ“ä½œã—ãŸãƒ‰ãƒƒãƒˆä½ç½®
-	@param[in]	yLine	æ“ä½œã—ãŸè¡Œæ•°
-	@param[in]	bAlone	å˜ç‹¬ã‹ã©ã†ã‹ãƒ»å˜ç‹¬ã‚‰ã€ã‚°ãƒ«ãƒ¼ãƒ—ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ç•ªå·ã‚’ã‚¤ãƒ³ã‚¯ãƒªã—ã¦è¨˜éŒ²
-	@return		UINT	ã‚°ãƒ«ãƒ¼ãƒ—ç•ªå·
+	ˆë•¶š’Ç‰ÁA–”‚Ííœ
+	@param[in]	pstBuff	‘®‚·‚éƒAƒ“ƒhƒDƒoƒbƒtƒ@
+	@param[in]	dCmd	‘€ìí—Ş
+	@param[in]	ch		•¶šEíœ‚Ì‚Æ‚«‚Í–³Œø
+	@param[in]	xDot	‘€ì‚µ‚½ƒhƒbƒgˆÊ’u
+	@param[in]	yLine	‘€ì‚µ‚½s”
+	@param[in]	bAlone	’P“Æ‚©‚Ç‚¤‚©E’P“Æ‚çAƒOƒ‹[ƒvƒV[ƒPƒ“ƒX”Ô†‚ğƒCƒ“ƒNƒŠ‚µ‚Ä‹L˜^
+	@return		UINT	ƒOƒ‹[ƒv”Ô†
 */
 UINT SqnAppendLetter( LPUNDOBUFF pstBuff, UINT dCmd, TCHAR ch, INT xDot, INT yLine, UINT bAlone )
 {
@@ -179,7 +179,7 @@ UINT SqnAppendLetter( LPUNDOBUFF pstBuff, UINT dCmd, TCHAR ch, INT xDot, INT yLi
 	ZeroMemory( atBuffer, sizeof(atBuffer) );
 	atBuffer[0] = ch;
 
-	//	å£±æ–‡å­—å›ºå®šãªã®ã§ã€ã‚°ãƒ«ãƒ¼ãƒ—ã¯å¸¸ã«å­¤ç‹¬
+	//	ˆë•¶šŒÅ’è‚È‚Ì‚ÅAƒOƒ‹[ƒv‚Íí‚ÉŒÇ“Æ
 	uRslt = SqnAppendString( pstBuff, dCmd, atBuffer, xDot, yLine, bAlone );
 
 	DocModifyContent( TRUE );
@@ -189,14 +189,14 @@ UINT SqnAppendLetter( LPUNDOBUFF pstBuff, UINT dCmd, TCHAR ch, INT xDot, INT yLi
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	çŸ©å½¢ã®æ–‡å­—åˆ—è¿½åŠ ã€åˆã¯å‰Šé™¤ã‚’è¨˜éŒ²
-	@param[in]	pstBuff	å±ã™ã‚‹ã‚¢ãƒ³ãƒ‰ã‚¥ãƒãƒƒãƒ•ã‚¡
-	@param[in]	dCmd	æ“ä½œç¨®é¡
-	@param[in]	ptStr	æ–‡å­—åˆ—
-	@param[in]	pstPt	æ“ä½œã—ãŸè¡Œä½ç½®ã¨ãƒ‰ãƒƒãƒˆä½ç½®
-	@param[in]	yLine	æ“ä½œã—ãŸè¡Œæ•°
-	@param[in]	bAlone	å˜ç‹¬ã‹ã©ã†ã‹ãƒ»å˜ç‹¬ã‚‰ã€ã‚°ãƒ«ãƒ¼ãƒ—ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ç•ªå·ã‚’ã‚¤ãƒ³ã‚¯ãƒªã—ã¦è¨˜éŒ²
-	@return		UINT	å…ˆç«¯ç•ªå·ï¼Ÿ
+	‹éŒ`‚Ì•¶š—ñ’Ç‰ÁA–”‚Ííœ‚ğ‹L˜^
+	@param[in]	pstBuff	‘®‚·‚éƒAƒ“ƒhƒDƒoƒbƒtƒ@
+	@param[in]	dCmd	‘€ìí—Ş
+	@param[in]	ptStr	•¶š—ñ
+	@param[in]	pstPt	‘€ì‚µ‚½sˆÊ’u‚ÆƒhƒbƒgˆÊ’u
+	@param[in]	yLine	‘€ì‚µ‚½s”
+	@param[in]	bAlone	’P“Æ‚©‚Ç‚¤‚©E’P“Æ‚çAƒOƒ‹[ƒvƒV[ƒPƒ“ƒX”Ô†‚ğƒCƒ“ƒNƒŠ‚µ‚Ä‹L˜^
+	@return		UINT	æ’[”Ô†H
 */
 UINT SqnAppendSquare( LPUNDOBUFF pstBuff, UINT dCmd, LPCTSTR ptStr, LPPOINT pstPt, INT yLine, UINT bAlone )
 {
@@ -205,22 +205,22 @@ UINT SqnAppendSquare( LPUNDOBUFF pstBuff, UINT dCmd, LPCTSTR ptStr, LPPOINT pstP
 	LPCTSTR		ptCaret, ptSprt;
 	OPERATELOG	stOpe;
 
-	//	ã‚¢ãƒ³ãƒ‰ã‚¥ã¨ã‹ã§æœ€æ–°ä½ç½®ãŒãšã‚Œã¦ãŸã‚‰ã€ãã“ã‚ˆã‚Šæ–°ã—ã„ã®ç ´æ£„ã—ã¦ä»˜ã‘è¶³ã—ã¦ã„ã
-	//	ã“ã“ã§ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ç•ªå·ãƒã‚§ã‚­
+	//	ƒAƒ“ƒhƒD‚Æ‚©‚ÅÅVˆÊ’u‚ª‚¸‚ê‚Ä‚½‚çA‚»‚±‚æ‚èV‚µ‚¢‚Ì”jŠü‚µ‚Ä•t‚¯‘«‚µ‚Ä‚¢‚­
+	//	‚±‚±‚ÅƒV[ƒPƒ“ƒX”Ô†ƒ`ƒFƒL
 	SqnNumberCheck( pstBuff );
 
-	//	Groupç•ªå·èª¿æ•´
+	//	Group”Ô†’²®
 	if( bAlone ){	pstBuff->dGrpSqn += 1;	}
 
 	StringCchLength( ptStr, STRSAFE_MAX_CCH, &cchSize );
 
 	ptCaret = ptStr;
 
-	for( i = 0; yLine > i; i++ )	//	è¡Œæ•°åˆ†å›ã™
+	for( i = 0; yLine > i; i++ )	//	s”•ª‰ñ‚·
 	{
 		if( !( *ptCaret ) ){	break;	}
 
-		pstBuff->dTopSqn += 1;	//	ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ã¯å¸¸æ™‚ã‚¤ãƒ³ã‚¯ãƒª
+		pstBuff->dTopSqn += 1;	//	ƒV[ƒPƒ“ƒX‚ÍíƒCƒ“ƒNƒŠ
 
 		ZeroMemory( &stOpe, sizeof(OPERATELOG) );
 		stOpe.dCommando  = dCmd;
@@ -230,20 +230,20 @@ UINT SqnAppendSquare( LPUNDOBUFF pstBuff, UINT dCmd, LPCTSTR ptStr, LPPOINT pstP
 		stOpe.rdXdot  = pstPt[i].x;
 		stOpe.rdYline = pstPt[i].y;
 
-		ptSprt = StrStr( ptCaret, CH_CRLFW );	//	æ”¹è¡Œã®ã¨ã“ã‚ã¾ã§
+		ptSprt = StrStr( ptCaret, CH_CRLFW );	//	‰üs‚Ì‚Æ‚±‚ë‚Ü‚Å
 		if( !(ptSprt) ){	ptSprt = ptStr + cchSize;	}
-		//	æœ«ç«¯ã¾ã§æ”¹è¡ŒãŒãªã‹ã£ãŸã‚‰ã€æœ«ç«¯æ–‡å­—ã®ä½ç½®ã‚’å…¥ã‚Œã‚‹
-		//	æœ«ç«¯ãŒãƒ”ã‚¿ãƒªæ”¹è¡Œã«ãªã‚‹ã¯ãš
-		cchMozi = ptSprt - ptCaret;	//	ãã“ã¾ã§ã®æ–‡å­—æ•°æ±‚ã‚ã¦
+		//	––’[‚Ü‚Å‰üs‚ª‚È‚©‚Á‚½‚çA––’[•¶š‚ÌˆÊ’u‚ğ“ü‚ê‚é
+		//	––’[‚ªƒsƒ^ƒŠ‰üs‚É‚È‚é‚Í‚¸
+		cchMozi = ptSprt - ptCaret;	//	‚»‚±‚Ü‚Å‚Ì•¶š”‹‚ß‚Ä
 
-		cchMozi++;	//	ï¾‡ï¾™ï¾€ï½°ï¾ï¾ˆï½°ï¾€åˆ†
+		cchMozi++;	//	ÇÙÀ°ĞÈ°À•ª
 		stOpe.cchSize = cchMozi;
-		stOpe.ptText  = (LPTSTR)malloc( cchMozi * sizeof(TCHAR) );	//	å¿…è¦åˆ†ç¢ºä¿
+		stOpe.ptText  = (LPTSTR)malloc( cchMozi * sizeof(TCHAR) );	//	•K—v•ªŠm•Û
 		StringCchCopy( stOpe.ptText, cchMozi, ptCaret );
 
 		pstBuff->vcOpeSqn.push_back( stOpe );
 
-		ptCaret = NextLineW( ptSprt );	//	æ¬¡ã®è¡Œã®å…ˆé ­ã«ç§»å‹•
+		ptCaret = NextLineW( ptSprt );	//	Ÿ‚Ìs‚Ìæ“ª‚ÉˆÚ“®
 	}
 
 	pstBuff->dNowSqn = pstBuff->vcOpeSqn.size( );
@@ -255,22 +255,22 @@ UINT SqnAppendSquare( LPUNDOBUFF pstBuff, UINT dCmd, LPCTSTR ptStr, LPPOINT pstP
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	æ–‡å­—åˆ—è¿½åŠ ã€åˆã¯å‰Šé™¤ã‚’è¨˜éŒ²
-	@param[in]	pstBuff	å±ã™ã‚‹ã‚¢ãƒ³ãƒ‰ã‚¥ãƒãƒƒãƒ•ã‚¡
-	@param[in]	dCmd	æ“ä½œç¨®é¡
-	@param[in]	ptStr	æ–‡å­—åˆ—
-	@param[in]	xDot	æ“ä½œã—ãŸãƒ‰ãƒƒãƒˆä½ç½®
-	@param[in]	yLine	æ“ä½œã—ãŸè¡Œæ•°
-	@param[in]	bAlone	å˜ç‹¬ã‹ã©ã†ã‹ãƒ»å˜ç‹¬ã‚‰ã€ã‚°ãƒ«ãƒ¼ãƒ—ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ç•ªå·ã‚’ã‚¤ãƒ³ã‚¯ãƒªã—ã¦è¨˜éŒ²
-	@return		UINT	å…ˆç«¯ç•ªå·ï¼Ÿ
+	•¶š—ñ’Ç‰ÁA–”‚Ííœ‚ğ‹L˜^
+	@param[in]	pstBuff	‘®‚·‚éƒAƒ“ƒhƒDƒoƒbƒtƒ@
+	@param[in]	dCmd	‘€ìí—Ş
+	@param[in]	ptStr	•¶š—ñ
+	@param[in]	xDot	‘€ì‚µ‚½ƒhƒbƒgˆÊ’u
+	@param[in]	yLine	‘€ì‚µ‚½s”
+	@param[in]	bAlone	’P“Æ‚©‚Ç‚¤‚©E’P“Æ‚çAƒOƒ‹[ƒvƒV[ƒPƒ“ƒX”Ô†‚ğƒCƒ“ƒNƒŠ‚µ‚Ä‹L˜^
+	@return		UINT	æ’[”Ô†H
 */
 UINT SqnAppendString( LPUNDOBUFF pstBuff, UINT dCmd, LPCTSTR ptStr, INT xDot, INT yLine, UINT bAlone )
 {
 	UINT_PTR	cchSize;
 	OPERATELOG	stOpe;
 
-	//	ã‚¢ãƒ³ãƒ‰ã‚¥ã¨ã‹ã§æœ€æ–°ä½ç½®ãŒãšã‚Œã¦ãŸã‚‰ã€ãã“ã‚ˆã‚Šæ–°ã—ã„ã®ç ´æ£„ã—ã¦ä»˜ã‘è¶³ã—ã¦ã„ã
-	//	ã“ã“ã§ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ç•ªå·ãƒã‚§ã‚­
+	//	ƒAƒ“ƒhƒD‚Æ‚©‚ÅÅVˆÊ’u‚ª‚¸‚ê‚Ä‚½‚çA‚»‚±‚æ‚èV‚µ‚¢‚Ì”jŠü‚µ‚Ä•t‚¯‘«‚µ‚Ä‚¢‚­
+	//	‚±‚±‚ÅƒV[ƒPƒ“ƒX”Ô†ƒ`ƒFƒL
 	SqnNumberCheck( pstBuff );
 
 
@@ -279,18 +279,18 @@ UINT SqnAppendString( LPUNDOBUFF pstBuff, UINT dCmd, LPCTSTR ptStr, INT xDot, IN
 	stOpe.dCommando  = dCmd;
 	stOpe.ixSequence = pstBuff->dTopSqn;
 
-	//	Groupç•ªå·èª¿æ•´
+	//	Group”Ô†’²®
 	if( bAlone ){	pstBuff->dGrpSqn += 1;	}
-	stOpe.ixGroup    = pstBuff->dGrpSqn;	//	ã‚°ãƒ«ãƒ¼ãƒ—ç•ªå·ã€ï¼ã«æˆã‚‰ãªã„ã‚ˆã†ã«æ³¨æ„
+	stOpe.ixGroup    = pstBuff->dGrpSqn;	//	ƒOƒ‹[ƒv”Ô†A‚O‚É¬‚ç‚È‚¢‚æ‚¤‚É’ˆÓ
 
 	stOpe.rdXdot  = xDot;
 	stOpe.rdYline = yLine;
 
-	//	å…¥åŠ›ã—ãŸæ–‡å­—ãƒ»ã‚‚ã—ãã¯å‰Šé™¤ã—ãŸæ–‡å­—
+	//	“ü—Í‚µ‚½•¶šE‚à‚µ‚­‚Ííœ‚µ‚½•¶š
 	StringCchLength( ptStr, STRSAFE_MAX_CCH, &cchSize );
-	stOpe.cchSize = cchSize;	//	æ–‡å­—æ•°ã«ã¯ãƒŒãƒ«ã‚¿ãƒ¼ãƒŸãƒãƒ¼ã‚¿åˆ†ã¯å«ã‚ãªã„
-	cchSize++;	//	ãƒŒãƒ«ã‚¿ãƒ¼ãƒŸãƒãƒ¼ã‚¿åˆ†
-	stOpe.ptText  = (LPTSTR)malloc( cchSize * sizeof(TCHAR) );	//	å¿…è¦åˆ†ç¢ºä¿
+	stOpe.cchSize = cchSize;	//	•¶š”‚É‚Íƒkƒ‹ƒ^[ƒ~ƒl[ƒ^•ª‚ÍŠÜ‚ß‚È‚¢
+	cchSize++;	//	ƒkƒ‹ƒ^[ƒ~ƒl[ƒ^•ª
+	stOpe.ptText  = (LPTSTR)malloc( cchSize * sizeof(TCHAR) );	//	•K—v•ªŠm•Û
 	StringCchCopy( stOpe.ptText, cchSize, ptStr );
 
 	pstBuff->vcOpeSqn.push_back( stOpe );
@@ -304,11 +304,11 @@ UINT SqnAppendString( LPUNDOBUFF pstBuff, UINT dCmd, LPCTSTR ptStr, INT xDot, IN
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚¢ãƒ³ãƒ‰ã‚¥ã‚’å®Ÿè¡Œ
-	@param[in]	pstBuff	å±ã™ã‚‹ã‚¢ãƒ³ãƒ‰ã‚¥ãƒãƒƒãƒ•ã‚¡
-	@param[in]	pxDot	æ“ä½œã—ãŸãƒ‰ãƒƒãƒˆä½ç½®
-	@param[in]	pyLine	æ“ä½œã—ãŸè¡Œæ•°
-	@return		INT		æ”¹è¡Œã—ãŸã‹ã©ã†ã‹
+	ƒAƒ“ƒhƒD‚ğÀs
+	@param[in]	pstBuff	‘®‚·‚éƒAƒ“ƒhƒDƒoƒbƒtƒ@
+	@param[in]	pxDot	‘€ì‚µ‚½ƒhƒbƒgˆÊ’u
+	@param[in]	pyLine	‘€ì‚µ‚½s”
+	@return		INT		‰üs‚µ‚½‚©‚Ç‚¤‚©
 */
 INT SqnUndoExec( LPUNDOBUFF pstBuff, PINT pxDot, PINT pyLine )
 {
@@ -318,7 +318,7 @@ INT SqnUndoExec( LPUNDOBUFF pstBuff, PINT pxDot, PINT pyLine )
 	UINT	dPreGroup = 0;
 	LPTSTR	ptStr;
 
-	if( !(pstBuff) )	return 0;	//	å®‰å…¨å¯¾ç­–
+	if( !(pstBuff) )	return 0;	//	ˆÀ‘S‘Îô
 
 #ifdef DO_TRY_CATCH
 	try{
@@ -330,7 +330,7 @@ INT SqnUndoExec( LPUNDOBUFF pstBuff, PINT pxDot, PINT pyLine )
 
 		if( 0 >= dNow ){	return dCrLf;	}
 
-		dNow--;	//	ä½ç½®åˆã‚ã›
+		dNow--;	//	ˆÊ’u‡‚í‚¹
 		TRACE( TEXT("UNDO SQNUM:%u"), dNow );
 
 		dCmd  = pstBuff->vcOpeSqn.at( dNow ).dCommando;
@@ -338,36 +338,36 @@ INT SqnUndoExec( LPUNDOBUFF pstBuff, PINT pxDot, PINT pyLine )
 		xDot  = pstBuff->vcOpeSqn.at( dNow ).rdXdot;
 		yLine = pstBuff->vcOpeSqn.at( dNow ).rdYline;
 		
-		if( 0 == dPreGroup )	//	ï¼‘å›ç›®ã¯åˆæœŸåŒ–ã™ã‚Œã°ãŠï½‹
+		if( 0 == dPreGroup )	//	‚P‰ñ–Ú‚Í‰Šú‰»‚·‚ê‚Î‚¨‚‹
 		{
 			dPreGroup = dGrp;
 			yPreLine = yLine;
 		}
-		else	//	ï¼’å›ç›®ä»¥é™
+		else	//	‚Q‰ñ–ÚˆÈ~
 		{
-			//	åˆ¥ã‚°ãƒ«ãƒ¼ãƒ—ãªã‚‰å³é›¢è„±
+			//	•ÊƒOƒ‹[ƒv‚È‚ç‘¦—£’E
 			if( dPreGroup != dGrp ){	break;	}
 
-			//	è¤‡æ•°è¡Œã«ã‚ãŸã£ã¦ã„ã‚‹ãªã‚‰ã€ãƒ•ãƒ©ã‚°çš„ã«ï¼¯ï¼®
+			//	•¡”s‚É‚í‚½‚Á‚Ä‚¢‚é‚È‚çAƒtƒ‰ƒO“I‚É‚n‚m
 			if( yPreLine != yLine && 0 == dCrLf ){	dCrLf = 1;	}
 		}
 
 		TRACE( TEXT("UNDO CMD:%u GRP:%u  D:%d, L:%d"), dCmd, dGrp, xDot, yLine );
 
 		ptStr = pstBuff->vcOpeSqn.at( dNow ).ptText;
-//OutOfRangeã¯ã€å§‹ç‚¹ãƒ‰ãƒƒãƒˆãŒç‹‚ã£ã¦ã‚‹å ´åˆãŒã‚ã‚‹ã‚ˆã†ã 
+//OutOfRange‚ÍAn“_ƒhƒbƒg‚ª‹¶‚Á‚Ä‚éê‡‚ª‚ ‚é‚æ‚¤‚¾
 		switch( dCmd )
 		{
-			case  DO_INSERT:	//	æŒ¿å…¥ãªã‚‰ã€è©²å½“ç¯„å›²ã‚’å‰Šé™¤
+			case  DO_INSERT:	//	‘}“ü‚È‚çAŠY“–”ÍˆÍ‚ğíœ
 				StringCchLength( ptStr, STRSAFE_MAX_CCH, &cchSize );
 				iRslt = DocStringErase( xDot, yLine, NULL, cchSize );
 				break;
 
-			case  DO_DELETE:	//	å‰Šé™¤ã ã£ãŸã‚‰ã€æ–‡å­—ã‚’å…¥ã‚Œã‚‹ã€ã™ã‚Œã°ã„ã„
+			case  DO_DELETE:	//	íœ‚¾‚Á‚½‚çA•¶š‚ğ“ü‚ê‚éA‚·‚ê‚Î‚¢‚¢
 				iRslt = DocStringAdd( &xDot, &yLine, pstBuff->vcOpeSqn.at( dNow ).ptText, pstBuff->vcOpeSqn.at( dNow ).cchSize );
 				break;
 
-			default:	TRACE( TEXT("ã‚¢ãƒ³ãƒ‰ã‚¥ã‚¨ãƒ©ãƒ¼ï¼ã€€[%u]æœªçŸ¥ã®ã‚³ãƒ¼ãƒ‰"), dCmd );	return dCrLf;
+			default:	TRACE( TEXT("ƒAƒ“ƒhƒDƒGƒ‰[I@[%u]–¢’m‚ÌƒR[ƒh"), dCmd );	return dCrLf;
 		}
 
 		*pxDot  = xDot;
@@ -377,7 +377,7 @@ INT SqnUndoExec( LPUNDOBUFF pstBuff, PINT pxDot, PINT pyLine )
 
 		pstBuff->dNowSqn -= 1;
 
-		if( !(gbGroupUndo) ){	break;	}	//	ã‚°ãƒ«ãƒ¼ãƒ—ã‚¢ãƒ³ãƒ‰ã‚¥ã—ãªã„
+		if( !(gbGroupUndo) ){	break;	}	//	ƒOƒ‹[ƒvƒAƒ“ƒhƒD‚µ‚È‚¢
 
 	}while( pstBuff->dNowSqn );
 
@@ -392,11 +392,11 @@ INT SqnUndoExec( LPUNDOBUFF pstBuff, PINT pxDot, PINT pyLine )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒªãƒ‰ã‚¥ã‚’å®Ÿè¡Œ
-	@param[in]	pstBuff	å±ã™ã‚‹ã‚¢ãƒ³ãƒ‰ã‚¥ãƒãƒƒãƒ•ã‚¡
-	@param[in]	pxDot	æ“ä½œã—ãŸãƒ‰ãƒƒãƒˆä½ç½®
-	@param[in]	pyLine	æ“ä½œã—ãŸè¡Œæ•°
-	@return		INT		æ”¹è¡Œã—ãŸã‹ã©ã†ã‹
+	ƒŠƒhƒD‚ğÀs
+	@param[in]	pstBuff	‘®‚·‚éƒAƒ“ƒhƒDƒoƒbƒtƒ@
+	@param[in]	pxDot	‘€ì‚µ‚½ƒhƒbƒgˆÊ’u
+	@param[in]	pyLine	‘€ì‚µ‚½s”
+	@return		INT		‰üs‚µ‚½‚©‚Ç‚¤‚©
 */
 INT SqnRedoExec( LPUNDOBUFF pstBuff, PINT pxDot, PINT pyLine )
 {
@@ -415,7 +415,7 @@ INT SqnRedoExec( LPUNDOBUFF pstBuff, PINT pxDot, PINT pyLine )
 		dNow  = pstBuff->dNowSqn;
 		if( dNow == pstBuff->vcOpeSqn.size( ) ){	return 0;	}
 
-		//dNow++;	//	ä½ç½®åˆã‚ã›
+		//dNow++;	//	ˆÊ’u‡‚í‚¹
 		TRACE( TEXT("REDO SQNUM:%u"), dNow );
 
 		dCmd  = pstBuff->vcOpeSqn.at( dNow ).dCommando;
@@ -423,17 +423,17 @@ INT SqnRedoExec( LPUNDOBUFF pstBuff, PINT pxDot, PINT pyLine )
 		xDot  = pstBuff->vcOpeSqn.at( dNow ).rdXdot;
 		yLine = pstBuff->vcOpeSqn.at( dNow ).rdYline;
 
-		if( 0 == dPreGroup )	//	ï¼‘å›ç›®ã¯åˆæœŸåŒ–ã™ã‚Œã°ãŠï½‹
+		if( 0 == dPreGroup )	//	‚P‰ñ–Ú‚Í‰Šú‰»‚·‚ê‚Î‚¨‚‹
 		{
 			dPreGroup = dGrp;
 			yPreLine = yLine;
 		}
-		else	//	ï¼’å›ç›®ä»¥é™
+		else	//	‚Q‰ñ–ÚˆÈ~
 		{
-			//	åˆ¥ã‚°ãƒ«ãƒ¼ãƒ—ãªã‚‰å³é›¢è„±
+			//	•ÊƒOƒ‹[ƒv‚È‚ç‘¦—£’E
 			if( dPreGroup != dGrp ){	break;	}
 
-			//	è¤‡æ•°è¡Œã«ã‚ãŸã£ã¦ã„ã‚‹ãªã‚‰ã€ãƒ•ãƒ©ã‚°çš„ã«ï¼¯ï¼®
+			//	•¡”s‚É‚í‚½‚Á‚Ä‚¢‚é‚È‚çAƒtƒ‰ƒO“I‚É‚n‚m
 			if( yPreLine != yLine && 0 == dCrLf ){	dCrLf = 1;	}
 		}
 
@@ -441,7 +441,7 @@ INT SqnRedoExec( LPUNDOBUFF pstBuff, PINT pxDot, PINT pyLine )
 
 		ptStr = pstBuff->vcOpeSqn.at( dNow ).ptText;
 
-		switch( dCmd )	//	ãƒªãƒ‰ã‚¥ã®å ´åˆã¯ç´ ç›´ã«å‡¦ç†ã™ã‚Œã°ã„ã„
+		switch( dCmd )	//	ƒŠƒhƒD‚Ìê‡‚Í‘f’¼‚Éˆ—‚·‚ê‚Î‚¢‚¢
 		{
 			case  DO_INSERT:
 				iRslt = DocStringAdd( &xDot, &yLine, pstBuff->vcOpeSqn.at( dNow ).ptText, pstBuff->vcOpeSqn.at( dNow ).cchSize );
@@ -452,7 +452,7 @@ INT SqnRedoExec( LPUNDOBUFF pstBuff, PINT pxDot, PINT pyLine )
 				iRslt = DocStringErase( xDot, yLine, NULL, cchSize );
 				break;
 
-			default:	TRACE( TEXT("ãƒªãƒ‰ã‚¥ã‚¨ãƒ©ãƒ¼ï¼ã€€[%u]æœªçŸ¥ã®ã‚³ãƒ¼ãƒ‰"), dCmd );	return dCrLf;
+			default:	TRACE( TEXT("ƒŠƒhƒDƒGƒ‰[I@[%u]–¢’m‚ÌƒR[ƒh"), dCmd );	return dCrLf;
 		}
 
 		*pxDot  = xDot;
@@ -462,7 +462,7 @@ INT SqnRedoExec( LPUNDOBUFF pstBuff, PINT pxDot, PINT pyLine )
 
 		pstBuff->dNowSqn += 1;
 
-		if( !(gbGroupUndo) ){	break;	}	//	ã‚°ãƒ«ãƒ¼ãƒ—ã‚¢ãƒ³ãƒ‰ã‚¥ã—ãªã„
+		if( !(gbGroupUndo) ){	break;	}	//	ƒOƒ‹[ƒvƒAƒ“ƒhƒD‚µ‚È‚¢
 
 	}while( pstBuff->dNowSqn != pstBuff->vcOpeSqn.size( ) );
 

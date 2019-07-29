@@ -1,6 +1,6 @@
-﻿/*! @file
-	@brief 選択範囲の面倒みます
-	このファイルは DocSelect.cpp です。
+/*! @file
+	@brief �I��͈̖͂ʓ|�݂܂�
+	���̃t�@�C���� DocSelect.cpp �ł��B
 	@author	SikigamiHNQ
 	@date	2011/04/27
 */
@@ -21,13 +21,13 @@ If not, see <http://www.gnu.org/licenses/>.
 #include "OrinrinEditor.h"
 //-------------------------------------------------------------------------------------------------
 
-extern FILES_ITR	gitFileIt;	//	今見てるファイルの本体・イテレータを構造体と見なす
-extern INT		gixFocusPage;	//	注目中のページ・とりあえず０・０インデックス
+extern FILES_ITR	gitFileIt;	//	�����Ă�t�@�C���̖{�́E�C�e���[�^���\���̂ƌ��Ȃ�
+extern INT		gixFocusPage;	//	���ڒ��̃y�[�W�E�Ƃ肠�����O�E�O�C���f�b�N�X
 
-extern  UINT	gbUniPad;		//	パディングにユニコードをつかって、ドットを見せないようにする
-extern  UINT	gbCrLfCode;		//	改行コード：０したらば・非０ＹＹ 
+extern  UINT	gbUniPad;		//	�p�f�B���O�Ƀ��j�R�[�h�������āA�h�b�g�������Ȃ��悤�ɂ���
+extern  UINT	gbCrLfCode;		//	���s�R�[�h�F�O������΁E��O�x�x 
 
-static INT		gdSelByte;		//!<	選択範囲のバイト数
+static INT		gdSelByte;		//!<	�I��͈͂̃o�C�g��
 //-------------------------------------------------------------------------------------------------
 
 
@@ -36,14 +36,14 @@ VOID	DocSelectedByteStatus( VOID );
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	選択範囲がある開始行と終了行を登録
-	@param[in]	dTop	選択範囲開始行
-	@param[in]	dBottom	選択範囲終了行
-	@return		HRESULT	終了状態コード
+	�I��͈͂�����J�n�s�ƏI���s��o�^
+	@param[in]	dTop	�I��͈͊J�n�s
+	@param[in]	dBottom	�I��͈͏I���s
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT DocSelRangeSet( INT dTop, INT dBottom )
 {
-	TRACE( TEXT(" 選択レンジセット[%d - %d]"), dTop, dBottom );
+	TRACE( TEXT(" �I�������W�Z�b�g[%d - %d]"), dTop, dBottom );
 
 	(*gitFileIt).vcCont.at( gixFocusPage ).dSelLineTop    = dTop;
 	(*gitFileIt).vcCont.at( gixFocusPage ).dSelLineBottom = dBottom;
@@ -53,10 +53,10 @@ HRESULT DocSelRangeSet( INT dTop, INT dBottom )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	選択範囲がある開始行と終了行を取得
-	@param[in]	pdTop	選択範囲開始行いれるバッファえのぽうんた
-	@param[in]	pdBtm	選択範囲終了行いれるバッファえのぽいんた
-	@return		HRESULT	終了状態コード
+	�I��͈͂�����J�n�s�ƏI���s���擾
+	@param[in]	pdTop	�I��͈͊J�n�s�����o�b�t�@���̂ۂ���
+	@param[in]	pdBtm	�I��͈͏I���s�����o�b�t�@���̂ۂ���
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT DocSelRangeGet( PINT pdTop, PINT pdBtm )
 {
@@ -68,10 +68,10 @@ HRESULT DocSelRangeGet( PINT pdTop, PINT pdBtm )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	選択範囲を探して数値を再設定する
-	@param[in]	pdTop	選択範囲開始行いれるバッファえのぽうんた・NULL可
-	@param[in]	pdBtm	選択範囲終了行いれるバッファえのぽいんた・NULL可
-	@return		HRESULT	終了状態コード
+	�I��͈͂�T���Đ��l���Đݒ肷��
+	@param[in]	pdTop	�I��͈͊J�n�s�����o�b�t�@���̂ۂ��񂽁ENULL��
+	@param[in]	pdBtm	�I��͈͏I���s�����o�b�t�@���̂ۂ��񂽁ENULL��
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT DocSelRangeReset( PINT pdTop, PINT pdBtm )
 {
@@ -92,7 +92,7 @@ HRESULT DocSelRangeReset( PINT pdTop, PINT pdBtm )
 				if( 0 > iTop )	iTop = iLine;
 				iEnd = iLine;
 
-				break;	//	一個でもヒットすれば関係ない
+				break;	//	��ł��q�b�g����Ί֌W�Ȃ�
 			}
 		}
 	}
@@ -108,8 +108,8 @@ HRESULT DocSelRangeReset( PINT pdTop, PINT pdBtm )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	選択バイト数を指定した値に書き直す・多分クルヤー用
-	@param[in]	iBytes	新しい値
+	�I���o�C�g�����w�肵���l�ɏ��������E�����N�����[�p
+	@param[in]	iBytes	�V�����l
 */
 VOID DocSelByteSet( INT iBytes )
 {
@@ -118,10 +118,10 @@ VOID DocSelByteSet( INT iBytes )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	示されたドット位置の直後の文字の選択状態の確認
-	@param[in]	nowDot	対象のドット位置
-	@param[in]	rdLine	対象の行番号・ドキュメントの０インデックス
-	@return		非０選択状態　０選択してない
+	�����ꂽ�h�b�g�ʒu�̒���̕����̑I����Ԃ̊m�F
+	@param[in]	nowDot	�Ώۂ̃h�b�g�ʒu
+	@param[in]	rdLine	�Ώۂ̍s�ԍ��E�h�L�������g�̂O�C���f�b�N�X
+	@return		��O�I����ԁ@�O�I�����ĂȂ�
 */
 UINT DocLetterSelStateGet( INT nowDot, INT rdLine )
 {
@@ -134,9 +134,9 @@ UINT DocLetterSelStateGet( INT nowDot, INT rdLine )
 	iLines = DocNowFilePageLineCount( );
 	if( iLines <= rdLine )	return 0;
 
-	iLetter = DocLetterPosGetAdjust( &nowDot, rdLine, 0 );	//	今の文字位置を確認
+	iLetter = DocLetterPosGetAdjust( &nowDot, rdLine, 0 );	//	���̕����ʒu���m�F
 
-	//	直後の文字を確認
+	//	����̕������m�F
 	itLine = (*gitFileIt).vcCont.at( gixFocusPage ).ltPage.begin();
 	std::advance( itLine, rdLine );
 	if( (*gitFileIt).vcCont.at( gixFocusPage ).ltPage.end() == itLine ){	return 0;	}
@@ -144,7 +144,7 @@ UINT DocLetterSelStateGet( INT nowDot, INT rdLine )
 	iLength = itLine->vcLine.size();
 	if( iLength <= iLetter )	return 0;
 
-	//	フラグ操作
+	//	�t���O����
 	dStyle  = itLine->vcLine.at( iLetter ).mzStyle;
 
 	if( dStyle & CT_SELECT )	return 1;
@@ -154,11 +154,11 @@ UINT DocLetterSelStateGet( INT nowDot, INT rdLine )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	示されたドット位置の直後の文字の選択状態をON/OFFして、該当文字の幅を返す・単独では呼ばれない？
-	@param[in]	nowDot	対象のドット位置
-	@param[in]	rdLine	対象の行番号・ドキュメントの０インデックス
-	@param[in]	dForce	０斗愚留　＋選択状態　ー選択解除
-	@return		該当文字のドット数
+	�����ꂽ�h�b�g�ʒu�̒���̕����̑I����Ԃ�ON/OFF���āA�Y�������̕���Ԃ��E�P�Ƃł͌Ă΂�Ȃ��H
+	@param[in]	nowDot	�Ώۂ̃h�b�g�ʒu
+	@param[in]	rdLine	�Ώۂ̍s�ԍ��E�h�L�������g�̂O�C���f�b�N�X
+	@param[in]	dForce	�O�l�𗯁@�{�I����ԁ@�[�I������
+	@return		�Y�������̃h�b�g��
 */
 INT DocLetterSelStateToggle( INT nowDot, INT rdLine, INT dForce )
 {
@@ -171,9 +171,9 @@ INT DocLetterSelStateToggle( INT nowDot, INT rdLine, INT dForce )
 	iLines = DocNowFilePageLineCount( );
 	if( iLines <= rdLine )	return 0;
 
-	iLetter = DocLetterPosGetAdjust( &nowDot, rdLine, 0 );	//	今の文字位置を確認
+	iLetter = DocLetterPosGetAdjust( &nowDot, rdLine, 0 );	//	���̕����ʒu���m�F
 
-	//	直後の文字の幅を確認
+	//	����̕����̕����m�F
 	itLine = (*gitFileIt).vcCont.at( gixFocusPage ).ltPage.begin();
 	std::advance( itLine, rdLine );
 	if( (*gitFileIt).vcCont.at( gixFocusPage ).ltPage.end() == itLine ){	return 0;	}
@@ -185,7 +185,7 @@ INT DocLetterSelStateToggle( INT nowDot, INT rdLine, INT dForce )
 	dByte   = itLine->vcLine.at( iLetter ).mzByte;
 
 
-	//	フラグ操作
+	//	�t���O����
 	dStyle  = itLine->vcLine.at( iLetter ).mzStyle;
 	maeSty = dStyle;
 	if( 0 == dForce ){		dStyle ^=  CT_SELECT;	}
@@ -195,26 +195,26 @@ INT DocLetterSelStateToggle( INT nowDot, INT rdLine, INT dForce )
 
 	TRACE( TEXT("L[%d] D[%d] B[%d] f[0x%X]"), rdLine, dLtrDot, dByte, dStyle );
 
-	if( maeSty != dStyle )	//	フラグ操作されてたら
+	if( maeSty != dStyle )	//	�t���O���삳��Ă���
 	{
 		if( CT_SELECT & dStyle )	gdSelByte += dByte;
 		else						gdSelByte -= dByte;
 
 		if( 0 >  gdSelByte )	gdSelByte = 0;
-		//	０未満になったら本当はおかしい
+		//	�O�����ɂȂ�����{���͂�������
 	}
 
-	return dLtrDot;	//	ドット数戻してＯＫ
+	return dLtrDot;	//	�h�b�g���߂��Ăn�j
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	指定された行の始点終点ドット位置の区間の文字の選択状態をON/OFFする
-	@param[in]	dBgnDot	開始ドット位置・マイナスなら０
-	@param[in]	dEndDot	終了ドット位置・マイナスなら行末端
-	@param[in]	rdLine	対象の行番号・ドキュメントの０インデックス
-	@param[in]	dForce	０斗愚留　＋選択状態　ー選択解除
-	@return		該当文字のドット数
+	�w�肳�ꂽ�s�̎n�_�I�_�h�b�g�ʒu�̋�Ԃ̕����̑I����Ԃ�ON/OFF����
+	@param[in]	dBgnDot	�J�n�h�b�g�ʒu�E�}�C�i�X�Ȃ�O
+	@param[in]	dEndDot	�I���h�b�g�ʒu�E�}�C�i�X�Ȃ�s���[
+	@param[in]	rdLine	�Ώۂ̍s�ԍ��E�h�L�������g�̂O�C���f�b�N�X
+	@param[in]	dForce	�O�l�𗯁@�{�I����ԁ@�[�I������
+	@return		�Y�������̃h�b�g��
 */
 INT DocRangeSelStateToggle( INT dBgnDot, INT dEndDot, INT rdLine, INT dForce )
 {
@@ -226,7 +226,7 @@ INT DocRangeSelStateToggle( INT dBgnDot, INT dEndDot, INT rdLine, INT dForce )
 	if( (INT)iLines <=  rdLine )	return 0;
 
 	dMaxDots = DocLineParamGet( rdLine, NULL, NULL );
-	//	範囲調整
+	//	�͈͒���
 	if( 0 > dBgnDot )	dBgnDot = 0;
 	if( 0 > dEndDot )	dEndDot = dMaxDots;
 
@@ -234,7 +234,7 @@ INT DocRangeSelStateToggle( INT dBgnDot, INT dEndDot, INT rdLine, INT dForce )
 	{
 		dDot += DocLetterSelStateToggle( dDot, rdLine, dForce );
 	}
-//操作済のアレの計算がヘン・フラグの兼ね合いとか
+//����ς̃A���̌v�Z���w���E�t���O�̌��ˍ����Ƃ�
 	dLtrDot = dDot - dBgnDot;
 
 	rect.left   = dBgnDot;
@@ -247,15 +247,15 @@ INT DocRangeSelStateToggle( INT dBgnDot, INT dEndDot, INT rdLine, INT dForce )
 
 	DocSelectedByteStatus(  );
 
-	return dLtrDot;	//	ドット数戻してＯＫ
+	return dLtrDot;	//	�h�b�g���߂��Ăn�j
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	指定された行の改行の選択状態をON/OFFする
-	@param[in]	rdLine	対象の行番号・ドキュメントの０インデックス
-	@param[in]	dForce	０斗愚留　＋選択状態　ー選択解除
-	@return		HRESULT	終了状態コード
+	�w�肳�ꂽ�s�̉��s�̑I����Ԃ�ON/OFF����
+	@param[in]	rdLine	�Ώۂ̍s�ԍ��E�h�L�������g�̂O�C���f�b�N�X
+	@param[in]	dForce	�O�l�𗯁@�{�I����ԁ@�[�I������
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT DocReturnSelStateToggle( INT rdLine, INT dForce )
 {
@@ -270,7 +270,7 @@ HRESULT DocReturnSelStateToggle( INT rdLine, INT dForce )
 	if( (INT)iLines <=  rdLine )	return E_OUTOFMEMORY;
 
 	iLnDot = DocLineParamGet( rdLine, NULL, NULL );
-	//	フラグ操作
+	//	�t���O����
 	itLine = (*gitFileIt).vcCont.at( gixFocusPage ).ltPage.begin();
 	std::advance( itLine, rdLine );
 
@@ -280,7 +280,7 @@ HRESULT DocReturnSelStateToggle( INT rdLine, INT dForce )
 	else if( 0 < dForce ){	dStyle |=  CT_SELRTN;	}
 	else if( 0 > dForce ){	dStyle &= ~CT_SELRTN;	}
 	itLine->dStyle = dStyle;
-	if( maeSty != dStyle )	//	フラグ操作されてたら
+	if( maeSty != dStyle )	//	�t���O���삳��Ă���
 	{
 		if( gbCrLfCode )	dByte = YY2_CRLF;
 		else				dByte = STRB_CRLF;
@@ -289,14 +289,14 @@ HRESULT DocReturnSelStateToggle( INT rdLine, INT dForce )
 		else						gdSelByte -= dByte;
 
 		if( 0 >  gdSelByte )	gdSelByte = 0;
-		//	０未満になったら本当はおかしい
+		//	�O�����ɂȂ�����{���͂�������
 
 		DocSelectedByteStatus(  );
 	}
 
 	rect.left   = iLnDot;
 	rect.top    = rdLine * LINE_HEIGHT;
-	rect.right  = iLnDot + 20;	//	たぶんこれくらい
+	rect.right  = iLnDot + 20;	//	���Ԃ񂱂ꂭ�炢
 	rect.bottom = rect.top + LINE_HEIGHT;
 
 //	ViewRedrawSetLine( rdLine );
@@ -307,9 +307,9 @@ HRESULT DocReturnSelStateToggle( INT rdLine, INT dForce )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ページ全体の選択状態をON/OFFする
-	@param[in]	dForce	０无　＋選択状態　ー選択解除
-	@return		全体文字数
+	�y�[�W�S�̂̑I����Ԃ�ON/OFF����
+	@param[in]	dForce	�O�ف@�{�I����ԁ@�[�I������
+	@return		�S�̕�����
 */
 INT DocPageSelStateToggle( INT dForce )
 {
@@ -320,9 +320,9 @@ INT DocPageSelStateToggle( INT dForce )
 
 	LINE_ITR	itLine;
 
-	if( 0 == dForce )	return 0;	//	０なら処理しない
+	if( 0 == dForce )	return 0;	//	�O�Ȃ珈�����Ȃ�
 
-	if( 0 > gixFocusPage )	return 0;	//	特殊な状況下では処理しない
+	if( 0 > gixFocusPage )	return 0;	//	����ȏ󋵉��ł͏������Ȃ�
 
 	iTotal = 0;
 
@@ -331,16 +331,16 @@ INT DocPageSelStateToggle( INT dForce )
 	itLine = (*gitFileIt).vcCont.at( gixFocusPage ).ltPage.begin();
 	for( ln = 0; iLines > ln; ln++, itLine++ )
 	{
-		iDot = 0;	//	そこまでのドット数をため込む
+		iDot = 0;	//	�����܂ł̃h�b�g�������ߍ���
 		inRect.top    = ln * LINE_HEIGHT;
 		inRect.bottom = inRect.top + LINE_HEIGHT;
 
-		iLetters = itLine->vcLine.size( );	//	この行の文字数確認して
+		iLetters = itLine->vcLine.size( );	//	���̍s�̕������m�F����
 
-		//	壱文字ずつ、全部をチェキっていく
+		//	�땶�����A�S�����`�F�L���Ă���
 		for( mz = 0; iLetters > mz; mz++ )
 		{
-			//	直前の状態
+			//	���O�̏��
 			dStyle = itLine->vcLine.at( mz ).mzStyle;
 			iWid   = itLine->vcLine.at( mz ).rdWidth;
 
@@ -362,10 +362,10 @@ INT DocPageSelStateToggle( INT dForce )
 			iTotal++;
 		}
 
-		//	壱行終わったら末尾状況確認。改行・本文末端に改行はない・選択のときのみ
+		//	��s�I������疖���󋵊m�F�B���s�E�{�����[�ɉ��s�͂Ȃ��E�I���̂Ƃ��̂�
 		dStyle = itLine->dStyle;
 		inRect.left  = iDot;
-		inRect.right = iDot + 20;	//	改行描画エリア・大体これくらい
+		inRect.right = iDot + 20;	//	���s�`��G���A�E��̂��ꂭ�炢
 		if( 0 < dForce )
 		{
 			if( iLines > ln+1 )
@@ -382,7 +382,7 @@ INT DocPageSelStateToggle( INT dForce )
 	}
 
 
-	if( 0 < dForce )	//	頁全体のバイト数そのものか、非選択なので０
+	if( 0 < dForce )	//	�őS�̂̃o�C�g�����̂��̂��A��I���Ȃ̂łO
 	{
 		DocSelRangeSet(  0, iLines - 1 );
 		DocPageParamGet( NULL, &gdSelByte );
@@ -394,14 +394,14 @@ INT DocPageSelStateToggle( INT dForce )
 	}
 	DocSelectedByteStatus(  );
 
-//	ViewRedrawSetLine( -1 );	//	画面表示更新
+//	ViewRedrawSetLine( -1 );	//	��ʕ\���X�V
 
 	return iTotal;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	選択されてるバイト数をステータスバーに表示
+	�I������Ă�o�C�g�����X�e�[�^�X�o�[�ɕ\��
 */
 VOID DocSelectedByteStatus( VOID )
 {
@@ -422,12 +422,12 @@ VOID DocSelectedByteStatus( VOID )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	選択されているところを全削除しちゃう
-	@param[in]	pdDot	キャレットドット位置・書き換える必要がある
-	@param[in]	pdLine	行番号・書き換える必要がある
-	@param[in]	bSqSel	矩形選択してるのかどうか・D_SQUARE
-	@param[in]	bFirst	アンドゥ用・これが最初のアクションか
-	@return	非０改行あった　０壱行のみ
+	�I������Ă���Ƃ����S�폜�����Ⴄ
+	@param[in]	pdDot	�L�����b�g�h�b�g�ʒu�E����������K�v������
+	@param[in]	pdLine	�s�ԍ��E����������K�v������
+	@param[in]	bSqSel	��`�I�����Ă�̂��ǂ����ED_SQUARE
+	@param[in]	bFirst	�A���h�D�p�E���ꂪ�ŏ��̃A�N�V������
+	@return	��O���s�������@�O��s�̂�
 */
 INT DocSelectedDelete( PINT pdDot, PINT pdLine, UINT bSqSel, BOOLEAN bFirst )
 {
@@ -445,18 +445,18 @@ INT DocSelectedDelete( PINT pdDot, PINT pdLine, UINT bSqSel, BOOLEAN bFirst )
 	try{
 #endif
 
-	bSqSel &= D_SQUARE;	//	矩形ビットだけ残す
+	bSqSel &= D_SQUARE;	//	��`�r�b�g�����c��
 
-	//	ページ全体の行数
+	//	�y�[�W�S�̂̍s��
 //	iLines = DocNowFilePageLineCount( );
 	i = (*gitFileIt).vcCont.at( gixFocusPage ).dSelLineTop;
 	j = (*gitFileIt).vcCont.at( gixFocusPage ).dSelLineBottom;
-	TRACE( TEXT("範囲削除[T%d - B%d]"), i, j );
-	if( 0 > i ){	return 0;	}	//	選択範囲が無かった
+	TRACE( TEXT("�͈͍폜[T%d - B%d]"), i, j );
+	if( 0 > i ){	return 0;	}	//	�I��͈͂���������
 
 
-//アンドゥバッファリングの準備
-	iLct = j - i + 1;	//	含まれる行なので、数えるの注意
+//�A���h�D�o�b�t�@�����O�̏���
+	iLct = j - i + 1;	//	�܂܂��s�Ȃ̂ŁA������̒���
 	cbSize = DocSelectTextGetAlloc( D_UNI | bSqSel, (LPVOID *)(&ptText), NULL );
 	pstPt = (LPPOINT)malloc( iLct * sizeof(POINT) );
 	ZeroMemory( pstPt, iLct * sizeof(POINT) );
@@ -464,14 +464,14 @@ INT DocSelectedDelete( PINT pdDot, PINT pdLine, UINT bSqSel, BOOLEAN bFirst )
 
 	bCrLf = iLct - 1;
 
-	dBeginY = i;	//	選択肢のある行
+	dBeginY = i;	//	�I�����̂���s
 
 	itLine = (*gitFileIt).vcCont.at( gixFocusPage ).ltPage.begin();
 	std::advance( itLine, j );
 
-	for( ; i <= j; j--, k--, itLine-- )//beginを超えたらアウツ！
+	for( ; i <= j; j--, k--, itLine-- )//begin�𒴂�����A�E�c�I
 	{
-		//	continueは使えない・
+		//	continue�͎g���Ȃ��E
 
 		iMozis = itLine->vcLine.size( );
 		if( 0 < iMozis )
@@ -483,7 +483,7 @@ INT DocSelectedDelete( PINT pdDot, PINT pdLine, UINT bSqSel, BOOLEAN bFirst )
 
 			dBeginX = 0;
 
-			//	最初の選択部分を検索
+			//	�ŏ��̑I�𕔕�������
 			for( ; itLtr != itEnd; itLtr++ )
 			{
 				if( CT_SELECT & itLtr->mzStyle )
@@ -492,10 +492,10 @@ INT DocSelectedDelete( PINT pdDot, PINT pdLine, UINT bSqSel, BOOLEAN bFirst )
 					break;
 				}
 
-				dBeginX += itLtr->rdWidth;	//	意味があるのは最後のところなので、常時上書きでおｋ
+				dBeginX += itLtr->rdWidth;	//	�Ӗ�������͍̂Ō�̂Ƃ���Ȃ̂ŁA�펞�㏑���ł���
 			}
 
-			//	選択されてない所まで検索
+			//	�I������ĂȂ����܂Ō���
 			for( ; itLtr != itEnd; itLtr++ )
 			{
 				if( !(CT_SELECT & itLtr->mzStyle) )
@@ -511,32 +511,32 @@ INT DocSelectedDelete( PINT pdDot, PINT pdLine, UINT bSqSel, BOOLEAN bFirst )
 
 		if( 0 < iMozis )
 		{
-			//	該当範囲を削除・末端は、該当部分の直前までが対象・末端自体は非対象
+			//	�Y���͈͂��폜�E���[�́A�Y�������̒��O�܂ł��ΏہE���[���͔̂�Ώ�
 			itLine->vcLine.erase( itHead, itTail );
 		}
 
-		//	改行が含まれていたら
+		//	���s���܂܂�Ă�����
 		if( CT_SELRTN & itLine->dStyle ){	DocLineCombine( j );	}
 
-		DocLineParamGet( j, NULL, NULL );	//	バイト数再計算
+		DocLineParamGet( j, NULL, NULL );	//	�o�C�g���Čv�Z
 
-		//	矩形の場合は、各行毎に面倒みないかん
+		//	��`�̏ꍇ�́A�e�s���ɖʓ|�݂Ȃ�����
 		if( D_SQUARE & bSqSel ){	DocBadSpaceCheck( j );	}
 
-		//	改行サクるとこれによりatが無効になる？
+		//	���s�T�N��Ƃ���ɂ��at�������ɂȂ�H
 	
-	//	iLines = DocNowFilePageLineCount( );	//	ページ全体の行数再設定？
+	//	iLines = DocNowFilePageLineCount( );	//	�y�[�W�S�̂̍s���Đݒ�H
 
 		if( (*gitFileIt).vcCont.at( gixFocusPage ).ltPage.begin() == itLine )	break;
-		//	位置的に末端だったらループせずに終わる
+		//	�ʒu�I�ɖ��[�������烋�[�v�����ɏI���
 	}
 
-	ViewSelPageAll( -1 );	//	選択範囲無くなる
+	ViewSelPageAll( -1 );	//	�I��͈͖����Ȃ�
 
-	//	カーソル位置移動せないかん
+	//	�J�[�\���ʒu�ړ����Ȃ�����
 	*pdDot = dBeginX;	*pdLine = dBeginY;
 
-	//	最終的に残っている行のチェックだけすればいい
+	//	�ŏI�I�Ɏc���Ă���s�̃`�F�b�N��������΂���
 	if( !(D_SQUARE & bSqSel)  ){	DocBadSpaceCheck( dBeginY );	}
 
 	if( bSqSel ){	SqnAppendSquare( &((*gitFileIt).vcCont.at( gixFocusPage ).stUndoLog), DO_DELETE, ptText, pstPt, iLct , bFirst );	}
@@ -557,11 +557,11 @@ INT DocSelectedDelete( PINT pdDot, PINT pdLine, UINT bSqSel, BOOLEAN bFirst )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	選択範囲を指定文字列で塗りつぶす
-	@param[in]	ptBrush	ブラシ文字列・NULLなら空白
-	@param[in]	pdDot	キャレットドット位置・書き換える必要がある
-	@param[in]	pdLine	行番号・書き換える必要がある
-	@return	非０塗った　０してない
+	�I��͈͂��w�蕶����œh��Ԃ�
+	@param[in]	ptBrush	�u���V������ENULL�Ȃ��
+	@param[in]	pdDot	�L�����b�g�h�b�g�ʒu�E����������K�v������
+	@param[in]	pdLine	�s�ԍ��E����������K�v������
+	@return	��O�h�����@�O���ĂȂ�
 */
 INT DocSelectedBrushFilling( LPTSTR ptBrush, PINT pdDot, PINT pdLine )
 {
@@ -583,19 +583,19 @@ INT DocSelectedBrushFilling( LPTSTR ptBrush, PINT pdDot, PINT pdLine )
 
 	i = (*gitFileIt).vcCont.at( gixFocusPage ).dSelLineTop;
 	j = (*gitFileIt).vcCont.at( gixFocusPage ).dSelLineBottom;
-	TRACE( TEXT("範囲確認[T%d - B%d]"), i, j );
-	if( 0 > i ){	return 0;	}	//	選択範囲が無かった
+	TRACE( TEXT("�͈͊m�F[T%d - B%d]"), i, j );
+	if( 0 > i ){	return 0;	}	//	�I��͈͂���������
 
-	dBeginY = i;	//	選択肢のある行
+	dBeginY = i;	//	�I�����̂���s
 	dBeginX = 0;
 
-	//	壱行ずつ処理していく
+	//	��s���������Ă���
 	itLine = (*gitFileIt).vcCont.at( gixFocusPage ).ltPage.begin();
 	std::advance( itLine, i );
 
 	for( iLct = i; j >= iLct; iLct++, itLine++ )
 	{
-		//	文字数確認して
+		//	�������m�F����
 		iMozis = itLine->vcLine.size( );
 		if( 0 < iMozis )
 		{
@@ -607,22 +607,22 @@ INT DocSelectedBrushFilling( LPTSTR ptBrush, PINT pdDot, PINT pdLine )
 			dBgnDot = 0;
 			dTgtDot = 0;
 
-			//	最初の選択部分を検索
+			//	�ŏ��̑I�𕔕�������
 			for( ; itLtr != itEnd; itLtr++ )
 			{
 				if( CT_SELECT & itLtr->mzStyle )
 				{
 					itHead =  itLtr;
 					dTgtDot = itLtr->rdWidth;
-					itLtr++;	//	次の文字を参照
+					itLtr++;	//	���̕������Q��
 					break;
 				}
 
 				dBgnDot += itLtr->rdWidth;
 			}
-			if( iLct == i ){	dBeginX = dBgnDot;	}	//	意味があるのは最後のところ
+			if( iLct == i ){	dBeginX = dBgnDot;	}	//	�Ӗ�������͍̂Ō�̂Ƃ���
 
-			//	選択されてない所まで検索
+			//	�I������ĂȂ����܂Ō���
 			for( ; itLtr != itEnd; itLtr++ )
 			{
 				if( !(CT_SELECT & itLtr->mzStyle) )
@@ -630,24 +630,24 @@ INT DocSelectedBrushFilling( LPTSTR ptBrush, PINT pdDot, PINT pdLine )
 					itTail =  itLtr;
 					break;
 				}
-				dTgtDot += itLtr->rdWidth;	//	ドット数を確認
+				dTgtDot += itLtr->rdWidth;	//	�h�b�g�����m�F
 			}
 
-			//	当てはめるアレを計算する
+			//	���Ă͂߂�A�����v�Z����
 			if( ptBrush )
 			{
 				ptReplc = BrushStringMake( dTgtDot, ptBrush );
 			}
-			else	//	空白指定ということ
+			else	//	�󔒎w��Ƃ�������
 			{
 				ptReplc = DocPaddingSpaceMake( dTgtDot );
 			}
 
-			//	ここで、埋め文字列が作成不可なら、この行の処理は飛ばす
+			//	�����ŁA���ߕ����񂪍쐬�s�Ȃ�A���̍s�̏����͔�΂�
 			if( !(ptReplc) )	continue;
 
 
-			//	該当部分の内容を記録＜アンドゥ用
+			//	�Y�������̓��e���L�^���A���h�D�p
 			wsBuffer.clear();
 			for( itLtr = itHead; itLtr != itTail; itLtr++ )
 			{
@@ -658,9 +658,9 @@ INT DocSelectedBrushFilling( LPTSTR ptBrush, PINT pdDot, PINT pdLine )
 			ptDeled = (LPTSTR)malloc( cchSize * sizeof(TCHAR) );
 			StringCchCopy( ptDeled, cchSize, wsBuffer.c_str( ) );
 
-			//	該当部分を削除
+			//	�Y���������폜
 			itLine->vcLine.erase( itHead, itTail );
-			//	ブラシ文字列で埋める
+			//	�u���V������Ŗ��߂�
 			StringCchLength( ptReplc, STRSAFE_MAX_CCH, &cchSize );
 			dNowDot = dBgnDot;
 			DocStringAdd( &dNowDot, &iLct, ptReplc, cchSize );
@@ -677,25 +677,25 @@ INT DocSelectedBrushFilling( LPTSTR ptBrush, PINT pdDot, PINT pdLine )
 
 	}
 
-	ViewSelPageAll( -1 );	//	選択範囲無くなる
+	ViewSelPageAll( -1 );	//	�I��͈͖����Ȃ�
 
-	//	カーソル位置移動せないかん
+	//	�J�[�\���ʒu�ړ����Ȃ�����
 	*pdDot = dBeginX;	*pdLine = dBeginY;
 
 	return 1;
 }
 //-------------------------------------------------------------------------------------------------
 
-#pragma message ("指定行選択範囲確保、必要になったら作る")
+#pragma message ("�w��s�I��͈͊m�ہA�K�v�ɂȂ�������")
 #if 0
 /*!
-	指定行の選択範囲をテキストで確保する
-	@param[in]	itLine	指定行のイテレータ
-	@param[in]	bStyle	ユニコードかシフトJISか
-	@param[out]	*pText	確保した領域を返す・ワイド文字かマルチ文字になる・NULLだと必要バイト数を返すのみ
-	@param[out]	*piDot	選択範囲開始位置ドットを返す
-	@param[out]	*piMozi	選択範囲のユニコード文字数を返す
-	@return				確保したバイト数・NULLターミネータも含む
+	�w��s�̑I��͈͂��e�L�X�g�Ŋm�ۂ���
+	@param[in]	itLine	�w��s�̃C�e���[�^
+	@param[in]	bStyle	���j�R�[�h���V�t�gJIS��
+	@param[out]	*pText	�m�ۂ����̈��Ԃ��E���C�h�������}���`�����ɂȂ�ENULL���ƕK�v�o�C�g����Ԃ��̂�
+	@param[out]	*piDot	�I��͈͊J�n�ʒu�h�b�g��Ԃ�
+	@param[out]	*piMozi	�I��͈͂̃��j�R�[�h��������Ԃ�
+	@return				�m�ۂ����o�C�g���ENULL�^�[�~�l�[�^���܂�
 */
 INT DocSelectLineSelTextAlloc( LINE_ITR itLine, UINT bStyle, LPVOID *pText, PINT piDot, PINT piMozi )
 {
@@ -706,17 +706,17 @@ INT DocSelectLineSelTextAlloc( LINE_ITR itLine, UINT bStyle, LPVOID *pText, PINT
 #endif
 
 /*!
-	ページ全体から、選択されている文字列を確保する・freeは呼んだ方でやる
-	@param[in]	bStyle	１ユニコードかシフトJISで、矩形かどうか
-	@param[out]	*pText	確保した領域を返す・ワイド文字かマルチ文字になる・NULLだと必要バイト数を返すのみ
-	@param[out]	*pstPt	選択範囲の行番号と開始ドット位置をメモリして返す・開放は呼んだほうでやる・NULLなら何もしない
-	@return				確保したバイト数・NULLターミネータも含む
+	�y�[�W�S�̂���A�I������Ă��镶������m�ۂ���Efree�͌Ă񂾕��ł��
+	@param[in]	bStyle	�P���j�R�[�h���V�t�gJIS�ŁA��`���ǂ���
+	@param[out]	*pText	�m�ۂ����̈��Ԃ��E���C�h�������}���`�����ɂȂ�ENULL���ƕK�v�o�C�g����Ԃ��̂�
+	@param[out]	*pstPt	�I��͈͂̍s�ԍ��ƊJ�n�h�b�g�ʒu�����������ĕԂ��E�J���͌Ă񂾂ق��ł��ENULL�Ȃ牽�����Ȃ�
+	@return				�m�ۂ����o�C�g���ENULL�^�[�~�l�[�^���܂�
 */
 INT DocSelectTextGetAlloc( UINT bStyle, LPVOID *pText, LPPOINT *pstPt )
 {
-	//	指定行の指定範囲をコピーするようにすればいい
-	//	SJISの場合は、ユニコード文字は&#ddddd;で確保される
-	//	もしかしたら&#xhhhh;かもしれない
+	//	�w��s�̎w��͈͂��R�s�[����悤�ɂ���΂���
+	//	SJIS�̏ꍇ�́A���j�R�[�h������&#ddddd;�Ŋm�ۂ����
+	//	������������&#xhhhh;��������Ȃ�
 
 	UINT_PTR	iLines, i, j, iLetters;
 	INT_PTR		iSize, cchSz;
@@ -724,7 +724,7 @@ INT DocSelectTextGetAlloc( UINT bStyle, LPVOID *pText, LPPOINT *pstPt )
 	BOOLEAN		bNoSel;
 	LPPOINT		pstPoint = NULL;
 
-	string	srString;	//	ユニコード・シフトJISで確保
+	string	srString;	//	���j�R�[�h�E�V�t�gJIS�Ŋm��
 	wstring	wsString;
 
 	LINE_ITR	itLine;
@@ -732,18 +732,18 @@ INT DocSelectTextGetAlloc( UINT bStyle, LPVOID *pText, LPPOINT *pstPt )
 	srString.clear( );
 	wsString.clear( );
 
-	//	ページ全体の行数
+	//	�y�[�W�S�̂̍s��
 	iLines = DocNowFilePageLineCount( );
-	//	開始地点から開始
+	//	�J�n�n�_����J�n
 	d = (*gitFileIt).vcCont.at( gixFocusPage ).dSelLineTop;
 	k = (*gitFileIt).vcCont.at( gixFocusPage ).dSelLineBottom;
-	TRACE( TEXT("選択内容確保[%d - %d]"), d, k );
+	TRACE( TEXT("�I����e�m��[%d - %d]"), d, k );
 	if( 0 > d ){	d = 0;	}
 	if( 0 > k ){	k = iLines -  1;	}
 
 	if( pstPt )
 	{
-		iLn = k - d + 1;	//	行の数
+		iLn = k - d + 1;	//	�s�̐�
 		if( 0 < iLn ){	pstPoint = (LPPOINT)malloc( iLn * sizeof(POINT) );	}
 		*pstPt = pstPoint;
 	}
@@ -755,13 +755,13 @@ INT DocSelectTextGetAlloc( UINT bStyle, LPVOID *pText, LPPOINT *pstPt )
 	{
 		if( pstPoint  ){	pstPoint[m].x = 0;	pstPoint[m].y = i;	}
 
-		//	各行の文字数
+		//	�e�s�̕�����
 		iLetters = itLine->vcLine.size( );
 
 		bNoSel = TRUE;
 		for( j = 0; iLetters > j; j++ )
 		{
-			//	選択されている部分を文字列に確保
+			//	�I������Ă��镔���𕶎���Ɋm��
 			if( CT_SELECT & itLine->vcLine.at( j ).mzStyle )
 			{
 				bNoSel = FALSE;
@@ -773,14 +773,14 @@ INT DocSelectTextGetAlloc( UINT bStyle, LPVOID *pText, LPPOINT *pstPt )
 			if( bNoSel && pstPt )	pstPoint[m].x += itLine->vcLine.at( j ).rdWidth;
 		}
 
-		if( bStyle & D_SQUARE  )	//	矩形のときは容赦なく改行
+		if( bStyle & D_SQUARE  )	//	��`�̂Ƃ��͗e�͂Ȃ����s
 		{
 			if( bStyle & D_UNI )	wsString += wstring( CH_CRLFW );
 			else					srString +=  string( CH_CRLFA );
 		}
 		else
 		{
-			//	改行が含まれていたらその分確保
+			//	���s���܂܂�Ă����炻�̕��m��
 			if( CT_SELRTN & itLine->dStyle )
 			{
 				if( bStyle & D_UNI )	wsString += wstring( CH_CRLFW );
@@ -788,15 +788,15 @@ INT DocSelectTextGetAlloc( UINT bStyle, LPVOID *pText, LPPOINT *pstPt )
 			}
 		}
 
-		//	選択範囲末端までイッたらおしまい
+		//	�I��͈͖��[�܂ŃC�b���炨���܂�
 		if( (INT)i == (*gitFileIt).vcCont.at( gixFocusPage ).dSelLineBottom )	break;
 	}
 
 
-	if( bStyle & D_UNI )	//	ユニコードである
+	if( bStyle & D_UNI )	//	���j�R�[�h�ł���
 	{
-		cchSz = wsString.size( ) + 1;	//	NULLターミネータ分足す
-		iSize = cchSz * sizeof(TCHAR);	//	ユニコードなのでバイト数は２倍である
+		cchSz = wsString.size( ) + 1;	//	NULL�^�[�~�l�[�^������
+		iSize = cchSz * sizeof(TCHAR);	//	���j�R�[�h�Ȃ̂Ńo�C�g���͂Q�{�ł���
 
 		if( pText )
 		{
@@ -807,7 +807,7 @@ INT DocSelectTextGetAlloc( UINT bStyle, LPVOID *pText, LPPOINT *pstPt )
 	}
 	else
 	{
-		iSize = srString.size( ) + 1;	//	NULLターミネータ分足す
+		iSize = srString.size( ) + 1;	//	NULL�^�[�~�l�[�^������
 
 		if( pText )
 		{
@@ -822,9 +822,9 @@ INT DocSelectTextGetAlloc( UINT bStyle, LPVOID *pText, LPPOINT *pstPt )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	抽出対象領域を取り出す
-	@param[in]	hInst	実存値
-	@return		HRESULT	終了状態コード
+	���o�Ώۗ̈�����o��
+	@param[in]	hInst	�����l
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT DocExtractExecute( HINSTANCE hInst )
 {
@@ -841,52 +841,52 @@ HRESULT DocExtractExecute( HINSTANCE hInst )
 
 	if( 0 >= DocNowFilePageCount( ) )	return S_FALSE;
 
-	//	開始行と終止行・オフセット量を検索
+	//	�J�n�s�ƏI�~�s�E�I�t�Z�b�g�ʂ�����
 	itLnErate = (*gitFileIt).vcCont.at( gixFocusPage ).ltPage.begin();
 	itLnEnd   = (*gitFileIt).vcCont.at( gixFocusPage ).ltPage.end();
 	itLnFirst = itLnErate;
 	itLnLast  = itLnEnd;
 
-	dOffDot = DocPageMaxDotGet( -1, -1 );	//	MAX位置を初期にしとけばおｋ
+	dOffDot = DocPageMaxDotGet( -1, -1 );	//	MAX�ʒu�������ɂ��Ƃ��΂���
 
 	bLnFirst = TRUE;
 
-	for( ; itLnEnd != itLnErate; itLnErate++ )	//	行サーチ
+	for( ; itLnEnd != itLnErate; itLnErate++ )	//	�s�T�[�`
 	{
 		itMozi  = itLnErate->vcLine.begin();
 		itMzEnd = itLnErate->vcLine.end();
 
 		dCount = 0;
 
-		for( ; itMzEnd != itMozi; itMozi++ )	//	文字サーチ
+		for( ; itMzEnd != itMozi; itMozi++ )	//	�����T�[�`
 		{
-			if( CT_SELECT & itMozi->mzStyle )	//	選択状態発見
+			if( CT_SELECT & itMozi->mzStyle )	//	�I����Ԕ���
 			{
-				if( bLnFirst )	//	最初の行が未発見であれば
+				if( bLnFirst )	//	�ŏ��̍s���������ł����
 				{
-					itLnFirst = itLnErate;	//	今の行を記録する
+					itLnFirst = itLnErate;	//	���̍s���L�^����
 					bLnFirst = FALSE;
 				}
-				itLnLast  = itLnErate;	//	選択状態があるので終止行を更新
+				itLnLast  = itLnErate;	//	�I����Ԃ�����̂ŏI�~�s���X�V
 
-				//	そこまでのオフセット量よりさらに小さければ更新
+				//	�����܂ł̃I�t�Z�b�g�ʂ�肳��ɏ�������΍X�V
 				if( dOffDot > dCount )	dOffDot = dCount;
 
-				break;	//	次の行に移動
+				break;	//	���̍s�Ɉړ�
 			}
 
-			dCount += itMozi->rdWidth;	//	そこまでのドット数をため込む
+			dCount += itMozi->rdWidth;	//	�����܂ł̃h�b�g�������ߍ���
 
 		}
 	}
-	if( itLnLast != itLnEnd )	 itLnLast++;	//	終止の次の行を示しておく
+	if( itLnLast != itLnEnd )	 itLnLast++;	//	�I�~�̎��̍s�������Ă���
 
-	if( bLnFirst )	return  S_FALSE;	//	選択範囲がなかったら死にます
+	if( bLnFirst )	return  S_FALSE;	//	�I��͈͂��Ȃ������玀�ɂ܂�
 
 	wsBuffer.clear();
 
-	//	開始行から内容を確保していく
-	for( itLnErate = itLnFirst; itLnLast != itLnErate; itLnErate++ )	//	行サーチ
+	//	�J�n�s������e���m�ۂ��Ă���
+	for( itLnErate = itLnFirst; itLnLast != itLnErate; itLnErate++ )	//	�s�T�[�`
 	{
 		itMozi  = itLnErate->vcLine.begin();
 		itMzEnd = itLnErate->vcLine.end();
@@ -895,20 +895,20 @@ HRESULT DocExtractExecute( HINSTANCE hInst )
 		bIsVoid  = FALSE;
 		dCount   = 0;
 
-		for( ; itMzEnd != itMozi; itMozi++ )	//	文字サーチ
+		for( ; itMzEnd != itMozi; itMozi++ )	//	�����T�[�`
 		{
-			if( CT_SELECT & itMozi->mzStyle )	//	選択状態発見
+			if( CT_SELECT & itMozi->mzStyle )	//	�I����Ԕ���
 			{
-				if( bIsVoid )	//	直前まで未選択状態
+				if( bIsVoid )	//	���O�܂Ŗ��I�����
 				{
-					if( bMzFirst )	//	最初の空白部分であれば
+					if( bMzFirst )	//	�ŏ��̋󔒕����ł����
 					{
-						dCount -= dOffDot;	//	オフセットする
+						dCount -= dOffDot;	//	�I�t�Z�b�g����
 						if( 0 > dCount )	dCount = 0;
 						bMzFirst = FALSE;
 					}
 
-					//	埋めSpaceを作る・不可ならNULLが返る
+					//	����Space�����E�s�Ȃ�NULL���Ԃ�
 					ptSpace = DocPaddingSpaceMake( dCount );
 					if( ptSpace )
 					{
@@ -923,29 +923,29 @@ HRESULT DocExtractExecute( HINSTANCE hInst )
 				}
 
 				wsBuffer += itMozi->cchMozi;
-				dCount =  0;	//	リセット
+				dCount =  0;	//	���Z�b�g
 				bIsVoid = FALSE;
 			}
 			else
 			{
-				dCount += itMozi->rdWidth;	//	そこまでのドット数をため込む
+				dCount += itMozi->rdWidth;	//	�����܂ł̃h�b�g�������ߍ���
 				bIsVoid = TRUE;
 			}
 		}
 
-		wsBuffer += CH_CRLFW;	//	改行追加
+		wsBuffer += CH_CRLFW;	//	���s�ǉ�
 	}
-	//	この時点で、wsBufferに全体が入っているはず
+	//	���̎��_�ŁAwsBuffer�ɑS�̂������Ă���͂�
 
 	cch = wsBuffer.size( ) + 1;
 	ptString = (LPTSTR)malloc( cch * sizeof(TCHAR) );
 	StringCchCopy( ptString, cch, wsBuffer.c_str( ) );
 
-	if( hInst )	//	実存してるならレイヤボックスへ
+	if( hInst )	//	�������Ă�Ȃ烌�C���{�b�N�X��
 	{
 		LayerBoxVisibalise( hInst, ptString, 0x00 );
 	}
-	else	//	ないならクルッペボード
+	else	//	�Ȃ��Ȃ�N���b�y�{�[�h
 	{
 		DocClipboardDataSet( ptString, cch * sizeof(TCHAR), D_UNI );
 	}
