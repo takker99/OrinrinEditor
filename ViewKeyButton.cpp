@@ -1,6 +1,6 @@
 /*! @file
-	@brief キーボード入力やマウスクルックの面倒みる
-	このファイルは ViewKeyButton.cpp です。
+	@brief �L�[�{�[�h���͂�}�E�X�N���b�N�̖ʓ|�݂�
+	���̃t�@�C���� ViewKeyButton.cpp �ł��B
 	@author	SikigamiHNQ
 	@date	2011/04/22
 */
@@ -22,49 +22,49 @@ If not, see <http://www.gnu.org/licenses/>.
 //-------------------------------------------------------------------------------------------------
 
 /*
-MK_CONTROL	Ctrl キーが押されている場合に設定します。
-MK_LBUTTON	マウスの左ボタンが押されている場合に設定します。
-MK_MBUTTON	マウスの中央ボタンが押されている場合に設定します。
-MK_RBUTTON	マウスの右ボタンが押されている場合に設定します。
-MK_SHIFT	Shift キーが押されている場合に設定します。
+MK_CONTROL	Ctrl �L�[��������Ă���ꍇ�ɐݒ肵�܂��B
+MK_LBUTTON	�}�E�X�̍��{�^����������Ă���ꍇ�ɐݒ肵�܂��B
+MK_MBUTTON	�}�E�X�̒����{�^����������Ă���ꍇ�ɐݒ肵�܂��B
+MK_RBUTTON	�}�E�X�̉E�{�^����������Ă���ꍇ�ɐݒ肵�܂��B
+MK_SHIFT	Shift �L�[��������Ă���ꍇ�ɐݒ肵�܂��B
 */
 //-------------------------------------------------------------------------------------------------
 
-extern HWND		ghPrntWnd;		//!<	親ウインドウハンドル
-extern HWND		ghViewWnd;		//!<	このウインドウのハンドル
+extern HWND		ghPrntWnd;		//!<	�e�E�C���h�E�n���h��
+extern HWND		ghViewWnd;		//!<	���̃E�C���h�E�̃n���h��
 
-extern INT		gdXmemory;		//		直前のＸ位置を覚えておく
+extern INT		gdXmemory;		//		���O�̂w�ʒu���o���Ă���
 
-extern INT		gdDocXdot;		//!<	キャレットのＸドット・ドキュメント位置
-extern INT		gdDocLine;		//!<	キャレットのＹ行数・ドキュメント位置
-extern INT		gdDocMozi;		//!<	キャレットの左側の文字数
+extern INT		gdDocXdot;		//!<	�L�����b�g�̂w�h�b�g�E�h�L�������g�ʒu
+extern INT		gdDocLine;		//!<	�L�����b�g�̂x�s���E�h�L�������g�ʒu
+extern INT		gdDocMozi;		//!<	�L�����b�g�̍����̕�����
 
-//	画面サイズを確認して、移動によるスクロールの面倒みる
-extern INT		gdHideXdot;		//!<	左の隠れ部分
-extern INT		gdViewTopLine;	//!<	表示中の最上部行番号
-extern SIZE		gstViewArea;	//!<	表示領域のサイズ・ルーラー等の領域は無し
-extern INT		gdDispingLine;	//!<	見えてる行数・中途半端に見えてる末端は含まない
+//	��ʃT�C�Y���m�F���āA�ړ��ɂ��X�N���[���̖ʓ|�݂�
+extern INT		gdHideXdot;		//!<	���̉B�ꕔ��
+extern INT		gdViewTopLine;	//!<	�\�����̍ŏ㕔�s�ԍ�
+extern SIZE		gstViewArea;	//!<	�\���̈�̃T�C�Y�E���[���[���̗̈�͖���
+extern INT		gdDispingLine;	//!<	�����Ă�s���E���r���[�Ɍ����Ă閖�[�͊܂܂Ȃ�
 
 extern BOOLEAN	gbExtract;	
 
-extern  UINT	gbUniPad;		//!<	パディングにユニコードをつかって、ドットを見せないようにする
+extern  UINT	gbUniPad;		//!<	�p�f�B���O�Ƀ��j�R�[�h�������āA�h�b�g�������Ȃ��悤�ɂ���
 
-//	これらのキーの具合は、GetKeyStateもしくはGetKeyboardStateを使えばいい
-EXTERNED BOOLEAN	gbShiftOn;	//!<	シフトが押されている
-EXTERNED BOOLEAN	gbCtrlOn;	//!<	コントロールが押されている
-EXTERNED BOOLEAN	gbAltOn;	//!<	アルタが押されている
+//	�����̃L�[�̋�́AGetKeyState��������GetKeyboardState���g���΂���
+EXTERNED BOOLEAN	gbShiftOn;	//!<	�V�t�g��������Ă���
+EXTERNED BOOLEAN	gbCtrlOn;	//!<	�R���g���[����������Ă���
+EXTERNED BOOLEAN	gbAltOn;	//!<	�A���^��������Ă���
 
-EXTERNED POINT	gstCursor;		//!<	文字を考慮しない、Cursorのドット＆行位置
+EXTERNED POINT	gstCursor;		//!<	�������l�����Ȃ��ACursor�̃h�b�g���s�ʒu
 
-EXTERNED UINT	gbBrushMode;	//!<	非零ブラシモード
-static TCHAR	gatBrushPtn[SUB_STRING];	//!<	ブラシパヤーン
+EXTERNED UINT	gbBrushMode;	//!<	���u���V���[�h
+static TCHAR	gatBrushPtn[SUB_STRING];	//!<	�u���V�p���[��
 
-static  UINT	gdSqFillCnt;	//!<	矩形選択を、IME文字列で塗りつぶした時の文字数
+static  UINT	gdSqFillCnt;	//!<	��`�I�����AIME������œh��Ԃ������̕�����
 
-static  UINT	gbLDoubleClick;	//!<	ダブルクルックした
+static  UINT	gbLDoubleClick;	//!<	�_�u���N���b�N����
 
-static POINT	gstLClicken;	//!<	左クルックした位置
-static  UINT	gbDragMoved;	//!<	選択範囲をドラッグで移動しようとしている
+static POINT	gstLClicken;	//!<	���N���b�N�����ʒu
+static  UINT	gbDragMoved;	//!<	�I��͈͂��h���b�O�ňړ����悤�Ƃ��Ă���
 //-------------------------------------------------------------------------------------------------
 
 HRESULT	ViewBrushFilling( VOID );
@@ -72,14 +72,14 @@ HRESULT	ViewBrushFilling( VOID );
 HRESULT	ViewScriptedLineFeed( VOID );
 //-------------------------------------------------------------------------------------------------
 
-//CreateAcceleratorTable メモ
+//CreateAcceleratorTable ����
 
 /*!
-	シフト、コントロール、アルトキーの状態を確認する
+	�V�t�g�A�R���g���[���A�A���g�L�[�̏�Ԃ��m�F����
 */
 VOID ViewCombiKeyCheck( VOID )
 {
-//	SHIFT,CONTROL,ALTのキーの具合は、GetKeyStateもしくはGetKeyboardStateを使えばいい
+//	SHIFT,CONTROL,ALT�̃L�[�̋�́AGetKeyState��������GetKeyboardState���g���΂���
 	gbShiftOn = (0x8000 & GetKeyState(VK_SHIFT)) ? TRUE : FALSE;
 	gbCtrlOn  = (0x8000 & GetKeyState(VK_CONTROL)) ? TRUE : FALSE;
 	gbAltOn   = (0x8000 & GetKeyState(VK_MENU)) ? TRUE : FALSE;
@@ -89,18 +89,18 @@ VOID ViewCombiKeyCheck( VOID )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	編集ビューのキーダウンが発生
-	@param[in]	hWnd	ウインドウハンドル・ビューのとは限らないので注意セヨ
-	@param[in]	vk		押されたキーが仮想キーコードで来る
-	@param[in]	fDown	非０ダウン　０アップ
-	@param[in]	cRepeat	連続オサレ回数・取れてない？
-	@param[in]	flags	キーフラグいろいろ
-	@return		無し
+	�ҏW�r���[�̃L�[�_�E��������
+	@param[in]	hWnd	�E�C���h�E�n���h���E�r���[�̂Ƃ͌���Ȃ��̂Œ��ӃZ��
+	@param[in]	vk		�����ꂽ�L�[�����z�L�[�R�[�h�ŗ���
+	@param[in]	fDown	��O�_�E���@�O�A�b�v
+	@param[in]	cRepeat	�A���I�T���񐔁E���ĂȂ��H
+	@param[in]	flags	�L�[�t���O���낢��
+	@return		����
 */
 VOID Evw_OnKey( HWND hWnd, UINT vk, BOOL fDown, INT cRepeat, UINT flags )
 {
-	INT		bXdirect = 0;	//	Ｘの移動方向
-	UINT	dXwidth;	//	Ｘの移動ドット
+	INT		bXdirect = 0;	//	�w�̈ړ�����
+	UINT	dXwidth;	//	�w�̈ړ��h�b�g
 	INT		dDot, bCrLf, iLines, i;
 	BOOLEAN	bJump = FALSE, bMemoryX = FALSE;
 	BOOLEAN	bSelect = FALSE;
@@ -108,8 +108,8 @@ VOID Evw_OnKey( HWND hWnd, UINT vk, BOOL fDown, INT cRepeat, UINT flags )
 
 	ViewCombiKeyCheck(  );
 
-	ViewSelPositionSet( NULL );	//	操作直前の位置
-	//	中でルーラーのドローが発生してる。Ctrlとか押しっぱでちらつく
+	ViewSelPositionSet( NULL );	//	���쒼�O�̈ʒu
+	//	���Ń��[���[�̃h���[���������Ă�BCtrl�Ƃ��������ςł����
 
 #ifdef DO_TRY_CATCH
 	try{
@@ -123,14 +123,14 @@ VOID Evw_OnKey( HWND hWnd, UINT vk, BOOL fDown, INT cRepeat, UINT flags )
 
 			case VK_LEFT:	bXdirect = -1;	bMemoryX = TRUE;	break;
 
-			case VK_DOWN:	//	行を下へ
+			case VK_DOWN:	//	�s������
 				gdDocLine++;
-				dDot = DocLineParamGet( gdDocLine, NULL, NULL );	//	次の行が無かったら死にます
-				if( -1 == dDot ){	gdDocLine--;	}	//	戻しておく
+				dDot = DocLineParamGet( gdDocLine, NULL, NULL );	//	���̍s�����������玀�ɂ܂�
+				if( -1 == dDot ){	gdDocLine--;	}	//	�߂��Ă���
 				break;
 
-			case VK_UP:	//	行を上へ
-				if( 0 < gdDocLine ){	gdDocLine--;	}	//	０なら変化無し
+			case VK_UP:	//	�s�����
+				if( 0 < gdDocLine ){	gdDocLine--;	}	//	�O�Ȃ�ω�����
 				break;
 
 			case VK_PRIOR:	//	PageUp
@@ -140,26 +140,26 @@ VOID Evw_OnKey( HWND hWnd, UINT vk, BOOL fDown, INT cRepeat, UINT flags )
 
 			case VK_NEXT:	//	PageDown
 				gdDocLine += 10;
-				iLines = DocNowFilePageLineCount(  );//DocPageParamGet( NULL, NULL );	//	行数確保
+				iLines = DocNowFilePageLineCount(  );//DocPageParamGet( NULL, NULL );	//	�s���m��
 				if( iLines <= gdDocLine ){	gdDocLine =  iLines - 1;	}
 				break;
 
-			case VK_END:	//	Ctrl+Endで末尾へ
-				if( gbCtrlOn ){	gdDocLine = DocNowFilePageLineCount(  ) - 1;	}	//	DocPageParamGet( NULL, NULL )	//	行数確保
+			case VK_END:	//	Ctrl+End�Ŗ�����
+				if( gbCtrlOn ){	gdDocLine = DocNowFilePageLineCount(  ) - 1;	}	//	DocPageParamGet( NULL, NULL )	//	�s���m��
 				gdDocXdot = DocLineParamGet( gdDocLine, &gdDocMozi, NULL );
 				bMemoryX = TRUE;
 				break;
 
-			case VK_HOME:	//	Ctrl+Homeで先頭へ
+			case VK_HOME:	//	Ctrl+Home�Ő擪��
 				gdDocXdot = 0;	gdDocMozi = 0;	bMemoryX = TRUE;
 				if( gbCtrlOn  ){	gdDocLine = 0;	}
 				break;
 
 
-			case VK_DELETE:	//	DELキー入力
+			case VK_DELETE:	//	DEL�L�[����
 				bSelect = IsSelecting( &bSqSel );
-				iLines = DocNowFilePageLineCount(  );//DocPageParamGet( NULL, NULL );	//	行数確保
-				if( bSelect )	//	選択状態なら、そこだけ削除する
+				iLines = DocNowFilePageLineCount(  );//DocPageParamGet( NULL, NULL );	//	�s���m��
+				if( bSelect )	//	�I����ԂȂ�A���������폜����
 				{
 					bCrLf = DocSelectedDelete( &gdDocXdot , &gdDocLine, bSqSel, TRUE );
 				}
@@ -167,75 +167,75 @@ VOID Evw_OnKey( HWND hWnd, UINT vk, BOOL fDown, INT cRepeat, UINT flags )
 				{
 					bCrLf = DocInputDelete( gdDocXdot , gdDocLine );
 				}
-				//	負で異常発生
-				if( 0 <  bCrLf )	//	処理した行以降全取っ替え
+				//	���ňُ픭��
+				if( 0 <  bCrLf )	//	���������s�ȍ~�S����ւ�
 				{
 					for( i = gdDocLine; iLines >= i; i++  ){	ViewRedrawSetLine(  i );	}
 				}
 				else{	ViewRedrawSetLine( gdDocLine  );	}
-				ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	キャレット位置を決める
+				ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	�L�����b�g�ʒu�����߂�
 				DocPageInfoRenew( -1, 1 );
 				bMemoryX = TRUE;
 				return;
 
 			case VK_PROCESSKEY:
-				//	大日本帝國的言語変換をしてるときはキー入力は全部ここにくる・シフトとかは別っぽい
+				//	����{�隠�I����ϊ������Ă�Ƃ��̓L�[���͂͑S�������ɂ���E�V�t�g�Ƃ��͕ʂ��ۂ�
 				return;
 
 			default:
 		//		TRACE( TEXT("vk[0x%04X]"), vk );
 				return;
 		}
-		//	IMEがONのときのオサレは、vk：0xE5連発・確定された文字はCHARへ
+		//	IME��ON�̂Ƃ��̃I�T���́Avk�F0xE5�A���E�m�肳�ꂽ������CHAR��
 
 		if( bMemoryX )	gdXmemory = gdDocXdot;
 		else			gdDocXdot = gdXmemory;
 
 	
-		DocLetterPosGetAdjust( &gdDocXdot, gdDocLine, 0 );	//	キャレット位置調整
-		//	ここで文字位置のインクリ・デクリの面倒みて、ドットと行位置を変更
+		DocLetterPosGetAdjust( &gdDocXdot, gdDocLine, 0 );	//	�L�����b�g�ʒu����
+		//	�����ŕ����ʒu�̃C���N���E�f�N���̖ʓ|�݂āA�h�b�g�ƍs�ʒu��ύX
 		dXwidth = DocLetterShiftPos( gdDocXdot, gdDocLine, bXdirect, NULL, &bJump );
 
-		if( 0 > bXdirect )	//	左・先頭へ向かって
+		if( 0 > bXdirect )	//	���E�擪�֌�������
 		{
 			gdDocXdot -= dXwidth;
 			if( 0 >  gdDocXdot )	gdDocXdot = 0;
 
 			if( bJump )
 			{
-				if( 0 < gdDocLine ){	gdDocLine--;	}	//	０なら変化無し
+				if( 0 < gdDocLine ){	gdDocLine--;	}	//	�O�Ȃ�ω�����
 
-				//	隣の行の末尾に移動する
+				//	�ׂ̍s�̖����Ɉړ�����
 				dDot = DocLineParamGet( gdDocLine, NULL, NULL );
 				gdDocXdot = dDot;
 			}
 		}
 
-		if( 0 < bXdirect )	//	右・末尾へ向かって
+		if( 0 < bXdirect )	//	�E�E�����֌�������
 		{
 			gdDocXdot += dXwidth;
 			if( bJump )
 			{
 				gdDocLine++;
 
-				//	次の行が無かったら
+				//	���̍s������������
 				dDot = DocLineParamGet( gdDocLine, NULL, NULL );
-				if( 0 >  dDot ){	gdDocLine--;	}	//	戻しておく
-				else{	gdDocXdot = 0;	}	//	次の行へ移動して行頭へ
+				if( 0 >  dDot ){	gdDocLine--;	}	//	�߂��Ă���
+				else{	gdDocXdot = 0;	}	//	���̍s�ֈړ����čs����
 			}
 		}
 
-		gdDocMozi = DocLetterPosGetAdjust( &gdDocXdot, gdDocLine, 0 );	//	今の文字位置を確認
+		gdDocMozi = DocLetterPosGetAdjust( &gdDocXdot, gdDocLine, 0 );	//	���̕����ʒu���m�F
 
-		ViewSelMoveCheck( FALSE );	//	位置決まったら、選択状態をCheck
+		ViewSelMoveCheck( FALSE );	//	�ʒu���܂�����A�I����Ԃ�Check
 
 		if( bMemoryX )	gdXmemory = gdDocXdot;
 
-		ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	最終的な位置にキャレット位置を変更
+		ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	�ŏI�I�Ȉʒu�ɃL�����b�g�ʒu��ύX
 	}
-	else	//	キー離され
+	else	//	�L�[������
 	{
-		//	ない？
+		//	�Ȃ��H
 	}
 
 #ifdef DO_TRY_CATCH
@@ -249,56 +249,56 @@ VOID Evw_OnKey( HWND hWnd, UINT vk, BOOL fDown, INT cRepeat, UINT flags )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	編集ビューの文字キーオサレが発生
-	@param[in]	hWnd	ウインドウハンドル・ビューのとは限らないので注意セヨ
-	@param[in]	ch		押された文字
-	@param[in]	cRepeat	キーリピート回数・効いてない？
-	@return		無し
+	�ҏW�r���[�̕����L�[�I�T��������
+	@param[in]	hWnd	�E�C���h�E�n���h���E�r���[�̂Ƃ͌���Ȃ��̂Œ��ӃZ��
+	@param[in]	ch		�����ꂽ����
+	@param[in]	cRepeat	�L�[���s�[�g�񐔁E�����ĂȂ��H
+	@return		����
 */
 VOID Evw_OnChar( HWND hWnd, TCHAR ch, INT cRepeat )
 {
 	BOOLEAN	bSelect, bFirst;
 	UINT	bSqSel = 0;
 	INT		isctrl, bCrLf, iLines, i;
-	//	バックスペースとか改行0x0Dもくる
+	//	�o�b�N�X�y�[�X�Ƃ����s0x0D������
 	TCHAR	atCh[2];
 
 
 	ViewCombiKeyCheck(  );
 
-	bSelect = IsSelecting( &bSqSel );	//	選択状態であるか	矩形選択中であるか
+	bSelect = IsSelecting( &bSqSel );	//	�I����Ԃł��邩	��`�I�𒆂ł��邩
 
-	isctrl = iswcntrl( ch );	//	制御文字であるか
-	//	Ctrl+Zとかは制御文字で来るので注意
-	if( isctrl )	//	制御文字はBSとReturn以外は無視でいいか
+	isctrl = iswcntrl( ch );	//	���䕶���ł��邩
+	//	Ctrl+Z�Ƃ��͐��䕶���ŗ���̂Œ���
+	if( isctrl )	//	���䕶����BS��Return�ȊO�͖����ł�����
 	{
-		TRACE( TEXT("制御文字[%04X]"), ch );
+		TRACE( TEXT("���䕶��[%04X]"), ch );
 
-		//	TABはこっちに来る
+		//	TAB�͂������ɗ���
 
-		if( VK_RETURN == ch )	//	改行
+		if( VK_RETURN == ch )	//	���s
 		{
 			TRACE( TEXT("Enter Shift[%d]"), gbShiftOn );
 			if( gbShiftOn )
 			{
-				ViewScriptedLineFeed(  );	//	Shift押しながらの場合、台詞改行とする。
+				ViewScriptedLineFeed(  );	//	Shift�����Ȃ���̏ꍇ�A�䎌���s�Ƃ���B
 			}
 			else
 			{
 				bFirst = TRUE;
-				if( bSelect )	//	選択状態で有る場合・削除
+				if( bSelect )	//	�I����ԂŗL��ꍇ�E�폜
 				{
 					bCrLf = DocSelectedDelete( &gdDocXdot , &gdDocLine, bSqSel, bFirst );	bFirst = FALSE;
 				}
 
-				DocCrLfAdd( gdDocXdot , gdDocLine, bFirst );	//	中のほうで空白チェックやってる
+				DocCrLfAdd( gdDocXdot , gdDocLine, bFirst );	//	���̂ق��ŋ󔒃`�F�b�N����Ă�
 				ViewRedrawSetLine( gdDocLine );
 
-				gdDocXdot = 0;	gdDocMozi = 0;	gdDocLine++;	//	次の行に移る
-				ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	位置を決める
-				gdXmemory = gdDocXdot;	//	最新位置記憶
-				//	改行した行以降全取っ替え
-				iLines = DocPageParamGet( NULL, NULL );	//	表示変更してるか
+				gdDocXdot = 0;	gdDocMozi = 0;	gdDocLine++;	//	���̍s�Ɉڂ�
+				ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	�ʒu�����߂�
+				gdXmemory = gdDocXdot;	//	�ŐV�ʒu�L��
+				//	���s�����s�ȍ~�S����ւ�
+				iLines = DocPageParamGet( NULL, NULL );	//	�\���ύX���Ă邩
 				for( i = gdDocLine; iLines >= i; i++ ){	ViewRedrawSetLine(  i );	}
 			}
 		}
@@ -306,8 +306,8 @@ VOID Evw_OnChar( HWND hWnd, TCHAR ch, INT cRepeat )
 		if( VK_BACK == ch )	//	BackSpace
 		{
 			TRACE( TEXT("BACKSP [%d][%d:%d]"), bSelect, gdDocXdot, gdDocLine );
-			iLines = DocNowFilePageLineCount(  );//DocPageParamGet( NULL, NULL );	//	行数確保
-			if( bSelect )	//	選択状態なら、そこだけ削除する
+			iLines = DocNowFilePageLineCount(  );//DocPageParamGet( NULL, NULL );	//	�s���m��
+			if( bSelect )	//	�I����ԂȂ�A���������폜����
 			{
 				bCrLf = DocSelectedDelete( &gdDocXdot , &gdDocLine, bSqSel, TRUE );
 			}
@@ -315,52 +315,52 @@ VOID Evw_OnChar( HWND hWnd, TCHAR ch, INT cRepeat )
 			{
 				bCrLf = DocInputBkSpace( &gdDocXdot , &gdDocLine );
 			}
-			if( bCrLf  )	//	処理した行以降全取っ替え
+			if( bCrLf  )	//	���������s�ȍ~�S����ւ�
 			{
 				for( i = gdDocLine; iLines >= i; i++  ){	ViewRedrawSetLine(  i );	}
 			}
 			else{	ViewRedrawSetLine( gdDocLine  );	}
 
-			ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	キャレット位置を決める
-			gdXmemory = gdDocXdot;	//	最新位置記憶
+			ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	�L�����b�g�ʒu�����߂�
+			gdXmemory = gdDocXdot;	//	�ŐV�ʒu�L��
 		}
 
 		return;
 	}
 
-	TRACE( TEXT("入力文字[%c]"), ch );
+	TRACE( TEXT("���͕���[%c]"), ch );
 
-	if( 0 < gdSqFillCnt )	//	IME経由で矩形塗り潰しが発生している
+	if( 0 < gdSqFillCnt )	//	IME�o�R�ŋ�`�h��ׂ����������Ă���
 	{
 		gdSqFillCnt--;
-		TRACE( TEXT("キャンセル[%u]"), gdSqFillCnt );
+		TRACE( TEXT("�L�����Z��[%u]"), gdSqFillCnt );
 		return;
 	}
 
-	iLines = DocPageParamGet( NULL, NULL );	//	再計算してるかも・・・
+	iLines = DocPageParamGet( NULL, NULL );	//	�Čv�Z���Ă邩���E�E�E
 	bCrLf = 0;
-	if( bSelect )	//	選択状態で有る場合・矩形なら塗り潰し、通常なら削除
+	if( bSelect )	//	�I����ԂŗL��ꍇ�E��`�Ȃ�h��ׂ��A�ʏ�Ȃ�폜
 	{
-		if( bSqSel )	//	矩形選択中なら塗りつぶして終了
+		if( bSqSel )	//	��`�I�𒆂Ȃ�h��Ԃ��ďI��
 		{
 			atCh[0] = ch;	atCh[1] = NULL;
 			DocSelectedBrushFilling( atCh, &gdDocXdot ,&gdDocLine );
-			ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	キャレット位置を決める
+			ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	�L�����b�g�ʒu�����߂�
 			DocPageInfoRenew( -1, 1 );
 			return;
 		}
 		else{	bCrLf = DocSelectedDelete( &gdDocXdot , &gdDocLine, 0, TRUE );	}
-		//	通常選択中なら、一旦その範囲を削除する
+		//	�ʏ�I�𒆂Ȃ�A��U���͈̔͂��폜����
 	}
 
-	DocInsertLetter( &gdDocXdot, gdDocLine, ch );	//	行に追加
-	//	中でアンドゥバッファリング
-	gdDocMozi = DocLetterPosGetAdjust( &gdDocXdot, gdDocLine, 0 );	//	今の文字位置を確認
-	ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	位置移動
+	DocInsertLetter( &gdDocXdot, gdDocLine, ch );	//	�s�ɒǉ�
+	//	���ŃA���h�D�o�b�t�@�����O
+	gdDocMozi = DocLetterPosGetAdjust( &gdDocXdot, gdDocLine, 0 );	//	���̕����ʒu���m�F
+	ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	�ʒu�ړ�
 
-	gdXmemory = gdDocXdot;	//	最新位置記憶
+	gdXmemory = gdDocXdot;	//	�ŐV�ʒu�L��
 
-	if( bCrLf  )	//	処理した行以降全取っ替え
+	if( bCrLf  )	//	���������s�ȍ~�S����ւ�
 	{
 		for( i = gdDocLine; iLines > i; i++ ){	ViewRedrawSetLine(  i );	}
 	}
@@ -374,12 +374,12 @@ VOID Evw_OnChar( HWND hWnd, TCHAR ch, INT cRepeat )
 
 
 /*!
-	ビューでマウスの左ボタンがダウンされたとき
-	@param[in]	hWnd			ウインドウハンドル・ビューのとは限らないので注意セヨ
-	@param[in]	fDoubleClick	非０ダブルクルックされた場合
-	@param[in]	x				発生したＸ座標値
-	@param[in]	y				発生したＹ座標値
-	@param[in]	keyFlags		他に押されてるキーについて
+	�r���[�Ń}�E�X�̍��{�^�����_�E�����ꂽ�Ƃ�
+	@param[in]	hWnd			�E�C���h�E�n���h���E�r���[�̂Ƃ͌���Ȃ��̂Œ��ӃZ��
+	@param[in]	fDoubleClick	��O�_�u���N���b�N���ꂽ�ꍇ
+	@param[in]	x				���������w���W�l
+	@param[in]	y				���������x���W�l
+	@param[in]	keyFlags		���ɉ�����Ă�L�[�ɂ���
 */
 VOID Evw_OnLButtonDown( HWND hWnd, BOOL fDoubleClick, INT x, INT y, UINT keyFlags )
 {
@@ -387,81 +387,81 @@ VOID Evw_OnLButtonDown( HWND hWnd, BOOL fDoubleClick, INT x, INT y, UINT keyFlag
 	INT		dDot, dMaxDot, dLine, iMaxLine;	//	
 	UINT	dRslt;
 
-	SetFocus( hWnd );	//	マウスインでフォーカス
+	SetFocus( hWnd );	//	�}�E�X�C���Ńt�H�[�J�X
 
 	dX = x;
 	dY = y;
-	ViewPositionTransform( &dX, &dY, 0 );	//	ここで、ドキュメント位置に変更
+	ViewPositionTransform( &dX, &dY, 0 );	//	�����ŁA�h�L�������g�ʒu�ɕύX
 
 	ViewCombiKeyCheck(  );
 
 
-	//	マイナスのときはルーラーか行番号エリア
+	//	�}�C�i�X�̂Ƃ��̓��[���[���s�ԍ��G���A
 	if( 0 > dX )	dX = 0;
 	if( 0 > dY )	dY = 0;
 	
 	dDot  = dX;
 	dLine = dY / LINE_HEIGHT;
 
-	if( fDoubleClick )	//	ダブルクルック
+	if( fDoubleClick )	//	�_�u���N���b�N
 	{
-		TRACE( TEXT("マウス左ダブルクルック[%d / %d]%d:%d:%d"), dDot, dLine, gbShiftOn, gbCtrlOn, gbAltOn );
+		TRACE( TEXT("�}�E�X���_�u���N���b�N[%d / %d]%d:%d:%d"), dDot, dLine, gbShiftOn, gbCtrlOn, gbAltOn );
 
 		ViewSelAreaSelect( NULL );
 
 		gbLDoubleClick = TRUE;
-		return;	//	これ以降は処理しなくて良いはず
+		return;	//	����ȍ~�͏������Ȃ��ėǂ��͂�
 	}
 
-	TRACE( TEXT("マウス左ダウン[%d / %d]%d:%d:%d"), dDot, dLine, gbShiftOn, gbCtrlOn, gbAltOn );
+	TRACE( TEXT("�}�E�X���_�E��[%d / %d]%d:%d:%d"), dDot, dLine, gbShiftOn, gbCtrlOn, gbAltOn );
 
-	SetCapture( hWnd  );	//	マウスキャプチャ
+	SetCapture( hWnd  );	//	�}�E�X�L���v�`��
 
-	//	有効な位置かどうか確認
+	//	�L���Ȉʒu���ǂ����m�F
 
-	//	行数確認して、はみ出してたら末端にしておく
-	iMaxLine = DocNowFilePageLineCount(  );//DocPageParamGet( NULL, NULL );	//	行数確認かも・・・
+	//	�s���m�F���āA�͂ݏo���Ă��疖�[�ɂ��Ă���
+	iMaxLine = DocNowFilePageLineCount(  );//DocPageParamGet( NULL, NULL );	//	�s���m�F�����E�E�E
 	if( iMaxLine <=dLine )	dLine = iMaxLine - 1;
 
-	//	その行のドット数を確認して、はみ出してたら末端にしておく
+	//	���̍s�̃h�b�g�����m�F���āA�͂ݏo���Ă��疖�[�ɂ��Ă���
 	dMaxDot = DocLineParamGet( dLine, NULL, NULL );
 	if( dMaxDot <=dDot )	dDot = dMaxDot;
 
-	//	文字位置に合わせて調整
-	gdDocMozi = DocLetterPosGetAdjust( &dDot, dLine, 0 );	//	今の文字位置を確認
+	//	�����ʒu�ɍ��킹�Ē���
+	gdDocMozi = DocLetterPosGetAdjust( &dDot, dLine, 0 );	//	���̕����ʒu���m�F
 	gdDocXdot = dDot;
 	gdDocLine = dLine;
-	//	この時点で移動は確定
+	//	���̎��_�ňړ��͊m��
 
 	gstLClicken.x = gdDocXdot;
 	gstLClicken.y = gdDocLine;
 
-	//	Upのほうに移動してみる	20120328
-//	if( !(gbExtract) )	ViewBrushFilling(  );	//	ブラシする
-	//	抽出モード中は処理しない
+	//	Up�̂ق��Ɉړ����Ă݂�	20120328
+//	if( !(gbExtract) )	ViewBrushFilling(  );	//	�u���V����
+	//	���o���[�h���͏������Ȃ�
 
 	gdXmemory = gdDocXdot;
-	ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	位置移動
+	ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	�ʒu�ړ�
 
 
 	dRslt = DocLetterSelStateGet( gdDocXdot, gdDocLine );
 	//	TRACE(	TEXT("Sel %d[%u]"), dRslt, gdDocXdot );
-	if( dRslt ){	gbDragMoved = TRUE;	}	//	選択範囲のドラッグ移動の可能性
-	else{	ViewSelMoveCheck( FALSE );	}	//	選択状態で、クルッコだけすると、選択解除
-	//クルックした箇所が選択状態であれば解除しない・非選択エリアならここで解除する
+	if( dRslt ){	gbDragMoved = TRUE;	}	//	�I��͈͂̃h���b�O�ړ��̉\��
+	else{	ViewSelMoveCheck( FALSE );	}	//	�I����ԂŁA�N���b�R��������ƁA�I������
+	//�N���b�N�����ӏ����I����Ԃł���Ή������Ȃ��E��I���G���A�Ȃ炱���ŉ�������
 
-	ViewSelPositionSet( NULL );	//	移動した位置を記録と再描画
+	ViewSelPositionSet( NULL );	//	�ړ������ʒu���L�^�ƍĕ`��
 
 	return;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ビューでマウスを動かしたとき
-	@param[in]	hWnd		ウインドウハンドル・多分ビューのやつ
-	@param[in]	x			発生したクライヤントＸ座標値
-	@param[in]	y			発生したクライヤントＹ座標値
-	@param[in]	keyFlags	他に押されてるキーについて
+	�r���[�Ń}�E�X�𓮂������Ƃ�
+	@param[in]	hWnd		�E�C���h�E�n���h���E�����r���[�̂��
+	@param[in]	x			���������N���C�����g�w���W�l
+	@param[in]	y			���������N���C�����g�x���W�l
+	@param[in]	keyFlags	���ɉ�����Ă�L�[�ɂ���
 */
 VOID Evw_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
 {
@@ -469,16 +469,16 @@ VOID Evw_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
 	INT		dX, dY;
 	INT		dDot, dMaxDot, dLine, iMaxLine;	//	
 
-	//	ダブルクルック操作後は何もしない
+	//	�_�u���N���b�N�����͉������Ȃ�
 	if( gbLDoubleClick ){	 return;	}
 
 	dX = x;
 	dY = y;
-	ViewPositionTransform( &dX, &dY, 0 );	//	ここで、ドキュメント位置に変更
+	ViewPositionTransform( &dX, &dY, 0 );	//	�����ŁA�h�L�������g�ʒu�ɕύX
 
-	ViewCombiKeyCheck(  );	//	範囲選択しようとしてるか
+	ViewCombiKeyCheck(  );	//	�͈͑I�����悤�Ƃ��Ă邩
 
-	//	マイナスのときはルーラーか行番号エリア
+	//	�}�C�i�X�̂Ƃ��̓��[���[���s�ԍ��G���A
 	if( 0 > dY )	dY = 0;
 
 	dLine = dY / LINE_HEIGHT;
@@ -486,11 +486,11 @@ VOID Evw_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
 	if( 0 > dX )
 	{
 		dX = 0;
-		if( (keyFlags & MK_LBUTTON) )	//	ドラッグ中であるなら
+		if( (keyFlags & MK_LBUTTON) )	//	�h���b�O���ł���Ȃ�
 		{
-			//	その行のドット数を確認して、常に末端にカーソルがあると仮定する
+			//	���̍s�̃h�b�g�����m�F���āA��ɖ��[�ɃJ�[�\��������Ɖ��肷��
 			dX = DocLineParamGet( dLine, NULL, NULL );
-			//	バック選択中なら、逆に先頭にカーソルが来るようにする
+			//	�o�b�N�I�𒆂Ȃ�A�t�ɐ擪�ɃJ�[�\��������悤�ɂ���
 			if( ViewSelBackCheck( dLine ) ){	dX =  0;	}
 		}
 	}
@@ -498,29 +498,29 @@ VOID Evw_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
 	dDot  = dX;
 
 	gstCursor.x = dDot;
-	gstCursor.y = dLine;	//	Cursor位置記憶
+	gstCursor.y = dLine;	//	Cursor�ʒu�L��
 
 	if( (keyFlags & MK_LBUTTON) )
 	{
-		//	行数確認して、はみ出してたら末端にしておく
+		//	�s���m�F���āA�͂ݏo���Ă��疖�[�ɂ��Ă���
 		iMaxLine = DocNowFilePageLineCount(  );//DocPageParamGet( NULL, NULL );
 		if( iMaxLine <= dLine ){	dLine = iMaxLine - 1;	}
 
-		//	その行のドット数を確認して、はみ出してたら末端にしておく
+		//	���̍s�̃h�b�g�����m�F���āA�͂ݏo���Ă��疖�[�ɂ��Ă���
 		dMaxDot = DocLineParamGet( dLine, NULL, NULL );
 		if( dMaxDot <=dDot )	dDot = dMaxDot;
 
-		//	文字位置に合わせて調整
-		gdDocMozi = DocLetterPosGetAdjust( &dDot, dLine, 0 );	//	今の文字位置を確認
+		//	�����ʒu�ɍ��킹�Ē���
+		gdDocMozi = DocLetterPosGetAdjust( &dDot, dLine, 0 );	//	���̕����ʒu���m�F
 		gdDocXdot = dDot;
 		gdDocLine = dLine;
 
-		ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	位置移動
+		ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	�ʒu�ړ�
 
-		//	ドラッグ移動は選択モード突入・移動に考慮
+		//	�h���b�O�ړ��͑I�����[�h�˓��E�ړ��ɍl��
 		if( !(gbDragMoved) ){	ViewSelMoveCheck( TRUE );	}
 
-		ViewSelPositionSet( NULL );	//	移動した位置を記録
+		ViewSelPositionSet( NULL );	//	�ړ������ʒu���L�^
 	}
 
 	StringCchPrintf( atString, SUB_STRING, TEXT("MOUSE %d[dot] %d[line]"), gstCursor.x, gstCursor.y );
@@ -532,11 +532,11 @@ VOID Evw_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ビューでマウスの左ボタンがうっｐされたとき
-	@param[in]	hWnd			ウインドウハンドル・ビューのとは限らないので注意セヨ
-	@param[in]	x				発生したＸ座標値
-	@param[in]	y				発生したＹ座標値
-	@param[in]	keyFlags		他に押されてるキーについて
+	�r���[�Ń}�E�X�̍��{�^�������������ꂽ�Ƃ�
+	@param[in]	hWnd			�E�C���h�E�n���h���E�r���[�̂Ƃ͌���Ȃ��̂Œ��ӃZ��
+	@param[in]	x				���������w���W�l
+	@param[in]	y				���������x���W�l
+	@param[in]	keyFlags		���ɉ�����Ă�L�[�ɂ���
 */
 VOID Evw_OnLButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
 {
@@ -548,47 +548,47 @@ VOID Evw_OnLButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
 
 	INT		xPos, yPos;
 
-	TRACE( TEXT("マウス左アップ[%d / %d]"), x, y );
+	TRACE( TEXT("�}�E�X���A�b�v[%d / %d]"), x, y );
 
-	//	ダブルクルック操作後はすることはない
+	//	�_�u���N���b�N�����͂��邱�Ƃ͂Ȃ�
 	if( gbLDoubleClick ){	gbLDoubleClick =  FALSE;	 return;	}
 
-	ViewSelRangeCheck( FALSE  );	//	とりあえず選択範囲の様子確認
+	ViewSelRangeCheck( FALSE  );	//	�Ƃ肠�����I��͈̗͂l�q�m�F
 
-	ReleaseCapture(   );	//	マウスキャプチャ解除
+	ReleaseCapture(   );	//	�}�E�X�L���v�`������
 
-	//	Downのほうから	20120328
-	if( !(gbExtract) )	//	抽出モード中は処理しない
+	//	Down�̂ق�����	20120328
+	if( !(gbExtract) )	//	���o���[�h���͏������Ȃ�
 	{
-		ViewBrushFilling(  );	//	ブラシする
+		ViewBrushFilling(  );	//	�u���V����
 
-		//	最終的にここで解除
+		//	�ŏI�I�ɂ����ŉ���
 		if( (gstLClicken.x == gdDocXdot) && (gstLClicken.y == gdDocLine) )
 		{
 			ViewSelMoveCheck( FALSE );
 			gbDragMoved = FALSE;
 		}
 
-		if( gbDragMoved )	//	ドラッグ移動完了・ここに移動させる
+		if( gbDragMoved )	//	�h���b�O�ړ������E�����Ɉړ�������
 		{
-			//	キャレットが選択範囲中なら何もしない
+			//	�L�����b�g���I��͈͒��Ȃ牽�����Ȃ�
 			dRslt = DocLetterSelStateGet( gdDocXdot, gdDocLine );
 			if( !(dRslt)  )
 			{
-				IsSelecting( &bSqSel );	//	矩形であるか
-				//選択範囲をコピペしてから。内部処理なのでユニコードでよろし
+				IsSelecting( &bSqSel );	//	��`�ł��邩
+				//�I��͈͂��R�s�y���Ă���B���������Ȃ̂Ń��j�R�[�h�ł�낵
 				cbSize = DocSelectTextGetAlloc( D_UNI | bSqSel, (LPVOID *)(&ptString), NULL );
 				iCrLf = DocInsertString( &gdDocXdot, &gdDocLine, NULL, ptString, bSqSel, TRUE );
 				xPos = gdDocXdot;	yPos = gdDocLine;
 				FREE( ptString );
-				//	選択範囲を削除
-				DocSelRangeReset( NULL , NULL );	//	選択範囲がずれてまうのでリセット
+				//	�I��͈͂��폜
+				DocSelRangeReset( NULL , NULL );	//	�I��͈͂�����Ă܂��̂Ń��Z�b�g
 				iCrLf = DocSelectedDelete( &gdDocXdot, &gdDocLine, bSqSel, FALSE );
 
-				//REDRAW指示
-				ViewRedrawSetLine( -1 );	//	範囲不明なので全画面書換
+				//REDRAW�w��
+				ViewRedrawSetLine( -1 );	//	�͈͕s���Ȃ̂őS��ʏ���
 
-				ViewPosResetCaret( xPos, yPos );	//	キャレット移動
+				ViewPosResetCaret( xPos, yPos );	//	�L�����b�g�ړ�
 			}
 			gbDragMoved = FALSE;
 		}
@@ -600,63 +600,63 @@ VOID Evw_OnLButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ビューでマウスの右ボタンがダウンされたとき・コンテキストメニューの前
-	@param[in]	hWnd			ウインドウハンドル・ビューのとは限らないので注意セヨ
-	@param[in]	fDoubleClick	非０ダブルクルックされた場合
-	@param[in]	x				発生したＸ座標値
-	@param[in]	y				発生したＹ座標値
-	@param[in]	keyFlags		他に押されてるキーについて
+	�r���[�Ń}�E�X�̉E�{�^�����_�E�����ꂽ�Ƃ��E�R���e�L�X�g���j���[�̑O
+	@param[in]	hWnd			�E�C���h�E�n���h���E�r���[�̂Ƃ͌���Ȃ��̂Œ��ӃZ��
+	@param[in]	fDoubleClick	��O�_�u���N���b�N���ꂽ�ꍇ
+	@param[in]	x				���������w���W�l
+	@param[in]	y				���������x���W�l
+	@param[in]	keyFlags		���ɉ�����Ă�L�[�ɂ���
 */
 VOID Evw_OnRButtonDown( HWND hWnd, BOOL fDoubleClick, INT x, INT y, UINT keyFlags )
 {
-	//	キャレット移動のみ面倒見る
-	//	20110704	選択中はキャレット移動しないようにする
+	//	�L�����b�g�ړ��̂ݖʓ|����
+	//	20110704	�I�𒆂̓L�����b�g�ړ����Ȃ��悤�ɂ���
 
 	INT		dX, dY;	//	
 	INT		dDot, dMaxDot, dLine, iMaxLine;	//	
 
-	SetFocus( hWnd );	//	マウスインでフォーカス
+	SetFocus( hWnd );	//	�}�E�X�C���Ńt�H�[�J�X
 
-	if( IsSelecting( NULL ) )	//	選択作業中であるならなにもしない
+	if( IsSelecting( NULL ) )	//	�I����ƒ��ł���Ȃ�Ȃɂ����Ȃ�
 	{
-		TRACE( TEXT("[%X]マウス右ダウン　%d:%d　選択中"), hWnd, x, y );
+		TRACE( TEXT("[%X]�}�E�X�E�_�E���@%d:%d�@�I��"), hWnd, x, y );
 		return;
 	}
 
 	dX = x;
 	dY = y;
-	ViewPositionTransform( &dX, &dY, 0 );	//	ここで、ドキュメント位置に変更
+	ViewPositionTransform( &dX, &dY, 0 );	//	�����ŁA�h�L�������g�ʒu�ɕύX
 
 	dDot  = dX;
 	dLine = dY / LINE_HEIGHT;
 
-	TRACE( TEXT("[%X]マウス右ダウン[%d:%d[%d] / %d:%d:%d]"), hWnd, dX, dY, dLine, gbShiftOn, gbCtrlOn, gbAltOn );
+	TRACE( TEXT("[%X]�}�E�X�E�_�E��[%d:%d[%d] / %d:%d:%d]"), hWnd, dX, dY, dLine, gbShiftOn, gbCtrlOn, gbAltOn );
 
 
-	if( 0 <= dX || 0 <= dY )	//	マイナスのときはルーラーか行番号エリア
+	if( 0 <= dX || 0 <= dY )	//	�}�C�i�X�̂Ƃ��̓��[���[���s�ԍ��G���A
 	{
-		//	函数にしておくか
+		//	�����ɂ��Ă�����
 
-		//	有効な位置かどうか確認
+		//	�L���Ȉʒu���ǂ����m�F
 
-		//	行数確認して、はみ出してたら末端にしておく
+		//	�s���m�F���āA�͂ݏo���Ă��疖�[�ɂ��Ă���
 		iMaxLine = DocNowFilePageLineCount(  );//DocPageParamGet( NULL, NULL );
 		if( iMaxLine <=dLine )	dLine = iMaxLine - 1;
 
-		//	その行のドット数を確認して、はみ出してたら末端にしておく
+		//	���̍s�̃h�b�g�����m�F���āA�͂ݏo���Ă��疖�[�ɂ��Ă���
 		dMaxDot = DocLineParamGet( dLine, NULL, NULL );
 		if( dMaxDot <=dDot )	dDot = dMaxDot;
 
-		//	文字位置に合わせて調整
-		gdDocMozi = DocLetterPosGetAdjust( &dDot, dLine, 0 );	//	今の文字位置を確認
+		//	�����ʒu�ɍ��킹�Ē���
+		gdDocMozi = DocLetterPosGetAdjust( &dDot, dLine, 0 );	//	���̕����ʒu���m�F
 		gdDocXdot = dDot;
 		gdDocLine = dLine;
 
-		ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	位置移動
+		ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	�ʒu�ړ�
 
 		ViewSelMoveCheck( FALSE );
 
-		ViewSelPositionSet( NULL );	//	移動した位置を記録
+		ViewSelPositionSet( NULL );	//	�ړ������ʒu���L�^
 
 	}
 
@@ -665,12 +665,12 @@ VOID Evw_OnRButtonDown( HWND hWnd, BOOL fDoubleClick, INT x, INT y, UINT keyFlag
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ホイール大回転
-	@param[in]	hWnd	ウインドウハンドル
-	@param[in]	xPos	スクリーンＸ座標
-	@param[in]	yPos	スクリーンＹ座標
-	@param[in]	zDelta	回転量・１２０単位・WHEEL_DELTA
-	@param[in]	fwKeys	他に押されていたキー
+	�z�C�[�����]
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@param[in]	xPos	�X�N���[���w���W
+	@param[in]	yPos	�X�N���[���x���W
+	@param[in]	zDelta	��]�ʁE�P�Q�O�P�ʁEWHEEL_DELTA
+	@param[in]	fwKeys	���ɉ�����Ă����L�[
 */
 VOID Evw_OnMouseWheel( HWND hWnd, INT xPos, INT yPos, INT zDelta, UINT fwKeys )
 {
@@ -694,7 +694,7 @@ VOID Evw_OnMouseWheel( HWND hWnd, INT xPos, INT yPos, INT zDelta, UINT fwKeys )
 	else if( 0 > zDelta )	dCode = SB_LINEDOWN;
 	else					dCode = SB_ENDSCROLL;
 
-	//	posを、ホイールフラグにすればいい
+	//	pos���A�z�C�[���t���O�ɂ���΂���
 	FORWARD_WM_VSCROLL( ghViewWnd, NULL, dCode, 1, PostMessage );
 
 	return;
@@ -702,16 +702,16 @@ VOID Evw_OnMouseWheel( HWND hWnd, INT xPos, INT yPos, INT zDelta, UINT fwKeys )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ユニコード空白の挿入
-	@param[in]	dCommando	種類
-	@return	INT	文字幅
+	���j�R�[�h�󔒂̑}��
+	@param[in]	dCommando	���
+	@return	INT	������
 */
 INT ViewInsertUniSpace( UINT dCommando )
 {
 	INT	width;
 	TCHAR	ch;
 
-	TRACE( TEXT("挿入：ユニコード空白") );
+	TRACE( TEXT("�}���F���j�R�[�h��") );
 
 	switch( dCommando )
 	{
@@ -726,11 +726,11 @@ INT ViewInsertUniSpace( UINT dCommando )
 		default:	return 0;
 	}
 
-	width = DocInsertLetter( &gdDocXdot, gdDocLine, ch );	//	行に追加
-	//	中でアンドゥバッファリング
+	width = DocInsertLetter( &gdDocXdot, gdDocLine, ch );	//	�s�ɒǉ�
+	//	���ŃA���h�D�o�b�t�@�����O
 	gdDocMozi = DocLetterPosGetAdjust( &gdDocXdot, gdDocLine, 0 );
-	ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	位置移動
-	ViewRedrawSetLine( gdDocLine  );	//	ビューの書き直しが必要
+	ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	�ʒu�ړ�
+	ViewRedrawSetLine( gdDocLine  );	//	�r���[�̏����������K�v
 
 	DocPageInfoRenew( -1, 1 );
 
@@ -739,15 +739,15 @@ INT ViewInsertUniSpace( UINT dCommando )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	台詞用改行の処理する
+	�䎌�p���s�̏�������
 */
 HRESULT ViewScriptedLineFeed( VOID )
 {
-//押した行の、最後の空白＝文字列の先頭部分を探し、
-//次の行をそこまで空白パディングして、カーソル移動・行を増やすのとは違う処理
-//めり込んでたらカーソル移動だけ・次の行が無かったら、増やしてパディングする
+//�������s�́A�Ō�̋󔒁�������̐擪������T���A
+//���̍s�������܂ŋ󔒃p�f�B���O���āA�J�[�\���ړ��E�s�𑝂₷�̂Ƃ͈Ⴄ����
+//�߂荞��ł���J�[�\���ړ������E���̍s������������A���₵�ăp�f�B���O����
 
-//空白が出っ張ってる行でやったら、そこを基準点とする処理する
+//�󔒂��o�������Ă�s�ł������A��������_�Ƃ��鏈������
 
 	INT		dLines, iTgtDot, iLastDot, iLineDot, iPadDot;
 	INT		iPrvDot, iChkDot;
@@ -756,57 +756,57 @@ HRESULT ViewScriptedLineFeed( VOID )
 	LPTSTR	ptSpace;
 
 	iChkDot = gdDocXdot;
-	iTgtDot = 0;	//	安全確認
+	iTgtDot = 0;	//	���S�m�F
 
 	while( iChkDot )
 	{
-		//	文字列の開始地点を探す。iTgtDotがその位置のはず
+		//	������̊J�n�n�_��T���BiTgtDot�����̈ʒu�̂͂�
 		DocLineStateCheckWithDot( iChkDot, gdDocLine, &iTgtDot, &iLastDot, NULL, NULL, &bIsSp );
 
-		//	チェック部分が空白ではなく、先頭までイッてしまったら
-		if(  0 == iTgtDot && !(bIsSp) ){	break;	}	//	すなわち先頭部分まで移動
+		//	�`�F�b�N�������󔒂ł͂Ȃ��A�擪�܂ŃC�b�Ă��܂�����
+		if(  0 == iTgtDot && !(bIsSp) ){	break;	}	//	���Ȃ킿�擪�����܂ňړ�
 
-		//	該当箇所が最初からスペースだったら、キャレット位置を基準点にする・壱行空け用
+		//	�Y���ӏ����ŏ�����X�y�[�X��������A�L�����b�g�ʒu����_�ɂ���E��s�󂯗p
 		if( bIsSp ){	iTgtDot = iChkDot;	break;	}
 
-		DocLetterShiftPos( iTgtDot, gdDocLine, -1, &iPrvDot, &bJump );	//	壱文字戻る
-		//	戻ったところも空白かどうかチェック
+		DocLetterShiftPos( iTgtDot, gdDocLine, -1, &iPrvDot, &bJump );	//	�땶���߂�
+		//	�߂����Ƃ�����󔒂��ǂ����`�F�b�N
 		DocLineStateCheckWithDot( iPrvDot, gdDocLine, &iChkDot, &iLastDot, NULL, NULL, &bIsSp );
-		if( bIsSp ){	break;	}	//	引き続き空白なら、そこまでとする。
+		if( bIsSp ){	break;	}	//	���������󔒂Ȃ�A�����܂łƂ���B
 
-		iChkDot = iPrvDot;	//	一つ戻った所からチェック続行
+		iChkDot = iPrvDot;	//	��߂���������`�F�b�N���s
 	}
 
 	TRACE( TEXT("TEXT START D[%d] L[%d]"), iTgtDot, gdDocLine );
 
-	dLines = DocNowFilePageLineCount(  );//DocPageParamGet( NULL , NULL );	//	行数確保
-	if( (dLines - 1) <= gdDocLine )	//	最終行だったら
+	dLines = DocNowFilePageLineCount(  );//DocPageParamGet( NULL , NULL );	//	�s���m��
+	if( (dLines - 1) <= gdDocLine )	//	�ŏI�s��������
 	{
 		DocAdditionalLine( 1, &bFirst );//	bFirst = FALSE;
 		ViewRedrawSetLine( gdDocLine );
-	}//末端に壱行追加
+	}//���[�Ɉ�s�ǉ�
 
-	gdDocLine++;	//	次の行に移動
+	gdDocLine++;	//	���̍s�Ɉړ�
 
-	iLineDot = DocLineParamGet( gdDocLine, NULL, NULL );	//	次の行のドット数確認
-	if( iTgtDot <= iLineDot )	//	ターゲットドット位置より長かったら
+	iLineDot = DocLineParamGet( gdDocLine, NULL, NULL );	//	���̍s�̃h�b�g���m�F
+	if( iTgtDot <= iLineDot )	//	�^�[�Q�b�g�h�b�g�ʒu��蒷��������
 	{
-		gdDocXdot = iTgtDot;	//	とりやえず合わせる
-		DocLetterPosGetAdjust( &gdDocXdot, gdDocLine, 0 );	//	Caret位置調整
-		ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	位置移動
+		gdDocXdot = iTgtDot;	//	�Ƃ�₦�����킹��
+		DocLetterPosGetAdjust( &gdDocXdot, gdDocLine, 0 );	//	Caret�ʒu����
+		ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	�ʒu�ړ�
 	}
 	else
 	{
-		iPadDot = iTgtDot - iLineDot;	//	埋めるのに必要なドット数
-		ptSpace = DocPaddingSpaceMake( iPadDot );	//	埋め空白作る
-		gdDocXdot = iLineDot;	//	末端に合わせる
-		//	空白文字列追加
+		iPadDot = iTgtDot - iLineDot;	//	���߂�̂ɕK�v�ȃh�b�g��
+		ptSpace = DocPaddingSpaceMake( iPadDot );	//	���ߋ󔒍��
+		gdDocXdot = iLineDot;	//	���[�ɍ��킹��
+		//	�󔒕�����ǉ�
 		DocInsertString( &gdDocXdot, &gdDocLine, NULL, ptSpace, dStyle, bFirst );	bFirst = FALSE;
-		//	キャレット位置変更は↑でやってる
+		//	�L�����b�g�ʒu�ύX�́��ł���Ă�
 		FREE(ptSpace);
 	}
 
-	ViewRedrawSetLine( gdDocLine  );	//	今操作した行を書き直し
+	ViewRedrawSetLine( gdDocLine  );	//	�����삵���s����������
 
 
 	return S_OK;
@@ -814,9 +814,9 @@ HRESULT ViewScriptedLineFeed( VOID )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	したらば用色指定タグの挿入
-	@param[in]	dCommando	種類
-	@return	INT	文字幅
+	������Ηp�F�w��^�O�̑}��
+	@param[in]	dCommando	���
+	@return	INT	������
 */
 INT ViewInsertColourTag( UINT dCommando )
 {
@@ -847,9 +847,9 @@ INT ViewInsertColourTag( UINT dCommando )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	テンプレからの文字列を挿入
-	@param[in]	ptText	挿入する文字列
-	@return		使ったドット数
+	�e���v������̕������}��
+	@param[in]	ptText	�}�����镶����
+	@return		�g�����h�b�g��
 */
 INT ViewInsertTmpleString( LPCTSTR ptText )
 {
@@ -869,16 +869,16 @@ INT ViewInsertTmpleString( LPCTSTR ptText )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ブラシモードの設定をうける
-	@param[in]	bBrushOn	ブラシモードか否か
-	@param[in]	ptPattern	使用するブラシパヤーン
-	@return		HRESULT	終了状態コード
+	�u���V���[�h�̐ݒ��������
+	@param[in]	bBrushOn	�u���V���[�h���ۂ�
+	@param[in]	ptPattern	�g�p����u���V�p���[��
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT ViewBrushStyleSetting( UINT bBrushOn, LPTSTR ptPattern )
 {
 	gbBrushMode = bBrushOn;
 
-	//	メニューのcheckTOGGLE
+	//	���j���[��checkTOGGLE
 	SendMessage( ghPrntWnd, WMP_BRUSH_TOGGLE, (WPARAM)bBrushOn, (LPARAM)IDM_BRUSH_STYLE );
 
 	if( ptPattern ){	StringCchCopy( gatBrushPtn, SUB_STRING, ptPattern );	}
@@ -890,8 +890,8 @@ HRESULT ViewBrushStyleSetting( UINT bBrushOn, LPTSTR ptPattern )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ブラシモードなら、ブラシ的処理をする
-	@return		HRESULT	終了状態コード
+	�u���V���[�h�Ȃ�A�u���V�I����������
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT ViewBrushFilling( VOID )
 {
@@ -904,28 +904,28 @@ HRESULT ViewBrushFilling( VOID )
 
 	if( !(gbBrushMode) )	return S_FALSE;
 
-	//	選択範囲があるなら、そっちを優先して塗りつぶす
+	//	�I��͈͂�����Ȃ�A��������D�悵�ēh��Ԃ�
 	rslt = DocSelectedBrushFilling( gatBrushPtn, &gdDocXdot, &gdDocLine );
 	if( rslt )	return S_OK;
 
-	//	クルッコ位置が空白かどうか
+	//	�N���b�R�ʒu���󔒂��ǂ���
 	dTgDot = DocLineStateCheckWithDot( gdDocXdot, gdDocLine, &dLeft, &dRight, &iBgnMozi, &iCntMozi, &bSpace );
 	if( !(bSpace)  )	return S_FALSE;
 
-//塗り潰し文字列作成
+//�h��ׂ�������쐬
 	ptBuff = BrushStringMake( dTgDot, gatBrushPtn );
 	if( !(ptBuff) )
 	{
-		NotifyBalloonExist( TEXT("ブラシを選んでおいてね"), TEXT("操作ミス"), NIIF_INFO );
+		NotifyBalloonExist( TEXT("�u���V��I��ł����Ă�"), TEXT("����~�X"), NIIF_INFO );
 		return E_OUTOFMEMORY;
 	}
 
-	//	その範囲の空白を削除して
+	//	���͈̔͂̋󔒂��폜����
 	DocRangeDeleteByMozi( dLeft, gdDocLine, iBgnMozi, (iBgnMozi + iCntMozi), &bFirst );
-	//	ブラシ文字列をぶち込む
+	//	�u���V��������Ԃ�����
 	DocInsertString( &dLeft, &gdDocLine, NULL, ptBuff, 0, bFirst );	bFirst = FALSE;
 
-	//	再度調整・キャレット移動はこの後
+	//	�ēx�����E�L�����b�g�ړ��͂��̌�
 	gdDocMozi = DocLetterPosGetAdjust( &gdDocXdot, gdDocLine, 0 );
 
 	FREE(ptBuff);
@@ -935,10 +935,10 @@ HRESULT ViewBrushFilling( VOID )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	指定の幅とパターンで、ブラシる文字列を作る。余りは適当に埋める・ずれても気にしない
-	@param[in]	dDotLen		作成するドット幅
-	@param[in]	ptPattern	使用するブラシパヤーン
-	@return		LPTSTR	作成した文字列・開放は呼んだ方で面倒見る・作成出来なかったらNULL
+	�w��̕��ƃp�^�[���ŁA�u���V�镶��������B�]��͓K���ɖ��߂�E����Ă��C�ɂ��Ȃ�
+	@param[in]	dDotLen		�쐬����h�b�g��
+	@param[in]	ptPattern	�g�p����u���V�p���[��
+	@return		LPTSTR	�쐬����������E�J���͌Ă񂾕��Ŗʓ|����E�쐬�o���Ȃ�������NULL
 */
 LPTSTR BrushStringMake( INT dDotLen, LPTSTR ptPattern )
 {
@@ -950,45 +950,45 @@ LPTSTR BrushStringMake( INT dDotLen, LPTSTR ptPattern )
 	LPTSTR		ptBuff;//, ptPadd = NULL;
 	wstring		wsBuff;
 
-//塗り潰し文字列作成
+//�h��ׂ�������쐬
 	wsBuff.clear( );
 
-	//	ブラシの幅確認して
+	//	�u���V�̕��m�F����
 	dPtnDot = ViewStringWidthGet( ptPattern );
 	if( 0 >= dPtnDot ||  0 >= dDotLen ){	return NULL;	}
-	//	なんかいろいろおかしかったら終わる
+	//	�Ȃ񂩂��낢�남������������I���
 
-	dCnt = dDotLen / dPtnDot;	//	必要な数を確認
-	dAmr = dDotLen - (dCnt * dPtnDot);	//	余り
+	dCnt = dDotLen / dPtnDot;	//	�K�v�Ȑ����m�F
+	dAmr = dDotLen - (dCnt * dPtnDot);	//	�]��
 
-	//	規定の文字列作成
+	//	�K��̕�����쐬
 	for( i = 0; dCnt > i; i++ ){	wsBuff += ptPattern;	}
 
-	//	あまりを出来る限り埋める
+	//	���܂���o������薄�߂�
 	i = 0;
-	while( 0 < dAmr )	//	余り幅が無くなったら終わり
+	while( 0 < dAmr )	//	�]�蕝�������Ȃ�����I���
 	{
-		if(  0 == ptPattern[i] )	break;	//	それ以上パヤーンがなかったら
+		if(  0 == ptPattern[i] )	break;	//	����ȏ�p���[�����Ȃ�������
 
-		wid = ViewLetterWidthGet( ptPattern[i] );	//	順番に見ていく
+		wid = ViewLetterWidthGet( ptPattern[i] );	//	���ԂɌ��Ă���
 #if 0
-		if( gbUniPad )	//	ユニコード空白使うなら、はみ出す直前で終わっておく
+		if( gbUniPad )	//	���j�R�[�h�󔒎g���Ȃ�A�͂ݏo�����O�ŏI����Ă���
 		{
 			chk = dAmr - wid;
 			if( 0 > chk )	break;
 		}
 #endif
 		wsBuff += ptPattern[i];
-		dAmr -= wid;	//	壱文字毎の幅で埋めていく
+		dAmr -= wid;	//	�땶�����̕��Ŗ��߂Ă���
 		i++;
 	}
 
-	cchSize = wsBuff.size( ) + 8;	//	とりあえず余裕しておく
+	cchSize = wsBuff.size( ) + 8;	//	�Ƃ肠�����]�T���Ă���
 	ptBuff = (LPTSTR)malloc( cchSize * sizeof(TCHAR) );
 	ZeroMemory( ptBuff, cchSize * sizeof(TCHAR) );
 	StringCchCopy( ptBuff, cchSize, wsBuff.c_str( ) );
 #if 0
-	if( gbUniPad )	//	ユニコード空白で、余った数ドットを埋めておく
+	if( gbUniPad )	//	���j�R�[�h�󔒂ŁA�]�������h�b�g�𖄂߂Ă���
 	{
 		ptPadd = DocPaddingSpaceUni( dAmr, NULL, NULL, NULL );
 		if( ptPadd )
@@ -1004,10 +1004,10 @@ LPTSTR BrushStringMake( INT dDotLen, LPTSTR ptPattern )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	WM_IME_COMPOSITIONメッセージ
-	@param[in]	hWnd		ウインドウハンドル
-	@param[in]	wParam		追加の情報１
-	@param[in]	lParam		追加の情報２
+	WM_IME_COMPOSITION���b�Z�[�W
+	@param[in]	hWnd		�E�C���h�E�n���h��
+	@param[in]	wParam		�ǉ��̏��P
+	@param[in]	lParam		�ǉ��̏��Q
 */
 VOID Evw_OnImeComposition( HWND hWnd, WPARAM wParam, LPARAM lParam )
 {
@@ -1026,12 +1026,12 @@ VOID Evw_OnImeComposition( HWND hWnd, WPARAM wParam, LPARAM lParam )
 
 	if( (GCS_RESULTSTR & lParam) && bSelect && bSqSel )
 	{
-		hImc = ImmGetContext( ghViewWnd );	//	IMEハンドル確保
+		hImc = ImmGetContext( ghViewWnd );	//	IME�n���h���m��
 
 		cbSize = ImmGetCompositionString( hImc, GCS_RESULTSTR, NULL, 0 );
-		//	得られるのはバイト数・文字数じゃない
+		//	������̂̓o�C�g���E����������Ȃ�
 
-		//	確定した文字列を確保
+		//	�m�肵����������m��
 		cbSize += 2;
 		ptBuffer = (LPTSTR)malloc( cbSize );
 		ZeroMemory( ptBuffer, cbSize );
@@ -1039,9 +1039,9 @@ VOID Evw_OnImeComposition( HWND hWnd, WPARAM wParam, LPARAM lParam )
 		TRACE( TEXT("COMPOSITION MOZI[%d][%s]"), cbSize, ptBuffer );
 		ImmReleaseContext( ghViewWnd , hImc );
 
-		//	塗り潰し処理
+		//	�h��ׂ�����
 		DocSelectedBrushFilling( ptBuffer, &gdDocXdot ,&gdDocLine );
-		ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	キャレット位置を決める
+		ViewDrawCaret( gdDocXdot, gdDocLine, 1 );	//	�L�����b�g�ʒu�����߂�
 		DocPageInfoRenew( -1, 1 );
 
 		StringCchLength( ptBuffer, cbSize, &cchSize );
@@ -1050,18 +1050,18 @@ VOID Evw_OnImeComposition( HWND hWnd, WPARAM wParam, LPARAM lParam )
 		FREE(ptBuffer);
 	}
 /*
-GCS_COMPREADSTR			0x0001	現在の編集のリーディング文字列が取得された、または最新化された
-GCS_COMPREADATTR		0x0002	現在の編集のリーディング文字列が取得された、または最新化された
-GCS_COMPREADCLAUSE		0x0004	編集文字列のリーディング文字列の文節情報が取得された、または最新化された
-GCS_COMPSTR				0x0008	現在の編集文字列が取得された、または最新化された
-GCS_COMPATTR			0x0010	編集文字列のアトリビュートが取得された、または最新化された
-GCS_COMPCLAUSE			0x0020	編集文字列の文節情報が取得された、または最新化された
-GCS_CURSORPOS			0x0080	編集文字列のカーソル位置が取得した、または最新化された
-GCS_DELTASTART			0x0100	編集文字列の変化の開始位置が取得された、または最新化された
-GCS_RESULTREADSTR		0x0200	リーディング文字列を取得した、または最新化された
-GCS_RESULTREADCLAUSE	0x0400	リーディング文字列の文節情報が取得された、または最新化された
-GCS_RESULTSTR			0x0800	確定文字列が取得された、または最新化された
-GCS_RESULTCLAUSE		0x1000	確定文字列の文節情報が取得された、または最新化された
+GCS_COMPREADSTR			0x0001	���݂̕ҏW�̃��[�f�B���O�����񂪎擾���ꂽ�A�܂��͍ŐV�����ꂽ
+GCS_COMPREADATTR		0x0002	���݂̕ҏW�̃��[�f�B���O�����񂪎擾���ꂽ�A�܂��͍ŐV�����ꂽ
+GCS_COMPREADCLAUSE		0x0004	�ҏW������̃��[�f�B���O������̕��ߏ�񂪎擾���ꂽ�A�܂��͍ŐV�����ꂽ
+GCS_COMPSTR				0x0008	���݂̕ҏW�����񂪎擾���ꂽ�A�܂��͍ŐV�����ꂽ
+GCS_COMPATTR			0x0010	�ҏW������̃A�g���r���[�g���擾���ꂽ�A�܂��͍ŐV�����ꂽ
+GCS_COMPCLAUSE			0x0020	�ҏW������̕��ߏ�񂪎擾���ꂽ�A�܂��͍ŐV�����ꂽ
+GCS_CURSORPOS			0x0080	�ҏW������̃J�[�\���ʒu���擾�����A�܂��͍ŐV�����ꂽ
+GCS_DELTASTART			0x0100	�ҏW������̕ω��̊J�n�ʒu���擾���ꂽ�A�܂��͍ŐV�����ꂽ
+GCS_RESULTREADSTR		0x0200	���[�f�B���O��������擾�����A�܂��͍ŐV�����ꂽ
+GCS_RESULTREADCLAUSE	0x0400	���[�f�B���O������̕��ߏ�񂪎擾���ꂽ�A�܂��͍ŐV�����ꂽ
+GCS_RESULTSTR			0x0800	�m�蕶���񂪎擾���ꂽ�A�܂��͍ŐV�����ꂽ
+GCS_RESULTCLAUSE		0x1000	�m�蕶����̕��ߏ�񂪎擾���ꂽ�A�܂��͍ŐV�����ꂽ
 */
 	return;
 }

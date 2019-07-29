@@ -1,6 +1,6 @@
 /*! @file
-	@brief ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒšãƒ¼ã‚¸å˜ä½ã‚’ç®¡ç†ã—ã¾ã™
-	ã“ã®ãƒ•ã‚¡ã‚¤ãƒ«ã¯ PageCtrl.cpp ã§ã™ã€‚
+	@brief ƒtƒ@ƒCƒ‹‚Ìƒy[ƒW’PˆÊ‚ğŠÇ—‚µ‚Ü‚·
+	‚±‚Ìƒtƒ@ƒCƒ‹‚Í PageCtrl.cpp ‚Å‚·B
 	@author	SikigamiHNQ
 	@date	2011/05/20
 */
@@ -21,73 +21,73 @@ If not, see <http://www.gnu.org/licenses/>.
 #include "OrinrinEditor.h"
 //-------------------------------------------------------------------------------------------------
 
-//	TODO:	å„é ã®è©³ç´°ã‚’è¡¨ç¤ºå‡ºæ¥ã‚‹ã‚ˆã†ã«ã™ã‚‹
-//	TODO:	é¸æŠé ã®ã¿ä¿å­˜ã¨ã‹ã€ãªã‚“ã‹ãã‚“ãªæ©Ÿèƒ½ã»ã—ã„
+//	TODO:	Še•Å‚ÌÚ×‚ğ•\¦o—ˆ‚é‚æ‚¤‚É‚·‚é
+//	TODO:	‘I‘ğ•Å‚Ì‚İ•Û‘¶‚Æ‚©A‚È‚ñ‚©‚»‚ñ‚È‹@”\‚Ù‚µ‚¢
 
 #define PAGELIST_CLASS	TEXT("PAGE_LIST")
 #define PL_WIDTH	110
 #define PL_HEIGHT	300
 //-------------------------------------------------------------------------------------------------
 
-//	ãƒ›ã‚¤ãƒ›ã‚¤å…±æœ‰ã—ã¦ã„ã„ã®ã ã‚‰ã†ã‹
+//	ƒzƒCƒzƒC‹¤—L‚µ‚Ä‚¢‚¢‚Ì‚¾‚ç‚¤‚©
 
-extern FILES_ITR	gitFileIt;	//	ä»Šè¦‹ã¦ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã®æœ¬ä½“
+extern FILES_ITR	gitFileIt;	//	¡Œ©‚Ä‚éƒtƒ@ƒCƒ‹‚Ì–{‘Ì
 
-extern INT		gixFocusPage;	//	æ³¨ç›®ä¸­ã®ãƒšãƒ¼ã‚¸ãƒ»ã¨ã‚Šã‚ãˆãšï¼ãƒ»ï¼ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
-extern INT		gixDropPage;	//	æŠ•ä¸‹ãƒ›ãƒƒãƒˆç•ªå·
+extern INT		gixFocusPage;	//	’–Ú’†‚Ìƒy[ƒWE‚Æ‚è‚ ‚¦‚¸‚OE‚OƒCƒ“ƒfƒbƒNƒX
+extern INT		gixDropPage;	//	“Š‰ºƒzƒbƒg”Ô†
 //-------------------------------------------------------------------------------------------------
 
-static HINSTANCE	ghInst;		//!<	ã“ã®ã‚¢ãƒ—ãƒªã®å®Ÿå­˜å€¤
+static HINSTANCE	ghInst;		//!<	‚±‚ÌƒAƒvƒŠ‚ÌÀ‘¶’l
 
-static  ATOM	gPageAtom;		//!<	ã‚¯ãƒ©ã‚¹ã‚¢ãƒˆãƒ 
-static  HWND	ghPageWnd;		//!<	ã“ã®ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
+static  ATOM	gPageAtom;		//!<	ƒNƒ‰ƒXƒAƒgƒ€
+static  HWND	ghPageWnd;		//!<	‚±‚ÌƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
 
-static  HWND	ghToolWnd;		//!<	ãƒ„ãƒ¼ãƒ«ãƒãƒ¼
-static  HWND	ghPageListWnd;	//!<	ãƒšãƒ¼ã‚¸ãƒªã‚¹ãƒˆãƒ“ãƒ¥ãƒ¼ãƒãƒ³ãƒ‰ãƒ«
+static  HWND	ghToolWnd;		//!<	ƒc[ƒ‹ƒo[
+static  HWND	ghPageListWnd;	//!<	ƒy[ƒWƒŠƒXƒgƒrƒ…[ƒnƒ“ƒhƒ‹
 
 #ifdef PGL_TOOLTIP
-static  HWND	ghPageTipWnd;	//!<	ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—ãƒãƒ³ãƒ‰ãƒ«
-static HFONT	ghPgTipFont;	//!<	ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—ç”¨
+static  HWND	ghPageTipWnd;	//!<	ƒc[ƒ‹ƒ`ƒbƒvƒnƒ“ƒhƒ‹
+static HFONT	ghPgTipFont;	//!<	ƒc[ƒ‹ƒ`ƒbƒv—p
 static LPTSTR	gptPgTipBuf;	//!<	
 #endif
-static BOOLEAN	gbPgTipView;	//!<	é ãƒ„ãƒ¼ãƒ«ãƒ†ã‚£ãƒƒãƒ—è¡¨ç¤ºON/OFF
+static BOOLEAN	gbPgTipView;	//!<	•Åƒc[ƒ‹ƒeƒBƒbƒv•\¦ON/OFF
 
-static INT		gixPreviSel;	//!<	ç›´å‰ã¾ã§é¸æŠã—ã¦ãŸé 
+static INT		gixPreviSel;	//!<	’¼‘O‚Ü‚Å‘I‘ğ‚µ‚Ä‚½•Å
 
-static INT		gixMouseSel;	//!<	ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ä¸‹ã®ã‚¢ãƒ¬
+static INT		gixMouseSel;	//!<	ƒ}ƒEƒXƒJ[ƒ\ƒ‹‰º‚ÌƒAƒŒ
 #ifdef PGL_TOOLTIP
-static INT	gixPreSel;		//!<	ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ä¸‹ã®ã‚¢ãƒ¬
+static INT	gixPreSel;		//!<	ƒ}ƒEƒXƒJ[ƒ\ƒ‹‰º‚ÌƒAƒŒ
 #endif
 
-static BOOLEAN	gbPgRetFocus;	//!<	é ã‚’é¸æŠã—ãŸã‚‰ç·¨é›†çª“ã«ãƒ•ã‚©ãƒ¼ã‚«ã‚¹æˆ»ã™ã‹
+static BOOLEAN	gbPgRetFocus;	//!<	•Å‚ğ‘I‘ğ‚µ‚½‚ç•ÒW‘‹‚ÉƒtƒH[ƒJƒX–ß‚·‚©
 
-static WNDPROC	gpfOrigPageViewProc;	//!<	é ä¸€è¦§ãƒ“ãƒ¥ãƒ¼ã®å…ƒãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
-static WNDPROC	gpfOrigPageToolProc;	//!<	ãƒ„ãƒ¼ãƒ«ãƒãƒ¼ã®å…ƒãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
+static WNDPROC	gpfOrigPageViewProc;	//!<	•Åˆê——ƒrƒ…[‚ÌŒ³ƒvƒƒV[ƒWƒƒ
+static WNDPROC	gpfOrigPageToolProc;	//!<	ƒc[ƒ‹ƒo[‚ÌŒ³ƒvƒƒV[ƒWƒƒ
 
 static HIMAGELIST	ghPgLstImgLst;	//!<	
 
-extern INT	gbTmpltDock;		//	é ãƒ»å£±è¡Œãƒ†ãƒ³ãƒ—ãƒ¬ã®ãƒ‰ãƒƒã‚­ãƒ³ã‚°
-extern BOOLEAN	gbDockTmplView;	//	ãã£ã¤ã„ã¦ã‚‹ãƒ†ãƒ³ãƒ—ãƒ¬ã¯è¦‹ãˆã¦ã„ã‚‹ã‹
+extern INT	gbTmpltDock;		//	•ÅEˆësƒeƒ“ƒvƒŒ‚ÌƒhƒbƒLƒ“ƒO
+extern BOOLEAN	gbDockTmplView;	//	‚­‚Á‚Â‚¢‚Ä‚éƒeƒ“ƒvƒŒ‚ÍŒ©‚¦‚Ä‚¢‚é‚©
 
-extern  UINT	gdPageByteMax;	//	å£±ãƒ¬ã‚¹ã®æœ€å¤§ãƒã‚¤ãƒˆæ•°
+extern  UINT	gdPageByteMax;	//	ˆëƒŒƒX‚ÌÅ‘åƒoƒCƒg”
 
-//extern  HWND	ghMainSplitWnd;	//	ãƒ¡ã‚¤ãƒ³ã®ã‚¹ãƒ—ãƒªãƒƒãƒˆãƒãƒ¼ãƒãƒ³ãƒ‰ãƒ«
-extern  LONG	grdSplitPos;	//	ã‚¹ãƒ—ãƒªãƒƒãƒˆãƒãƒ¼ã®ã€å·¦å´ã®ã€ç”»é¢å³ã‹ã‚‰ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ
+//extern  HWND	ghMainSplitWnd;	//	ƒƒCƒ“‚ÌƒXƒvƒŠƒbƒgƒo[ƒnƒ“ƒhƒ‹
+extern  LONG	grdSplitPos;	//	ƒXƒvƒŠƒbƒgƒo[‚ÌA¶‘¤‚ÌA‰æ–Ê‰E‚©‚ç‚ÌƒIƒtƒZƒbƒg
 //-------------------------------------------------------------------------------------------------
 
-//	ãƒ„ãƒ¼ãƒ«ãƒãƒ¼ãƒ»æ–°è¦ä½œæˆã¨ã‹
+//	ƒc[ƒ‹ƒo[EV‹Kì¬‚Æ‚©
 #define PGTB_ITEMS	9
 static TBBUTTON gstPgTlBarInfo[] = {
-/*æ–°è¦*/{  0,	IDM_PAGEL_ADD,		TBSTATE_ENABLED | TBSTATE_WRAP,	BTNS_BUTTON | BTNS_AUTOSIZE,	{0, 0}, 0, 0  },	//	
-/*æŒ¿å…¥*/{  1,	IDM_PAGEL_INSERT,	TBSTATE_ENABLED | TBSTATE_WRAP,	BTNS_BUTTON | BTNS_AUTOSIZE,	{0, 0}, 0, 0  },	//	
-/*è¤‡è£½*/{  2,	IDM_PAGEL_DUPLICATE,TBSTATE_ENABLED | TBSTATE_WRAP,	BTNS_BUTTON | BTNS_AUTOSIZE,	{0, 0}, 0, 0  },	//	
-/*å‰Šé™¤*/{  3,	IDM_PAGEL_DELETE,	TBSTATE_ENABLED | TBSTATE_WRAP,	BTNS_BUTTON | BTNS_AUTOSIZE,	{0, 0}, 0, 0  },	//	
-/*çµ±åˆ*/{  4,	IDM_PAGEL_COMBINE,	TBSTATE_ENABLED | TBSTATE_WRAP,	BTNS_BUTTON | BTNS_AUTOSIZE,	{0, 0}, 0, 0  },	//	
-/*ä¸Šç§»*/{  5,	IDM_PAGEL_UPFLOW,	TBSTATE_ENABLED | TBSTATE_WRAP,	BTNS_BUTTON | BTNS_AUTOSIZE,	{0, 0}, 0, 0  },	//	
-/*ä¸‹ç§»*/{  6,	IDM_PAGEL_DOWNSINK,	TBSTATE_ENABLED | TBSTATE_WRAP,	BTNS_BUTTON | BTNS_AUTOSIZE,	{0, 0}, 0, 0  },	//	
-/*åç§°*/{  7,	IDM_PAGEL_RENAME,	TBSTATE_ENABLED | TBSTATE_WRAP,	BTNS_BUTTON | BTNS_AUTOSIZE,	{0, 0}, 0, 0  },	//	
-/*æ›´æ–°*/{  8,	IDM_PAGEL_DETAIL,	TBSTATE_WRAP,					BTNS_BUTTON | BTNS_AUTOSIZE,	{0, 0}, 0, 0  } 	//	
-};	//	å†…å®¹å¤‰æ›´ã—ãŸã‚‰ã€ãƒ„ãƒ¼ãƒ«ãƒãƒ¼æ–‡å­—åˆ—ã®è¨­å®šã¨ã‹ã‚‚å¤‰æ›´ã‚»ãƒ¨
+/*V‹K*/{  0,	IDM_PAGEL_ADD,		TBSTATE_ENABLED | TBSTATE_WRAP,	BTNS_BUTTON | BTNS_AUTOSIZE,	{0, 0}, 0, 0  },	//	
+/*‘}“ü*/{  1,	IDM_PAGEL_INSERT,	TBSTATE_ENABLED | TBSTATE_WRAP,	BTNS_BUTTON | BTNS_AUTOSIZE,	{0, 0}, 0, 0  },	//	
+/*•¡»*/{  2,	IDM_PAGEL_DUPLICATE,TBSTATE_ENABLED | TBSTATE_WRAP,	BTNS_BUTTON | BTNS_AUTOSIZE,	{0, 0}, 0, 0  },	//	
+/*íœ*/{  3,	IDM_PAGEL_DELETE,	TBSTATE_ENABLED | TBSTATE_WRAP,	BTNS_BUTTON | BTNS_AUTOSIZE,	{0, 0}, 0, 0  },	//	
+/*“‡*/{  4,	IDM_PAGEL_COMBINE,	TBSTATE_ENABLED | TBSTATE_WRAP,	BTNS_BUTTON | BTNS_AUTOSIZE,	{0, 0}, 0, 0  },	//	
+/*ãˆÚ*/{  5,	IDM_PAGEL_UPFLOW,	TBSTATE_ENABLED | TBSTATE_WRAP,	BTNS_BUTTON | BTNS_AUTOSIZE,	{0, 0}, 0, 0  },	//	
+/*‰ºˆÚ*/{  6,	IDM_PAGEL_DOWNSINK,	TBSTATE_ENABLED | TBSTATE_WRAP,	BTNS_BUTTON | BTNS_AUTOSIZE,	{0, 0}, 0, 0  },	//	
+/*–¼Ì*/{  7,	IDM_PAGEL_RENAME,	TBSTATE_ENABLED | TBSTATE_WRAP,	BTNS_BUTTON | BTNS_AUTOSIZE,	{0, 0}, 0, 0  },	//	
+/*XV*/{  8,	IDM_PAGEL_DETAIL,	TBSTATE_WRAP,					BTNS_BUTTON | BTNS_AUTOSIZE,	{0, 0}, 0, 0  } 	//	
+};	//	“à—e•ÏX‚µ‚½‚çAƒc[ƒ‹ƒo[•¶š—ñ‚Ìİ’è‚Æ‚©‚à•ÏXƒZƒˆ
 
 //-------------------------------------------------------------------------------------------------
 
@@ -123,11 +123,11 @@ LPTSTR	CALLBACK PageListHoverTipInfo( LPVOID );
 
 
 /*!
-	ãƒšãƒ¼ã‚¸ç”¨ã‚Šã™ã¨ã³ã‚…ï½ã®ä½œæˆ
-	@param[in]	hInstance	ã‚¢ãƒ—ãƒªã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
-	@param[in]	hParentWnd	è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	pstFrame	ãƒ¡ã‚¤ãƒ³ã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆé ˜åŸŸ
-	@return		ä½œã£ãŸãƒ“ãƒ¥ãƒ¼ã®ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
+	ƒy[ƒW—p‚è‚·‚Æ‚Ñ‚ã`‚Ìì¬
+	@param[in]	hInstance	ƒAƒvƒŠ‚ÌƒCƒ“ƒXƒ^ƒ“ƒX
+	@param[in]	hParentWnd	eƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
+	@param[in]	pstFrame	ƒƒCƒ“ƒNƒ‰ƒCƒ„ƒ“ƒg—Ìˆæ
+	@return		ì‚Á‚½ƒrƒ…[‚ÌƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
 */
 HWND PageListInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame )
 {
@@ -175,28 +175,28 @@ HWND PageListInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame )
 
 	gbPgTipView = InitParamValue( INIT_LOAD, VL_PAGETIP_VIEW, 1 );
 
-	//	ãƒ•ã‚©ãƒ¼ã‚«ã‚¹æ“ä½œ
+	//	ƒtƒH[ƒJƒX‘€ì
 	gbPgRetFocus = InitParamValue( INIT_LOAD, VL_PGL_RETFCS, 0 );
 
 	InitWindowPos( INIT_LOAD, WDP_PLIST, &rect );
-	if( 0 == rect.right || 0 == rect.bottom )	//	å¹…é«˜ã•ãŒï¼ã¯ãƒ‡ãƒ¼ã‚¿ç„¡ã—
+	if( 0 == rect.right || 0 == rect.bottom )	//	•‚‚³‚ª‚O‚Íƒf[ƒ^–³‚µ
 	{
 		GetWindowRect( hParentWnd, &wdRect );
 		rect.left   = wdRect.left - PL_WIDTH;
 		rect.top    = wdRect.top;
 		rect.right  = PL_WIDTH;
 		rect.bottom = PL_HEIGHT;
-		InitWindowPos( INIT_SAVE, WDP_PLIST, &rect );	//	èµ·å‹•æ™‚ä¿å­˜
+		InitWindowPos( INIT_SAVE, WDP_PLIST, &rect );	//	‹N“®•Û‘¶
 	}
 
-	if( gbTmpltDock )	//	ãƒ¡ãƒ¼ãƒ³ã‚¦ã‚£ãƒ³ãƒ‰ãƒ¼ã«ãƒ‰ãƒƒã‚­ãƒ¥ã™ã‚‹
+	if( gbTmpltDock )	//	ƒ[ƒ“ƒEƒBƒ“ƒh[‚ÉƒhƒbƒLƒ…‚·‚é
 	{
-		spPos = grdSplitPos - SPLITBAR_WIDTH;	//	å³ã‹ã‚‰ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ
+		spPos = grdSplitPos - SPLITBAR_WIDTH;	//	‰E‚©‚ç‚ÌƒIƒtƒZƒbƒg
 
 		hPrWnd    = hParentWnd;
 		dwExStyle = 0;
 		dwStyle   = WS_CHILD | WS_VISIBLE;
-		rect = *pstFrame;	//	ã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆã«ä½¿ãˆã‚‹é ˜åŸŸ
+		rect = *pstFrame;	//	ƒNƒ‰ƒCƒ„ƒ“ƒg‚Ég‚¦‚é—Ìˆæ
 		rect.left  = rect.right - spPos;
 		rect.right = PLIST_DOCK;
 		rect.bottom >>= 1;
@@ -210,15 +210,15 @@ HWND PageListInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame )
 	}
 	ghPageWnd = CreateWindowEx( dwExStyle, PAGELIST_CLASS, TEXT("Page List"), dwStyle,
 		rect.left, rect.top, rect.right, rect.bottom, hPrWnd, NULL, hInstance, NULL);
-	//	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã‚’ä½œæˆ
+	//	ƒEƒCƒ“ƒhƒE‚ğì¬
 
 	GetClientRect( ghPageWnd, &clRect );
 
-	//	ãƒ„ãƒ¼ãƒ«ãƒãƒ¼ãƒ»ç¸¦ã®ã‚„ã¤
+	//	ƒc[ƒ‹ƒo[Ec‚Ì‚â‚Â
 	ghToolWnd = CreateWindowEx( 0, TOOLBARCLASSNAME, TEXT("pagetoolbar"),
 		WS_CHILD | WS_VISIBLE | CCS_NORESIZE | CCS_LEFT | CCS_NODIVIDER | TBSTYLE_FLAT | TBSTYLE_LIST | TBSTYLE_TOOLTIPS,// | TBSTYLE_WRAPABLE,
 		0, 0, 0, 0, ghPageWnd, (HMENU)IDTB_PAGE_TOOLBAR, hInstance, NULL);
-	//	è‡ªå‹•ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—ã‚¹ã‚¿ã‚¤ãƒ«ã‚’è¿½åŠ 
+	//	©“®ƒc[ƒ‹ƒ`ƒbƒvƒXƒ^ƒCƒ‹‚ğ’Ç‰Á
 	SendMessage( ghToolWnd, TB_SETEXTENDEDSTYLE, 0, TBSTYLE_EX_MIXEDBUTTONS );
 
 	//stToolBmp.hInst = HINST_COMMCTRL;
@@ -230,39 +230,39 @@ HWND PageListInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame )
 	{
 		hImg = LoadBitmap( hInstance, MAKEINTRESOURCE( (resnum++) ) );
 		hMsq = LoadBitmap( hInstance, MAKEINTRESOURCE( (resnum++) ) );
-		ImageList_Add( ghPgLstImgLst, hImg, hMsq );	//	ã‚¤ãƒ¡ãƒ¼ã‚¸ãƒªã‚¹ãƒˆã«ã‚¤ãƒ¡ãƒ¼ã‚¸ã‚’è¿½åŠ 
+		ImageList_Add( ghPgLstImgLst, hImg, hMsq );	//	ƒCƒ[ƒWƒŠƒXƒg‚ÉƒCƒ[ƒW‚ğ’Ç‰Á
 		DeleteBitmap( hImg );	DeleteBitmap( hMsq );
 	}
 	SendMessage( ghToolWnd, TB_SETIMAGELIST, 0, (LPARAM)ghPgLstImgLst );
 
 	SendMessage( ghToolWnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0 );
-	//	ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—æ–‡å­—åˆ—ã‚’è¨­å®šãƒ»ãƒœã‚¿ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãŒãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—ã«ãªã‚‹
-	StringCchCopy( atBuff, MAX_STRING, TEXT("æœ«å°¾ã«æ–°è¦ä½œæˆ\r\nAlt + Shift + I ") );	gstPgTlBarInfo[ 0].iString = SendMessage( ghToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuff );
-	StringCchCopy( atBuff, MAX_STRING, TEXT("é¸æŠé ã®æ¬¡ã«æŒ¿å…¥\r\nAlt + I") );			gstPgTlBarInfo[ 1].iString = SendMessage( ghToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuff );
-	StringCchCopy( atBuff, MAX_STRING, TEXT("é¸æŠé ã‚’è¤‡è£½\r\nAlt + C") );				gstPgTlBarInfo[ 2].iString = SendMessage( ghToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuff );
-	StringCchCopy( atBuff, MAX_STRING, TEXT("é¸æŠé ã‚’å‰Šé™¤\r\nAlt + D") );				gstPgTlBarInfo[ 3].iString = SendMessage( ghToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuff );
-	StringCchCopy( atBuff, MAX_STRING, TEXT("æ¬¡ã®é ã¨çµ±åˆ\r\nAlt + G") );				gstPgTlBarInfo[ 4].iString = SendMessage( ghToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuff );
-	StringCchCopy( atBuff, MAX_STRING, TEXT("é ã‚’ä¸Šã¸ç§»å‹•\r\nAlt + U") );				gstPgTlBarInfo[ 5].iString = SendMessage( ghToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuff );
-	StringCchCopy( atBuff, MAX_STRING, TEXT("é ã‚’ä¸‹ã¸ç§»å‹•\r\nAlt + J") );				gstPgTlBarInfo[ 6].iString = SendMessage( ghToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuff );
-	StringCchCopy( atBuff, MAX_STRING, TEXT("é åç§°ã®å¤‰æ›´\r\nAlt + N") );				gstPgTlBarInfo[ 7].iString = SendMessage( ghToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuff );
-	StringCchCopy( atBuff, MAX_STRING, TEXT("æœ€æ–°ã®æƒ…å ±ã«æ›´æ–°") );						gstPgTlBarInfo[ 8].iString = SendMessage( ghToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuff );
+	//	ƒc[ƒ‹ƒ`ƒbƒv•¶š—ñ‚ğİ’èEƒ{ƒ^ƒ“ƒeƒLƒXƒg‚ªƒc[ƒ‹ƒ`ƒbƒv‚É‚È‚é
+	StringCchCopy( atBuff, MAX_STRING, TEXT("––”ö‚ÉV‹Kì¬\r\nAlt + Shift + I ") );	gstPgTlBarInfo[ 0].iString = SendMessage( ghToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuff );
+	StringCchCopy( atBuff, MAX_STRING, TEXT("‘I‘ğ•Å‚ÌŸ‚É‘}“ü\r\nAlt + I") );			gstPgTlBarInfo[ 1].iString = SendMessage( ghToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuff );
+	StringCchCopy( atBuff, MAX_STRING, TEXT("‘I‘ğ•Å‚ğ•¡»\r\nAlt + C") );				gstPgTlBarInfo[ 2].iString = SendMessage( ghToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuff );
+	StringCchCopy( atBuff, MAX_STRING, TEXT("‘I‘ğ•Å‚ğíœ\r\nAlt + D") );				gstPgTlBarInfo[ 3].iString = SendMessage( ghToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuff );
+	StringCchCopy( atBuff, MAX_STRING, TEXT("Ÿ‚Ì•Å‚Æ“‡\r\nAlt + G") );				gstPgTlBarInfo[ 4].iString = SendMessage( ghToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuff );
+	StringCchCopy( atBuff, MAX_STRING, TEXT("•Å‚ğã‚ÖˆÚ“®\r\nAlt + U") );				gstPgTlBarInfo[ 5].iString = SendMessage( ghToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuff );
+	StringCchCopy( atBuff, MAX_STRING, TEXT("•Å‚ğ‰º‚ÖˆÚ“®\r\nAlt + J") );				gstPgTlBarInfo[ 6].iString = SendMessage( ghToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuff );
+	StringCchCopy( atBuff, MAX_STRING, TEXT("•Å–¼Ì‚Ì•ÏX\r\nAlt + N") );				gstPgTlBarInfo[ 7].iString = SendMessage( ghToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuff );
+	StringCchCopy( atBuff, MAX_STRING, TEXT("ÅV‚Ìî•ñ‚ÉXV") );						gstPgTlBarInfo[ 8].iString = SendMessage( ghToolWnd, TB_ADDSTRING, 0, (LPARAM)atBuff );
 
 	SendMessage( ghToolWnd, TB_SETROWS, MAKEWPARAM(PGTB_ITEMS,TRUE), (LPARAM)(&tbRect) );
 
-	SendMessage( ghToolWnd, TB_ADDBUTTONS, (WPARAM)PGTB_ITEMS, (LPARAM)&gstPgTlBarInfo );	//	ãƒ„ãƒ¼ãƒ«ãƒãƒ¼ã«ãƒœã‚¿ãƒ³ã‚’æŒ¿å…¥
+	SendMessage( ghToolWnd, TB_ADDBUTTONS, (WPARAM)PGTB_ITEMS, (LPARAM)&gstPgTlBarInfo );	//	ƒc[ƒ‹ƒo[‚Éƒ{ƒ^ƒ“‚ğ‘}“ü
 
 	SendMessage( ghToolWnd, TB_GETITEMRECT, 0, (LPARAM)(&tbRect) );
 	MoveWindow( ghToolWnd, 0, 0, tbRect.right, rect.bottom, TRUE );
-	InvalidateRect( ghToolWnd , NULL, TRUE );	//	ã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆå…¨ä½“ã‚’å†æç”»ã™ã‚‹
+	InvalidateRect( ghToolWnd , NULL, TRUE );	//	ƒNƒ‰ƒCƒ„ƒ“ƒg‘S‘Ì‚ğÄ•`‰æ‚·‚é
 
-//	ã‚µãƒ–ã‚¯ãƒ©ã‚¹åŒ–
+//	ƒTƒuƒNƒ‰ƒX‰»
 	gpfOrigPageToolProc = SubclassWindow( ghToolWnd, gpfPageToolProc );
 
 	tbRect.bottom  = rect.bottom;
 	tbRect.left    = 0;
 	tbRect.top     = 0;
 
-//ãƒªã‚¹ãƒˆãƒ“ãƒ¥ãƒ¼	LVS_SHOWSELALWAYS
+//ƒŠƒXƒgƒrƒ…[	LVS_SHOWSELALWAYS
 	ghPageListWnd = CreateWindowEx( 0, WC_LISTVIEW, TEXT("pagelist"),
 		WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | 
 #ifdef PAGE_MULTISELECT
@@ -280,12 +280,12 @@ HWND PageListInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame )
 	stLvColm.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
 	stLvColm.fmt = LVCFMT_LEFT;
 	stLvColm.pszText = TEXT("No");		stLvColm.cx =  28;	stLvColm.iSubItem = 0;	ListView_InsertColumn( ghPageListWnd, 0, &stLvColm );
-	stLvColm.pszText = TEXT("å");		stLvColm.cx =  67;	stLvColm.iSubItem = 1;	ListView_InsertColumn( ghPageListWnd, 1, &stLvColm );
+	stLvColm.pszText = TEXT("–¼");		stLvColm.cx =  67;	stLvColm.iSubItem = 1;	ListView_InsertColumn( ghPageListWnd, 1, &stLvColm );
 	stLvColm.pszText = TEXT("Byte");	stLvColm.cx =  45;	stLvColm.iSubItem = 2;	ListView_InsertColumn( ghPageListWnd, 2, &stLvColm );
 	stLvColm.pszText = TEXT("Line");	stLvColm.cx =  45;	stLvColm.iSubItem = 3;	ListView_InsertColumn( ghPageListWnd, 3, &stLvColm );
 
 
-//ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—
+//ƒc[ƒ‹ƒ`ƒbƒv
 #ifdef PGL_TOOLTIP
 	ghPageTipWnd = CreateWindowEx( WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL, TTS_NOPREFIX | TTS_ALWAYSTIP,
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, ghPageWnd, NULL, hInstance, NULL );
@@ -295,7 +295,7 @@ HWND PageListInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame )
 	ghPgTipFont = CreateFontIndirect( &stFont );
 	SetWindowFont( ghPageTipWnd, ghPgTipFont, TRUE );
 
-	//	ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—ã‚’ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã§å‰²ã‚Šä»˜ã‘
+	//	ƒc[ƒ‹ƒ`ƒbƒv‚ğƒR[ƒ‹ƒoƒbƒN‚ÅŠ„‚è•t‚¯
 	ZeroMemory( &stToolInfo, sizeof(TTTOOLINFO) );
 	stToolInfo.cbSize   = sizeof(TTTOOLINFO);
 	stToolInfo.uFlags   = TTF_SUBCLASS;
@@ -303,15 +303,15 @@ HWND PageListInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame )
 	stToolInfo.hwnd     = ghPageListWnd;
 	stToolInfo.uId      = IDLV_PAGELISTVIEW;
 	GetClientRect( ghPageListWnd, &stToolInfo.rect );
-	stToolInfo.lpszText = LPSTR_TEXTCALLBACK;	//	ã‚³ãƒ¬ã‚’æŒ‡å®šã™ã‚‹ã¨ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã«ãªã‚‹
+	stToolInfo.lpszText = LPSTR_TEXTCALLBACK;	//	ƒRƒŒ‚ğw’è‚·‚é‚ÆƒR[ƒ‹ƒoƒbƒN‚É‚È‚é
 	SendMessage( ghPageTipWnd, TTM_ADDTOOL, 0, (LPARAM)&stToolInfo );
-	SendMessage( ghPageTipWnd, TTM_SETMAXTIPWIDTH, 0, 0 );	//	ãƒãƒƒãƒ—ã®å¹…ã€‚ï¼è¨­å®šã§ã„ã„ã€‚ã“ã‚Œã—ã¨ã‹ãªã„ã¨æ”¹è¡Œã•ã‚Œãªã„
+	SendMessage( ghPageTipWnd, TTM_SETMAXTIPWIDTH, 0, 0 );	//	ƒ`ƒbƒv‚Ì•B‚Oİ’è‚Å‚¢‚¢B‚±‚ê‚µ‚Æ‚©‚È‚¢‚Æ‰üs‚³‚ê‚È‚¢
 
-//	ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—ã®ãƒãƒƒãƒ—ãƒ‡ã‚£ãƒ¬ã‚¤ã¯ã€TTM_SETDELAYTIME ã§èª¿æ•´å‡ºæ¥ã‚‹
-//	wParam	TTDT_INITIAL	è¡¨ç¤ºã¾ã§ã®æ™‚é–“
+//	ƒc[ƒ‹ƒ`ƒbƒv‚Ìƒ|ƒbƒvƒfƒBƒŒƒC‚ÍATTM_SETDELAYTIME ‚Å’²®o—ˆ‚é
+//	wParam	TTDT_INITIAL	•\¦‚Ü‚Å‚ÌŠÔ
 //	lParam	The LOWORD specifies the delay time, in milliseconds. The HIWORD must be zero.
 //	SendMessage( ghPageTipWnd, TTM_SETDELAYTIME, TTDT_INITIAL, MAKELPARAM(2222,0) );
-	//	åŠ¹æœç„¡ã—
+	//	Œø‰Ê–³‚µ
 #endif
 
 	ShowWindow( ghPageWnd, SW_SHOW );
@@ -322,13 +322,13 @@ HWND PageListInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒ„ãƒ¼ãƒ«ãƒãƒ¼ã‚µãƒ–ã‚¯ãƒ©ã‚¹
-	WindowsXPã§ã€ãƒ„ãƒ¼ãƒ«ãƒãƒ¼ã®ãƒœã‚¿ãƒ³ä¸Šã§ãƒã‚¦ã‚¹ã®å·¦ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸã¾ã¾å³ãƒœã‚¿ãƒ³ã‚’æŠ¼ã™ã¨ã€
-	ãã‚Œä»¥é™ã®ãƒã‚¦ã‚¹æ“ä½œã‚’æ­£å¸¸ã«å—ã‘ä»˜ã‘ãªããªã‚‹ã€‚ãã‚Œã®å¯¾ç­–
-	@param[in]	hWnd	è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	msg		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®è­˜åˆ¥ç•ªå·
-	@param[in]	wParam	è¿½åŠ ã®æƒ…å ±ï¼‘
-	@param[in]	lParam	è¿½åŠ ã®æƒ…å ±ï¼’
+	ƒc[ƒ‹ƒo[ƒTƒuƒNƒ‰ƒX
+	WindowsXP‚ÅAƒc[ƒ‹ƒo[‚Ìƒ{ƒ^ƒ“ã‚Åƒ}ƒEƒX‚Ì¶ƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½‚Ü‚Ü‰Eƒ{ƒ^ƒ“‚ğ‰Ÿ‚·‚ÆA
+	‚»‚êˆÈ~‚Ìƒ}ƒEƒX‘€ì‚ğ³í‚Éó‚¯•t‚¯‚È‚­‚È‚éB‚»‚ê‚Ì‘Îô
+	@param[in]	hWnd	eƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
+	@param[in]	msg		ƒEƒCƒ“ƒhƒEƒƒbƒZ[ƒW‚Ì¯•Ê”Ô†
+	@param[in]	wParam	’Ç‰Á‚Ìî•ñ‚P
+	@param[in]	lParam	’Ç‰Á‚Ìî•ñ‚Q
 */
 LRESULT CALLBACK gpfPageToolProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
@@ -346,13 +346,13 @@ LRESULT CALLBACK gpfPageToolProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 
 
 /*!
-	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
-	@param[in]	hWnd	è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	message	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®è­˜åˆ¥ç•ªå·
-	@param[in]	wParam	è¿½åŠ ã®æƒ…å ±ï¼‘
-	@param[in]	lParam	è¿½åŠ ã®æƒ…å ±ï¼’
-	@retval 0	ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡¦ç†æ¸ˆã¿
-	@retval no0	ã“ã“ã§ã¯å‡¦ç†ã›ãšæ¬¡ã«å›ã™
+	ƒEƒCƒ“ƒhƒEƒvƒƒV[ƒWƒƒ
+	@param[in]	hWnd	eƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
+	@param[in]	message	ƒEƒCƒ“ƒhƒEƒƒbƒZ[ƒW‚Ì¯•Ê”Ô†
+	@param[in]	wParam	’Ç‰Á‚Ìî•ñ‚P
+	@param[in]	lParam	’Ç‰Á‚Ìî•ñ‚Q
+	@retval 0	ƒƒbƒZ[ƒWˆ—Ï‚İ
+	@retval no0	‚±‚±‚Å‚Íˆ—‚¹‚¸Ÿ‚É‰ñ‚·
 */
 LRESULT CALLBACK PageListProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
@@ -360,7 +360,7 @@ LRESULT CALLBACK PageListProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 	{
 		HANDLE_MSG( hWnd, WM_COMMAND,     Plt_OnCommand );	
 		HANDLE_MSG( hWnd, WM_SIZE,        Plt_OnSize );	
-		HANDLE_MSG( hWnd, WM_NOTIFY,      Plt_OnNotify );	//	ã‚³ãƒ¢ãƒ³ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã®å€‹åˆ¥ã‚¤ãƒ™ãƒ³ãƒˆ
+		HANDLE_MSG( hWnd, WM_NOTIFY,      Plt_OnNotify );	//	ƒRƒ‚ƒ“ƒRƒ“ƒgƒ[ƒ‹‚ÌŒÂ•ÊƒCƒxƒ“ƒg
 		HANDLE_MSG( hWnd, WM_CONTEXTMENU, Plt_OnContextMenu );
 
 		case WM_DESTROY:
@@ -382,12 +382,12 @@ LRESULT CALLBACK PageListProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	COMMANDãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®å—ã‘å–ã‚Šã€‚ãƒœã‚¿ãƒ³æŠ¼ã•ã‚ŒãŸã¨ã‹ã§ç™ºç”Ÿ
-	@param[in]	hWnd		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	id			ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ç™ºç”Ÿã•ã›ãŸå­ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®è­˜åˆ¥å­	LOWORD(wParam)
-	@param[in]	hWndCtl		ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ç™ºç”Ÿã•ã›ãŸå­ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«	lParam
-	@param[in]	codeNotify	é€šçŸ¥ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸	HIWORD(wParam)
-	@return		ãªã—
+	COMMANDƒƒbƒZ[ƒW‚Ìó‚¯æ‚èBƒ{ƒ^ƒ“‰Ÿ‚³‚ê‚½‚Æ‚©‚Å”­¶
+	@param[in]	hWnd		ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	id			ƒƒbƒZ[ƒW‚ğ”­¶‚³‚¹‚½qƒEƒCƒ“ƒhƒE‚Ì¯•Êq	LOWORD(wParam)
+	@param[in]	hWndCtl		ƒƒbƒZ[ƒW‚ğ”­¶‚³‚¹‚½qƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹	lParam
+	@param[in]	codeNotify	’Ê’mƒƒbƒZ[ƒW	HIWORD(wParam)
+	@return		‚È‚µ
 */
 VOID Plt_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 {
@@ -402,16 +402,16 @@ VOID Plt_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 		case  IDM_WINDOW_CHANGE:	WindowFocusChange( WND_PAGE,  1 );	return;
 		case  IDM_WINDOW_CHG_RVRS:	WindowFocusChange( WND_PAGE, -1 );	return;
 
-		case IDM_PAGEL_ADD:	//	æœ«å°¾æ–°è¦ä½œæˆã¯ã„ã¤ã§ã‚‚æœ‰åŠ¹
+		case IDM_PAGEL_ADD:	//	––”öV‹Kì¬‚Í‚¢‚Â‚Å‚à—LŒø
 			iPage = DocPageCreate( -1 );
-			PageListInsert( iPage );	//	ãƒšãƒ¼ã‚¸ãƒªã‚¹ãƒˆãƒ“ãƒ¥ãƒ¼ã«è¿½åŠ 
+			PageListInsert( iPage );	//	ƒy[ƒWƒŠƒXƒgƒrƒ…[‚É’Ç‰Á
 			DocPageChange( iPage );
 			DocModifyContent( TRUE );
-			DocFileBackup( hWnd );	//	ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ã—ã¦ãŠã
-			ViewFocusSet(  );	//	ãƒ•ã‚©ãƒ¼ã‚«ã‚¹æˆ»ã™
+			DocFileBackup( hWnd );	//	ƒoƒbƒNƒAƒbƒv‚µ‚Ä‚¨‚­
+			ViewFocusSet(  );	//	ƒtƒH[ƒJƒX–ß‚·
 			return;
 
-		case IDM_TOPMOST_TOGGLE:	//	å¸¸æ™‚æœ€å…¨é¢ã¨é€šå¸¸ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒˆã‚°ãƒ«
+		case IDM_TOPMOST_TOGGLE:	//	íÅ‘S–Ê‚Æ’ÊíƒEƒCƒ“ƒhƒE‚ÌƒgƒOƒ‹
 			rdExStyle = GetWindowLongPtr( hWnd, GWL_EXSTYLE );
 			if( WS_EX_TOPMOST & rdExStyle )
 			{
@@ -425,12 +425,12 @@ VOID Plt_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 			}
 			return;
 
-		case IDM_PAGEL_AATIP_TOGGLE:	//	å†…å®¹ãƒãƒƒãƒ‘ãƒƒãƒ—ã™ã‚‹ã‹
+		case IDM_PAGEL_AATIP_TOGGLE:	//	“à—eƒ|ƒbƒpƒbƒv‚·‚é‚©
 			gbPgTipView = gbPgTipView ? FALSE : TRUE;
 			InitParamValue( INIT_SAVE, VL_PAGETIP_VIEW, gbPgTipView );
 			return;
 
-		case IDM_PAGEL_RETURN_FOCUS:	//	é é¸æŠã—ãŸã‚‰ãƒ•ã‚©ãƒ¼ã‚«ã‚¹æˆ»ã™ã‹
+		case IDM_PAGEL_RETURN_FOCUS:	//	•Å‘I‘ğ‚µ‚½‚çƒtƒH[ƒJƒX–ß‚·‚©
 			gbPgRetFocus = gbPgRetFocus ? FALSE : TRUE;
 			InitParamValue( INIT_SAVE, VL_PGL_RETFCS, gbPgRetFocus );
 			return;
@@ -439,65 +439,65 @@ VOID Plt_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 		default:	break;
 	}
 
-	//	é¸æŠã•ã‚Œã¦ã‚‹å€‹æ•°ã‚’ç¢ºä¿ãƒ»ãªã‚“ã‹ãƒ˜ãƒ³ã«ãªã£ã¦ã‚‹
+	//	‘I‘ğ‚³‚ê‚Ä‚éŒÂ”‚ğŠm•ÛE‚È‚ñ‚©ƒwƒ“‚É‚È‚Á‚Ä‚é
 //	ListView_GetSelectedCount
 
-	//	é¸æŠã•ã‚Œã¦ã‚‹é …ç›®ã‚’ç¢ºä¿
+	//	‘I‘ğ‚³‚ê‚Ä‚é€–Ú‚ğŠm•Û
 	iItem = ListView_GetNextItem( ghPageListWnd, -1, LVNI_ALL | LVNI_SELECTED );
 #ifdef PAGE_MULTISELECT
 	iCount = ListView_GetItemCount( ghPageListWnd );
 
-	if( 0 <= iItem )	//	è¤‡æ•°é¸æŠã•ã‚Œã¦ã‚‹ã‹ã©ã†ã‹ç¢ºèª
+	if( 0 <= iItem )	//	•¡”‘I‘ğ‚³‚ê‚Ä‚é‚©‚Ç‚¤‚©Šm”F
 	{
 		iNxItem = ListView_GetNextItem( ghPageListWnd, iItem, LVNI_ALL | LVNI_SELECTED );
 	}
 #endif
 
-	//	é¸æŠã•ã‚Œã¦ã‚‹ãƒ¢ãƒãŒãªã„ã¨ç„¡æ„å‘³
+	//	‘I‘ğ‚³‚ê‚Ä‚éƒ‚ƒm‚ª‚È‚¢‚Æ–³ˆÓ–¡
 	if( 0 >  iItem ){	iItem = gixFocusPage;	}
-	//	æœªé¸æŠãªã‚‰ã€ç¾åœ¨é ãŒé¸æŠã•ã‚Œã¦ã„ã‚‹ãƒ¢ãƒã¨è¦‹ãªã™
+	//	–¢‘I‘ğ‚È‚çAŒ»İ•Å‚ª‘I‘ğ‚³‚ê‚Ä‚¢‚éƒ‚ƒm‚ÆŒ©‚È‚·
 
-	//	è¤‡æ•°é¸æŠãªã‚‰ã€ä»Šã®Pageã‚’Currentã«ã™ã‚‹ã‹
+	//	•¡”‘I‘ğ‚È‚çA¡‚ÌPage‚ğCurrent‚É‚·‚é‚©
 
 	switch( id )
 	{
-		case IDM_PAGE_PREV:	//	å‰ã®é ã¸ç§»å‹•
+		case IDM_PAGE_PREV:	//	‘O‚Ì•Å‚ÖˆÚ“®
 			iDiff = iItem - 1;
 			PageListJump( iDiff );
 			return;
 
-		case IDM_PAGE_NEXT:	//	æ¬¡ã®é ã¸ç§»å‹•
+		case IDM_PAGE_NEXT:	//	Ÿ‚Ì•Å‚ÖˆÚ“®
 			iDiff = iItem + 1;
 			PageListJump( iDiff );
 			return;
-		//	20120110	é ç§»å‹•ã—ãŸã‚‰å¤‰æ›´æœ‰ã‚Šã«ãªã£ã¡ã‚ƒã†ã®ä¿®æ­£
+		//	20120110	•ÅˆÚ“®‚µ‚½‚ç•ÏX—L‚è‚É‚È‚Á‚¿‚á‚¤‚ÌC³
 
 
-		case IDM_PAGEL_INSERT:	//	ä»»æ„ä½ç½®æ–°è¦ä½œæˆ
+		case IDM_PAGEL_INSERT:	//	”CˆÓˆÊ’uV‹Kì¬
 #ifdef PAGE_MULTISELECT
-			if( 0 <= iNxItem ){	return;	}	//	è¤‡æ•°é¸æŠã—ã¦ãŸã‚‰å‡¦ç†ã—ãªã„
+			if( 0 <= iNxItem ){	return;	}	//	•¡”‘I‘ğ‚µ‚Ä‚½‚çˆ—‚µ‚È‚¢
 #endif
 			iPage = DocPageCreate( iItem );
-			PageListInsert( iPage );	//	ãƒšãƒ¼ã‚¸ãƒªã‚¹ãƒˆãƒ“ãƒ¥ãƒ¼ã«è¿½åŠ 
+			PageListInsert( iPage );	//	ƒy[ƒWƒŠƒXƒgƒrƒ…[‚É’Ç‰Á
 			DocPageChange( iPage );
-			DocFileBackup( hWnd );	//	ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ã—ã¦ãŠã
+			DocFileBackup( hWnd );	//	ƒoƒbƒNƒAƒbƒv‚µ‚Ä‚¨‚­
 			break;
 
-		case IDM_PAGEL_RENAME:	//	é åç§°å¤‰æ›´
+		case IDM_PAGEL_RENAME:	//	•Å–¼Ì•ÏX
 #ifdef PAGE_MULTISELECT
-			if( 0 <= iNxItem ){	return;	}	//	è¤‡æ•°é¸æŠã—ã¦ãŸã‚‰å‡¦ç†ã—ãªã„
+			if( 0 <= iNxItem ){	return;	}	//	•¡”‘I‘ğ‚µ‚Ä‚½‚çˆ—‚µ‚È‚¢
 #endif
 			if( FAILED( PageListNameChange( iItem ) ) ){	 return;	}
 			break;
 
-		case IDM_PAGEL_DELETE:	//	ã“ã®é ã‚’å‰Šé™¤
+		case IDM_PAGEL_DELETE:	//	‚±‚Ì•Å‚ğíœ
 #ifdef PAGE_MULTISELECT
-			if( 0 <= iNxItem )	//	è¤‡æ•°é¸æŠã—ã¦ã‚‹ã®ãªã‚‰ã€ã„ã¤ã§ã‚‚ç¢ºèªå…¥ã‚Œã‚‹
+			if( 0 <= iNxItem )	//	•¡”‘I‘ğ‚µ‚Ä‚é‚Ì‚È‚çA‚¢‚Â‚Å‚àŠm”F“ü‚ê‚é
 			{
-				mRslt = MessageBox( hWnd, TEXT("è¤‡æ•°ã®é ã‚’å‰Šé™¤ã—ã‚ˆã†ã¨ã—ã¦ã‚‹ã‚ˆã€‚\r\næœ¬å½“ã«å‰Šé™¤ã—ã¦ã„ã„ã®ã‹ã„ï¼Ÿ"), TEXT("ãŠç‡ã‹ã‚‰ã®ç¢ºèª"), MB_YESNO | MB_DEFBUTTON2 );
+				mRslt = MessageBox( hWnd, TEXT("•¡”‚Ì•Å‚ğíœ‚µ‚æ‚¤‚Æ‚µ‚Ä‚é‚æB\r\n–{“–‚Éíœ‚µ‚Ä‚¢‚¢‚Ì‚©‚¢H"), TEXT("‚¨—Ó‚©‚ç‚ÌŠm”F"), MB_YESNO | MB_DEFBUTTON2 );
 				if( IDYES == mRslt )
 				{
-					for( i = 0; iCount > i; i++ )	//	ä¸€å¿œãƒªãƒŸãƒƒãƒˆ
+					for( i = 0; iCount > i; i++ )	//	ˆê‰ƒŠƒ~ƒbƒg
 					{
 						iItem = ListView_GetNextItem( ghPageListWnd, -1, LVNI_ALL | LVNI_SELECTED );
 						if( 0 > iItem ){	break;	}
@@ -508,68 +508,68 @@ VOID Plt_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 			else
 			{
 #endif
-				mRslt = MessageBoxCheckBox( hWnd, ghInst, 2 );	//	ç¢ºèªå…¥ã‚Œã¦
+				mRslt = MessageBoxCheckBox( hWnd, ghInst, 2 );	//	Šm”F“ü‚ê‚Ä
 				if( IDYES == mRslt ){	DocPageDelete( iItem , -1 );	}
 #ifdef PAGE_MULTISELECT
 			}
 #endif
 			break;
 
-		case IDM_PAGEL_DIVIDE:	//	åˆ†å‰²ã¯ãƒ“ãƒ¥ãƒ¼ã®ãƒ¡ãƒ‹ãƒ¥ãƒ¼
+		case IDM_PAGEL_DIVIDE:	//	•ªŠ„‚Íƒrƒ…[‚Ìƒƒjƒ…[
 			break;
 
-		case IDM_PAGEL_COMBINE:	//	çµ±åˆ
+		case IDM_PAGEL_COMBINE:	//	“‡
 #ifdef PAGE_MULTISELECT
-			if( 0 <= iNxItem ){	return;	}	//	è¤‡æ•°é¸æŠã—ã¦ãŸã‚‰å‡¦ç†ã—ãªã„
+			if( 0 <= iNxItem ){	return;	}	//	•¡”‘I‘ğ‚µ‚Ä‚½‚çˆ—‚µ‚È‚¢
 #endif
-			//	ç¢ºèªå…¥ã‚Œã¦
+			//	Šm”F“ü‚ê‚Ä
 			mRslt = MessageBoxCheckBox( hWnd, ghInst, 0 );
 			if( IDYES == mRslt ){	PageListCombine( hWnd , iItem );	}
 			break;
 
-		case IDM_PAGEL_UPFLOW:		//	â†‘ç§»å‹•
+		case IDM_PAGEL_UPFLOW:		//	ªˆÚ“®
 #ifdef PAGE_MULTISELECT
-			if( 0 <= iNxItem ){	return;	}	//	è¤‡æ•°é¸æŠã—ã¦ãŸã‚‰å‡¦ç†ã—ãªã„
+			if( 0 <= iNxItem ){	return;	}	//	•¡”‘I‘ğ‚µ‚Ä‚½‚çˆ—‚µ‚È‚¢
 #endif
 			PageListSpinning( hWnd, iItem, 1 );
 			break;
 
-		case IDM_PAGEL_DOWNSINK:	//	â†“ç§»å‹•
+		case IDM_PAGEL_DOWNSINK:	//	«ˆÚ“®
 #ifdef PAGE_MULTISELECT
-			if( 0 <= iNxItem ){	return;	}	//	è¤‡æ•°é¸æŠã—ã¦ãŸã‚‰å‡¦ç†ã—ãªã„
+			if( 0 <= iNxItem ){	return;	}	//	•¡”‘I‘ğ‚µ‚Ä‚½‚çˆ—‚µ‚È‚¢
 #endif
 			PageListSpinning( hWnd, iItem, -1 );
 			break;
 
-		case IDM_PAGEL_DUPLICATE:	//	é è¤‡è£½
+		case IDM_PAGEL_DUPLICATE:	//	•Å•¡»
 #ifdef PAGE_MULTISELECT
-			if( 0 <= iNxItem ){	return;	}	//	è¤‡æ•°é¸æŠã—ã¦ãŸã‚‰å‡¦ç†ã—ãªã„
+			if( 0 <= iNxItem ){	return;	}	//	•¡”‘I‘ğ‚µ‚Ä‚½‚çˆ—‚µ‚È‚¢
 #endif
 			PageListDuplicate( hWnd, iItem );
 			break;
 
 		case IDM_PAGEL_DETAIL:
-			TRACE( TEXT("æœ€æ–°ã®æƒ…å ±ã«æ›´æ–°") );
+			TRACE( TEXT("ÅV‚Ìî•ñ‚ÉXV") );
 			return;
 
-		default:	TRACE( TEXT("æœªå®Ÿè£…[%d]"), id );	return;
+		default:	TRACE( TEXT("–¢À‘•[%d]"), id );	return;
 	}
 
-	//	æ›´æ–°ã«ãªã‚‹ã‚„ã¤ã¯ã“ã£ã¡ã«æˆ»ã™
+	//	XV‚É‚È‚é‚â‚Â‚Í‚±‚Á‚¿‚É–ß‚·
 	DocModifyContent( TRUE );
 
-	ViewFocusSet(  );	//	ãƒ•ã‚©ãƒ¼ã‚«ã‚¹æˆ»ã™
+	ViewFocusSet(  );	//	ƒtƒH[ƒJƒX–ß‚·
 
 	return;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚µã‚¤ã‚ºå¤‰æ›´ã•ã‚ŒãŸ
-	@param[in]	hWnd	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	state	ãªã«ã‹ã®çŠ¶æ…‹
-	@param[in]	cx		å¤‰æ›´ã•ã‚ŒãŸã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆå¹…
-	@param[in]	cy		å¤‰æ›´ã•ã‚ŒãŸã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆé«˜ã•
+	ƒTƒCƒY•ÏX‚³‚ê‚½
+	@param[in]	hWnd	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	state	‚È‚É‚©‚Ìó‘Ô
+	@param[in]	cx		•ÏX‚³‚ê‚½ƒNƒ‰ƒCƒ„ƒ“ƒg•
+	@param[in]	cy		•ÏX‚³‚ê‚½ƒNƒ‰ƒCƒ„ƒ“ƒg‚‚³
 */
 VOID Plt_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 {
@@ -588,7 +588,7 @@ VOID Plt_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 	MoveWindow( ghPageListWnd, tbRect.right, 0, cx - tbRect.right, cy, TRUE );
 
 #ifdef PGL_TOOLTIP
-	//	å¿…è¦ãªæ‰€ã ã‘ã„ã‚Œã‚Œã°ãŠï½‹
+	//	•K—v‚ÈŠ‚¾‚¯‚¢‚ê‚ê‚Î‚¨‚‹
 	ZeroMemory( &stToolInfo, sizeof(TTTOOLINFO) );
 	stToolInfo.cbSize = sizeof(TTTOOLINFO);
 	stToolInfo.hwnd   = ghPageListWnd;
@@ -601,28 +601,28 @@ VOID Plt_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒãƒ¼ãƒ†ã‚£ãƒ•ã‚¡ã‚¤ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®å‡¦ç†
-	@param[in]	hWnd		è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	idFrom		NOTIFYã‚’ç™ºç”Ÿã•ã›ãŸã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã®ï¼©ï¼¤
-	@param[in]	pstNmhdr	NOTIFYã®è©³ç´°
-	@return		å‡¦ç†ã—ãŸå†…å®¹ã¨ã‹
+	ƒm[ƒeƒBƒtƒ@ƒCƒƒbƒZ[ƒW‚Ìˆ—
+	@param[in]	hWnd		eƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
+	@param[in]	idFrom		NOTIFY‚ğ”­¶‚³‚¹‚½ƒRƒ“ƒgƒ[ƒ‹‚Ì‚h‚c
+	@param[in]	pstNmhdr	NOTIFY‚ÌÚ×
+	@return		ˆ—‚µ‚½“à—e‚Æ‚©
 */
 LRESULT Plt_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 {
-	//	ãƒšãƒ¼ã‚¸ãƒªã‚¹ãƒˆãƒ“ãƒ¥ãƒ¼
+	//	ƒy[ƒWƒŠƒXƒgƒrƒ…[
 	if( IDLV_PAGELISTVIEW == idFrom ){	return PageListNotify( hWnd, (LPNMLISTVIEW)pstNmhdr );	}
 
-	return 0;	//	ä½•ã‚‚ãªã„ãªã‚‰ï¼ã‚’æˆ»ã™
+	return 0;	//	‰½‚à‚È‚¢‚È‚ç‚O‚ğ–ß‚·
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãƒ¡ãƒ‹ãƒ¥ãƒ¼å‘¼ã³ã ã—ã‚¢ã‚¯ã‚·ãƒ§ãƒ³(è¦ã¯å³ã‚¯ãƒ«ãƒƒã‚¯ï¼‰
-	@param[in]	hWnd		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	hWndContext	ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãŒç™ºç”Ÿã—ãŸã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	xPos		ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ï¼¸åº§æ¨™
-	@param[in]	yPos		ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ï¼¹åº§æ¥­
-	@return		ç„¡ã—
+	ƒRƒ“ƒeƒLƒXƒgƒƒjƒ…[ŒÄ‚Ñ‚¾‚µƒAƒNƒVƒ‡ƒ“(—v‚Í‰EƒNƒ‹ƒbƒNj
+	@param[in]	hWnd		ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	hWndContext	ƒRƒ“ƒeƒLƒXƒg‚ª”­¶‚µ‚½ƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
+	@param[in]	xPos		ƒXƒNƒŠ[ƒ“‚wÀ•W
+	@param[in]	yPos		ƒXƒNƒŠ[ƒ“‚xÀ‹Æ
+	@return		–³‚µ
 */
 VOID Plt_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 {
@@ -634,7 +634,7 @@ VOID Plt_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 
 	POINT	stPoint;
 
-	stPoint.x = (SHORT)xPos;	//	ç”»é¢åº§æ¨™ã¯ãƒã‚¤ãƒŠã‚¹ã‚‚ã‚ã‚Šã†ã‚‹
+	stPoint.x = (SHORT)xPos;	//	‰æ–ÊÀ•W‚Íƒ}ƒCƒiƒX‚à‚ ‚è‚¤‚é
 	stPoint.y = (SHORT)yPos;
 
 	bSel = FALSE;
@@ -646,7 +646,7 @@ VOID Plt_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 	hMenu = LoadMenu( GetModuleHandle(NULL), MAKEINTRESOURCE(IDC_PGLVPOPUPMENU) );
 	hSubMenu = GetSubMenu( hMenu, 0 );
 
-	//	é ãŒï¼‘ã—ã‹ãªã„ãªã‚‰ã€å‰Šé™¤ã‚’ç„¡åŠ¹ã«
+	//	•Å‚ª‚P‚µ‚©‚È‚¢‚È‚çAíœ‚ğ–³Œø‚É
 	if( 1 >= iCount ){	EnableMenuItem( hSubMenu, IDM_PAGEL_DELETE, MF_GRAYED );	}
 
 	if( gbTmpltDock )
@@ -655,32 +655,32 @@ VOID Plt_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 	}
 	else
 	{
-		//	æœ€å‰é¢ã§ã‚ã‚‹ã‹
+		//	Å‘O–Ê‚Å‚ ‚é‚©
 		rdExStyle = GetWindowLongPtr( hWnd, GWL_EXSTYLE );
 		if( WS_EX_TOPMOST & rdExStyle ){	CheckMenuItem( hSubMenu , IDM_TOPMOST_TOGGLE, MF_BYCOMMAND | MF_CHECKED );	}
 	}
 
-	//	ãƒãƒƒãƒ‘ãƒƒãƒ—è¡¨ç¤ºæœ‰ã‚‹ã‹ï¼Ÿ
+	//	ƒ|ƒbƒpƒbƒv•\¦—L‚é‚©H
 	if( gbPgTipView ){	CheckMenuItem( hSubMenu, IDM_PAGEL_AATIP_TOGGLE, MF_CHECKED );	}
 
-	//	é¸æŠã§ãƒ•ã‚©ãƒ¼ã‚«ã‚¹æˆ»ã‚Šã‹ï¼Ÿ
+	//	‘I‘ğ‚ÅƒtƒH[ƒJƒX–ß‚è‚©H
 	if( gbPgRetFocus ){	CheckMenuItem( hSubMenu, IDM_PAGEL_RETURN_FOCUS, MF_CHECKED );	}
 
 
-	//	æœªé¸æŠãªã‚‰ã€é¸æŠã—ã¦ãªã„ã¨ä½¿ãˆãªã„æ©Ÿèƒ½ã‚’ç„¡åŠ¹ã«
+	//	–¢‘I‘ğ‚È‚çA‘I‘ğ‚µ‚Ä‚È‚¢‚Æg‚¦‚È‚¢‹@”\‚ğ–³Œø‚É
 	if( !(bSel) )
 	{
-		EnableMenuItem( hSubMenu, IDM_PAGEL_INSERT, MF_GRAYED );	//	ä»»æ„ä½œæˆ
-		EnableMenuItem( hSubMenu, IDM_PAGEL_DELETE, MF_GRAYED );	//	å‰Šé™¤
-		EnableMenuItem( hSubMenu, IDM_PAGEL_COMBINE, MF_GRAYED );	//	çµ±åˆ
-		EnableMenuItem( hSubMenu, IDM_PAGEL_UPFLOW, MF_GRAYED );	//	æµ®ä¸Š
-		EnableMenuItem( hSubMenu, IDM_PAGEL_DOWNSINK, MF_GRAYED );	//	æ²ˆé™
-		EnableMenuItem( hSubMenu, IDM_PAGEL_DUPLICATE, MF_GRAYED );	//	è¤‡è£½
-		EnableMenuItem( hSubMenu, IDM_PAGEL_RENAME, MF_GRAYED );	//	åç§°
+		EnableMenuItem( hSubMenu, IDM_PAGEL_INSERT, MF_GRAYED );	//	”CˆÓì¬
+		EnableMenuItem( hSubMenu, IDM_PAGEL_DELETE, MF_GRAYED );	//	íœ
+		EnableMenuItem( hSubMenu, IDM_PAGEL_COMBINE, MF_GRAYED );	//	“‡
+		EnableMenuItem( hSubMenu, IDM_PAGEL_UPFLOW, MF_GRAYED );	//	•‚ã
+		EnableMenuItem( hSubMenu, IDM_PAGEL_DOWNSINK, MF_GRAYED );	//	’¾~
+		EnableMenuItem( hSubMenu, IDM_PAGEL_DUPLICATE, MF_GRAYED );	//	•¡»
+		EnableMenuItem( hSubMenu, IDM_PAGEL_RENAME, MF_GRAYED );	//	–¼Ì
 	}
 
 	dRslt = TrackPopupMenu( hSubMenu, 0, stPoint.x, stPoint.y, 0, hWnd, NULL );
-	//	é¸æŠã›ãšã§ï¼ã‹ï¼ï¼‘ï¼Ÿã€é¸æŠã—ãŸã‚‰ãã®ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®ï¼©ï¼¤ã§WM_COMMANDãŒç™ºè¡Œ
+	//	‘I‘ğ‚¹‚¸‚Å‚O‚©|‚PHA‘I‘ğ‚µ‚½‚ç‚»‚Ìƒƒjƒ…[‚Ì‚h‚c‚ÅWM_COMMAND‚ª”­s
 	DestroyMenu( hMenu );
 
 	return;
@@ -688,9 +688,9 @@ VOID Plt_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒ•ãƒ­ãƒ¼ãƒ†ã‚£ãƒ³ã‚°é ä¸€è¦§ã®ä½ç½®ãƒªã‚»ãƒƒãƒˆ
-	@param[in]	hMainWnd	ãƒ¡ã‚¤ãƒ³ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@return	HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	ƒtƒ[ƒeƒBƒ“ƒO•Åˆê——‚ÌˆÊ’uƒŠƒZƒbƒg
+	@param[in]	hMainWnd	ƒƒCƒ“ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@return	HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT PageListPositionReset( HWND hMainWnd )
 {
@@ -709,25 +709,25 @@ HRESULT PageListPositionReset( HWND hMainWnd )
 //-------------------------------------------------------------------------------------------------
 
 /* !
-	è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãŒç§»å‹•ã—ãŸã‚Šå¤§ãã•å¤‰ã‚ã£ãŸã‚‰
-	@param[in]	hPrntWnd	è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	pstFrame	ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã‚µã‚¤ã‚º
+	eƒEƒCƒ“ƒhƒE‚ªˆÚ“®‚µ‚½‚è‘å‚«‚³•Ï‚í‚Á‚½‚ç
+	@param[in]	hPrntWnd	eƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	pstFrame	ƒNƒ‰ƒCƒAƒ“ƒgƒTƒCƒY
 */
 VOID PageListResize( HWND hPrntWnd, LPRECT pstFrame )
 {
 	RECT	rect, tbRect;
 //gbTmpltDock
 
-	rect = *pstFrame;	//	ã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆã«ä½¿ãˆã‚‹é ˜åŸŸ
-	rect.left  = rect.right - (grdSplitPos - SPLITBAR_WIDTH);	//	å·¦ä½ç½®
-	rect.right = (grdSplitPos - SPLITBAR_WIDTH);	//	å¹…
+	rect = *pstFrame;	//	ƒNƒ‰ƒCƒ„ƒ“ƒg‚Ég‚¦‚é—Ìˆæ
+	rect.left  = rect.right - (grdSplitPos - SPLITBAR_WIDTH);	//	¶ˆÊ’u
+	rect.right = (grdSplitPos - SPLITBAR_WIDTH);	//	•
 	if( gbDockTmplView )
 	{
 		rect.bottom >>= 1;
 	}
 	else
 	{
-		DockingTabSizeGet( &tbRect );	//	ã‚¿ãƒ–ã®é«˜ã•ãŒè¦ã‚‹
+		DockingTabSizeGet( &tbRect );	//	ƒ^ƒu‚Ì‚‚³‚ª—v‚é
 		rect.bottom -= tbRect.bottom;
 	}
 
@@ -738,10 +738,10 @@ VOID PageListResize( HWND hPrntWnd, LPRECT pstFrame )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒªã‚¹ãƒˆã³ã‚…ãƒ¼ã®NOTIFYãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡¦ç†
-	@param[in]	hWnd	è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	pstLv	è¿½åŠ æƒ…å ±æ§‹é€ ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿ãƒ¼
-	@return		LRESULT	ãªã‚“ã‹ã„ã‚ã„ã‚ã‚„ã£ãŸ
+	ƒŠƒXƒg‚Ñ‚ã[‚ÌNOTIFYƒƒbƒZ[ƒWˆ—
+	@param[in]	hWnd	eƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	pstLv	’Ç‰Áî•ñ\‘¢‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^[
+	@return		LRESULT	‚È‚ñ‚©‚¢‚ë‚¢‚ë‚â‚Á‚½
 */
 LRESULT PageListNotify( HWND hWnd, LPNMLISTVIEW pstLv )
 {
@@ -758,27 +758,27 @@ LRESULT PageListNotify( HWND hWnd, LPNMLISTVIEW pstLv )
 
 	hLvWnd = pstLv->hdr.hwndFrom;
 	nmCode = pstLv->hdr.code;
-	//	ãªã‚“ã‚‰ã‹ã®ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã®èµ·ã“ã£ãŸROWä½ç½®ã‚’ã‚²ãƒƒãƒˆã™ã‚‹ 
+	//	‚È‚ñ‚ç‚©‚ÌƒAƒNƒVƒ‡ƒ“‚Ì‹N‚±‚Á‚½ROWˆÊ’u‚ğƒQƒbƒg‚·‚é 
 	iCount = ListView_GetItemCount( hLvWnd );
 	iItem  = pstLv->iItem;
 
-	//	æ™®é€šã®ã‚¯ãƒ«ãƒƒã‚¯ã«ã¤ã„ã¦
+	//	•’Ê‚ÌƒNƒ‹ƒbƒN‚É‚Â‚¢‚Ä
 	if( NM_CLICK == nmCode )
 	{
-		if( 0 <= iItem )	//	è©²å½“ãƒšãƒ¼ã‚¸ã¸ã®ç§»å‹•
+		if( 0 <= iItem )	//	ŠY“–ƒy[ƒW‚Ö‚ÌˆÚ“®
 		{
-			TRACE( TEXT("ãƒšãƒ¼ã‚¸é¸æŠ[%d]"), iItem );
+			TRACE( TEXT("ƒy[ƒW‘I‘ğ[%d]"), iItem );
 			DocPageChange( iItem );
 
-			//	ãƒ•ã‚©ãƒ¼ã‚«ã‚¹æˆ»ã™ï¼Ÿ
+			//	ƒtƒH[ƒJƒX–ß‚·H
 			if( gbPgRetFocus  ){	ViewFocusSet(  );	}
 		}
 	}
 
-	//	ãƒ€ãƒ–ãƒ«ã‚¯ãƒ«ãƒƒã‚¯
+	//	ƒ_ƒuƒ‹ƒNƒ‹ƒbƒN
 	if( NM_DBLCLK == nmCode )
 	{
-		if( 0 <= iItem )	//	é åç§°DIALOGUEã‚’ãƒ‹ãƒ§ã‚­
+		if( 0 <= iItem )	//	•Å–¼ÌDIALOGUE‚ğƒjƒ‡ƒL
 		{
 			if( SUCCEEDED( PageListNameChange( iItem ) ) )
 			{
@@ -792,38 +792,38 @@ LRESULT PageListNotify( HWND hWnd, LPNMLISTVIEW pstLv )
 //#ifdef PAGE_MULTISELECT
 
 		iSel = ListView_GetNextItem( hLvWnd, -1, LVNI_ALL | LVNI_SELECTED );
-		if( 0 > iSel )	return 0;	//	é¸æŠã—ã¦ãªã‹ã£ãŸã‚‰çµ‚ã‚ã‚Š
+		if( 0 > iSel )	return 0;	//	‘I‘ğ‚µ‚Ä‚È‚©‚Á‚½‚çI‚í‚è
 
 		TRACE( TEXT("NM_RETURN[%d]"), iSel );
 	}
-//	NM_KEYDOWN	NM_CHAR	é–¢çŸ¥ã§ããš
+//	NM_KEYDOWN	NM_CHAR	ŠÖ’m‚Å‚«‚¸
 
 
-//ã‚«ã‚¹ã‚¿ãƒ ãƒ‰ãƒ­ãƒ¼ãƒ»ã‚µãƒ–ã‚¯ãƒ©ã‚¹ã®ä¸­ã ã¨ä¸Šæ‰‹ãã„ã‹ãªã„ãƒ»Why?
+//ƒJƒXƒ^ƒ€ƒhƒ[EƒTƒuƒNƒ‰ƒX‚Ì’†‚¾‚Æãè‚­‚¢‚©‚È‚¢EWhy?
 	if( NM_CUSTOMDRAW == nmCode )
 	{
 		pstDraw = (LPNMLVCUSTOMDRAW)pstLv;
 
-		//	ã“ã“ã§æ‰±ã†å‡¦ç†å†…å®¹ã‚’è¿”ã™ã€‚ã„ã‚ã‚†ã‚‹åˆå›ç™»éŒ²
+		//	‚±‚±‚Åˆµ‚¤ˆ—“à—e‚ğ•Ô‚·B‚¢‚í‚ä‚é‰‰ñ“o˜^
 		if( pstDraw->nmcd.dwDrawStage == CDDS_PREPAINT ){		return CDRF_NOTIFYSUBITEMDRAW;	}
 		if( pstDraw->nmcd.dwDrawStage == CDDS_ITEMPREPAINT ){	return CDRF_NOTIFYSUBITEMDRAW;	}
 
 		if( pstDraw->nmcd.dwDrawStage == (CDDS_ITEMPREPAINT|CDDS_SUBITEM) )//(CDDS_ITEMPREPAINT|CDDS_SUBITEM)
 		{
-			lvLine = pstDraw->nmcd.dwItemSpec;	//	è¡Œãƒ»é ç•ªå·ã«ãªã‚‹
-			lvClmn = pstDraw->iSubItem;			//	ã‚«ãƒ©ãƒ 
+			lvLine = pstDraw->nmcd.dwItemSpec;	//	sE•Å”Ô†‚É‚È‚é
+			lvClmn = pstDraw->iSubItem;			//	ƒJƒ‰ƒ€
 
-			if( gixFocusPage == lvLine )	//	ä»Šã®è¡Œãƒ»ã¨ã‚Šã‚ãˆãšé’
+			if( gixFocusPage == lvLine )	//	¡‚ÌsE‚Æ‚è‚ ‚¦‚¸Â
 			{
 				pstDraw->clrTextBk = 0x00FF8080;
 			}
-			else if( gixPreviSel == lvLine )	//	å‰ã®è¡Œãƒ»ã¨ã‚Šã‚„ãˆãšç°
+			else if( gixPreviSel == lvLine )	//	‘O‚ÌsE‚Æ‚è‚â‚¦‚¸ŠD
 			{
 				pstDraw->clrTextBk = 0x00CCCCDD;
 			}
 			else
 			{
-				pstDraw->clrTextBk = 0xFF000000;	//	ã“ã‚Œã§ãƒ‡ãƒ•ã‚©è‰²æŒ‡å®šãƒ»å¤šåˆ†
+				pstDraw->clrTextBk = 0xFF000000;	//	‚±‚ê‚ÅƒfƒtƒHFw’èE‘½•ª
 			}
 
 			if( 0 == lvClmn )
@@ -838,7 +838,7 @@ LRESULT PageListNotify( HWND hWnd, LPNMLISTVIEW pstLv )
 				//}
 			}
 
-			//	å†æç”»ã›ãšã¨ã‚‚ãƒªãƒ¤ãƒ«ã«å¤‰ã‚ã‚‹ãƒ»ãƒã‚¤ãƒˆæ•°è¨ˆç®—ã®ã¨ã“ã‚ã§å†æç”»ã—ã¦ã‚‹ï¼Ÿ
+			//	Ä•`‰æ‚¹‚¸‚Æ‚àƒŠƒ„ƒ‹‚É•Ï‚í‚éEƒoƒCƒg”ŒvZ‚Ì‚Æ‚±‚ë‚ÅÄ•`‰æ‚µ‚Ä‚éH
 			if( 2 == lvClmn )
 			{
 				stInfo.dMasqus = PI_BYTES;
@@ -849,20 +849,20 @@ LRESULT PageListNotify( HWND hWnd, LPNMLISTVIEW pstLv )
 			}
 			//else
 			//{
-			//	pstDraw->clrTextBk = 0xFF000000;	//	ã“ã‚Œã§ãƒ‡ãƒ•ã‚©è‰²æŒ‡å®š
+			//	pstDraw->clrTextBk = 0xFF000000;	//	‚±‚ê‚ÅƒfƒtƒHFw’è
 			//}
 
 			return CDRF_NEWFONT;
 		}
 	}
 
-	return 0;	//	é€šå¸¸ã¯ï¼
+	return 0;	//	’Êí‚Í‚O
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒªã‚¹ãƒˆãƒ“ãƒ¥ãƒ¼ã‚¯ãƒªãƒ¤
-	@return	HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	ƒŠƒXƒgƒrƒ…[ƒNƒŠƒ„
+	@return	HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT PageListClear( VOID )
 {
@@ -873,34 +873,34 @@ HRESULT PageListClear( VOID )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	é–‹ã„ã¦ã„ã‚‹é å†…å®¹ã‚’å¤‰æ›´
-	@param[in]	iPage		é–‹ãé ï¼ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒ»è¡¨ç¤ºã¯ï¼‘ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãªã®ã§æ³¨æ„
-	@param[in]	iPrePage	ç›´å‰ã¾ã§é¸æŠã—ã¦ãŸé ãƒ»åˆ‡ã‚Šæ›¿ãˆãŸå ´åˆã¯ï¼ï¼‘
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	ŠJ‚¢‚Ä‚¢‚é•Å“à—e‚ğ•ÏX
+	@param[in]	iPage		ŠJ‚­•Å‚OƒCƒ“ƒfƒbƒNƒXE•\¦‚Í‚PƒCƒ“ƒfƒbƒNƒX‚È‚Ì‚Å’ˆÓ
+	@param[in]	iPrePage	’¼‘O‚Ü‚Å‘I‘ğ‚µ‚Ä‚½•ÅEØ‚è‘Ö‚¦‚½ê‡‚Í|‚P
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT PageListViewChange( INT iPage, INT iPrePage )
 {
-	//	ãƒ•ã‚©ãƒ¼ã‚«ã‚¹ãƒšãƒ¼ã‚¸ã¯ã€ã“ã“ã«æ¥ã‚‹å‰ã«å¤‰æ›´ã—ã¦ãŠãã“ã¨
+	//	ƒtƒH[ƒJƒXƒy[ƒW‚ÍA‚±‚±‚É—ˆ‚é‘O‚É•ÏX‚µ‚Ä‚¨‚­‚±‚Æ
 
 	LONG	iItem;
 
-	gixPreviSel = iPrePage;	//	ç›´å‰ã®é¸æŠé ã‚’è¨˜éŒ²ã—ã¦ãŠã
+	gixPreviSel = iPrePage;	//	’¼‘O‚Ì‘I‘ğ•Å‚ğ‹L˜^‚µ‚Ä‚¨‚­
 
 	InvalidateRect( ghPageListWnd, NULL, TRUE );
 
 	iItem = ListView_GetItemCount( ghPageListWnd );
 	if( iItem <= iPage || 0 > iPage )	return E_OUTOFMEMORY;
 
-	//	é¸æŠçŠ¶æ…‹ã‚’å¤‰æ›´
+	//	‘I‘ğó‘Ô‚ğ•ÏX
 	ListView_SetItemState( ghPageListWnd, iPage, LVIS_SELECTED, LVIS_SELECTED );
 
-	//	ãƒ“ãƒ¥ãƒ¼ã‚’æ›¸ãç›´ã—
+	//	ƒrƒ…[‚ğ‘‚«’¼‚µ
 	ViewEditReset(  );
 
-	//	ã“ã“ã§é–‹ã„ãŸé ã‚’æŠ•ä¸‹ãƒ›ãƒƒãƒˆã‚­ãƒ¼ç•ªå·ã«ã‚»ãƒƒãƒˆ
+	//	‚±‚±‚ÅŠJ‚¢‚½•Å‚ğ“Š‰ºƒzƒbƒgƒL[”Ô†‚ÉƒZƒbƒg
 	gixDropPage = iPage;
 
-//	ViewFocusSet(  );	//	ã“ã“ã§ã¯ãƒ•ã‚©ãƒ¼ã‚«ã‚¹ã—ãªã„ã»ã†ãŒè‰¯ã„ã‹
+//	ViewFocusSet(  );	//	‚±‚±‚Å‚ÍƒtƒH[ƒJƒX‚µ‚È‚¢‚Ù‚¤‚ª—Ç‚¢‚©
 
 
 	return S_OK;
@@ -908,29 +908,29 @@ HRESULT PageListViewChange( INT iPage, INT iPrePage )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	æŒ‡å®šã®ä½ç½®ã«ãƒšãƒ¼ã‚¸ã‚’è¿½åŠ 
-	@param[in]	iBefore	ï¼ï¼‘ãªã‚‰æœ«å°¾è¿½åŠ 
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	w’è‚ÌˆÊ’u‚Éƒy[ƒW‚ğ’Ç‰Á
+	@param[in]	iBefore	|‚P‚È‚ç––”ö’Ç‰Á
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT PageListInsert( INT iBefore )
 {
-	//	ãƒªã‚¹ãƒˆãƒ“ãƒ¥ãƒ¼ã®é€”ä¸­æŒ¿å…¥ã£ã¦ã§ããŸã£ã‘ï¼Ÿ
+	//	ƒŠƒXƒgƒrƒ…[‚Ì“r’†‘}“ü‚Á‚Ä‚Å‚«‚½‚Á‚¯H
 	UINT	iItem, i;
 	TCHAR	atBuffer[MIN_STRING];
 	LVITEM	stLvi;
 
 	iItem = ListView_GetItemCount( ghPageListWnd );
 
-	//	ã¨ã‚Šã‚ãˆãšæœ«ç«¯ã«è¿½åŠ ãƒ»é€”ä¸­è¿½åŠ ã¯å¾Œã§
+	//	‚Æ‚è‚ ‚¦‚¸––’[‚É’Ç‰ÁE“r’†’Ç‰Á‚ÍŒã‚Å
 
 	ZeroMemory( &stLvi, sizeof(stLvi) );
 	stLvi.mask  = LVIF_TEXT;
 
-	//	ä¸€è¦§ç•ªå·ã¯å¸¸ã«incrementã§ã„ã„ã®ã‹ï¼Ÿ
+	//	ˆê——”Ô†‚Íí‚Éincrement‚Å‚¢‚¢‚Ì‚©H
 
 	ZeroMemory( atBuffer, sizeof(atBuffer) );
 
-	if( 0 > iBefore )	//	æœ«å°¾è¿½åŠ ãªã‚‰å£±è¡Œå¢—ã‚„ã›ã°ãŠï½‹
+	if( 0 > iBefore )	//	––”ö’Ç‰Á‚È‚çˆës‘‚â‚¹‚Î‚¨‚‹
 	{
 		stLvi.iItem = iItem;
 
@@ -961,7 +961,7 @@ HRESULT PageListInsert( INT iBefore )
 
 	if( 0 <= iBefore )
 	{
-		//	é€£ç•ªæŒ¯ã‚Šç›´ã—
+		//	˜A”ÔU‚è’¼‚µ
 		iItem = ListView_GetItemCount( ghPageListWnd );
 		for( i = iBefore; iItem > i; i++ )
 		{
@@ -975,8 +975,8 @@ HRESULT PageListInsert( INT iBefore )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	é ãƒªã‚¹ãƒˆã‚’å†æ§‹æˆã™ã‚‹
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	•ÅƒŠƒXƒg‚ğÄ\¬‚·‚é
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT PageListBuild( LPVOID pVoid )
 {
@@ -988,7 +988,7 @@ HRESULT PageListBuild( LPVOID pVoid )
 	ZeroMemory( &stLvi, sizeof(stLvi) );
 	stLvi.mask  = LVIF_TEXT;
 
-#pragma message ("é ä¸€è¦§å†æ§‹æˆãƒ»é …ç›®æ³¨æ„")
+#pragma message ("•Åˆê——Ä\¬E€–Ú’ˆÓ")
 
 	i = 0;
 	for( itPage = (*gitFileIt).vcCont.begin(); itPage != (*gitFileIt).vcCont.end(); itPage++ )
@@ -1015,20 +1015,20 @@ HRESULT PageListBuild( LPVOID pVoid )
 		i++;
 	}
 
-	//	è¦‹ã¦ãŸé ã‚’ãƒªã‚¹ãƒˆã«éœ²å‡ºã•ã›ã‚‹
+	//	Œ©‚Ä‚½•Å‚ğƒŠƒXƒg‚É˜Io‚³‚¹‚é
 	iLastPage = (*gitFileIt).dNowPage;
-	ListView_EnsureVisible( ghPageListWnd, iLastPage, FALSE );	//	å¯¾è±¡é ã®ãƒ©ã‚¤ãƒ³ã¾ã§ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ã•ã›ã¡ã‚ƒã†
+	ListView_EnsureVisible( ghPageListWnd, iLastPage, FALSE );	//	‘ÎÛ•Å‚Ìƒ‰ƒCƒ“‚Ü‚ÅƒXƒNƒ[ƒ‹‚³‚¹‚¿‚á‚¤
 
 	return S_OK;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	é¸ã°ã‚ŒãŸé ã‚’ä¸Šä¸‹ç§»å‹•
-	@param[in]	hWnd	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	iPage	ç§»å‹•ã•ã›ã‚‹é ç•ªå·
-	@param[in]	bDir	æ­£ï¼šä¸Šã¸ã€€è² ï¼šä¸‹ã¸
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	‘I‚Î‚ê‚½•Å‚ğã‰ºˆÚ“®
+	@param[in]	hWnd	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	iPage	ˆÚ“®‚³‚¹‚é•Å”Ô†
+	@param[in]	bDir	³Fã‚Ö@•‰F‰º‚Ö
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT PageListSpinning( HWND hWnd, INT iPage, INT bDir )
 {
@@ -1037,31 +1037,31 @@ HRESULT PageListSpinning( HWND hWnd, INT iPage, INT bDir )
 
 	iItem = ListView_GetItemCount( ghPageListWnd );
 
-	if( 0 == bDir ){	return E_INVALIDARG;	}	//	ã‚ã¾ã‚Šæ„å‘³ã¯ãªã„
+	if( 0 == bDir ){	return E_INVALIDARG;	}	//	‚ ‚Ü‚èˆÓ–¡‚Í‚È‚¢
 
-	//	ã“ã‚Œä»¥ä¸Šâ†‘ã«ã„ã‘ãªã„ãªã‚‰ä½•ã‚‚ã—ãªã„
+	//	‚±‚êˆÈãª‚É‚¢‚¯‚È‚¢‚È‚ç‰½‚à‚µ‚È‚¢
 	if( (0 == iPage) && (0 < bDir) ){	return  E_ABORT;	}
 
-	//	ã“ã‚Œä»¥ä¸Šâ†“ã«ã‚¤ã‚±ãƒŠã‚¤ãªã‚‰ä½•ã‚‚ã—ãªã„
+	//	‚±‚êˆÈã«‚ÉƒCƒPƒiƒC‚È‚ç‰½‚à‚µ‚È‚¢
 	if( (iItem <= (iPage+1)) && (0 > bDir) ){	return  E_ABORT;	}
 
-	TRACE( TEXT("é ç§»å‹•å‡¦ç†[%d]"), iPage );
+	TRACE( TEXT("•ÅˆÚ“®ˆ—[%d]"), iPage );
 
-	//	è¡—é ­ä½ç½®ã¾ã§ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ã‚’ã‚‚ã£ã¦ã„ã
+	//	ŠX“ªˆÊ’u‚Ü‚ÅƒCƒeƒŒ[ƒ^‚ğ‚à‚Á‚Ä‚¢‚­
 	itPage = (*gitFileIt).vcCont.begin(  );
 	std::advance( itPage, iPage );
 
-	//	ã‚¹ãƒ¯ãƒƒãƒ—å¯¾è±¡
-	if( 0 <  bDir ){	itSwap = itPage - 1;	i = iPage - 1;	}	//	â†‘ã«ç§»å‹•ãªã‚‰ç›´å‰ã®ã‚„ã¤ã¨äº¤æ›
-	if( 0 >  bDir ){	itSwap = itPage + 1;	i = iPage + 1;	}	//	â†“ãªã‚‰ç›´å¾Œã®ã¨ãƒã‚§ãƒ³ã‚¸ã‚²ãƒƒã‚¿ãƒ¼
+	//	ƒXƒƒbƒv‘ÎÛ
+	if( 0 <  bDir ){	itSwap = itPage - 1;	i = iPage - 1;	}	//	ª‚ÉˆÚ“®‚È‚ç’¼‘O‚Ì‚â‚Â‚ÆŒğŠ·
+	if( 0 >  bDir ){	itSwap = itPage + 1;	i = iPage + 1;	}	//	«‚È‚ç’¼Œã‚Ì‚Æƒ`ƒFƒ“ƒWƒQƒbƒ^[
 
-	iter_swap( itPage, itSwap );	//	ã‚¹ãƒ¯ãƒƒãƒ”ãƒ³ã‚°ï¼
+	iter_swap( itPage, itSwap );	//	ƒXƒƒbƒsƒ“ƒOI
 
-	//	è¡¨ç¤ºå†…å®¹å…¥ã‚Œæ›¿ãˆã¦ã€é¸æŠã‚’ã—ã¦ãŠã
+	//	•\¦“à—e“ü‚ê‘Ö‚¦‚ÄA‘I‘ğ‚ğ‚µ‚Ä‚¨‚­
 	PageListViewRewrite( iPage );
 	PageListViewRewrite( i );
 
-	//	é¸æŠçŠ¶æ…‹ã‚’å¤‰æ›´
+	//	‘I‘ğó‘Ô‚ğ•ÏX
 	ListView_SetItemState( ghPageListWnd, i, LVIS_SELECTED, LVIS_SELECTED );
 
 	DocPageChange( i );
@@ -1071,9 +1071,9 @@ HRESULT PageListSpinning( HWND hWnd, INT iPage, INT bDir )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ä¸€è¦§ã®æŒ‡å®šã®é ãŠå‰Šé™¤ã™ã‚‹
-	@param[in]	iPage	ã‚µã‚¯ãƒƒãŸé ç•ªå·
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	ˆê——‚Ìw’è‚Ì•Å‚¨íœ‚·‚é
+	@param[in]	iPage	ƒTƒNƒb‚½•Å”Ô†
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT PageListDelete( INT iPage )
 {
@@ -1081,9 +1081,9 @@ HRESULT PageListDelete( INT iPage )
 	TCHAR	atBuffer[MIN_STRING];
 
 	ListView_DeleteItem( ghPageListWnd, iPage );
-	//	Deleteã—ãŸã‚‰ã€ãƒªã‚¹ãƒˆãƒ“ãƒ¥ãƒ¼ã¯è‡ªå‹•ã§è©°ã‚ã‚‰ã‚Œã‚‹
+	//	Delete‚µ‚½‚çAƒŠƒXƒgƒrƒ…[‚Í©“®‚Å‹l‚ß‚ç‚ê‚é
 
-	//	é€£ç•ªæŒ¯ã‚Šç›´ã—
+	//	˜A”ÔU‚è’¼‚µ
 	iItem = ListView_GetItemCount( ghPageListWnd );
 	for( i = 0; iItem > i; i++ )
 	{
@@ -1096,11 +1096,11 @@ HRESULT PageListDelete( INT iPage )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	å„é ã®çŠ¶æ³ãƒ»å¼•æ•°ã¯ãã®ã†ã¡æ§‹é€ ä½“ã«ã—ãŸã»ã†ãŒã„ã„ã‹ã‚‚
-	@param[in]	iPage	é ç•ªå·
-	@param[in]	dByte	ãƒã‚¤ãƒˆæ•°
-	@param[in]	dLine	è¡Œæ•°
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	Še•Å‚Ìó‹µEˆø”‚Í‚»‚Ì‚¤‚¿\‘¢‘Ì‚É‚µ‚½‚Ù‚¤‚ª‚¢‚¢‚©‚à
+	@param[in]	iPage	•Å”Ô†
+	@param[in]	dByte	ƒoƒCƒg”
+	@param[in]	dLine	s”
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT PageListInfoSet( INT iPage, INT dByte, INT dLine )
 {
@@ -1121,13 +1121,13 @@ HRESULT PageListInfoSet( INT iPage, INT dByte, INT dLine )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚ã‚‹é ã®æƒ…å ±ã‚’æ›¸ãæ›ãˆã™ã‚‹
-	@param[in]	iPage	é ç•ªå·
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	‚ ‚é•Å‚Ìî•ñ‚ğ‘‚«Š·‚¦‚·‚é
+	@param[in]	iPage	•Å”Ô†
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT PageListViewRewrite( INT iPage )
 {
-#pragma message ("é ä¸€è¦§å†æç”»ãƒ»é …ç›®æ³¨æ„")
+#pragma message ("•Åˆê——Ä•`‰æE€–Ú’ˆÓ")
 	UINT_PTR	dLines;
 	UINT		dBytes;
 	INT			iPageCount, i;
@@ -1136,7 +1136,7 @@ HRESULT PageListViewRewrite( INT iPage )
 	iPageCount = ListView_GetItemCount( ghPageListWnd );
 	if( iPageCount <= iPage )	return E_OUTOFMEMORY;
 
-	if( 0 >  iPage )	//	å†å¸°ã§å…¨æç”»
+	if( 0 >  iPage )	//	Ä‹A‚Å‘S•`‰æ
 	{
 		for( i = 0; iPageCount > i; i++ )
 		{
@@ -1166,9 +1166,9 @@ HRESULT PageListViewRewrite( INT iPage )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒ•ã‚©ãƒ¼ã‚«ã‚¹é ã‚’ç§»å‹•
-	@param[in]	iDiff	ç§»å‹•å…ˆãƒ»ç¯„å›²å¤–ã‹ã‚‚ã—ã‚Œãªã„
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	ƒtƒH[ƒJƒX•Å‚ğˆÚ“®
+	@param[in]	iDiff	ˆÚ“®æE”ÍˆÍŠO‚©‚à‚µ‚ê‚È‚¢
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT PageListJump( INT iDiff )
 {
@@ -1183,20 +1183,20 @@ HRESULT PageListJump( INT iDiff )
 
 	DocPageChange( iDiff );
 
-	ViewFocusSet(  );	//	ãƒ•ã‚©ãƒ¼ã‚«ã‚¹æˆ»ã™
+	ViewFocusSet(  );	//	ƒtƒH[ƒJƒX–ß‚·
 
 	return S_OK;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	åç§°å¤‰æ›´ãƒ€ã‚¤ãƒ¤ãƒ­ã‚°ãƒœãƒƒã‚¯ã‚¹ã®ãƒ¡ã‚»ãƒ¼ã‚¸ãƒãƒ³ãƒ‰ãƒ©ã ã£ã¦ã°ã‚ˆ
-	@param[in]	hDlg	ãƒ€ã‚¤ãƒ¤ãƒ­ã‚°ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	message	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®è­˜åˆ¥ç•ªå·
-	@param[in]	wParam	è¿½åŠ ã®æƒ…å ±ï¼‘
-	@param[in]	lParam	è¿½åŠ ã®æƒ…å ±ï¼’
-	@retval 0	ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¯å‡¦ç†ã—ã¦ã„ãªã„
-	@retval no0	ãªã‚“ã‹å‡¦ç†ã•ã‚ŒãŸ
+	–¼Ì•ÏXƒ_ƒCƒ„ƒƒOƒ{ƒbƒNƒX‚ÌƒƒZ[ƒWƒnƒ“ƒhƒ‰‚¾‚Á‚Ä‚Î‚æ
+	@param[in]	hDlg	ƒ_ƒCƒ„ƒƒOƒnƒ“ƒhƒ‹
+	@param[in]	message	ƒEƒCƒ“ƒhƒEƒƒbƒZ[ƒW‚Ì¯•Ê”Ô†
+	@param[in]	wParam	’Ç‰Á‚Ìî•ñ‚P
+	@param[in]	lParam	’Ç‰Á‚Ìî•ñ‚Q
+	@retval 0	ƒƒbƒZ[ƒW‚Íˆ—‚µ‚Ä‚¢‚È‚¢
+	@retval no0	‚È‚ñ‚©ˆ—‚³‚ê‚½
 */
 INT_PTR CALLBACK PageNameDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
@@ -1206,7 +1206,7 @@ INT_PTR CALLBACK PageNameDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM
 	switch( message )
 	{
 		case WM_INITDIALOG:
-			cdPage = lParam;	//	ç·¨é›†ã™ã‚‹é ç•ªå·
+			cdPage = lParam;	//	•ÒW‚·‚é•Å”Ô†
 			Edit_SetText( GetDlgItem(hDlg,IDE_PAGENAME), (*gitFileIt).vcCont.at( cdPage ).atPageName );
 			SetFocus( GetDlgItem(hDlg,IDE_PAGENAME) );
 			return (INT_PTR)FALSE;
@@ -1232,9 +1232,9 @@ INT_PTR CALLBACK PageNameDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	é åå‰å¤‰æ›´ãƒ€ã‚¤ãƒ¤ãƒ­ã‚°ã¨ã‹
-	@param[in]	dPage	é ç•ªå·
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	•Å–¼‘O•ÏXƒ_ƒCƒ„ƒƒO‚Æ‚©
+	@param[in]	dPage	•Å”Ô†
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT PageListNameChange( INT dPage )
 {
@@ -1252,10 +1252,10 @@ HRESULT PageListNameChange( INT dPage )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	é åå‰ã‚’ã‚»ãƒƒãƒˆ
-	@param[in]	dPage	é ç•ªå·
-	@param[in]	ptName	é åç§°
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	•Å–¼‘O‚ğƒZƒbƒg
+	@param[in]	dPage	•Å”Ô†
+	@param[in]	ptName	•Å–¼Ì
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT PageListNameSet( INT dPage, LPTSTR ptName )
 {
@@ -1269,7 +1269,7 @@ HRESULT PageListNameSet( INT dPage, LPTSTR ptName )
 	stLvi.mask     = LVIF_TEXT;
 	stLvi.iItem    = dPage;
 	stLvi.pszText  = ptName;
-	stLvi.iSubItem =  1;	//	åå‰
+	stLvi.iSubItem =  1;	//	–¼‘O
 	ListView_SetItem( ghPageListWnd, &stLvi );
 
 	return S_OK;
@@ -1277,9 +1277,9 @@ HRESULT PageListNameSet( INT dPage, LPTSTR ptName )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ä»Šé–‹ã„ã¦ã„ã‚‹é ã®åå‰ã‚’ã‚»ãƒƒãƒˆ
-	@param[in]	ptName	é åç§°ãƒ»ï¼–ï¼“æ–‡å­—ä»¥å†…
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	¡ŠJ‚¢‚Ä‚¢‚é•Å‚Ì–¼‘O‚ğƒZƒbƒg
+	@param[in]	ptName	•Å–¼ÌE‚U‚R•¶šˆÈ“à
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT PageListNameRewrite( LPTSTR ptName )
 {
@@ -1287,22 +1287,22 @@ HRESULT PageListNameRewrite( LPTSTR ptName )
 
 	StringCchLength( ptName, STRSAFE_MAX_CCH, &cchSize );
 
-	//	ã¯ã¿å‡ºã•ãªã„ã‚ˆã†ã«ã€ã‚µã‚¤ã‚ºæœ«ç«¯ã‚’å¼·åˆ¶NULL
+	//	‚Í‚İo‚³‚È‚¢‚æ‚¤‚ÉAƒTƒCƒY––’[‚ğ‹­§NULL
 	if( SUB_STRING <= cchSize ){	ptName[(SUB_STRING-1)] = NULL;	}
 
-	//	æœ¬ä½“æ›¸ãæ›ãˆã¦
+	//	–{‘Ì‘‚«Š·‚¦‚Ä
 	StringCchCopy( (*gitFileIt).vcCont.at( gixFocusPage ).atPageName, SUB_STRING, ptName );
 
-	PageListNameSet( gixFocusPage, ptName );	//	è¡¨ç¤ºã‚‚æ›¸æ›
+	PageListNameSet( gixFocusPage, ptName );	//	•\¦‚à‘Š·
 
 	return S_OK;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	åå‰ã®ä»˜ã„ã¦ã„ã‚‹é ãŒã‚ã‚‹ã‹
-	@param[in]	itFile	ãƒã‚§ãƒƒã‚¯å¯¾è±¡ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿
-	@return	INT	éï¼åå‰ä»˜ããŒã‚ã£ãŸã€€ï¼ãªã‹ã£ãŸ
+	–¼‘O‚Ì•t‚¢‚Ä‚¢‚é•Å‚ª‚ ‚é‚©
+	@param[in]	itFile	ƒ`ƒFƒbƒN‘ÎÛƒtƒ@ƒCƒ‹‚ÌƒCƒeƒŒ[ƒ^
+	@return	INT	”ñ‚O–¼‘O•t‚«‚ª‚ ‚Á‚½@‚O‚È‚©‚Á‚½
 */
 INT PageListIsNamed( FILES_ITR itFile )
 {
@@ -1319,10 +1319,10 @@ INT PageListIsNamed( FILES_ITR itFile )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒ•ã‚©ãƒ¼ã‚«ã‚¹é ã®å†…å®¹ã‚’ã€æ¬¡ã®é ã‚’ä½œã£ã¦ã‚³ãƒ”ãƒ¼ã™ã‚‹
-	@param[in]	hWnd		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	iNowPage	ãƒ•ã‚©ãƒ¼ã‚«ã‚¹ã—ã¦ã‚‹é 
-	@return		HRESULT		çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	ƒtƒH[ƒJƒX•Å‚Ì“à—e‚ğAŸ‚Ì•Å‚ğì‚Á‚ÄƒRƒs[‚·‚é
+	@param[in]	hWnd		ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	iNowPage	ƒtƒH[ƒJƒX‚µ‚Ä‚é•Å
+	@return		HRESULT		I—¹ó‘ÔƒR[ƒh
 */
 HRESULT PageListDuplicate( HWND hWnd, INT iNowPage )
 {
@@ -1330,33 +1330,33 @@ HRESULT PageListDuplicate( HWND hWnd, INT iNowPage )
 //	INT_PTR	iNext, iTotal;
 	LINE_ITR	itLine;
 
-	TRACE( TEXT("é è¤‡è£½") );
+	TRACE( TEXT("•Å•¡»") );
 
 	//iTotal = DocNowFilePageCount(  );
-	//iNext = iNowPage + 1;	//	æ¬¡ã®é 
-	//if( iTotal <= iNext ){	iNext =  -1;	}	//	å…¨é ã‚ˆã‚Šå¤šã„ãªã‚‰æœ«ç«¯æŒ‡å®š
+	//iNext = iNowPage + 1;	//	Ÿ‚Ì•Å
+	//if( iTotal <= iNext ){	iNext =  -1;	}	//	‘S•Å‚æ‚è‘½‚¢‚È‚ç––’[w’è
 
-	iNewPage = DocPageCreate( iNowPage );	//	æ–°é 
-	PageListInsert( iNewPage  );	//	ãƒšãƒ¼ã‚¸ãƒªã‚¹ãƒˆãƒ“ãƒ¥ãƒ¼ã«è¿½åŠ 
+	iNewPage = DocPageCreate( iNowPage );	//	V•Å
+	PageListInsert( iNewPage  );	//	ƒy[ƒWƒŠƒXƒgƒrƒ…[‚É’Ç‰Á
 
-	//	ç©ºã®å£±è¡ŒãŒä½œã‚‰ã‚Œã¦ã‚‹ã®ã§ã€å‰Šé™¤ã—ã¦ãŠã
+	//	‹ó‚Ìˆës‚ªì‚ç‚ê‚Ä‚é‚Ì‚ÅAíœ‚µ‚Ä‚¨‚­
 	(*gitFileIt).vcCont.at( iNewPage ).ltPage.clear(  );
 
 	std::copy(	(*gitFileIt).vcCont.at( iNowPage ).ltPage.begin(),
 				(*gitFileIt).vcCont.at( iNowPage ).ltPage.end(),
 				back_inserter( (*gitFileIt).vcCont.at( iNewPage ).ltPage ) );
 
-#pragma message ("PageListDuplicate ä½œã£ãŸé ã®å†…å®¹ã®å†è¨ˆç®—ã„ã‚‹ã‹ï¼Ÿ")
+#pragma message ("PageListDuplicate ì‚Á‚½•Å‚Ì“à—e‚ÌÄŒvZ‚¢‚é‚©H")
 
 	return S_OK;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒ•ã‚©ãƒ¼ã‚«ã‚¹é ã®æ¬¡ã®é ã¨çµ±åˆã™ã‚‹
-	@param[in]	hWnd		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	iNowPage	ãƒ•ã‚©ãƒ¼ã‚«ã‚¹ã—ã¦ã‚‹é 
-	@return		HRESULT		çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	ƒtƒH[ƒJƒX•Å‚ÌŸ‚Ì•Å‚Æ“‡‚·‚é
+	@param[in]	hWnd		ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	iNowPage	ƒtƒH[ƒJƒX‚µ‚Ä‚é•Å
+	@return		HRESULT		I—¹ó‘ÔƒR[ƒh
 */
 HRESULT PageListCombine( HWND hWnd, INT iNowPage )
 {
@@ -1368,24 +1368,24 @@ HRESULT PageListCombine( HWND hWnd, INT iNowPage )
 
 	ZeroONELINE( &stLine );
 
-	TRACE( TEXT("é çµ±åˆ") );
+	TRACE( TEXT("•Å“‡") );
 
 	iTotal = DocNowFilePageCount(  );
 
-	//	é æ•°ãŒè¶³ã‚Šãªã„ãªã‚‰ãƒŠãƒ‹ã‚‚ã—ãªã„
+	//	•Å”‚ª‘«‚è‚È‚¢‚È‚çƒiƒj‚à‚µ‚È‚¢
 	if( 1 >= iTotal )	return E_ACCESSDENIED;
 
 
-	iNext = iNowPage + 1;	//	æ¬¡ã®é 
-	if( iTotal <= iNext ){	return E_OUTOFMEMORY;	}	//	æœ«ç«¯é ãªã‚‰ä½•ã‚‚ã—ãªã„
+	iNext = iNowPage + 1;	//	Ÿ‚Ì•Å
+	if( iTotal <= iNext ){	return E_OUTOFMEMORY;	}	//	––’[•Å‚È‚ç‰½‚à‚µ‚È‚¢
 
-	//	åŒºåˆ‡ã‚Šã¨ã—ã¦æ”¹è¡Œå…¥ã‚Œã¦
+	//	‹æØ‚è‚Æ‚µ‚Ä‰üs“ü‚ê‚Ä
 	(*gitFileIt).vcCont.at( iNowPage ).ltPage.push_back( stLine );
 
-	//	å…ˆã«çŠ¶æ³ãƒã‚§ãƒƒã‚¯ã—ã¦ã€æœªãƒ­ãƒ¼ãƒ‰ãªã‚‰ã€ã‚­ãƒ£ãƒ¬ãƒƒãƒˆä½ç½®ã‚’æœ«ç«¯ã«ã—ã¦ãƒ­ãƒ¼ãƒ‰ã—ã¦ã€å…ƒã«æˆ»ã™
-	if( (*gitFileIt).vcCont.at( iNext ).ptRawData )	//	ç”Ÿãƒ‡ãƒ¼ã‚¿çŠ¶æ…‹ã ã£ãŸã‚‰
+	//	æ‚Éó‹µƒ`ƒFƒbƒN‚µ‚ÄA–¢ƒ[ƒh‚È‚çAƒLƒƒƒŒƒbƒgˆÊ’u‚ğ––’[‚É‚µ‚Äƒ[ƒh‚µ‚ÄAŒ³‚É–ß‚·
+	if( (*gitFileIt).vcCont.at( iNext ).ptRawData )	//	¶ƒf[ƒ^ó‘Ô‚¾‚Á‚½‚ç
 	{
-		//	ä»Šã®æœ«ç«¯ä½ç½®ãƒã‚§ãƒƒã‚¯
+		//	¡‚Ì––’[ˆÊ’uƒ`ƒFƒbƒN
 		iLastLine = DocNowFilePageLineCount(  ) - 1;
 		iLastDot  = DocLineParamGet( iLastLine, NULL, NULL );
 
@@ -1393,26 +1393,26 @@ HRESULT PageListCombine( HWND hWnd, INT iNowPage )
 	}
 	else
 	{
-		//	æ¬¡ã®é ã®å…¨ä½“ã‚’ã‚³ãƒ”ãƒ¼ã—ã¡ã‚ƒã†
+		//	Ÿ‚Ì•Å‚Ì‘S‘Ì‚ğƒRƒs[‚µ‚¿‚á‚¤
 		std::copy(	(*gitFileIt).vcCont.at( iNext ).ltPage.begin(),
 					(*gitFileIt).vcCont.at( iNext ).ltPage.end(),
 					back_inserter( (*gitFileIt).vcCont.at( iNowPage ).ltPage ) );
 	}
 
-	SqnFreeAll( &((*gitFileIt).vcCont.at( iNowPage ).stUndoLog) );	//	ã‚¢ãƒ³ãƒ‰ã‚¥ãƒ­ã‚°å‰Šé™¤
+	SqnFreeAll( &((*gitFileIt).vcCont.at( iNowPage ).stUndoLog) );	//	ƒAƒ“ƒhƒDƒƒOíœ
 
-	DocPageDelete( iNext , -1 );	//	æ¬¡ã®é ã¯å‰Šé™¤ã—ã¡ã‚ƒã†
+	DocPageDelete( iNext , -1 );	//	Ÿ‚Ì•Å‚Ííœ‚µ‚¿‚á‚¤
 
 	return S_OK;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚¢ã‚¤ãƒ†ãƒ ãƒªã‚¹ãƒˆãƒ“ãƒ¥ãƒ¼ã‚µãƒ–ã‚¯ãƒ©ã‚¹
-	@param[in]	hWnd	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	msg		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®è­˜åˆ¥ç•ªå·
-	@param[in]	wParam	è¿½åŠ ã®æƒ…å ±ï¼‘
-	@param[in]	lParam	è¿½åŠ ã®æƒ…å ±ï¼’
+	ƒAƒCƒeƒ€ƒŠƒXƒgƒrƒ…[ƒTƒuƒNƒ‰ƒX
+	@param[in]	hWnd	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	msg		ƒEƒCƒ“ƒhƒEƒƒbƒZ[ƒW‚Ì¯•Ê”Ô†
+	@param[in]	wParam	’Ç‰Á‚Ìî•ñ‚P
+	@param[in]	lParam	’Ç‰Á‚Ìî•ñ‚Q
 */
 LRESULT CALLBACK gpfPageViewProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
@@ -1423,7 +1423,7 @@ LRESULT CALLBACK gpfPageViewProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 		HANDLE_MSG( hWnd, WM_MOUSEMOVE, Plv_OnMouseMove );	
 		HANDLE_MSG( hWnd, WM_COMMAND,   Plt_OnCommand );	
 #ifdef PGL_TOOLTIP
-		HANDLE_MSG( hWnd, WM_NOTIFY,    Plv_OnNotify  );	//	ã‚³ãƒ¢ãƒ³ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã®å€‹åˆ¥ã‚¤ãƒ™ãƒ³ãƒˆ
+		HANDLE_MSG( hWnd, WM_NOTIFY,    Plv_OnNotify  );	//	ƒRƒ‚ƒ“ƒRƒ“ƒgƒ[ƒ‹‚ÌŒÂ•ÊƒCƒxƒ“ƒg
 #endif
 
 #ifdef USE_HOVERTIP
@@ -1443,12 +1443,12 @@ LRESULT CALLBACK gpfPageViewProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒã‚¦ã‚¹ãŒå‹•ã„ãŸã¨ãã®å‡¦ç†
-	@param[in]	hWnd		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	x			ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆåº§æ¨™ï¼¸
-	@param[in]	y			ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆåº§æ¨™ï¼¹
-	@param[in]	keyFlags	æŠ¼ã•ã‚Œã¦ã‚‹ä»–ã®ãƒœã‚¿ãƒ³
-	@return		ãªã—
+	ƒ}ƒEƒX‚ª“®‚¢‚½‚Æ‚«‚Ìˆ—
+	@param[in]	hWnd		ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	x			ƒNƒ‰ƒCƒAƒ“ƒgÀ•W‚w
+	@param[in]	y			ƒNƒ‰ƒCƒAƒ“ƒgÀ•W‚x
+	@param[in]	keyFlags	‰Ÿ‚³‚ê‚Ä‚é‘¼‚Ìƒ{ƒ^ƒ“
+	@return		‚È‚µ
 */
 VOID Plv_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
 {
@@ -1456,10 +1456,10 @@ VOID Plv_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
 	INT	iItem;
 	BOOLEAN	bReDraw = FALSE;
 
-	//	ãã®ã¨ããƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ä¸‹ã«ã‚ã‚‹ã‚¢ã‚¤ãƒ†ãƒ ã‚’é¸æŠã—ã¦ãŠã
+	//	‚»‚Ì‚Æ‚«ƒ}ƒEƒXƒJ[ƒ\ƒ‹‰º‚É‚ ‚éƒAƒCƒeƒ€‚ğ‘I‘ğ‚µ‚Ä‚¨‚­
 
 	ZeroMemory( &stHitInfo, sizeof(LVHITTESTINFO) );
-	stHitInfo.pt.x = 10;	//	é«˜ã•ãŒé‡è¦ãªã®ã§ã“ã“ã¯é©å½“ã§ã„ã„
+	stHitInfo.pt.x = 10;	//	‚‚³‚ªd—v‚È‚Ì‚Å‚±‚±‚Í“K“–‚Å‚¢‚¢
 	stHitInfo.pt.y = y;
 
 	iItem = ListView_HitTest( hWnd, &stHitInfo );
@@ -1482,11 +1482,11 @@ VOID Plv_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
 
 #ifdef PGL_TOOLTIP
 /*!
-	ãƒãƒ¼ãƒ†ã‚£ãƒ•ã‚¡ã‚¤ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®å‡¦ç†
-	@param[in]	hWnd		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	idFrom		NOTIFYã‚’ç™ºç”Ÿã•ã›ãŸã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã®ï¼©ï¼¤
-	@param[in]	pstNmhdr	NOTIFYã®è©³ç´°
-	@return		å‡¦ç†ã—ãŸå†…å®¹ã¨ã‹
+	ƒm[ƒeƒBƒtƒ@ƒCƒƒbƒZ[ƒW‚Ìˆ—
+	@param[in]	hWnd		ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	idFrom		NOTIFY‚ğ”­¶‚³‚¹‚½ƒRƒ“ƒgƒ[ƒ‹‚Ì‚h‚c
+	@param[in]	pstNmhdr	NOTIFY‚ÌÚ×
+	@return		ˆ—‚µ‚½“à—e‚Æ‚©
 */
 LRESULT Plv_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 {
@@ -1494,7 +1494,7 @@ LRESULT Plv_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 	UINT_PTR		rdLength;
 	LPNMTTDISPINFO	pstDispInfo;
 
-	if( TTN_GETDISPINFO == pstNmhdr->code )	//	ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—ã®å†…å®¹ã®å•ã„åˆã‚ã›ã ã£ãŸã‚‰
+	if( TTN_GETDISPINFO == pstNmhdr->code )	//	ƒc[ƒ‹ƒ`ƒbƒv‚Ì“à—e‚Ì–â‚¢‡‚í‚¹‚¾‚Á‚½‚ç
 	{
 		if( IDLV_PAGELISTVIEW == idFrom )
 		{
@@ -1508,13 +1508,13 @@ LRESULT Plv_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 
 				FREE( gptPgTipBuf );
 
-				if( !(gbPgTipView) ){	return 0;	}	//	éè¡¨ç¤ºãªã‚‰ä½•ã‚‚ã—ãªã„ã§ãŠï½‹
+				if( !(gbPgTipView) ){	return 0;	}	//	”ñ•\¦‚È‚ç‰½‚à‚µ‚È‚¢‚Å‚¨‚‹
 				if( 0 > gixMouseSel ){	return 0;	}
 
 				TRACE( TEXT("1 TTN_GETDISPINFO %d  %X"), gixMouseSel, pstDispInfo->uFlags );
 				gixPreSel = gixMouseSel;
 
-				//	è©²å½“ãƒšãƒ¼ã‚¸ã‹ã‚‰å¼•ã£å¼µã‚‹
+				//	ŠY“–ƒy[ƒW‚©‚çˆø‚Á’£‚é
 				dBytes = DocPageTextGetAlloc( gitFileIt, gixMouseSel, D_UNI, (LPVOID *)(&gptPgTipBuf), FALSE );
 
 				if( gptPgTipBuf )
@@ -1522,12 +1522,12 @@ LRESULT Plv_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 					StringCchLength( gptPgTipBuf, STRSAFE_MAX_CCH, &rdLength );
 					//if( 2 <= rdLength )
 					//{
-					//	//	æœ«ç«¯ã«ä½™è¨ˆãªæ”¹è¡ŒãŒã‚ã‚‹ã®ã§æ¶ˆã—ã¦ãŠã
+					//	//	––’[‚É—]Œv‚È‰üs‚ª‚ ‚é‚Ì‚ÅÁ‚µ‚Ä‚¨‚­
 					//	gptPgTipBuf[rdLength-1] = NULL;
 					//	gptPgTipBuf[rdLength-2] = NULL;
 					//	rdLength -= 2;
 					//}
-					//	ä½™è¨ˆãªæ”¹è¡Œã¯ç„¡ããªã£ãŸ
+					//	—]Œv‚È‰üs‚Í–³‚­‚È‚Á‚½
 
 					pstDispInfo->lpszText = gptPgTipBuf;
 				}
@@ -1544,29 +1544,29 @@ LRESULT Plv_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 		}
 	}
 
-//	å‡¦ç†ãªã‹ã£ãŸã‚‰ç¶šã‘ã‚‹ï¼Ÿ
+//	ˆ—‚È‚©‚Á‚½‚ç‘±‚¯‚éH
 	return CallWindowProc( gpfOrigPageViewProc, hWnd, WM_NOTIFY, (WPARAM)idFrom, (LPARAM)pstNmhdr );
 
-	//	ç„¡é™ãƒ«ãƒ¼ãƒ—ã—ã¦ãªã„ã‹ã€å¤§ä¸ˆå¤«ã‹
+	//	–³ŒÀƒ‹[ƒv‚µ‚Ä‚È‚¢‚©A‘åä•v‚©
 }
 //-------------------------------------------------------------------------------------------------
 #endif
 
 #ifdef USE_HOVERTIP
 /*!
-	HoverTipç”¨ã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯å—å–
-	@param[in]	pVoid	æœªå®šç¾©
-	@return	ç¢ºä¿ã—ãŸæ–‡å­—åˆ—ãƒ»ã‚‚ã—ãã¯NULL
+	HoverTip—p‚ÌƒR[ƒ‹ƒoƒbƒNóæ
+	@param[in]	pVoid	–¢’è‹`
+	@return	Šm•Û‚µ‚½•¶š—ñE‚à‚µ‚­‚ÍNULL
 */
 LPTSTR CALLBACK PageListHoverTipInfo( LPVOID pVoid )
 {
 	INT		dBytes;
 	LPTSTR	ptBuffer = NULL;
 
-	if( !(gbPgTipView) ){	return NULL;	}	//	éè¡¨ç¤ºãªã‚‰ä½•ã‚‚ã—ãªã„ã§ãŠï½‹
+	if( !(gbPgTipView) ){	return NULL;	}	//	”ñ•\¦‚È‚ç‰½‚à‚µ‚È‚¢‚Å‚¨‚‹
 	if( 0 > gixMouseSel ){	return NULL;	}
 
-	//	è©²å½“ãƒšãƒ¼ã‚¸ã‹ã‚‰å¼•ã£å¼µã‚‹
+	//	ŠY“–ƒy[ƒW‚©‚çˆø‚Á’£‚é
 	dBytes = DocPageTextGetAlloc( gitFileIt, gixMouseSel, D_UNI, (LPVOID *)(&ptBuffer), FALSE );
 	TRACE( TEXT("HOVER CALL %d, by[%d]"), gixMouseSel, dBytes );
 

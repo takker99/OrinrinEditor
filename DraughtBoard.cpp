@@ -1,6 +1,6 @@
 /*! @file
-	@brief ãƒ‰ãƒ©ãƒ•ãƒˆãƒœãƒ¼ãƒ‰ã®ç®¡ç†ã—ã¾ã™
-	ã“ã®ãƒ•ã‚¡ã‚¤ãƒ«ã¯ DraughtBoard.cpp ã§ã™ã€‚
+	@brief ƒhƒ‰ƒtƒgƒ{[ƒh‚ÌŠÇ—‚µ‚Ü‚·
+	‚±‚Ìƒtƒ@ƒCƒ‹‚Í DraughtBoard.cpp ‚Å‚·B
 	@author	SikigamiHNQ
 	@date	2011/11/30
 */
@@ -18,9 +18,9 @@ If not, see <http://www.gnu.org/licenses/>.
 //-------------------------------------------------------------------------------------------------
 
 /*
-ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—ã®è¡¨ç¤ºéžè¡¨ç¤ºã¨æ–‡å­—ã‚µã‚¤ã‚ºã¯ï¼­ï¼¡ï¼¡ã«å¾“ã†
+ƒc[ƒ‹ƒ`ƒbƒv‚Ì•\Ž¦”ñ•\Ž¦‚Æ•¶ŽšƒTƒCƒY‚Í‚l‚`‚`‚É]‚¤
 
-è¡¨ç¤ºã‚µã‚¤ã‚ºå¤‰æ›´
+•\Ž¦ƒTƒCƒY•ÏX
 
 
 */
@@ -36,64 +36,64 @@ If not, see <http://www.gnu.org/licenses/>.
 
 #define TTMSG_NO_ITEM	TEXT("NO ITEM")
 
-//	ä¸€æžšã®ãƒ‘ãƒãƒ«ã‚µã‚¤ã‚º
+//	ˆê–‡‚Ìƒpƒlƒ‹ƒTƒCƒY
 //#define THM_WIDTH	128
 //#define THM_HEIGHT	128
 
-//	ã‚µã‚¤ã‚ºå¤‰æ›´
+//	ƒTƒCƒY•ÏX
 #define DTHMSZ_ULTRALIGHT	 80
 #define DTHMSZ_REGULAR		128
 #define DTHMSZ_DEMIBOLD		160
 #define DTHMSZ_ULTRABOLD	192
 
-//	ãƒ‘ãƒãƒ«ã¯ï¼•ï½˜ï¼“ã«ä¸¦ã¹ã‚‹
+//	ƒpƒlƒ‹‚Í‚T‚˜‚R‚É•À‚×‚é
 #define TPNL_HORIZ	5
 #define TPNL_VERTI	3
 //-------------------------------------------------------------------------------------------------
 
 
-//	ä½¿ç”¨ã™ã‚‹æ§‹é€ ä½“ã¯MAAã®ã¨å…±é€šã§ã„ã‘ã‚‹
+//	Žg—p‚·‚é\‘¢‘Ì‚ÍMAA‚Ì‚Æ‹¤’Ê‚Å‚¢‚¯‚é
 //-------------------------------------------------------------------------------------------------
 
-extern HFONT	ghAaFont;		//	AAç”¨ãƒ•ã‚©ãƒ³ãƒˆ
+extern HFONT	ghAaFont;		//	AA—pƒtƒHƒ“ƒg
 
 #ifdef MAA_TOOLTIP
-extern HFONT	ghTipFont;		//	ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—ç”¨
+extern HFONT	ghTipFont;		//	ƒc[ƒ‹ƒ`ƒbƒv—p
 
-static  HWND	ghDrghtTipWnd;	//!<	ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—
-static LPTSTR	gptTipBuffer;	//!<	ãƒãƒƒãƒ—å†…å®¹
+static  HWND	ghDrghtTipWnd;	//!<	ƒc[ƒ‹ƒ`ƒbƒv
+static LPTSTR	gptTipBuffer;	//!<	ƒ`ƒbƒv“à—e
 #endif
 
-extern  UINT	gbAAtipView;	//	éžï¼ã§ã€ï¼¡ï¼¡ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—è¡¨ç¤º
+extern  UINT	gbAAtipView;	//	”ñ‚O‚ÅA‚`‚`ƒc[ƒ‹ƒ`ƒbƒv•\Ž¦
 
 static  HWND	ghPtWnd;
 
-static  ATOM	gDraughtAtom;	//!<	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã‚¯ãƒ©ã‚¹ã‚¢ãƒˆãƒ 
-static  HWND	ghDraughtWnd;	//!<	ã“ã®ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
+static  ATOM	gDraughtAtom;	//!<	ƒEƒCƒ“ƒhƒEƒNƒ‰ƒXƒAƒgƒ€
+static  HWND	ghDraughtWnd;	//!<	‚±‚ÌƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
 
 
-EXTERNED UINT	gdClickDrt;		//!<	ã‚¢ã‚¤ãƒ†ãƒ ã‚’å·¦ã‚¯ãƒ«ãƒƒã‚¯ã—ãŸã¨ãã®åŸºæœ¬å‹•ä½œãƒ»ï¼é€šå¸¸æŒ¿å…¥ã€€ï¼‘çŸ©å½¢æŒ¿å…¥ã€€ï¼’ãƒ¬ã‚¤ãƒ¤ãƒœãƒƒã‚¯ã‚¹é–‹ãã€€ï¼“UNIã‚¯ãƒªãƒƒãƒ—ã€€ï¼”SJISã‚¯ãƒªãƒƒãƒ—
-EXTERNED UINT	gdSubClickDrt;	//!<	ã‚¢ã‚¤ãƒ†ãƒ ã‚’ä¸­ã‚¯ãƒ«ãƒƒã‚¯ã—ãŸã¨ãã®åŸºæœ¬å‹•ä½œãƒ»ï¼é€šå¸¸æŒ¿å…¥ã€€ï¼‘çŸ©å½¢æŒ¿å…¥ã€€ï¼’ãƒ¬ã‚¤ãƒ¤ãƒœãƒƒã‚¯ã‚¹é–‹ãã€€ï¼“UNIã‚¯ãƒªãƒƒãƒ—ã€€ï¼”SJISã‚¯ãƒªãƒƒãƒ—
-//ã‚¯ãƒ«ãƒƒãƒšãƒœãƒ¼ãƒ‰ã¸ã‚³ãƒ”ã‚‹ãƒ¢ãƒ¼ãƒ‰ã¯ã‚³ãƒ”ãƒ¼ãƒ¢ãƒ¼ãƒ‰ã‚¹ãƒ¯ãƒƒãƒ—ã«å¾“ã†
+EXTERNED UINT	gdClickDrt;		//!<	ƒAƒCƒeƒ€‚ð¶ƒNƒ‹ƒbƒN‚µ‚½‚Æ‚«‚ÌŠî–{“®ìE‚O’Êí‘}“ü@‚P‹éŒ`‘}“ü@‚QƒŒƒCƒ„ƒ{ƒbƒNƒXŠJ‚­@‚RUNIƒNƒŠƒbƒv@‚SSJISƒNƒŠƒbƒv
+EXTERNED UINT	gdSubClickDrt;	//!<	ƒAƒCƒeƒ€‚ð’†ƒNƒ‹ƒbƒN‚µ‚½‚Æ‚«‚ÌŠî–{“®ìE‚O’Êí‘}“ü@‚P‹éŒ`‘}“ü@‚QƒŒƒCƒ„ƒ{ƒbƒNƒXŠJ‚­@‚RUNIƒNƒŠƒbƒv@‚SSJISƒNƒŠƒbƒv
+//ƒNƒ‹ƒbƒyƒ{[ƒh‚ÖƒRƒs‚éƒ‚[ƒh‚ÍƒRƒs[ƒ‚[ƒhƒXƒƒbƒv‚É]‚¤
 
-static HDC		ghNonItemDC;	//!<	ã‚¢ã‚¤ãƒ†ãƒ ç„¡ã—ã®çµµ
+static HDC		ghNonItemDC;	//!<	ƒAƒCƒeƒ€–³‚µ‚ÌŠG
 static HBITMAP	ghNonItemBMP, ghOldBmp;	
 static HPEN		ghLinePen;
 
-static HFONT	ghAreaFont;		//!<	ã‚µã‚¤ã‚ºè¡¨ç¤ºç”¨
+static HFONT	ghAreaFont;		//!<	ƒTƒCƒY•\Ž¦—p
 
-static INT		giItemSel;		//!<	ãƒžã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ä¸‹ã«ã‚ã‚‹æž ç•ªå·
-static INT		giTarget;		//!<	ã‚¯ãƒ«ãƒƒã‚¯ã—ãŸã‚¢ã‚¤ãƒ†ãƒ ç•ªå·ãƒ»ï¼ï¼‘ã§ç„¡ã—
+static INT		giItemSel;		//!<	ƒ}ƒEƒXƒJ[ƒ\ƒ‹‰º‚É‚ ‚é˜g”Ô†
+static INT		giTarget;		//!<	ƒNƒ‹ƒbƒN‚µ‚½ƒAƒCƒeƒ€”Ô†E|‚P‚Å–³‚µ
 
-static  UINT	gbThumb;		//!<	ã‚µãƒ ãƒçŠ¶æ…‹ã§ã‚ã‚‹ã‹
-static  LONG	gdVwTop;		//!<	è¡¨ç¤ºã•ã‚Œã¦ã‚‹ä¸€ç•ªå·¦ä¸Šã®è¡Œç•ªå·ï¼ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
-static  HWND	ghScrBarWnd;	//!<	ã‚µãƒ ãƒç”¨ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒã‚¡ãƒ¼
+static  UINT	gbThumb;		//!<	ƒTƒ€ƒló‘Ô‚Å‚ ‚é‚©
+static  LONG	gdVwTop;		//!<	•\Ž¦‚³‚ê‚Ä‚éˆê”Ô¶ã‚Ìs”Ô†‚OƒCƒ“ƒfƒbƒNƒX
+static  HWND	ghScrBarWnd;	//!<	ƒTƒ€ƒl—pƒXƒNƒ[ƒ‹ƒoƒ@[
 
-static INT		giItemWidth;	//!<	ã‚¢ã‚¤ãƒ†ãƒ ã®å¹…
-static INT		giItemHeight;	//!<	ã‚¢ã‚¤ãƒ†ãƒ ã®é«˜ã•
+static INT		giItemWidth;	//!<	ƒAƒCƒeƒ€‚Ì•
+static INT		giItemHeight;	//!<	ƒAƒCƒeƒ€‚Ì‚‚³
 
-//static POINT	gstMainLsPt;	//!<	ãƒ¡ã‚¤ãƒ³ã‹ã‚‰é–‹ã„ãŸå ´åˆã®æœ€çµ‚ä½ç½®
-static POINT	gstViewLsPt;	//!<	ï¼­ï¼¡ï¼¡ã‹ã‚‰é–‹ã„ãŸå ´åˆã®æœ€çµ‚ä½ç½®
+//static POINT	gstMainLsPt;	//!<	ƒƒCƒ“‚©‚çŠJ‚¢‚½ê‡‚ÌÅIˆÊ’u
+static POINT	gstViewLsPt;	//!<	‚l‚`‚`‚©‚çŠJ‚¢‚½ê‡‚ÌÅIˆÊ’u
 
 
 static vector<AAMATRIX>	gvcDrtItems;	//!<	
@@ -124,15 +124,15 @@ LRESULT	Drt_OnNotify( HWND , INT, LPNMHDR );			//!<
 #endif
 
 #ifdef USE_HOVERTIP
-LPTSTR	CALLBACK DraughtHoverTipInfo( LPVOID  );		//!<	HoverTipç”¨ã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯å—å–
+LPTSTR	CALLBACK DraughtHoverTipInfo( LPVOID  );		//!<	HoverTip—p‚ÌƒR[ƒ‹ƒoƒbƒNŽóŽæ
 #endif
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒ†ãƒ³ãƒãƒ©ã£ãŸAAã‚’è¡¨ç¤ºã™ã‚‹ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ä½œæˆ
-	@param[in]	hInstance	ã‚¢ãƒ—ãƒªã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
-	@param[in]	hPtWnd		ãƒ¡ã‚¤ãƒ³çª“ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@return	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	ƒeƒ“ƒ|ƒ‰‚Á‚½AA‚ð•\Ž¦‚·‚éƒEƒCƒ“ƒhƒE‚Ìì¬
+	@param[in]	hInstance	ƒAƒvƒŠ‚ÌƒCƒ“ƒXƒ^ƒ“ƒX
+	@param[in]	hPtWnd		ƒƒCƒ“‘‹ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@return	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT DraughtInitialise( HINSTANCE hInstance, HWND hPtWnd )
 {
@@ -159,27 +159,27 @@ HRESULT DraughtInitialise( HINSTANCE hInstance, HWND hPtWnd )
 
 		ghNonItemDC = NULL;
 
-		//	ã‚µã‚¤ã‚ºä½µã›
+		//	ƒTƒCƒY•¹‚¹
 		giItemWidth  = InitParamValue( INIT_LOAD, VL_THUMB_HORIZ, DTHMSZ_REGULAR );
 		giItemHeight = InitParamValue( INIT_LOAD, VL_THUMB_VERTI, DTHMSZ_REGULAR );
 
 
-		//	ã‚µã‚¤ã‚ºè¡¨ç¤ºç”¨ãƒ•ã‚©ãƒ³ãƒˆ
+		//	ƒTƒCƒY•\Ž¦—pƒtƒHƒ“ƒg
 		ghAreaFont = CreateFont( FONTSZ_REDUCE, 0, 0, 0, FW_REGULAR, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, PROOF_QUALITY, VARIABLE_PITCH, TEXT("MS UI Gothic") );
 
 		ghPtWnd = hPtWnd;
 
-		//	åˆæœŸçŠ¶æ…‹
+		//	‰Šúó‘Ô
 		//gstMainLsPt.x = -1;
 		gstViewLsPt.x = -1;
 
 		giItemSel = -1;
 
 #ifndef _ORRVW
-		//	ã‚¯ãƒ«ãƒƒã‚¯å‹•ä½œæŒ‡å®šãƒ­ãƒ¼ãƒ‰ãƒ»ãƒ‡ãƒ•ã‚©å‹•ä½œã¯é€šå¸¸æŒ¿å…¥
+		//	ƒNƒ‹ƒbƒN“®ìŽw’èƒ[ƒhEƒfƒtƒH“®ì‚Í’Êí‘}“ü
 		gdClickDrt    = InitParamValue( INIT_LOAD, VL_DRT_LCLICK, MAA_INSERT );
 		gdSubClickDrt = InitParamValue( INIT_LOAD, VL_DRT_MCLICK, MAA_INSERT );
-		//	Viewerã®å ´åˆã¯ã‚³ãƒ”ãƒ¼ãƒ¢ãƒ¼ãƒ‰ã«å¾“ã†
+		//	Viewer‚Ìê‡‚ÍƒRƒs[ƒ‚[ƒh‚É]‚¤
 #endif
 	}
 	else
@@ -206,11 +206,11 @@ HRESULT DraughtInitialise( HINSTANCE hInstance, HWND hPtWnd )
 
 
 /*!
-	è¡¨ç¤ºç”¨ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã‚’ä½œã‚‹
-	@param[in]	hInstance	ã‚¢ãƒ—ãƒªã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
-	@param[in]	hPtWnd		å‘¼ã³å‡ºã—ãŸæ–¹ã®ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	bThumb		éžï¼MAAã®ã‚µãƒ ãƒè¡¨ç¤ºã¨ã—ã¦å‘¼ã°ã‚ŒãŸ
-	@return	ä½œã£ãŸã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
+	•\Ž¦—pƒEƒCƒ“ƒhƒE‚ðì‚é
+	@param[in]	hInstance	ƒAƒvƒŠ‚ÌƒCƒ“ƒXƒ^ƒ“ƒX
+	@param[in]	hPtWnd		ŒÄ‚Ño‚µ‚½•û‚ÌƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	bThumb		”ñ‚OMAA‚ÌƒTƒ€ƒl•\Ž¦‚Æ‚µ‚ÄŒÄ‚Î‚ê‚½
+	@return	ì‚Á‚½ƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
 */
 HWND DraughtWindowCreate( HINSTANCE hInstance, HWND hPtWnd, UINT bThumb )
 {
@@ -231,27 +231,27 @@ HWND DraughtWindowCreate( HINSTANCE hInstance, HWND hPtWnd, UINT bThumb )
 	LONG	rigOffs = 0;
 	SCROLLINFO	stScrollInfo;
 
-	if( !(hPtWnd ) )	//	ç ´å£Šã™ã‚‹ãƒ»ã„ã‚‰ãªã„ï¼Ÿ
+	if( !(hPtWnd ) )	//	”j‰ó‚·‚éE‚¢‚ç‚È‚¢H
 	{
 		return NULL;
 	}
 
-	//	å·²ã«å‡ºæ¥ã¦ã„ãŸã‚‰ãã®ã¾ã¾è¿”ã™
+	//	›ß‚Éo—ˆ‚Ä‚¢‚½‚ç‚»‚Ì‚Ü‚Ü•Ô‚·
 	if( ghDraughtWnd  ){	UpdateWindow( ghDraughtWnd );	return ghDraughtWnd;	}
 
 	gbThumb = bThumb;
 
-	iItems = gvcDrtItems.size( );	//	ç¾åœ¨å€‹æ•°ãƒ»ã“ã“ã§ã¯ä½¿ã‚ãªã„
+	iItems = gvcDrtItems.size( );	//	Œ»ÝŒÂ”E‚±‚±‚Å‚ÍŽg‚í‚È‚¢
 
 
 	iCapHei = GetSystemMetrics( SM_CYSMCAPTION );
 	iXfrm   = GetSystemMetrics( SM_CXFIXEDFRAME );
 	iYfrm   = GetSystemMetrics( SM_CYFIXEDFRAME );
 
-	if( 0 >  gstViewLsPt.x )	//	æœªè¨­å®šãªã‚‰
+	if( 0 >  gstViewLsPt.x )	//	–¢Ý’è‚È‚ç
 	{
 		GetWindowRect( hPtWnd, &wdRect );
-		rect.left   = wdRect.left + 32;	//	ã‚ªãƒ•ã‚»ãƒƒãƒˆå€¤ã«ç‰¹ã«æ„å‘³ã¯ãªã„
+		rect.left   = wdRect.left + 32;	//	ƒIƒtƒZƒbƒg’l‚É“Á‚ÉˆÓ–¡‚Í‚È‚¢
 		rect.top    = wdRect.top  + 32;
 	
 		gstViewLsPt.x = rect.left;
@@ -268,27 +268,27 @@ HWND DraughtWindowCreate( HINSTANCE hInstance, HWND hPtWnd, UINT bThumb )
 	rect.bottom += ((iYfrm * 2) + iCapHei);
 
 
-//	if( ghPtWnd == hPtWnd )	å‘¼ã³ã ã—ãŸæ–¹ã«ã‚ˆã£ã¦ã€ãƒ©ã‚¹ãƒˆä½ç½®ãƒªãƒ­ãƒ¼ãƒ‰ãƒ»åº•ã¾ã§ã—ãªãã¦è‰¯ã„ã‹
+//	if( ghPtWnd == hPtWnd )	ŒÄ‚Ñ‚¾‚µ‚½•û‚É‚æ‚Á‚ÄAƒ‰ƒXƒgˆÊ’uƒŠƒ[ƒhE’ê‚Ü‚Å‚µ‚È‚­‚Ä—Ç‚¢‚©
 
 
-	if( gbThumb )	//	ã‚µãƒ ãƒãƒ¢ãƒ¼ãƒ‰
+	if( gbThumb )	//	ƒTƒ€ƒlƒ‚[ƒh
 	{
 		gdVwTop = 0;
 
-		iItems = AacItemCount( 0  );	//	ç¾åœ¨å€‹æ•°ãƒ»ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼ã®åˆ»ã¿è¨­å®šã«ã¤ã‹ã†
-		if( 0 >= iItems )	return NULL;	//	ã‚¢ã‚¤ãƒ†ãƒ é–‹ã„ã¦ãªã„ãªã‚‰ä½•ã‚‚ã—ãªã„
+		iItems = AacItemCount( 0  );	//	Œ»ÝŒÂ”EƒXƒNƒ[ƒ‹ƒo[‚Ì‚ÝÝ’è‚É‚Â‚©‚¤
+		if( 0 >= iItems )	return NULL;	//	ƒAƒCƒeƒ€ŠJ‚¢‚Ä‚È‚¢‚È‚ç‰½‚à‚µ‚È‚¢
 
-		iLines = (iItems + (TPNL_HORIZ-1)) / TPNL_HORIZ;	//	è¡Œæ•°ãƒ»åˆ‡ã‚Šä¸Šã’å‡¦ç†
+		iLines = (iItems + (TPNL_HORIZ-1)) / TPNL_HORIZ;	//	s”EØ‚èã‚°ˆ—
 
-		iStep = iLines - TPNL_VERTI;	//	ã™ãã‚ã‚‹ã°ï½žã®åˆ»ã¿æ•°
+		iStep = iLines - TPNL_VERTI;	//	‚·‚­‚ë‚é‚Î`‚Ì‚Ý”
 		if( 0 > iStep ){	iStep = 0;	}
 
 		rigOffs = rect.right;
 
-		iScWid = GetSystemMetrics( SM_CXVSCROLL );	//	åž‚ç›´ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼ã®å¹…ç¢ºä¿
+		iScWid = GetSystemMetrics( SM_CXVSCROLL );	//	‚’¼ƒXƒNƒ[ƒ‹ƒo[‚Ì•Šm•Û
 		rect.right += iScWid;
 
-		iBrdrWid = GetSystemMetrics( SM_CXFIXEDFRAME );	//	æž ã®å¹…ç¢ºä¿
+		iBrdrWid = GetSystemMetrics( SM_CXFIXEDFRAME );	//	˜g‚Ì•Šm•Û
 		rect.right += (iBrdrWid*2);
 
 		StringCchCopy( atCaption, SUB_STRING, TEXT("MAA THUMBNAIL") );
@@ -298,7 +298,7 @@ HWND DraughtWindowCreate( HINSTANCE hInstance, HWND hPtWnd, UINT bThumb )
 		StringCchCopy( atCaption, SUB_STRING, TEXT("DRAUGHT BOARD") );
 	}
 
-	//	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ä½œæˆ	TOPMOSTã„ã‚‹ã‹ï¼Ÿ	è¦ã‚‹
+	//	ƒEƒCƒ“ƒhƒEì¬	TOPMOST‚¢‚é‚©H	—v‚é
 	ghDraughtWnd = CreateWindowEx( WS_EX_TOOLWINDOW | WS_EX_TOPMOST,
 		DRAUGHT_BOARD_CLASS, atCaption, WS_POPUP | WS_VISIBLE | WS_CAPTION,
 		rect.left, rect.top, rect.right, rect.bottom, NULL, NULL, hInstance, NULL );
@@ -306,11 +306,11 @@ HWND DraughtWindowCreate( HINSTANCE hInstance, HWND hPtWnd, UINT bThumb )
 #ifdef MAA_TOOLTIP
 	FREE( gptTipBuffer );
 
-	//	ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—
+	//	ƒc[ƒ‹ƒ`ƒbƒv
 	ghDrghtTipWnd = CreateWindowEx( WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL, TTS_NOPREFIX | TTS_ALWAYSTIP, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, ghDraughtWnd, NULL, hInstance, NULL );
 	SetWindowFont( ghDrghtTipWnd, ghTipFont, TRUE );
 
-	//	ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—ã‚’ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã§å‰²ã‚Šä»˜ã‘
+	//	ƒc[ƒ‹ƒ`ƒbƒv‚ðƒR[ƒ‹ƒoƒbƒN‚ÅŠ„‚è•t‚¯
 	ZeroMemory( &stToolInfo, sizeof(TTTOOLINFO) );
 	GetClientRect( ghDraughtWnd, &stToolInfo.rect );
 	stToolInfo.cbSize   = sizeof(TTTOOLINFO);
@@ -318,14 +318,14 @@ HWND DraughtWindowCreate( HINSTANCE hInstance, HWND hPtWnd, UINT bThumb )
 	stToolInfo.hinst    = NULL;	//	
 	stToolInfo.hwnd     = ghDraughtWnd;
 	stToolInfo.uId      = IDTT_DRT_TOOLTIP;
-	stToolInfo.lpszText = LPSTR_TEXTCALLBACK;	//	ã‚³ãƒ¬ã‚’æŒ‡å®šã™ã‚‹ã¨ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã«ãªã‚‹
+	stToolInfo.lpszText = LPSTR_TEXTCALLBACK;	//	ƒRƒŒ‚ðŽw’è‚·‚é‚ÆƒR[ƒ‹ƒoƒbƒN‚É‚È‚é
 	SendMessage( ghDrghtTipWnd, TTM_ADDTOOL, 0, (LPARAM)&stToolInfo );
-	SendMessage( ghDrghtTipWnd, TTM_SETMAXTIPWIDTH, 0 , 0 );	//	ãƒãƒƒãƒ—ã®å¹…ã€‚ï¼è¨­å®šã§ã„ã„ã€‚ã“ã‚Œã—ã¨ã‹ãªã„ã¨æ”¹è¡Œã•ã‚Œãªã„
+	SendMessage( ghDrghtTipWnd, TTM_SETMAXTIPWIDTH, 0 , 0 );	//	ƒ`ƒbƒv‚Ì•B‚OÝ’è‚Å‚¢‚¢B‚±‚ê‚µ‚Æ‚©‚È‚¢‚Æ‰üs‚³‚ê‚È‚¢
 #endif
 
-	if( gbThumb )	//	ã‚µãƒ ãƒãƒ¢ãƒ¼ãƒ‰
+	if( gbThumb )	//	ƒTƒ€ƒlƒ‚[ƒh
 	{
-		//	ä¸€è¦§ã®ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼
+		//	ˆê——‚ÌƒXƒNƒ[ƒ‹ƒo[
 		ghScrBarWnd = CreateWindowEx( 0, WC_SCROLLBAR, TEXT("scroll"), WS_VISIBLE | WS_CHILD | SBS_VERT,
 			rigOffs, 0, iScWid, iScHei, ghDraughtWnd, (HMENU)IDSB_DRT_THUM_SCROLL, hInstance, NULL );
 
@@ -339,7 +339,7 @@ HWND DraughtWindowCreate( HINSTANCE hInstance, HWND hPtWnd, UINT bThumb )
 		SetScrollInfo( ghScrBarWnd, SB_CTL, &stScrollInfo, TRUE );
 	}
 
-	if( !(ghNonItemDC) )	//	ç©´åŸ‹ã‚æç”»ç”¨ãƒ“ãƒƒãƒˆãƒžãƒƒãƒ—ä½œæˆ
+	if( !(ghNonItemDC) )	//	ŒŠ–„‚ß•`‰æ—pƒrƒbƒgƒ}ƒbƒvì¬
 	{
 		hdc = GetDC( ghDraughtWnd );
 
@@ -369,11 +369,11 @@ HWND DraughtWindowCreate( HINSTANCE hInstance, HWND hPtWnd, UINT bThumb )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
-	@param[in]	hWnd	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	iWidth	æ–°ã—ã„ã‚¢ã‚¤ãƒ†ãƒ å¹…
-	@param[in]	iHeight	æ–°ã—ã„ã‚¢ã‚¤ãƒ†ãƒ é«˜ã•
-	@return	HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	ƒEƒCƒ“ƒhƒEƒvƒƒV[ƒWƒƒ
+	@param[in]	hWnd	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	iWidth	V‚µ‚¢ƒAƒCƒeƒ€•
+	@param[in]	iHeight	V‚µ‚¢ƒAƒCƒeƒ€‚‚³
+	@return	HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT DraughtFrameResize( HWND hWnd, INT iWidth, INT iHeight )
 {
@@ -397,28 +397,28 @@ HRESULT DraughtFrameResize( HWND hWnd, INT iWidth, INT iHeight )
 	iScHei      = rect.bottom;
 	rect.bottom += ((iYfrm * 2) + iCapHei);
 
-	if( gbThumb )	//	ã‚µãƒ ãƒãƒ¢ãƒ¼ãƒ‰
+	if( gbThumb )	//	ƒTƒ€ƒlƒ‚[ƒh
 	{
 		rigOffs = rect.right;
 
-		iScWid = GetSystemMetrics( SM_CXVSCROLL );	//	åž‚ç›´ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼ã®å¹…ç¢ºä¿
+		iScWid = GetSystemMetrics( SM_CXVSCROLL );	//	‚’¼ƒXƒNƒ[ƒ‹ƒo[‚Ì•Šm•Û
 		rect.right += iScWid;
 
-		iBrdrWid = GetSystemMetrics( SM_CXFIXEDFRAME );	//	æž ã®å¹…ç¢ºä¿
+		iBrdrWid = GetSystemMetrics( SM_CXFIXEDFRAME );	//	˜g‚Ì•Šm•Û
 		rect.right += (iBrdrWid*2);
 	}
 
-	//	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚ºå¤‰æ›´
+	//	ƒEƒCƒ“ƒhƒEƒTƒCƒY•ÏX
 	SetWindowPos( ghDraughtWnd, HWND_TOP, rect.left, rect.top, rect.right, rect.bottom, SWP_NOMOVE );
 
-	if( gbThumb )	//	ã‚µãƒ ãƒãƒ¢ãƒ¼ãƒ‰ãƒ»ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼ã®ä½ç½®å¤‰æ›´
+	if( gbThumb )	//	ƒTƒ€ƒlƒ‚[ƒhEƒXƒNƒ[ƒ‹ƒo[‚ÌˆÊ’u•ÏX
 	{
 		SetWindowPos( ghScrBarWnd, HWND_TOP, rigOffs, 0, iScWid, iScHei, SWP_NOZORDER );
 	}
 
 	InvalidateRect( ghDraughtWnd, NULL, TRUE );
 
-	//	è¨˜éŒ²
+	//	‹L˜^
 	InitParamValue( INIT_SAVE, VL_THUMB_HORIZ, giItemWidth );
 	InitParamValue( INIT_SAVE, VL_THUMB_VERTI, giItemHeight );
 
@@ -427,13 +427,13 @@ HRESULT DraughtFrameResize( HWND hWnd, INT iWidth, INT iHeight )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
-	@param[in]	hWnd	è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	message	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®è­˜åˆ¥ç•ªå·
-	@param[in]	wParam	è¿½åŠ ã®æƒ…å ±ï¼‘
-	@param[in]	lParam	è¿½åŠ ã®æƒ…å ±ï¼’
-	@retval 0	ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡¦ç†æ¸ˆã¿
-	@retval no0	ã“ã“ã§ã¯å‡¦ç†ã›ãšæ¬¡ã«å›žã™
+	ƒEƒCƒ“ƒhƒEƒvƒƒV[ƒWƒƒ
+	@param[in]	hWnd	eƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
+	@param[in]	message	ƒEƒCƒ“ƒhƒEƒƒbƒZ[ƒW‚ÌŽ¯•Ê”Ô†
+	@param[in]	wParam	’Ç‰Á‚Ìî•ñ‚P
+	@param[in]	lParam	’Ç‰Á‚Ìî•ñ‚Q
+	@retval 0	ƒƒbƒZ[ƒWˆ—Ï‚Ý
+	@retval no0	‚±‚±‚Å‚Íˆ—‚¹‚¸ŽŸ‚É‰ñ‚·
 */
 LRESULT CALLBACK DraughtProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
@@ -441,17 +441,17 @@ LRESULT CALLBACK DraughtProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 	{
 	//	HANDLE_MSG( hWnd, WM_SIZE,        Drt_OnSize );	
 		HANDLE_MSG( hWnd, WM_COMMAND,     Drt_OnCommand );	
-		HANDLE_MSG( hWnd, WM_MOUSEMOVE,   Drt_OnMouseMove );	//	ãƒžã‚¦ã‚¹ã„ã”ã„ãŸ
+		HANDLE_MSG( hWnd, WM_MOUSEMOVE,   Drt_OnMouseMove );	//	ƒ}ƒEƒX‚¢‚²‚¢‚½
 		HANDLE_MSG( hWnd, WM_LBUTTONUP,   Drt_OnLButtonUp );
 		HANDLE_MSG( hWnd, WM_MBUTTONUP,   Drt_OnMButtonUp );
 		HANDLE_MSG( hWnd, WM_PAINT,       Drt_OnPaint );
-		HANDLE_MSG( hWnd, WM_CONTEXTMENU, Drt_OnContextMenu );	//	å³ã‚¯ãƒªãƒ¡ãƒ‹ãƒ¥ãƒ¼
+		HANDLE_MSG( hWnd, WM_CONTEXTMENU, Drt_OnContextMenu );	//	‰EƒNƒŠƒƒjƒ…[
 		HANDLE_MSG( hWnd, WM_DESTROY,     Drt_OnDestroy );
-		HANDLE_MSG( hWnd, WM_KILLFOCUS,   Drt_OnKillFocus );	//	ãƒ•ã‚©ãƒ¼ã‚«ã‚¹ã‚’å¤±ã£ãŸ
-		HANDLE_MSG( hWnd, WM_VSCROLL,     Drt_OnVScroll );		//	ç¸¦ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«é–¢é€£
-		HANDLE_MSG( hWnd, WM_MOUSEWHEEL,  Drt_OnMouseWheel );	//	ãƒžã‚¦ã‚¹ãƒ›ã‚¦ã‚£ãƒ¼ãƒ«
+		HANDLE_MSG( hWnd, WM_KILLFOCUS,   Drt_OnKillFocus );	//	ƒtƒH[ƒJƒX‚ðŽ¸‚Á‚½
+		HANDLE_MSG( hWnd, WM_VSCROLL,     Drt_OnVScroll );		//	cƒXƒNƒ[ƒ‹ŠÖ˜A
+		HANDLE_MSG( hWnd, WM_MOUSEWHEEL,  Drt_OnMouseWheel );	//	ƒ}ƒEƒXƒzƒEƒB[ƒ‹
 #ifdef MAA_TOOLTIP
-		HANDLE_MSG( hWnd, WM_NOTIFY,      Drt_OnNotify );	//	ã‚³ãƒ¢ãƒ³ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã®å€‹åˆ¥ã‚¤ãƒ™ãƒ³ãƒˆ
+		HANDLE_MSG( hWnd, WM_NOTIFY,      Drt_OnNotify );	//	ƒRƒ‚ƒ“ƒRƒ“ƒgƒ[ƒ‹‚ÌŒÂ•ÊƒCƒxƒ“ƒg
 #endif
 
 #ifdef USE_HOVERTIP
@@ -476,12 +476,12 @@ LRESULT CALLBACK DraughtProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	COMMANDãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®å—ã‘å–ã‚Šã€‚ãƒœã‚¿ãƒ³æŠ¼ã•ã‚ŒãŸã¨ã‹ã§ç™ºç”Ÿ
-	@param[in]	hWnd		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	id			ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ç™ºç”Ÿã•ã›ãŸå­ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®è­˜åˆ¥å­	LOWORD(wParam)
-	@param[in]	hWndCtl		ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ç™ºç”Ÿã•ã›ãŸå­ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«	lParam
-	@param[in]	codeNotify	é€šçŸ¥ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸	HIWORD(wParam)
-	@return		ãªã—
+	COMMANDƒƒbƒZ[ƒW‚ÌŽó‚¯Žæ‚èBƒ{ƒ^ƒ“‰Ÿ‚³‚ê‚½‚Æ‚©‚Å”­¶
+	@param[in]	hWnd		ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	id			ƒƒbƒZ[ƒW‚ð”­¶‚³‚¹‚½ŽqƒEƒCƒ“ƒhƒE‚ÌŽ¯•ÊŽq	LOWORD(wParam)
+	@param[in]	hWndCtl		ƒƒbƒZ[ƒW‚ð”­¶‚³‚¹‚½ŽqƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹	lParam
+	@param[in]	codeNotify	’Ê’mƒƒbƒZ[ƒW	HIWORD(wParam)
+	@return		‚È‚µ
 */
 VOID Drt_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 {
@@ -496,7 +496,7 @@ VOID Drt_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 		case IDM_DRAUGHT_UNICLIP:
 		case IDM_DRAUGHT_SJISCLIP:		DraughtItemUse( hWnd , id );	DestroyWindow( hWnd );	break;
 
-		case IDM_THUMB_DRAUGHT_ADD:		DraughtItemUse( hWnd , id );	break;	//	Draughtè¿½åŠ ãªã‚‰é–‰ã˜ãªã„æ–¹ãŒã„ã„ã ã‚ã†
+		case IDM_THUMB_DRAUGHT_ADD:		DraughtItemUse( hWnd , id );	break;	//	Draught’Ç‰Á‚È‚ç•Â‚¶‚È‚¢•û‚ª‚¢‚¢‚¾‚ë‚¤
 
 		case IDM_DRAUGHT_DELETE:		DraughtItemDelete( giTarget );	InvalidateRect( hWnd , NULL, TRUE );	break;
 		case IDM_DRAUGHT_ALLDELETE:		DraughtItemDelete( -1 );	DestroyWindow( hWnd );	break;
@@ -517,9 +517,9 @@ VOID Drt_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	PAINTã€‚ç„¡åŠ¹é ˜åŸŸãŒå‡ºæ¥ãŸã¨ãã«ç™ºç”Ÿã€‚èƒŒæ™¯ã®æ‰±ã„ã«æ³¨æ„ã€‚èƒŒæ™¯ã‚’å¡—ã‚Šã¤ã¶ã—ã¦ã‹ã‚‰ã€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æç”»
-	@param[in]	hWnd	è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
-	@return		ç„¡ã—
+	PAINTB–³Œø—Ìˆæ‚ªo—ˆ‚½‚Æ‚«‚É”­¶B”wŒi‚Ìˆµ‚¢‚É’ˆÓB”wŒi‚ð“h‚è‚Â‚Ô‚µ‚Ä‚©‚çAƒIƒuƒWƒFƒNƒg‚ð•`‰æ
+	@param[in]	hWnd	eƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
+	@return		–³‚µ
 */
 VOID Drt_OnPaint( HWND hWnd )
 {
@@ -542,7 +542,7 @@ VOID Drt_OnPaint( HWND hWnd )
 
 	SetStretchBltMode( hdc, HALFTONE );
 
-	if( gbThumb )	//	ã‚µãƒ ãƒãƒ¢ãƒ¼ãƒ‰
+	if( gbThumb )	//	ƒTƒ€ƒlƒ‚[ƒh
 	{
 		iItems = gdVwTop * TPNL_HORIZ;
 
@@ -561,9 +561,9 @@ VOID Drt_OnPaint( HWND hWnd )
 					hAaDC = CreateCompatibleDC( hdc );
 					hOldBmp = SelectBitmap( hAaDC, hBmp );
 
-					StretchBlt( hdc, (x * giItemWidth), (y * giItemHeight), stSize.cx, stSize.cy,	//	ã‚³ãƒ”ãƒ¼å…ˆï¼¤ï¼£ã€å·¦ä¸Šï¼¸ï¼¹ã€å¹…ã€é«˜ã•
-						hAaDC, 0, 0, stOrgSize.cx, stOrgSize.cy,	//	ã‚³ãƒ”ãƒ¼å…ƒï¼¤ï¼£ã€å·¦ä¸Šï¼¸ï¼¹ã€å¹…ã€é«˜ã•
-						SRCCOPY );	//	ãƒ©ã‚¹ã‚¿ã‚ªãƒšãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚³ãƒ¼ãƒ‰
+					StretchBlt( hdc, (x * giItemWidth), (y * giItemHeight), stSize.cx, stSize.cy,	//	ƒRƒs[æ‚c‚bA¶ã‚w‚xA•A‚‚³
+						hAaDC, 0, 0, stOrgSize.cx, stOrgSize.cy,	//	ƒRƒs[Œ³‚c‚bA¶ã‚w‚xA•A‚‚³
+						SRCCOPY );	//	ƒ‰ƒXƒ^ƒIƒyƒŒ[ƒVƒ‡ƒ“ƒR[ƒh
 
 					SelectBitmap( hAaDC, hOldBmp );
 
@@ -600,9 +600,9 @@ VOID Drt_OnPaint( HWND hWnd )
 					hAaDC = CreateCompatibleDC( hdc );
 					hOldBmp = SelectBitmap( hAaDC, itItem->hThumbBmp );
 
-					StretchBlt( hdc, (x * giItemWidth), (y * giItemHeight), stSize.cx, stSize.cy,	//	ã‚³ãƒ”ãƒ¼å…ˆï¼¤ï¼£ã€å·¦ä¸Šï¼¸ï¼¹ã€å¹…ã€é«˜ã•
-						hAaDC, 0, 0, itItem->stSize.cx, itItem->stSize.cy,	//	ã‚³ãƒ”ãƒ¼å…ƒï¼¤ï¼£ã€å·¦ä¸Šï¼¸ï¼¹ã€å¹…ã€é«˜ã•
-						SRCCOPY );	//	ãƒ©ã‚¹ã‚¿ã‚ªãƒšãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚³ãƒ¼ãƒ‰	//	itItem->hThumbDC
+					StretchBlt( hdc, (x * giItemWidth), (y * giItemHeight), stSize.cx, stSize.cy,	//	ƒRƒs[æ‚c‚bA¶ã‚w‚xA•A‚‚³
+						hAaDC, 0, 0, itItem->stSize.cx, itItem->stSize.cy,	//	ƒRƒs[Œ³‚c‚bA¶ã‚w‚xA•A‚‚³
+						SRCCOPY );	//	ƒ‰ƒXƒ^ƒIƒyƒŒ[ƒVƒ‡ƒ“ƒR[ƒh	//	itItem->hThumbDC
 
 					SelectBitmap( hAaDC, hOldBmp );
 
@@ -624,13 +624,13 @@ VOID Drt_OnPaint( HWND hWnd )
 
 	SelectFont( hdc, hOldFnt );
 
-	for( y = 1; TPNL_HORIZ > y; y++ )	//	ç¸¦ç·š
+	for( y = 1; TPNL_HORIZ > y; y++ )	//	cü
 	{
 		MoveToEx( hdc, (y * giItemWidth), 0, NULL );
 		LineTo( hdc, (y * giItemWidth), (giItemHeight * TPNL_VERTI) );
 	}
 
-	for( x = 1; TPNL_VERTI > x; x++ )	//	æ¨ªç·š
+	for( x = 1; TPNL_VERTI > x; x++ )	//	‰¡ü
 	{
 		MoveToEx( hdc, 0, (x * giItemHeight), NULL );
 		LineTo(   hdc, (giItemWidth * TPNL_HORIZ), (x * giItemHeight) );
@@ -643,9 +643,9 @@ VOID Drt_OnPaint( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒ•ã‚©ãƒ¼ã‚«ã‚¹ã‚’å¤±ã£ãŸå ´åˆ
-	@param[in]	hWnd			ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	hwndNewFocus	ãƒ•ã‚©ãƒ¼ã‚«ã‚¹ã‚’å¾—ãŸã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
+	ƒtƒH[ƒJƒX‚ðŽ¸‚Á‚½ê‡
+	@param[in]	hWnd			ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	hwndNewFocus	ƒtƒH[ƒJƒX‚ð“¾‚½ƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
 */
 VOID Drt_OnKillFocus( HWND hWnd, HWND hwndNewFocus )
 {
@@ -663,11 +663,11 @@ VOID Drt_OnKillFocus( HWND hWnd, HWND hwndNewFocus )
 
 #ifdef MAA_TOOLTIP
 /*!
-	ãƒŽãƒ¼ãƒ†ã‚£ãƒ•ã‚¡ã‚¤ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®å‡¦ç†
-	@param[in]	hWnd		è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	idFrom		NOTIFYã‚’ç™ºç”Ÿã•ã›ãŸã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã®ï¼©ï¼¤
-	@param[in]	pstNmhdr	NOTIFYã®è©³ç´°
-	@return		å‡¦ç†ã—ãŸå†…å®¹ã¨ã‹
+	ƒm[ƒeƒBƒtƒ@ƒCƒƒbƒZ[ƒW‚Ìˆ—
+	@param[in]	hWnd		eƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
+	@param[in]	idFrom		NOTIFY‚ð”­¶‚³‚¹‚½ƒRƒ“ƒgƒ[ƒ‹‚Ì‚h‚c
+	@param[in]	pstNmhdr	NOTIFY‚ÌÚ×
+	@return		ˆ—‚µ‚½“à—e‚Æ‚©
 */
 LRESULT Drt_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 {
@@ -679,40 +679,40 @@ LRESULT Drt_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 
 	MAAM_ITR	itItem;
 
-	if( TTN_GETDISPINFO ==  pstNmhdr->code )	//	ãƒ„ãƒ¼ãƒ«ãƒãƒƒãƒ—ã®å†…å®¹ã®å•ã„åˆã‚ã›ã ã£ãŸã‚‰
+	if( TTN_GETDISPINFO ==  pstNmhdr->code )	//	ƒc[ƒ‹ƒ`ƒbƒv‚Ì“à—e‚Ì–â‚¢‡‚í‚¹‚¾‚Á‚½‚ç
 	{
-		GetCursorPos( &stMosPos );	//	ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™
-		ScreenToClient( hWnd, &stMosPos );	//	ã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆåº§æ¨™ã«å¤‰æ›
+		GetCursorPos( &stMosPos );	//	ƒXƒNƒŠ[ƒ“À•W
+		ScreenToClient( hWnd, &stMosPos );	//	ƒNƒ‰ƒCƒ„ƒ“ƒgÀ•W‚É•ÏŠ·
 
 		pstDispInfo = (LPNMTTDISPINFO)pstNmhdr;
 
 		ZeroMemory( &(pstDispInfo->szText), sizeof(pstDispInfo->szText) );
 		pstDispInfo->lpszText = NULL;
 
-		if( !(gbAAtipView) ){	return 0;	}	//	éžè¡¨ç¤ºãªã‚‰ä½•ã‚‚ã—ãªã„ã§ãŠï½‹
+		if( !(gbAAtipView) ){	return 0;	}	//	”ñ•\Ž¦‚È‚ç‰½‚à‚µ‚È‚¢‚Å‚¨‚‹
 
 		FREE( gptTipBuffer );
 
 		iTarget = DraughtTargetItemSet( &stMosPos );
 		TRACE( TEXT("TARGET %d"), iTarget );
 
-		if( gbThumb )	//	ã‚µãƒ ãƒã‚¤ãƒ«
+		if( gbThumb )	//	ƒTƒ€ƒlƒCƒ‹
 		{
 			iOffset = gdVwTop * TPNL_HORIZ;
 			iTarget = iOffset + iTarget;
-			pcConts = AacAsciiArtGet( iTarget );	//	è©²å½“ã™ã‚‹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹AAã‚’å¼•ã£å¼µã£ã¦ãã‚‹
+			pcConts = AacAsciiArtGet( iTarget );	//	ŠY“–‚·‚éƒCƒ“ƒfƒbƒNƒXAA‚ðˆø‚Á’£‚Á‚Ä‚­‚é
 
 			gptTipBuffer = SjisDecodeAlloc( pcConts );
 			FREE( pcConts );
 		}
 		else
 		{
-			iItems = gvcDrtItems.size( );	//	ç¾åœ¨å€‹æ•°
-			if( iItems > iTarget )	//	ä¿æŒæ•°å†…ã§ã‚ã‚Œã°
+			iItems = gvcDrtItems.size( );	//	Œ»ÝŒÂ”
+			if( iItems > iTarget )	//	•ÛŽ”“à‚Å‚ ‚ê‚Î
 			{
 				for( i = 0, itItem = gvcDrtItems.begin(); gvcDrtItems.end() != itItem; i++, itItem++ )
 				{
-					if( iTarget == i )	//	ãƒ’ãƒƒãƒˆ
+					if( iTarget == i )	//	ƒqƒbƒg
 					{
 						gptTipBuffer = SjisDecodeAlloc( itItem->pcItem );
 						break;
@@ -721,7 +721,7 @@ LRESULT Drt_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 			}
 		}
 
-		//	ã“ã“ã§NULLã‚’è¿”ã™ã¨ã€ãã‚Œä»¥é™ã®ãƒãƒƒãƒ—ãŒå‡ºã¦ã“ãªã„
+		//	‚±‚±‚ÅNULL‚ð•Ô‚·‚ÆA‚»‚êˆÈ~‚Ìƒ`ƒbƒv‚ªo‚Ä‚±‚È‚¢
 		if( gptTipBuffer  ){	pstDispInfo->lpszText = gptTipBuffer;	}
 		else{					pstDispInfo->lpszText = TTMSG_NO_ITEM;	}
 	}
@@ -732,12 +732,12 @@ LRESULT Drt_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 #endif
 
 /*!
-	ãƒžã‚¦ã‚¹ãŒå‹•ã„ãŸã¨ãã®å‡¦ç†
-	@param[in]	hWnd		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	x			ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆåº§æ¨™ï¼¸
-	@param[in]	y			ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆåº§æ¨™ï¼¹
-	@param[in]	keyFlags	æŠ¼ã•ã‚Œã¦ã‚‹ä»–ã®ãƒœã‚¿ãƒ³
-	@return		ãªã—
+	ƒ}ƒEƒX‚ª“®‚¢‚½‚Æ‚«‚Ìˆ—
+	@param[in]	hWnd		ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	x			ƒNƒ‰ƒCƒAƒ“ƒgÀ•W‚w
+	@param[in]	y			ƒNƒ‰ƒCƒAƒ“ƒgÀ•W‚x
+	@param[in]	keyFlags	‰Ÿ‚³‚ê‚Ä‚é‘¼‚Ìƒ{ƒ^ƒ“
+	@return		‚È‚µ
 */
 VOID Drt_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
 {
@@ -748,12 +748,12 @@ VOID Drt_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
 	point.x = x;
 	point.y = y;
 
-	iTarget = DraughtTargetItemSet( &point );	//	ãƒžã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ä¸‹ã®æž ã‚’ç¢ºèª
+	iTarget = DraughtTargetItemSet( &point );	//	ƒ}ƒEƒXƒJ[ƒ\ƒ‹‰º‚Ì˜g‚ðŠm”F
 	if( giItemSel !=  iTarget ){	bReDraw =  TRUE;	}
 	giItemSel = iTarget;
 
 #ifdef USE_HOVERTIP
-	//	åˆã‚ã¦ã®æž ãªã‚‰
+	//	‰‚ß‚Ä‚Ì˜g‚È‚ç
 	if( bReDraw && gbAAtipView ){	HoverTipResist( ghDraughtWnd  );	}
 #endif
 
@@ -762,15 +762,15 @@ VOID Drt_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒžã‚¦ã‚¹ã®ä¸­ãƒœã‚¿ãƒ³ãŒã†ã£ï½ã•ã‚ŒãŸã¨ã
-	@param[in]	hWnd		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	x			ç™ºç”Ÿã—ãŸï¼¸åº§æ¨™å€¤
-	@param[in]	y			ç™ºç”Ÿã—ãŸï¼¹åº§æ¨™å€¤
-	@param[in]	keyFlags	ä»–ã«æŠ¼ã•ã‚Œã¦ã‚‹ã‚­ãƒ¼ã«ã¤ã„ã¦
+	ƒ}ƒEƒX‚Ì’†ƒ{ƒ^ƒ“‚ª‚¤‚Á‚‚³‚ê‚½‚Æ‚«
+	@param[in]	hWnd		ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	x			”­¶‚µ‚½‚wÀ•W’l
+	@param[in]	y			”­¶‚µ‚½‚xÀ•W’l
+	@param[in]	keyFlags	‘¼‚É‰Ÿ‚³‚ê‚Ä‚éƒL[‚É‚Â‚¢‚Ä
 */
 VOID Drt_OnMButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
 {
-	TRACE( TEXT("MUP %d x %d"), x , y );	//	ã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆåº§æ¨™
+	TRACE( TEXT("MUP %d x %d"), x , y );	//	ƒNƒ‰ƒCƒ„ƒ“ƒgÀ•W
 
 	DraughtButtonUp( hWnd, x, y, keyFlags, WM_MBUTTONUP );
 
@@ -779,15 +779,15 @@ VOID Drt_OnMButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒžã‚¦ã‚¹ã®å·¦ãƒœã‚¿ãƒ³ãŒã†ã£ï½ã•ã‚ŒãŸã¨ã
-	@param[in]	hWnd		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	x			ç™ºç”Ÿã—ãŸï¼¸åº§æ¨™å€¤
-	@param[in]	y			ç™ºç”Ÿã—ãŸï¼¹åº§æ¨™å€¤
-	@param[in]	keyFlags	ä»–ã«æŠ¼ã•ã‚Œã¦ã‚‹ã‚­ãƒ¼ã«ã¤ã„ã¦
+	ƒ}ƒEƒX‚Ì¶ƒ{ƒ^ƒ“‚ª‚¤‚Á‚‚³‚ê‚½‚Æ‚«
+	@param[in]	hWnd		ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	x			”­¶‚µ‚½‚wÀ•W’l
+	@param[in]	y			”­¶‚µ‚½‚xÀ•W’l
+	@param[in]	keyFlags	‘¼‚É‰Ÿ‚³‚ê‚Ä‚éƒL[‚É‚Â‚¢‚Ä
 */
 VOID Drt_OnLButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
 {
-	TRACE( TEXT("LUP %d x %d"), x , y );	//	ã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆåº§æ¨™
+	TRACE( TEXT("LUP %d x %d"), x , y );	//	ƒNƒ‰ƒCƒ„ƒ“ƒgÀ•W
 
 	DraughtButtonUp( hWnd, x, y, keyFlags, WM_LBUTTONUP );
 
@@ -796,12 +796,12 @@ VOID Drt_OnLButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒžã‚¦ã‚¹ã®ãƒœã‚¿ãƒ³ãŒã†ã£ï½ã•ã‚ŒãŸã¨ã
-	@param[in]	hWnd		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	x			ç™ºç”Ÿã—ãŸï¼¸åº§æ¨™å€¤
-	@param[in]	y			ç™ºç”Ÿã—ãŸï¼¹åº§æ¨™å€¤
-	@param[in]	keyFlags	ä»–ã«æŠ¼ã•ã‚Œã¦ã‚‹ã‚­ãƒ¼ã«ã¤ã„ã¦
-	@param[in]	message		ã†ï½ã•ã‚ŒãŸãƒœã‚¿ãƒ³ã‚¿ã‚¤ãƒ—	WM_LBUTTONUP	WM_MBUTTONUP
+	ƒ}ƒEƒX‚Ìƒ{ƒ^ƒ“‚ª‚¤‚Á‚‚³‚ê‚½‚Æ‚«
+	@param[in]	hWnd		ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	x			”­¶‚µ‚½‚wÀ•W’l
+	@param[in]	y			”­¶‚µ‚½‚xÀ•W’l
+	@param[in]	keyFlags	‘¼‚É‰Ÿ‚³‚ê‚Ä‚éƒL[‚É‚Â‚¢‚Ä
+	@param[in]	message		‚¤‚‚³‚ê‚½ƒ{ƒ^ƒ“ƒ^ƒCƒv	WM_LBUTTONUP	WM_MBUTTONUP
 */
 VOID DraughtButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags, UINT message )
 {
@@ -815,11 +815,11 @@ VOID DraughtButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags, UINT message )
 	giTarget = DraughtTargetItemSet( &stPos );
 	TRACE( TEXT("TARGET %d"), giTarget );
 
-	//	ã‚µãƒ ãƒå´ã§ã‚¯ãƒ«ãƒƒã‚¯ã—ãŸãªã‚‰ã€MAAã®ãƒ‡ãƒ•ã‚©å‹•ä½œã«å¾“ã†
+	//	ƒTƒ€ƒl‘¤‚ÅƒNƒ‹ƒbƒN‚µ‚½‚È‚çAMAA‚ÌƒfƒtƒH“®ì‚É]‚¤
 	if( gbThumb )
 	{
 		dMode = ViewMaaItemsModeGet( &dSubMode );
-		//	ä¸­ã‚¯ãƒ«ãƒƒã‚¯ã®å ´åˆ
+		//	’†ƒNƒ‹ƒbƒN‚Ìê‡
 		if( WM_MBUTTONUP == message )	dMode = dSubMode;
 
 		switch( dMode )
@@ -830,7 +830,7 @@ VOID DraughtButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags, UINT message )
 			case  2:	id = IDM_DRAUGHT_LAYERBOX;	break;
 	#endif
 			case  3:	id = IDM_DRAUGHT_UNICLIP;	break;
-			default:	//	ã¨ã‚Šã‚ãˆãšã‚³ãƒ”ãƒ¼
+			default:	//	‚Æ‚è‚ ‚¦‚¸ƒRƒs[
 			case  4:	id = IDM_DRAUGHT_SJISCLIP;	break;
 			case  5:	id = IDM_THUMB_DRAUGHT_ADD;	break;
 		}
@@ -848,7 +848,7 @@ VOID DraughtButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags, UINT message )
 			case  2:	id = IDM_DRAUGHT_LAYERBOX;	break;
 	#endif
 			case  3:	id = IDM_DRAUGHT_UNICLIP;	break;
-			default:	//	ãƒ‰ãƒ©ãƒ•ãƒˆå´ãªã‚‰ã€ã¨ã‚Šã‚ãˆãšã‚³ãƒ”ãƒ¼
+			default:	//	ƒhƒ‰ƒtƒg‘¤‚È‚çA‚Æ‚è‚ ‚¦‚¸ƒRƒs[
 			case  4:	id = IDM_DRAUGHT_SJISCLIP;	break;
 		}
 	}
@@ -860,12 +860,12 @@ VOID DraughtButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags, UINT message )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãƒ¡ãƒ‹ãƒ¥ãƒ¼å‘¼ã³ã ã—ã‚¢ã‚¯ã‚·ãƒ§ãƒ³(è¦ã¯å³ã‚¯ãƒ«ãƒƒã‚¯ï¼‰
-	@param[in]	hWnd		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	hWndContext	ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãŒç™ºç”Ÿã—ãŸã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	xPos		ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ï¼¸åº§æ¨™
-	@param[in]	yPos		ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ï¼¹åº§æ¥­
-	@return		ç„¡ã—
+	ƒRƒ“ƒeƒLƒXƒgƒƒjƒ…[ŒÄ‚Ñ‚¾‚µƒAƒNƒVƒ‡ƒ“(—v‚Í‰EƒNƒ‹ƒbƒNj
+	@param[in]	hWnd		ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	hWndContext	ƒRƒ“ƒeƒLƒXƒg‚ª”­¶‚µ‚½ƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
+	@param[in]	xPos		ƒXƒNƒŠ[ƒ“‚wÀ•W
+	@param[in]	yPos		ƒXƒNƒŠ[ƒ“‚xÀ‹Æ
+	@return		–³‚µ
 */
 VOID Drt_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 {
@@ -874,7 +874,7 @@ VOID Drt_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 
 	POINT	stPoint, stPos;
 
-	stPoint.x = (SHORT)xPos;	//	ç”»é¢åº§æ¨™ã¯ãƒžã‚¤ãƒŠã‚¹ã‚‚ã‚ã‚Šã†ã‚‹
+	stPoint.x = (SHORT)xPos;	//	‰æ–ÊÀ•W‚Íƒ}ƒCƒiƒX‚à‚ ‚è‚¤‚é
 	stPoint.y = (SHORT)yPos;
 
 	TRACE( TEXT("CTX %d x %d"), stPoint.x, stPoint.y );
@@ -887,16 +887,16 @@ VOID Drt_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 	hMenu = LoadMenu( GetModuleHandle(NULL), MAKEINTRESOURCE(IDM_DRAUGHT_POPUP) );
 	hSubMenu = GetSubMenu( hMenu, 0 );
 
-	if( gbThumb )	//	ã‚µãƒ ãƒå´ãªã‚‰
+	if( gbThumb )	//	ƒTƒ€ƒl‘¤‚È‚ç
 	{
-		DeleteMenu( hSubMenu, IDM_DRAUGHT_ALLDELETE, MF_BYCOMMAND );	//	å…¨å‰Šé™¤ã‚’ç ´å£Š
-		DeleteMenu( hSubMenu, IDM_DRAUGHT_EXPORT,    MF_BYCOMMAND );	//	ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆã‚’ç ´å£Š
-		//	æ–‡å­—åˆ—å¤‰æ›´
-		ModifyMenu( hSubMenu, IDM_DRAUGHT_CLOSE,     MF_BYCOMMAND | MFT_STRING, IDM_DRAUGHT_CLOSE, TEXT("ã‚µãƒ ãƒã‚¤ãƒ«ã‚’é–‰ã˜ã‚‹(&Q)") );
-		ModifyMenu( hSubMenu, IDM_DRAUGHT_DELETE,    MF_BYCOMMAND | MFT_STRING, IDM_THUMB_DRAUGHT_ADD, TEXT("ãƒ‰ãƒ©ãƒ•ãƒˆãƒœãƒ¼ãƒ‰ã«è¿½åŠ (&D)") );
+		DeleteMenu( hSubMenu, IDM_DRAUGHT_ALLDELETE, MF_BYCOMMAND );	//	‘Síœ‚ð”j‰ó
+		DeleteMenu( hSubMenu, IDM_DRAUGHT_EXPORT,    MF_BYCOMMAND );	//	ƒGƒNƒXƒ|[ƒg‚ð”j‰ó
+		//	•¶Žš—ñ•ÏX
+		ModifyMenu( hSubMenu, IDM_DRAUGHT_CLOSE,     MF_BYCOMMAND | MFT_STRING, IDM_DRAUGHT_CLOSE, TEXT("ƒTƒ€ƒlƒCƒ‹‚ð•Â‚¶‚é(&Q)") );
+		ModifyMenu( hSubMenu, IDM_DRAUGHT_DELETE,    MF_BYCOMMAND | MFT_STRING, IDM_THUMB_DRAUGHT_ADD, TEXT("ƒhƒ‰ƒtƒgƒ{[ƒh‚É’Ç‰Á(&D)") );
 	}
 
-	if( giItemWidth == giItemHeight )	//	è©²å½“ã™ã‚‹ã‚µã‚¤ã‚ºã«ãƒã‚§ã‚­ãƒ©ï¼
+	if( giItemWidth == giItemHeight )	//	ŠY“–‚·‚éƒTƒCƒY‚Éƒ`ƒFƒLƒ‰I
 	{
 		switch( giItemWidth )
 		{
@@ -909,7 +909,7 @@ VOID Drt_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 	}
 
 	dRslt = TrackPopupMenu( hSubMenu, 0, stPoint.x, stPoint.y, 0, hWnd, NULL );
-	//	é¸æŠžã›ãšã§ï¼ã‹ï¼ï¼‘ï¼Ÿã€TPM_RETURNCMDç„¡ã‹ã£ãŸã‚‰ã€é¸æŠžã—ãŸã‚‰ãã®ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®ï¼©ï¼¤ã§WM_COMMANDãŒç™ºè¡Œ
+	//	‘I‘ð‚¹‚¸‚Å‚O‚©|‚PHATPM_RETURNCMD–³‚©‚Á‚½‚çA‘I‘ð‚µ‚½‚ç‚»‚Ìƒƒjƒ…[‚Ì‚h‚c‚ÅWM_COMMAND‚ª”­s
 	DestroyMenu( hMenu );
 
 	return;
@@ -917,9 +917,9 @@ VOID Drt_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã‚’é–‰ã˜ã‚‹ã¨ãã«ç™ºç”Ÿã€‚
-	@param[in]	hWnd	è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
-	@return		ç„¡ã—
+	ƒEƒCƒ“ƒhƒE‚ð•Â‚¶‚é‚Æ‚«‚É”­¶B
+	@param[in]	hWnd	eƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
+	@return		–³‚µ
 */
 VOID Drt_OnDestroy( HWND hWnd )
 {
@@ -935,12 +935,12 @@ VOID Drt_OnDestroy( HWND hWnd )
 
 
 /*!
-	ãƒ›ã‚¤ãƒ¼ãƒ«å¤§å›žè»¢
-	@param[in]	hWnd	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	xPos	ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ï¼¸åº§æ¨™
-	@param[in]	yPos	ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ï¼¹åº§æ¨™
-	@param[in]	zDelta	å›žè»¢é‡ãƒ»ï¼‘ï¼’ï¼å˜ä½ãƒ»WHEEL_DELTA
-	@param[in]	fwKeys	ä»–ã«æŠ¼ã•ã‚Œã¦ã„ãŸã‚­ãƒ¼
+	ƒzƒC[ƒ‹‘å‰ñ“]
+	@param[in]	hWnd	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	xPos	ƒXƒNƒŠ[ƒ“‚wÀ•W
+	@param[in]	yPos	ƒXƒNƒŠ[ƒ“‚xÀ•W
+	@param[in]	zDelta	‰ñ“]—ÊE‚P‚Q‚O’PˆÊEWHEEL_DELTA
+	@param[in]	fwKeys	‘¼‚É‰Ÿ‚³‚ê‚Ä‚¢‚½ƒL[
 */
 VOID Drt_OnMouseWheel( HWND hWnd, INT xPos, INT yPos, INT zDelta, UINT fwKeys )
 {
@@ -956,19 +956,19 @@ VOID Drt_OnMouseWheel( HWND hWnd, INT xPos, INT yPos, INT zDelta, UINT fwKeys )
 	else if( 0 > zDelta )	dCode = SB_LINEDOWN;
 	else					dCode = SB_ENDSCROLL;
 
-	Drt_OnVScroll( hWnd, ghScrBarWnd, dCode, 1 );	//	posã¯å¤šåˆ†æœªä½¿ç”¨
+	Drt_OnVScroll( hWnd, ghScrBarWnd, dCode, 1 );	//	pos‚Í‘½•ª–¢Žg—p
 
 	return;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ã®å‡¦ç†
-	@param[in]	hWnd	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	hwndCtl	ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼ã®ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	code	å‹•ä½œçŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
-	@param[in]	pos		ã¤ã¾ã¿ã®ä½ç½®
-	@return		ç„¡ã—
+	ƒXƒNƒ[ƒ‹‚Ìˆ—
+	@param[in]	hWnd	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	hwndCtl	ƒXƒNƒ[ƒ‹ƒo[‚ÌƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	code	“®ìó‘ÔƒR[ƒh
+	@param[in]	pos		‚Â‚Ü‚Ý‚ÌˆÊ’u
+	@return		–³‚µ
 */
 VOID Drt_OnVScroll( HWND hWnd, HWND hwndCtl, UINT code, INT pos )
 {
@@ -977,7 +977,7 @@ VOID Drt_OnVScroll( HWND hWnd, HWND hwndCtl, UINT code, INT pos )
 
 //	if( ghScrBarWnd != hwndCtl )	return;
 
-	//	çŠ¶æ…‹ã‚’ãã‚„ã—ã
+	//	ó‘Ô‚ð‚­‚â‚µ‚­
 	ZeroMemory( &stScrollInfo, sizeof(SCROLLINFO) );
 	stScrollInfo.cbSize = sizeof(SCROLLINFO);
 	stScrollInfo.fMask = SIF_ALL;
@@ -985,7 +985,7 @@ VOID Drt_OnVScroll( HWND hWnd, HWND hwndCtl, UINT code, INT pos )
 
 	maePos = gdVwTop;
 
-	switch( code )	//	ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«æ–¹å‘ã«åˆã‚ã›ã¦å†…å®¹ã‚’ãšã‚‰ã™
+	switch( code )	//	ƒXƒNƒ[ƒ‹•ûŒü‚É‡‚í‚¹‚Ä“à—e‚ð‚¸‚ç‚·
 	{
 		case SB_TOP:
 			gdVwTop = 0;
@@ -1021,11 +1021,11 @@ VOID Drt_OnVScroll( HWND hWnd, HWND hwndCtl, UINT code, INT pos )
 
 		default:	return;
 	}
-	//	å¤‰åŒ–ãªã„ãªã‚‰ãªã«ã‚‚ã›ã‚“ã§ã„ã„
+	//	•Ï‰»‚È‚¢‚È‚ç‚È‚É‚à‚¹‚ñ‚Å‚¢‚¢
 	if( maePos == gdVwTop  )	return;
 
 	InvalidateRect( ghDraughtWnd, NULL, TRUE );
-	UpdateWindow( ghDraughtWnd );	//	ãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ æç”»ã«å¿…è¦
+	UpdateWindow( ghDraughtWnd );	//	ƒŠƒAƒ‹ƒ^ƒCƒ€•`‰æ‚É•K—v
 
 	stScrollInfo.fMask = SIF_POS;
 	stScrollInfo.nPos  = gdVwTop;
@@ -1037,9 +1037,9 @@ VOID Drt_OnVScroll( HWND hWnd, HWND hwndCtl, UINT code, INT pos )
 
 #ifdef USE_HOVERTIP
 /*!
-	HoverTipç”¨ã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯å—å–
-	@param[in]	pVoid	æœªå®šç¾©
-	@return	ç¢ºä¿ã—ãŸæ–‡å­—åˆ—ãƒ»ã‚‚ã—ãã¯NULL
+	HoverTip—p‚ÌƒR[ƒ‹ƒoƒbƒNŽóŽæ
+	@param[in]	pVoid	–¢’è‹`
+	@return	Šm•Û‚µ‚½•¶Žš—ñE‚à‚µ‚­‚ÍNULL
 */
 LPTSTR CALLBACK DraughtHoverTipInfo( LPVOID pVoid )
 {
@@ -1051,14 +1051,14 @@ LPTSTR CALLBACK DraughtHoverTipInfo( LPVOID pVoid )
 	MAAM_ITR	itItem;
 
 
-	if( !(gbAAtipView) ){	return NULL;	}	//	éžè¡¨ç¤ºãªã‚‰ä½•ã‚‚ã—ãªã„ã§ãŠï½‹
+	if( !(gbAAtipView) ){	return NULL;	}	//	”ñ•\Ž¦‚È‚ç‰½‚à‚µ‚È‚¢‚Å‚¨‚‹
 	if( 0 > giItemSel ){	return NULL;	}
 
-	if( gbThumb )	//	ã‚µãƒ ãƒã‚¤ãƒ«
+	if( gbThumb )	//	ƒTƒ€ƒlƒCƒ‹
 	{
 		iOffset = gdVwTop * TPNL_HORIZ;
 		iTarget = iOffset + giItemSel;
-		pcConts = AacAsciiArtGet( iTarget );	//	è©²å½“ã™ã‚‹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹AAã‚’å¼•ã£å¼µã£ã¦ãã‚‹
+		pcConts = AacAsciiArtGet( iTarget );	//	ŠY“–‚·‚éƒCƒ“ƒfƒbƒNƒXAA‚ðˆø‚Á’£‚Á‚Ä‚­‚é
 
 		ptBuffer = SjisDecodeAlloc( pcConts );
 		FREE( pcConts );
@@ -1066,12 +1066,12 @@ LPTSTR CALLBACK DraughtHoverTipInfo( LPVOID pVoid )
 	else
 	{
 		iTarget = giItemSel;
-		iItems  = gvcDrtItems.size( );	//	ç¾åœ¨å€‹æ•°
-		if( iItems > iTarget )	//	ä¿æŒæ•°å†…ã§ã‚ã‚Œã°
+		iItems  = gvcDrtItems.size( );	//	Œ»ÝŒÂ”
+		if( iItems > iTarget )	//	•ÛŽ”“à‚Å‚ ‚ê‚Î
 		{
 			for( i = 0, itItem = gvcDrtItems.begin(); gvcDrtItems.end() != itItem; i++, itItem++ )
 			{
-				if( iTarget == i )	//	ãƒ’ãƒƒãƒˆ
+				if( iTarget == i )	//	ƒqƒbƒg
 				{
 					ptBuffer = SjisDecodeAlloc( itItem->pcItem );
 					break;
@@ -1091,9 +1091,9 @@ LPTSTR CALLBACK DraughtHoverTipInfo( LPVOID pVoid )
 #ifndef _ORRVW
 
 /*!
-	ç·¨é›†ã®é¸æŠžç¯„å›²ã‹ã‚‰ã„ãŸã ã
-	@param[in]	hWnd	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	bSqSel	çŸ©å½¢ã§ã‚ã‚‹ã‹ã©ã†ã‹
+	•ÒW‚Ì‘I‘ð”ÍˆÍ‚©‚ç‚¢‚½‚¾‚­
+	@param[in]	hWnd	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	bSqSel	‹éŒ`‚Å‚ ‚é‚©‚Ç‚¤‚©
 */
 UINT DraughtItemAddFromSelect( HWND hWnd, UINT bSqSel )
 {
@@ -1110,38 +1110,38 @@ UINT DraughtItemAddFromSelect( HWND hWnd, UINT bSqSel )
 	wstring	wsString;
 
 
-	//	å†…éƒ¨å‡¦ç†ãªã®ã§Unicodeå›ºå®š
+	//	“à•”ˆ—‚È‚Ì‚ÅUnicodeŒÅ’è
 	cbSize = DocSelectTextGetAlloc( D_UNI | bSqSel, (LPVOID *)(&ptString), (bSqSel & D_SQUARE) ? &pstPos : NULL );
 
 	StringCchLength( ptString, STRSAFE_MAX_CCH, &cchSize );
 
-	if( 0 >= cchSize )	return 0;	//	æ–‡å­—åˆ—ãªã„ãªã‚‰ãªã«ã‚‚ã—ãªã„
+	if( 0 >= cchSize )	return 0;	//	•¶Žš—ñ‚È‚¢‚È‚ç‚È‚É‚à‚µ‚È‚¢
 
-	//	ã‚ªãƒ•ã‚»ãƒƒãƒˆè¨­å®šãŒæœ‰ã‚‹å ´åˆã€ãã®åˆ†ã‚’åŸ‹ã‚ã‚‹ç©ºç™½ãŒå¿…è¦
-	if( pstPos )	//	æœ€å°ã‚ªãƒ•ã‚»ãƒƒãƒˆå€¤ã‚’æŽ¢ã—ã¦ã€ãã“ã‚’å·¦ç«¯ã«ã™ã‚‹
+	//	ƒIƒtƒZƒbƒgÝ’è‚ª—L‚éê‡A‚»‚Ì•ª‚ð–„‚ß‚é‹ó”’‚ª•K—v
+	if( pstPos )	//	Å¬ƒIƒtƒZƒbƒg’l‚ð’T‚µ‚ÄA‚»‚±‚ð¶’[‚É‚·‚é
 	{
 		dMin = pstPos[0].x;
 
 		yLine = 0;
 		for( i = 0; cchSize > i; i++ )
 		{
-			if( CC_CR == ptString[i] && CC_LF == ptString[i+1] )	//	æ”¹è¡Œã§ã‚ã£ãŸã‚‰
+			if( CC_CR == ptString[i] && CC_LF == ptString[i+1] )	//	‰üs‚Å‚ ‚Á‚½‚ç
 			{
-				//	ã‚ªãƒ•ã‚»ãƒƒãƒˆæœ€å°ã‚’ã•ãŒã™
+				//	ƒIƒtƒZƒbƒgÅ¬‚ð‚³‚ª‚·
 				if( dMin > pstPos[yLine].x ){	dMin =  pstPos[yLine].x;	}
 
-				i++;		//	0x0D,0x0Aã ã‹ã‚‰ã€å£±æ–‡å­—é£›ã°ã™ã®ãŒãƒã‚¤ãƒ³ãƒˆ
-				yLine++;	//	æ”¹è¡Œã—ãŸã‹ã‚‰Focusã¯æ¬¡ã®è¡Œã¸
+				i++;		//	0x0D,0x0A‚¾‚©‚çAˆë•¶Žš”ò‚Î‚·‚Ì‚ªƒ|ƒCƒ“ƒg
+				yLine++;	//	‰üs‚µ‚½‚©‚çFocus‚ÍŽŸ‚Ìs‚Ö
 			}
 		}
-		//	ã“ã®æ™‚ç‚¹ã§ã€yLineã¯è¡Œæ•°ã«ãªã£ã¦ã‚‹
+		//	‚±‚ÌŽž“_‚ÅAyLine‚Ís”‚É‚È‚Á‚Ä‚é
 		iLines = yLine;
 
-		//	å£±è¡Œç›®ã®ç©ºç™½ã‚’ä½œã£ã¦é–ƒå…‰å…¥åŠ›ã—ã¦ãŠã
+		//	ˆës–Ú‚Ì‹ó”’‚ðì‚Á‚Ä‘MŒõ“ü—Í‚µ‚Ä‚¨‚­
 		insDot = 0;
 		dOffset = pstPos[0].x - dMin;
 		ptSpace = DocPaddingSpaceUni( dOffset, NULL, NULL, NULL );
-		//	å‰æ–¹ç©ºç™½ã¯ç„¡è¦–ã•ã‚Œã‚‹ã®ã§ãƒ¦ãƒ‹ã‚³ãƒ¼ãƒ‰ä½¿ã£ã¦å•é¡Œç„¡ã„
+		//	‘O•û‹ó”’‚Í–³Ž‹‚³‚ê‚é‚Ì‚Åƒ†ƒjƒR[ƒhŽg‚Á‚Ä–â‘è–³‚¢
 		StringCchLength( ptSpace, STRSAFE_MAX_CCH, &iTexts );
 		for( j = 0; iTexts > j; j++ ){	wsString +=  ptSpace[j];	}
 		FREE(ptSpace);
@@ -1150,32 +1150,32 @@ UINT DraughtItemAddFromSelect( HWND hWnd, UINT bSqSel )
 	yLine = 0;	insDot = 0;
 	for( i = 0; cchSize > i; i++ )
 	{
-		if( CC_CR == ptString[i] && CC_LF == ptString[i+1] )	//	æ”¹è¡Œã§ã‚ã£ãŸã‚‰
+		if( CC_CR == ptString[i] && CC_LF == ptString[i+1] )	//	‰üs‚Å‚ ‚Á‚½‚ç
 		{
 			wsString +=  wstring( TEXT("\r\n") );
 
-			i++;		//	0x0D,0x0Aã ã‹ã‚‰ã€å£±æ–‡å­—é£›ã°ã™ã®ãŒãƒã‚¤ãƒ³ãƒˆ
-			yLine++;	//	æ”¹è¡Œã—ãŸã‹ã‚‰Focusã¯æ¬¡ã®è¡Œã¸
+			i++;		//	0x0D,0x0A‚¾‚©‚çAˆë•¶Žš”ò‚Î‚·‚Ì‚ªƒ|ƒCƒ“ƒg
+			yLine++;	//	‰üs‚µ‚½‚©‚çFocus‚ÍŽŸ‚Ìs‚Ö
 
-			//	ã‚ªãƒ•ã‚»ãƒƒãƒˆåˆ†ã®ç©ºç™½ã‚’ä½œã‚‹
+			//	ƒIƒtƒZƒbƒg•ª‚Ì‹ó”’‚ðì‚é
 			if( pstPos && (iLines > yLine) )
 			{
 				dOffset = pstPos[yLine].x - dMin;
 				ptSpace = DocPaddingSpaceUni( dOffset, NULL, NULL, NULL );
-				//	å‰æ–¹ç©ºç™½ã¯ç„¡è¦–ã•ã‚Œã‚‹ã®ã§ãƒ¦ãƒ‹ã‚³ãƒ¼ãƒ‰ä½¿ã£ã¦å•é¡Œç„¡ã„
+				//	‘O•û‹ó”’‚Í–³Ž‹‚³‚ê‚é‚Ì‚Åƒ†ƒjƒR[ƒhŽg‚Á‚Ä–â‘è–³‚¢
 				StringCchLength( ptSpace, STRSAFE_MAX_CCH, &iTexts );
 				for( j = 0; iTexts > j; j++ ){	wsString +=  ptSpace[j];	}
 				FREE(ptSpace);
 			}
 		}
-		else if( CC_TAB ==  ptString[i] ){	/*	ã‚¿ãƒ–ã¯æŒ¿å…¥ã—ãªã„	*/	}
+		else if( CC_TAB ==  ptString[i] ){	/*	ƒ^ƒu‚Í‘}“ü‚µ‚È‚¢	*/	}
 		else{	wsString += ptString[i];	}
 	}
 
 	FREE(ptString);
 	FREE(pstPos);
 
-	pcArts =  SjisEncodeAlloc( wsString.c_str() );	//	é¸æŠžç¯„å›²ã‚’ãƒ‰ãƒ©ãƒ•ãƒˆãƒœãƒ¼ãƒ‰ã«ç§»ã™ã¨ã
+	pcArts =  SjisEncodeAlloc( wsString.c_str() );	//	‘I‘ð”ÍˆÍ‚ðƒhƒ‰ƒtƒgƒ{[ƒh‚ÉˆÚ‚·‚Æ‚«
 
 	DraughtItemAdding( hWnd, pcArts );
 
@@ -1187,10 +1187,10 @@ UINT DraughtItemAddFromSelect( HWND hWnd, UINT bSqSel )
 #endif
 
 /*!
-	AAãƒ†ã‚­ã‚¹ãƒˆã‚’ç¢ºä¿ã—ã¦å–ã‚Šè¾¼ã‚€
-	@param[in]	hWnd	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	pcArts	ï¼¡ï¼¡ãƒ†ã‚­ã‚¹ãƒˆSJIS
-	@return		è¿½åŠ å¾Œã®ã‚¢ã‚¤ãƒ†ãƒ ç·æ•°
+	AAƒeƒLƒXƒg‚ðŠm•Û‚µ‚ÄŽæ‚èž‚Þ
+	@param[in]	hWnd	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	pcArts	‚`‚`ƒeƒLƒXƒgSJIS
+	@return		’Ç‰ÁŒã‚ÌƒAƒCƒeƒ€‘”
 */
 UINT DraughtItemAdding( HWND hWnd, LPSTR pcArts )
 {
@@ -1213,7 +1213,7 @@ UINT DraughtItemAdding( HWND hWnd, LPSTR pcArts )
 
 	gvcDrtItems.push_back( stItem );
 
-	do	//	ã¯ã¿ã ã—ã¦ãŸã‚‰ï¼Ÿ
+	do	//	‚Í‚Ý‚¾‚µ‚Ä‚½‚çH
 	{
 		iItems = gvcDrtItems.size( );
 		if( (TPNL_HORIZ * TPNL_VERTI) < iItems ){	DraughtItemDelete(  0 );	}
@@ -1225,9 +1225,9 @@ UINT DraughtItemAdding( HWND hWnd, LPSTR pcArts )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ï¼¡ï¼¡ã®ã‚µãƒ ãƒç”¨ã‚¤ãƒ¡ãƒ¼ã‚¸ã‚’ä½œã‚‹
-	@param[in]		hWnd	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in,out]	pstItem	ã‚¤ãƒ¡ãƒ¼ã‚¸ä½œã‚ŠãŸã„AAã®ãƒ‡ãƒ¼ã‚¿ã¨ã‹
+	‚`‚`‚ÌƒTƒ€ƒl—pƒCƒ[ƒW‚ðì‚é
+	@param[in]		hWnd	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in,out]	pstItem	ƒCƒ[ƒWì‚è‚½‚¢AA‚Ìƒf[ƒ^‚Æ‚©
 */
 UINT DraughtAaImageing( HWND hWnd, LPAAMATRIX pstItem )
 {
@@ -1243,7 +1243,7 @@ UINT DraughtAaImageing( HWND hWnd, LPAAMATRIX pstItem )
 	ptTextaa = SjisDecodeAlloc( pstItem->pcItem );
 	StringCchLength( ptTextaa, STRSAFE_MAX_CCH, &cchSize );
 
-	//	å…ƒï¼¡ï¼¡ã®ã‚µã‚¤ã‚ºç¢ºå®šãŒå¿…è¦
+	//	Œ³‚`‚`‚ÌƒTƒCƒYŠm’è‚ª•K—v
 	iXdot = TextViewSizeGet( ptTextaa, &iLine );
 	iYdot = iLine * LINE_HEIGHT;
 
@@ -1257,12 +1257,12 @@ UINT DraughtAaImageing( HWND hWnd, LPAAMATRIX pstItem )
 	pstItem->stSize.cy = iYdot;
 
 	SetRect( &rect, 0, 0, iXdot, iYdot );
-	//	ã‚ã‚“ã¾ã‚Šå¤§ãã„ãªã‚‰ã€å·¦ä¸Šé™å®šã¨ã‹ï¼Ÿ
+	//	‚ ‚ñ‚Ü‚è‘å‚«‚¢‚È‚çA¶ãŒÀ’è‚Æ‚©H
 
-	//	æç”»ç”¨ãƒ“ãƒƒãƒˆãƒžãƒƒãƒ—ä½œæˆ
+	//	•`‰æ—pƒrƒbƒgƒ}ƒbƒvì¬
 	hdc = GetDC( hWnd );
 
-	//	ã‚µãƒ ãƒç”¨BMPãƒ»ã“ã‚Œã¯ãƒ•ãƒ«ã‚µã‚¤ã‚º	//	pstItem->hThumbDC	pstItem->hOldBmp
+	//	ƒTƒ€ƒl—pBMPE‚±‚ê‚Íƒtƒ‹ƒTƒCƒY	//	pstItem->hThumbDC	pstItem->hOldBmp
 	hMemDC = CreateCompatibleDC( hdc );
 	pstItem->hThumbBmp = CreateCompatibleBitmap( hdc, rect.right, rect.bottom );
 	hOldBmp = SelectBitmap( hMemDC, pstItem->hThumbBmp );
@@ -1285,10 +1285,10 @@ UINT DraughtAaImageing( HWND hWnd, LPAAMATRIX pstItem )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	Targetã‚¢ã‚¤ãƒ†ãƒ ã‚’ä½¿ã†ãƒ»ã‚¯ãƒ«ãƒƒãƒ—ãƒœãƒ¼ãƒ‰ã¸ãƒ»ä»–ã«ä½¿ã„ãŸã„ã¨ãã¯ï¼Ÿ
-	@param[in]	hWnd	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	id		å‹•ä½œãƒ¢ãƒ¼ãƒ‰ï¼©ï¼¤
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	TargetƒAƒCƒeƒ€‚ðŽg‚¤EƒNƒ‹ƒbƒvƒ{[ƒh‚ÖE‘¼‚ÉŽg‚¢‚½‚¢‚Æ‚«‚ÍH
+	@param[in]	hWnd	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	id		“®ìƒ‚[ƒh‚h‚c
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT DraughtItemUse( HWND hWnd, INT id )
 {
@@ -1298,7 +1298,7 @@ HRESULT DraughtItemUse( HWND hWnd, INT id )
 	UINT		dMode;
 	MAAM_ITR	itItem;
 
-	if( gbThumb )	//	ã‚µãƒ ãƒãƒ¢ãƒ¼ãƒ‰
+	if( gbThumb )	//	ƒTƒ€ƒlƒ‚[ƒh
 	{
 		iOffset = gdVwTop * TPNL_HORIZ;
 		iTarget = iOffset + giTarget;
@@ -1323,7 +1323,7 @@ HRESULT DraughtItemUse( HWND hWnd, INT id )
 
 		if( id != IDM_THUMB_DRAUGHT_ADD )
 		{
-			//	ã“ã“ã§ãŠæ°—ã«å…¥ã‚Šã«å…¥ã‚Œã‚‹ãƒ»å¤§ä¸ˆå¤«ã‹ï¼Ÿ
+			//	‚±‚±‚Å‚¨‹C‚É“ü‚è‚É“ü‚ê‚éE‘åä•v‚©H
 			if( SUCCEEDED( AaItemsFavUpload( pcAaItem, cbSize ) ) )
 			{
 				FavContsRedrawRequest( hWnd );
@@ -1334,12 +1334,12 @@ HRESULT DraughtItemUse( HWND hWnd, INT id )
 	}
 	else
 	{
-		iItems = gvcDrtItems.size( );	//	ç¾åœ¨å€‹æ•°
+		iItems = gvcDrtItems.size( );	//	Œ»ÝŒÂ”
 		if( 0 >= iItems )	return E_OUTOFMEMORY;
 
 		for( i = 0, itItem = gvcDrtItems.begin(); gvcDrtItems.end() != itItem; i++, itItem++ )
 		{
-			if( giTarget == i )	//	ãƒ’ãƒƒãƒˆ
+			if( giTarget == i )	//	ƒqƒbƒg
 			{
 				switch( id )
 				{
@@ -1362,9 +1362,9 @@ HRESULT DraughtItemUse( HWND hWnd, INT id )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	å¯¾è±¡ã‚¢ã‚¤ãƒ†ãƒ å‰Šé™¤ãƒ»REDRAWã®é¢å€’ã¯åˆ¥ã§è¦‹ã‚‹
-	@param[in]	iTarget	å¯¾è±¡ã®é€šã—ç•ªå·ãƒ»ãƒžã‚¤ãƒŠã‚¹ãªã‚‰å…¨å‰Šé™¤
-	@return	éžï¼å‰Šé™¤ã—ãŸã€€ï¼å‰Šé™¤ã§ãã‚“ã‹ã£ãŸ
+	‘ÎÛƒAƒCƒeƒ€íœEREDRAW‚Ì–Ê“|‚Í•Ê‚ÅŒ©‚é
+	@param[in]	iTarget	‘ÎÛ‚Ì’Ê‚µ”Ô†Eƒ}ƒCƒiƒX‚È‚ç‘Síœ
+	@return	”ñ‚Oíœ‚µ‚½@‚Oíœ‚Å‚«‚ñ‚©‚Á‚½
 */
 INT DraughtItemDelete( CONST INT iTarget )
 {
@@ -1372,7 +1372,7 @@ INT DraughtItemDelete( CONST INT iTarget )
 	INT		delCnt;
 	MAAM_ITR	itItem;
 
-	iItems = gvcDrtItems.size( );	//	ç¾åœ¨å€‹æ•°
+	iItems = gvcDrtItems.size( );	//	Œ»ÝŒÂ”
 	if( 0 >= iItems )	return 0;
 
 	delCnt = 0;
@@ -1399,9 +1399,9 @@ INT DraughtItemDelete( CONST INT iTarget )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆåº§æ¨™ã‚’å—ã‘å–ã£ã¦ã€ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚¢ã‚¤ãƒ†ãƒ é€šã—ç•ªå·ã‚’å‡ºã™
-	@param[in]	pstPos	ã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆåº§æ¨™ãŒå…¥ã£ãŸæ§‹é€ ä½“ãƒã‚¤ãƒ³ã‚¿ãƒ¼
-	@return		å·¦ä¸Šã‹ã‚‰ã€â†’ã«é€šã—ç•ªå·ï¼ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã€€ç„¡åŠ¹ã§ï¼ï¼‘
+	ƒNƒ‰ƒCƒ„ƒ“ƒgÀ•W‚ðŽó‚¯Žæ‚Á‚ÄAƒ^[ƒQƒbƒgƒAƒCƒeƒ€’Ê‚µ”Ô†‚ðo‚·
+	@param[in]	pstPos	ƒNƒ‰ƒCƒ„ƒ“ƒgÀ•W‚ª“ü‚Á‚½\‘¢‘Ìƒ|ƒCƒ“ƒ^[
+	@return		¶ã‚©‚çA¨‚É’Ê‚µ”Ô†‚OƒCƒ“ƒfƒbƒNƒX@–³Œø‚Å|‚P
 */
 INT DraughtTargetItemSet( LPPOINT pstPos )
 {
@@ -1419,10 +1419,10 @@ INT DraughtTargetItemSet( LPPOINT pstPos )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ç¸¦æ¨ªã‚’å—ã‘å–ã£ã¦ã€ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”ã‚’ç¶­æŒã—ã¦ã‚µãƒ ãƒã‚µã‚¤ã‚ºã«ç¸®å°ã™ã‚‹
-	@param[in,out]	pstSize	å—ã‘å–ã£ã¦ã€æˆ»ã™
-	@param[in]		bOrgRem	éžï¼ã‚µãƒ ãƒã‚µã‚¤ã‚ºã‚ˆã‚Šå°ã•ã„ãªã‚‰ã‚ªãƒªã‚¸ãƒŠãƒ«ã‚µã‚¤ã‚º
-	@return	DOUBLE	ZOOMçŽ‡
+	c‰¡‚ðŽó‚¯Žæ‚Á‚ÄAƒAƒXƒyƒNƒg”ä‚ðˆÛŽ‚µ‚ÄƒTƒ€ƒlƒTƒCƒY‚Ék¬‚·‚é
+	@param[in,out]	pstSize	Žó‚¯Žæ‚Á‚ÄA–ß‚·
+	@param[in]		bOrgRem	”ñ‚OƒTƒ€ƒlƒTƒCƒY‚æ‚è¬‚³‚¢‚È‚çƒIƒŠƒWƒiƒ‹ƒTƒCƒY
+	@return	DOUBLE	ZOOM—¦
 */
 DOUBLE DraughtAspectKeeping( LPSIZE pstSize, UINT bOrgRem )
 {
@@ -1434,18 +1434,18 @@ DOUBLE DraughtAspectKeeping( LPSIZE pstSize, UINT bOrgRem )
 	iOrgHei = pstSize->cy;
 	ddPercent = 1.0;
 
-	if( iOrgWid >= iOrgHei )	//	æ­£æ–¹å½¢ã‹æ¨ªé•·
+	if( iOrgWid >= iOrgHei )	//	³•ûŒ`‚©‰¡’·
 	{
 		iZomWid = giItemWidth;
 
-		if( giItemWidth == iOrgWid )	//	ãƒ”ã‚¿ãƒªãªã‚‰ä½•ã‚‚ã™ã‚‹ã“ã¨ãªã„
+		if( giItemWidth == iOrgWid )	//	ƒsƒ^ƒŠ‚È‚ç‰½‚à‚·‚é‚±‚Æ‚È‚¢
 		{
 			iZomHei = iOrgHei;
 		}
 		else
 		{
 			ddPercent = (DOUBLE)giItemWidth / (DOUBLE)iOrgWid;
-			if( bOrgRem && giItemWidth > iOrgWid )	//	ã‚µã‚¤ã‚ºä»¥ä¸‹ãªã‚‰ã‚ªãƒªã‚¸ãƒŠãƒ«ã‚µã‚¤ã‚ºã§ã‚ˆã‚ã—
+			if( bOrgRem && giItemWidth > iOrgWid )	//	ƒTƒCƒYˆÈ‰º‚È‚çƒIƒŠƒWƒiƒ‹ƒTƒCƒY‚Å‚æ‚ë‚µ
 			{
 				iZomWid = iOrgWid;
 				iZomHei = iOrgHei;
@@ -1453,23 +1453,23 @@ DOUBLE DraughtAspectKeeping( LPSIZE pstSize, UINT bOrgRem )
 			else
 			{
 				ddBuff  = (DOUBLE)iOrgHei * ddPercent;
-				ddBuff += 0.5;	//	å››æ¨äº”å…¥
+				ddBuff += 0.5;	//	ŽlŽÌŒÜ“ü
 				iZomHei = ddBuff;
 			}
 		}
 	}
-	else	//	ç¸¦é•·
+	else	//	c’·
 	{
 		iZomHei = giItemHeight;
 
-		if( giItemHeight == iOrgHei )	//	ãƒ”ã‚¿ãƒªãªã‚‰ä½•ã‚‚ã™ã‚‹ã“ã¨ãªã„
+		if( giItemHeight == iOrgHei )	//	ƒsƒ^ƒŠ‚È‚ç‰½‚à‚·‚é‚±‚Æ‚È‚¢
 		{
 			iZomWid = iOrgWid;
 		}
 		else
 		{
 			ddPercent = (DOUBLE)giItemHeight / (DOUBLE)iOrgHei;
-			if( bOrgRem && giItemHeight >  iOrgHei )	//	ã‚µã‚¤ã‚ºä»¥ä¸‹ãªã‚‰ã‚ªãƒªã‚¸ãƒŠãƒ«ã‚µã‚¤ã‚ºã§ã‚ˆã‚ã—
+			if( bOrgRem && giItemHeight >  iOrgHei )	//	ƒTƒCƒYˆÈ‰º‚È‚çƒIƒŠƒWƒiƒ‹ƒTƒCƒY‚Å‚æ‚ë‚µ
 			{
 				iZomWid = iOrgWid;
 				iZomHei = iOrgHei;
@@ -1477,7 +1477,7 @@ DOUBLE DraughtAspectKeeping( LPSIZE pstSize, UINT bOrgRem )
 			else
 			{
 				ddBuff  = (DOUBLE)iOrgWid * ddPercent;
-				ddBuff += 0.5;	//	å››æ¨äº”å…¥
+				ddBuff += 0.5;	//	ŽlŽÌŒÜ“ü
 				iZomWid = ddBuff;
 			}
 		}
@@ -1491,13 +1491,13 @@ DOUBLE DraughtAspectKeeping( LPSIZE pstSize, UINT bOrgRem )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒ‰ãƒ©ãƒ•ãƒˆãƒœãƒ¼ãƒ‰ã®å†…å®¹ã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã«æ›¸ãå‡ºã™
-	@param[in]	hWnd	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	ptPath	æœªä½¿ç”¨
+	ƒhƒ‰ƒtƒgƒ{[ƒh‚Ì“à—e‚ðƒtƒ@ƒCƒ‹‚É‘‚«o‚·
+	@param[in]	hWnd	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	ptPath	–¢Žg—p
 */
 HRESULT DraughtItemExport( HWND hWnd, LPTSTR ptPath )
 {
-	CONST CHAR	cacSplit[] = ("[SPLIT]\r\n");	//	ï¼™ï¼¢ï¼¹ï¼´ï¼¥
+	CONST CHAR	cacSplit[] = ("[SPLIT]\r\n");	//	‚X‚a‚x‚s‚d
 
 	UINT_PTR	dItems, cbSize;
 	TCHAR		atPath[MAX_PATH], atName[MAX_PATH];
@@ -1511,35 +1511,35 @@ HRESULT DraughtItemExport( HWND hWnd, LPTSTR ptPath )
 
 
 	dItems = gvcDrtItems.size();
-	if( 0 >= dItems )	return E_NOTIMPL;	//	ç©ºãªã‚‰ä½•ã‚‚ã—ãªã„
+	if( 0 >= dItems )	return E_NOTIMPL;	//	‹ó‚È‚ç‰½‚à‚µ‚È‚¢
 
-	//ãƒ•ã‚¡ã‚¤ãƒ«åç¢ºå®š
+	//ƒtƒ@ƒCƒ‹–¼Šm’è
 	ZeroMemory( atPath, sizeof(atPath) );
 	ZeroMemory( atName, sizeof(atName) );
 
 	ZeroMemory( &stOpenFile, sizeof(OPENFILENAME) );
 	stOpenFile.lStructSize     = sizeof(OPENFILENAME);
 	stOpenFile.hwndOwner       = ghPtWnd;
-	stOpenFile.lpstrFilter     = TEXT("è¤‡æ•°è¡Œãƒ†ãƒ³ãƒ—ãƒ¬ãƒ•ã‚¡ã‚¤ãƒ«(*.mlt)\0*.mlt\0å…¨ã¦ã®å½¢å¼(*.*)\0*.*\0\0");
+	stOpenFile.lpstrFilter     = TEXT("•¡”sƒeƒ“ƒvƒŒƒtƒ@ƒCƒ‹(*.mlt)\0*.mlt\0‘S‚Ä‚ÌŒ`Ž®(*.*)\0*.*\0\0");
 	stOpenFile.nFilterIndex    = 1;
 	stOpenFile.lpstrFile       = atPath;
 	stOpenFile.nMaxFile        = MAX_PATH;
 	stOpenFile.lpstrFileTitle  = atName;
 	stOpenFile.nMaxFileTitle   = MAX_PATH;
-	stOpenFile.lpstrTitle      = TEXT("ä¿å­˜ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æŒ‡å®šã—ã¦ã­");
+	stOpenFile.lpstrTitle      = TEXT("•Û‘¶‚·‚éƒtƒ@ƒCƒ‹–¼‚ðŽw’è‚µ‚Ä‚Ë");
 	stOpenFile.Flags           = OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY;
 	stOpenFile.lpstrDefExt     = TEXT("mlt");
 
-	//ã“ã“ã§ FileOpenDialogue ã‚’å‡ºã™
+	//‚±‚±‚Å FileOpenDialogue ‚ðo‚·
 	bOpened = GetSaveFileName( &stOpenFile );
 	wrote = CommDlgExtendedError();
 
-	TRACE( TEXT("ãƒ•ã‚¡ã‚¤ãƒ«ä¿å­˜ãƒ€ã‚¤ãƒ¤ãƒ­ã‚°é€šéŽ[%X]"), wrote );
+	TRACE( TEXT("ƒtƒ@ƒCƒ‹•Û‘¶ƒ_ƒCƒ„ƒƒO’Ê‰ß[%X]"), wrote );
 
 #ifndef _ORRVW
 	ViewFocusSet(  );
 #endif
-	if( !(bOpened) ){	return  E_ABORT;	}	//	ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã—ã¦ãŸã‚‰ä½•ã‚‚ã—ãªã„
+	if( !(bOpened) ){	return  E_ABORT;	}	//	ƒLƒƒƒ“ƒZƒ‹‚µ‚Ä‚½‚ç‰½‚à‚µ‚È‚¢
 
 	hFile = CreateFile( atPath, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL );
 	if( INVALID_HANDLE_VALUE == hFile ){	return E_HANDLE;	}
@@ -1551,12 +1551,12 @@ HRESULT DraughtItemExport( HWND hWnd, LPTSTR ptPath )
 		StringCchLengthA( itItem->pcItem, STRSAFE_MAX_LENGTH, &cbSize );
 		
 		WriteFile( hFile, itItem->pcItem, cbSize, &wrote, NULL );
-		WriteFile( hFile, cacSplit, 9, &wrote, NULL );	//	å›ºå®šå€¤æ³¨æ„
+		WriteFile( hFile, cacSplit, 9, &wrote, NULL );	//	ŒÅ’è’l’ˆÓ
 	}
 
 	CloseHandle( hFile );
 
-	MessageBox( hWnd, TEXT("ãƒ•ã‚¡ã‚¤ãƒ«ã«ä¿å­˜ã—ãŸã‚ˆ"), TEXT("ãŠç‡ã‹ã‚‰ã®ãŠçŸ¥ã‚‰ã›"), MB_OK | MB_ICONINFORMATION );
+	MessageBox( hWnd, TEXT("ƒtƒ@ƒCƒ‹‚É•Û‘¶‚µ‚½‚æ"), TEXT("‚¨—Ó‚©‚ç‚Ì‚¨’m‚ç‚¹"), MB_OK | MB_ICONINFORMATION );
 
 	return S_OK;
 }

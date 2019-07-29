@@ -1,6 +1,6 @@
 /*! @file
-	@brief ãƒ„ãƒªãƒ¼ãƒ“ãƒ¥ãƒ¼ã¨ãŠæ°—ã«å…¥ã‚Šã€ã‚¿ãƒ–ã®åˆ¶å¾¡ã‚’ã—ã¾ã™
-	ã“ã®ãƒ•ã‚¡ã‚¤ãƒ«ã¯ MaaTreeView.cpp ã§ã™ã€‚
+	@brief ƒcƒŠ[ƒrƒ…[‚Æ‚¨‹C‚É“ü‚èAƒ^ƒu‚Ì§Œä‚ð‚µ‚Ü‚·
+	‚±‚Ìƒtƒ@ƒCƒ‹‚Í MaaTreeView.cpp ‚Å‚·B
 	@author	SikigamiHNQ
 	@date	2011/06/22
 */
@@ -17,29 +17,29 @@ If not, see <http://www.gnu.org/licenses/>.
 */
 //-------------------------------------------------------------------------------------------------
 
-//	ã‚¿ãƒ–ã«ãŠæ°—ã«å…¥ã‚Šã‚’ç™»éŒ²ã™ã‚‹ã«ã¯
+//	ƒ^ƒu‚É‚¨‹C‚É“ü‚è‚ð“o˜^‚·‚é‚É‚Í
 
 /*
-ï¼¤ï¼†ï¼¤ã«ã‚ˆã‚‹ãƒ„ãƒªãƒ¼è¿½åŠ ã€‚
-è¿½åŠ ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’ç”¨æ„ã€‚ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ•ãƒ«ãƒ‘ã‚¹ã®ä¿æŒã¯ï¼Ÿ
-åˆ¥Tableç”¨æ„ã™ã‚‹ã¨ã—ã¦ã€lParamã«ï¼’ã‚„ï¼ï¼‘ã‚’ï¼Ÿ
-lParamã¨ã‚‹ã¨ã“ã‚ã§ã®æ•´åˆæ€§æ³¨æ„
+‚c•‚c‚É‚æ‚éƒcƒŠ[’Ç‰ÁB
+’Ç‰ÁƒfƒBƒŒƒNƒgƒŠ‚ð—pˆÓBƒtƒ@ƒCƒ‹‚Ìƒtƒ‹ƒpƒX‚Ì•ÛŽ‚ÍH
+•ÊTable—pˆÓ‚·‚é‚Æ‚µ‚ÄAlParam‚É‚Q‚â|‚P‚ðH
+lParam‚Æ‚é‚Æ‚±‚ë‚Å‚Ì®‡«’ˆÓ
 
-ç°¡æ˜“è¿½åŠ ã—ãŸã¨ãã€å†æ§‹ç¯‰ã—ãŸã‚‰ï¼Ÿï¼œã“ã®æ™‚ã¯æ¶ˆãˆã¦ã‚‚è‰¯ã„ã‹ï¼Ÿ
-ç°¡æ˜“è¿½åŠ ã‚’çºã‚ã¦ãŠããƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’ç”¨æ„ã€‚ãƒ†ãƒ¼ãƒ–ãƒ«å¢—ã‚„ã™ã‹ï¼Ÿåˆ¥å€‹ã§æŒã£ã¦ãŠã‘ã°
-æ§‹ç¯‰æ™‚ã«ç„¡ããªã‚‰ãªã„ãƒ»é¸æŠžã—ãŸã¨ãã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚µãƒ¼ãƒã©ã†ã™ã‚‹ãƒ»ãƒŽãƒ¼ãƒ‰ã®lParamã«ãªã«ã‹ï¼Ÿã§ããŸã£ã‘ï¼Ÿ
+ŠÈˆÕ’Ç‰Á‚µ‚½‚Æ‚«AÄ\’z‚µ‚½‚çHƒ‚±‚ÌŽž‚ÍÁ‚¦‚Ä‚à—Ç‚¢‚©H
+ŠÈˆÕ’Ç‰Á‚ð“Z‚ß‚Ä‚¨‚­ƒfƒBƒŒƒNƒgƒŠ‚ð—pˆÓBƒe[ƒuƒ‹‘‚â‚·‚©H•ÊŒÂ‚ÅŽ‚Á‚Ä‚¨‚¯‚Î
+\’zŽž‚É–³‚­‚È‚ç‚È‚¢E‘I‘ð‚µ‚½‚Æ‚«‚Ìƒtƒ@ƒCƒ‹ƒT[ƒ`‚Ç‚¤‚·‚éEƒm[ƒh‚ÌlParam‚É‚È‚É‚©H‚Å‚«‚½‚Á‚¯H
 
-ãƒ„ãƒªãƒ¼å³ã‚¯ãƒªã® æœ«å°¾ã«ã‚¢ã‚¤ãƒ†ãƒ è¿½åŠ  ã‚’ã€ã‚¨ã‚­ã‚¹ãƒˆãƒ©ãƒ•ã‚¡ã‚¤ãƒ«ç”¨ã®å‰Šé™¤ã«å¤‰æ›´ã™ã‚‹
+ƒcƒŠ[‰EƒNƒŠ‚Ì ––”ö‚ÉƒAƒCƒeƒ€’Ç‰Á ‚ðAƒGƒLƒXƒgƒ‰ƒtƒ@ƒCƒ‹—p‚Ìíœ‚É•ÏX‚·‚é
 IDM_MAA_IADD_OPEN
 */
 
 
-//	TODO:	ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®é–‰ã˜ãŸã‚Šé–‹ã„ãŸã‚Šã®ã‚¢ã‚¤ã‚³ãƒ³èª¿æ•´
+//	TODO:	ƒfƒBƒŒƒNƒgƒŠ‚Ì•Â‚¶‚½‚èŠJ‚¢‚½‚è‚ÌƒAƒCƒRƒ“’²®
 
 #ifdef EXTRA_NODE_STYLE
-//ã‚¨ã‚­ã‚¹ãƒˆãƒ©ãƒ•ã‚¡ã‚¤ãƒ«ã®ä½¿ç”¨è¿½åŠ ã®æŒ™å‹•ãŒãŠã‹ã—ã„
-//ã‚¨ã‚­ã‚¹ãƒˆãƒ©ãƒ•ã‚¡ã‚¤ãƒ«è¿½åŠ ã—ãŸã¨ãã€ãƒ„ãƒªãƒ¼ã¸ã®è¿½åŠ ãŒå‡ºæ¥ã¦ãªã„ãƒ»æç”»ï¼Ÿè¿½åŠ è‡ªä½“ï¼Ÿ
-//ã‚¨ã‚­ã‚¹ãƒˆãƒ©ãƒ•ã‚¡ã‚¤ãƒ«ã®å‰Šé™¤ æœ«å°¾ã«ã‚¢ã‚¤ãƒ†ãƒ è¿½åŠ  ã‚’å¤‰æ›´ã—ã¦ã‚„ã‚Œã°ã„ã„ã ã‚ã†
+//ƒGƒLƒXƒgƒ‰ƒtƒ@ƒCƒ‹‚ÌŽg—p’Ç‰Á‚Ì‹““®‚ª‚¨‚©‚µ‚¢
+//ƒGƒLƒXƒgƒ‰ƒtƒ@ƒCƒ‹’Ç‰Á‚µ‚½‚Æ‚«AƒcƒŠ[‚Ö‚Ì’Ç‰Á‚ªo—ˆ‚Ä‚È‚¢E•`‰æH’Ç‰ÁŽ©‘ÌH
+//ƒGƒLƒXƒgƒ‰ƒtƒ@ƒCƒ‹‚Ìíœ ––”ö‚ÉƒAƒCƒeƒ€’Ç‰Á ‚ð•ÏX‚µ‚Ä‚â‚ê‚Î‚¢‚¢‚¾‚ë‚¤
 #endif
 
 #include "stdafx.h"
@@ -47,94 +47,94 @@ IDM_MAA_IADD_OPEN
 #include "MaaTemplate.h"
 //-------------------------------------------------------------------------------------------------
 
-#define NODE_DIR	1		//!<	ãƒŽãƒ¼ãƒ‰ã§ã€ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’ç¤ºã™
-#define NODE_FILE	0		//!<	ãƒŽãƒ¼ãƒ‰ã§ã€ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ç¤ºã™
-#define NODE_EXTRA	(-1)	//!<	ãƒŽãƒ¼ãƒ‰ã§ã€è¿½åŠ ç”¨ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’ç¤ºã™
+#define NODE_DIR	1		//!<	ƒm[ƒh‚ÅAƒfƒBƒŒƒNƒgƒŠ‚ðŽ¦‚·
+#define NODE_FILE	0		//!<	ƒm[ƒh‚ÅAƒtƒ@ƒCƒ‹‚ðŽ¦‚·
+#define NODE_EXTRA	(-1)	//!<	ƒm[ƒh‚ÅA’Ç‰Á—pƒfƒBƒŒƒNƒgƒŠ‚ðŽ¦‚·
 
-#define TICO_DIR_CLOSE	0	//!<	ãƒ„ãƒªãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ï¼šé–‰ã˜ãŸãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª
-#define TICO_DIR_OPEN	1	//!<	ãƒ„ãƒªãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ï¼šé–‹ã„ãŸãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª
-#define TICO_DIR_EXTRA	2	//!<	ãƒ„ãƒªãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ï¼šè¿½åŠ ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª
-#define TICO_FILE_AST	3	//!<	ãƒ„ãƒªãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ï¼šï¼¡ï¼³ï¼´ãƒ•ã‚¡ã‚¤ãƒ«
-#define TICO_FILE_MLT	4	//!<	ãƒ„ãƒªãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ï¼šï¼­ï¼¬ï¼´ãƒ•ã‚¡ã‚¤ãƒ«
-#define TICO_FILE_ETC	5	//!<	ãƒ„ãƒªãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ï¼šãã®ä»–ãƒ•ã‚¡ã‚¤ãƒ«
+#define TICO_DIR_CLOSE	0	//!<	ƒcƒŠ[ƒAƒCƒRƒ“F•Â‚¶‚½ƒfƒBƒŒƒNƒgƒŠ
+#define TICO_DIR_OPEN	1	//!<	ƒcƒŠ[ƒAƒCƒRƒ“FŠJ‚¢‚½ƒfƒBƒŒƒNƒgƒŠ
+#define TICO_DIR_EXTRA	2	//!<	ƒcƒŠ[ƒAƒCƒRƒ“F’Ç‰ÁƒfƒBƒŒƒNƒgƒŠ
+#define TICO_FILE_AST	3	//!<	ƒcƒŠ[ƒAƒCƒRƒ“F‚`‚r‚sƒtƒ@ƒCƒ‹
+#define TICO_FILE_MLT	4	//!<	ƒcƒŠ[ƒAƒCƒRƒ“F‚l‚k‚sƒtƒ@ƒCƒ‹
+#define TICO_FILE_ETC	5	//!<	ƒcƒŠ[ƒAƒCƒRƒ“F‚»‚Ì‘¼ƒtƒ@ƒCƒ‹
 
 
 
-//!	å‰¯ã‚¿ãƒ–ã®å†…å®¹ä¿æŒ
+//!	•›ƒ^ƒu‚Ì“à—e•ÛŽ
 typedef struct tagMULTIPLEMAA
 {
-	INT		dTabNum;				//!<	ã‚¿ãƒ–ã®ç•ªå·ãƒ»ï¼’ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
-	TCHAR	atFilePath[MAX_PATH];	//!<	ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ãƒ»ç©ºãªã‚‰ä½¿ç”¨ã‹ã‚‰é–‹ã„ãŸ
-	TCHAR	atBaseName[MAX_PATH];	//!<	ä½¿ç”¨ãƒªã‚¹ãƒˆã«å…¥ã‚Œã‚‹æ™‚ã®ã‚°ãƒ«ãƒ¼ãƒ—å
-	TCHAR	atDispName[MAX_PATH];	//!<	ã‚¿ãƒ–è¡¨ç¤ºç”¨åç§°
+	INT		dTabNum;				//!<	ƒ^ƒu‚Ì”Ô†E‚QƒCƒ“ƒfƒbƒNƒX
+	TCHAR	atFilePath[MAX_PATH];	//!<	ƒtƒ@ƒCƒ‹ƒpƒXE‹ó‚È‚çŽg—p‚©‚çŠJ‚¢‚½
+	TCHAR	atBaseName[MAX_PATH];	//!<	Žg—pƒŠƒXƒg‚É“ü‚ê‚éŽž‚ÌƒOƒ‹[ƒv–¼
+	TCHAR	atDispName[MAX_PATH];	//!<	ƒ^ƒu•\Ž¦—p–¼Ì
 
-	UINT	dLastTop;				//!<	è¦‹ã¦ãŸAAã®ç•ªå·
+	UINT	dLastTop;				//!<	Œ©‚Ä‚½AA‚Ì”Ô†
 
 } MULTIPLEMAA, *LPMULTIPLEMAA;
 
 //-------------------------------------------------------------------------------------------------
 
-extern  HWND		ghSplitaWnd;	//		ã‚¹ãƒ—ãƒªãƒƒãƒˆãƒãƒ¼ãƒãƒ³ãƒ‰ãƒ«
+extern  HWND		ghSplitaWnd;	//		ƒXƒvƒŠƒbƒgƒo[ƒnƒ“ƒhƒ‹
 
-extern HMENU		ghProfHisMenu;	//		å±¥æ­´è¡¨ç¤ºã™ã‚‹éƒ¨åˆ†ãƒ»å‹•çš„ã«å†…å®¹ä½œæˆã›ãªã„ã‹ã‚“
+extern HMENU		ghProfHisMenu;	//		—š—ð•\Ž¦‚·‚é•”•ªE“®“I‚É“à—eì¬‚¹‚È‚¢‚©‚ñ
 
-static HFONT		ghTabFont;		//!<	ã‚¿ãƒ–ç”¨ã®ãƒ•ã‚©ãƒ³ãƒˆãƒ»ã¡ã£ã¡ã‚ƒã‚ã®å­—
+static HFONT		ghTabFont;		//!<	ƒ^ƒu—p‚ÌƒtƒHƒ“ƒgE‚¿‚Á‚¿‚á‚ß‚ÌŽš
 
-static  HWND		ghTabWnd;		//!<	é¸æŠžã‚¿ãƒ–ã®ãƒãƒ³ãƒ‰ãƒ«
+static  HWND		ghTabWnd;		//!<	‘I‘ðƒ^ƒu‚Ìƒnƒ“ƒhƒ‹
 
-static  HWND		ghFavLtWnd;		//!<	ã‚ˆãä½¿ã†å¥´ã‚’ç™»éŒ²ã™ã‚‹ãƒªã‚¹ãƒˆãƒœãƒƒã‚¯ã‚¹
+static  HWND		ghFavLtWnd;		//!<	‚æ‚­Žg‚¤“z‚ð“o˜^‚·‚éƒŠƒXƒgƒ{ƒbƒNƒX
 
-static  HWND		ghTreeWnd;		//!<	ãƒ„ãƒªãƒ¼ã®ãƒãƒ³ãƒ‰ãƒ«
-static HTREEITEM	ghTreeRoot;		//!<	ãƒ„ãƒªãƒ¼ã®ãƒ«ãƒ¼ãƒˆã‚¢ã‚¤ãƒ†ãƒ 
+static  HWND		ghTreeWnd;		//!<	ƒcƒŠ[‚Ìƒnƒ“ƒhƒ‹
+static HTREEITEM	ghTreeRoot;		//!<	ƒcƒŠ[‚Ìƒ‹[ƒgƒAƒCƒeƒ€
 
-//static HIMAGELIST	ghImageList;	//!<	ãƒ„ãƒªãƒ¼ãƒ“ãƒ¥ãƒ¼ã«ãã£ã¤ã‘ã‚‹ã‚¤ãƒ¡ãƒ¼ã‚¸ãƒªã‚¹ãƒˆ
+//static HIMAGELIST	ghImageList;	//!<	ƒcƒŠ[ƒrƒ…[‚É‚­‚Á‚Â‚¯‚éƒCƒ[ƒWƒŠƒXƒg
 
-static TCHAR		gatAARoot[MAX_PATH];	//!<	ï¼¡ï¼¡ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ã‚«ãƒ¬ãƒ³ãƒˆ
-static TCHAR		gatBaseName[MAX_PATH];	//!<	ä½¿ç”¨ãƒªã‚¹ãƒˆã«å…¥ã‚Œã‚‹æ™‚ã®ã‚°ãƒ«ãƒ¼ãƒ—å
+static TCHAR		gatAARoot[MAX_PATH];	//!<	‚`‚`ƒfƒBƒŒƒNƒgƒŠ‚ÌƒJƒŒƒ“ƒg
+static TCHAR		gatBaseName[MAX_PATH];	//!<	Žg—pƒŠƒXƒg‚É“ü‚ê‚éŽž‚ÌƒOƒ‹[ƒv–¼
 
-static INT			gixUseTab;		//!<	ä»Šé–‹ã„ã¦ã‚‹ã®ãƒ»ï¼ãƒ„ãƒªãƒ¼ã€€ï¼‘ãŠæ°—ã«å…¥ã‚Šã€€ï¼’ï½žè¤‡æ•°ãƒ•ã‚¡ã‚¤ãƒ«
-//	ã‚¿ãƒ–ç•ªå·ã§ã‚ã‚‹ã“ã¨ã«æ³¨æ„ãƒ»è¤‡æ•°ãƒ•ã‚¡ã‚¤ãƒ«ãƒªã‚¹ãƒˆã®å‰²å½“ç•ªå·ã§ã¯ãªã„
+static INT			gixUseTab;		//!<	¡ŠJ‚¢‚Ä‚é‚ÌE‚OƒcƒŠ[@‚P‚¨‹C‚É“ü‚è@‚Q`•¡”ƒtƒ@ƒCƒ‹
+//	ƒ^ƒu”Ô†‚Å‚ ‚é‚±‚Æ‚É’ˆÓE•¡”ƒtƒ@ƒCƒ‹ƒŠƒXƒg‚ÌŠ„“–”Ô†‚Å‚Í‚È‚¢
 
 #ifdef HUKUTAB_DRAGMOVE
-static POINT		gstMouseDown;		//!<	ãƒžã‚¦ã‚¹ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸä½ç½®
-static INT			giDragSel;			//!<	å‹•ã‹ãã†ã¨ã—ãŸã‚¿ãƒ–ã®ç•ªå·
-static BOOLEAN		gbTabDraging;		//!<	ã‚¿ãƒ–ã‚’ãƒ‰ãƒ©ãƒƒã‚°ã—ã¦ã‚‹
+static POINT		gstMouseDown;		//!<	ƒ}ƒEƒXƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½ˆÊ’u
+static INT			giDragSel;			//!<	“®‚©‚»‚¤‚Æ‚µ‚½ƒ^ƒu‚Ì”Ô†
+static BOOLEAN		gbTabDraging;		//!<	ƒ^ƒu‚ðƒhƒ‰ƒbƒO‚µ‚Ä‚é
 #endif
 
-static WNDPROC	gpfOriginFavListProc;	//!<	ä½¿ç”¨ãƒªã‚¹ãƒˆã®å…ƒãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
-static WNDPROC	gpfOriginTreeViewProc;	//!<	ãƒ„ãƒªãƒ¼ãƒ“ãƒ¥ãƒ¼ã®å…ƒãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
-static WNDPROC	gpfOriginTabMultiProc;	//!<	ã‚¿ãƒ–ã®å…ƒãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
+static WNDPROC	gpfOriginFavListProc;	//!<	Žg—pƒŠƒXƒg‚ÌŒ³ƒvƒƒV[ƒWƒƒ
+static WNDPROC	gpfOriginTreeViewProc;	//!<	ƒcƒŠ[ƒrƒ…[‚ÌŒ³ƒvƒƒV[ƒWƒƒ
+static WNDPROC	gpfOriginTabMultiProc;	//!<	ƒ^ƒu‚ÌŒ³ƒvƒƒV[ƒWƒƒ
 
 
-static list<MULTIPLEMAA>	gltMultiFiles;			//!<	å‰¯ã‚¿ãƒ–ã§é–‹ã„ã¦ã„ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã®ä¿æŒ
-typedef  list<MULTIPLEMAA>::iterator	MLTT_ITR;	//!<	å‰¯ã‚¿ãƒ–ãƒªã‚¹ãƒˆã®ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿
+static list<MULTIPLEMAA>	gltMultiFiles;			//!<	•›ƒ^ƒu‚ÅŠJ‚¢‚Ä‚¢‚éƒtƒ@ƒCƒ‹‚Ì•ÛŽ
+typedef  list<MULTIPLEMAA>::iterator	MLTT_ITR;	//!<	•›ƒ^ƒuƒŠƒXƒg‚ÌƒCƒeƒŒ[ƒ^
 //-------------------------------------------------------------------------------------------------
 
-HRESULT	TreeItemFromSqlII( HTREEITEM  );			//!<	ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã¨ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ï¼³ï¼±ï¼¬ã‹ã‚‰ãƒ„ãƒªãƒ¼ãƒ“ãƒ¥ãƒ¼ã«å±•é–‹
+HRESULT	TreeItemFromSqlII( HTREEITEM  );			//!<	ƒfƒBƒŒƒNƒgƒŠ‚Æƒtƒ@ƒCƒ‹‚ð‚r‚p‚k‚©‚çƒcƒŠ[ƒrƒ…[‚É“WŠJ
 
 #ifdef EXTRA_NODE_STYLE
-UINT	TreeNodeExtraAdding( LPCTSTR  );			//!<	ã‚¨ã‚­ã‚¹ãƒˆãƒ©ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ ã™ã‚‹
-HRESULT	TreeExtraItemFromSql( HTREEITEM, UINT );	//!<	ã‚¨ã‚­ã‚¹ãƒˆãƒ©ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ï¼³ï¼±ï¼¬ã‹ã‚‰ãƒ„ãƒªãƒ¼ãƒ“ãƒ¥ãƒ¼ã«å±•é–‹
+UINT	TreeNodeExtraAdding( LPCTSTR  );			//!<	ƒGƒLƒXƒgƒ‰ƒtƒ@ƒCƒ‹‚ð’Ç‰Á‚·‚é
+HRESULT	TreeExtraItemFromSql( HTREEITEM, UINT );	//!<	ƒGƒLƒXƒgƒ‰ƒtƒ@ƒCƒ‹‚ð‚r‚p‚k‚©‚çƒcƒŠ[ƒrƒ…[‚É“WŠJ
 #endif
 
-VOID	Mtv_OnMButtonUp( HWND, INT, INT, UINT );	//!<	ãƒ„ãƒªãƒ¼ãƒ“ãƒ¥ãƒ¼ã§ãƒžã‚¦ã‚¹ã®ä¸­ãƒãƒ©ã‚¡ãƒ³ãŒã†ï½ã•ã‚ŒãŸæ™‚ã®å‡¦ç†
-VOID	Mtv_OnDropFiles( HWND , HDROP );			//!<	ãƒ„ãƒªãƒ¼ãƒ“ãƒ¥ãƒ¼ã«ãƒ‰ãƒ©ãƒƒã‚°ãƒ³ãƒ‰ãƒ­ãƒƒãƒ—ã•ã‚ŒãŸã¨ãã®å‡¦ç†
+VOID	Mtv_OnMButtonUp( HWND, INT, INT, UINT );	//!<	ƒcƒŠ[ƒrƒ…[‚Åƒ}ƒEƒX‚Ì’†ƒoƒ‰ƒ@ƒ“‚ª‚¤‚‚³‚ê‚½Žž‚Ìˆ—
+VOID	Mtv_OnDropFiles( HWND , HDROP );			//!<	ƒcƒŠ[ƒrƒ…[‚Éƒhƒ‰ƒbƒOƒ“ƒhƒƒbƒv‚³‚ê‚½‚Æ‚«‚Ìˆ—
 
-HRESULT	TabMultipleRestore( HWND  );				//!<	è¤‡æ•°ãƒ•ã‚¡ã‚¤ãƒ«ã‚’INIã‹ã‚‰èª­ã¿è¾¼ã‚“ã§å†å±•é–‹ã™ã‚‹
-INT		TabMultipleSelect( HWND, INT, UINT );		//!<	å‰¯ã‚¿ãƒ–ã‹ã‚‰é¸æŠžã—ãŸå ´åˆ
+HRESULT	TabMultipleRestore( HWND  );				//!<	•¡”ƒtƒ@ƒCƒ‹‚ðINI‚©‚ç“Ç‚Ýž‚ñ‚ÅÄ“WŠJ‚·‚é
+INT		TabMultipleSelect( HWND, INT, UINT );		//!<	•›ƒ^ƒu‚©‚ç‘I‘ð‚µ‚½ê‡
 //INT	TabMultipleOpen( HWND , HTREEITEM );		//
-HRESULT	TabMultipleDelete( HWND, CONST INT );		//!<	æŒ‡å®šã®ã‚¿ãƒ–ã‚’é–‰ã˜ã‚‹
-INT		TabMultipleAppend( HWND );					//!<	ã‚¿ãƒ–ã‚’å¢—ã‚„ã™
+HRESULT	TabMultipleDelete( HWND, CONST INT );		//!<	Žw’è‚Ìƒ^ƒu‚ð•Â‚¶‚é
+INT		TabMultipleAppend( HWND );					//!<	ƒ^ƒu‚ð‘‚â‚·
 
-HRESULT	TabMultipleNameChange( HWND , INT );		//!<	ã‚¿ãƒ–åå‰å¤‰æ›´ãƒ€ã‚¤ãƒ¤ãƒ­ã‚°é–‹ã
+HRESULT	TabMultipleNameChange( HWND , INT );		//!<	ƒ^ƒu–¼‘O•ÏXƒ_ƒCƒ„ƒƒOŠJ‚­
 
-HRESULT	TabLineMultiSingleToggle( HWND );			//!<	ã‚¿ãƒ–ã®å¤šæ®µè¡¨ç¤ºãƒ»ä¸€è¡Œè¡¨ç¤ºã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
+HRESULT	TabLineMultiSingleToggle( HWND );			//!<	ƒ^ƒu‚Ì‘½’i•\Ž¦Eˆês•\Ž¦‚ðØ‚è‘Ö‚¦‚é
 
-UINT	TabMultipleIsFavTab( INT, LPTSTR, UINT_PTR );	//!<	å‰¯ã‚¿ãƒ–ã¯ãŠæ°—ã«ãƒªã‚¹ãƒˆã®ã§ã‚ã‚‹ã‹
+UINT	TabMultipleIsFavTab( INT, LPTSTR, UINT_PTR );	//!<	•›ƒ^ƒu‚Í‚¨‹C‚ÉƒŠƒXƒg‚Ì‚Å‚ ‚é‚©
 
-LRESULT	CALLBACK gpfFavListProc(  HWND , UINT, WPARAM, LPARAM );	//!<	ä½¿ç”¨ãƒªã‚¹ãƒˆã®ã‚µãƒ–ã‚¯ãƒ©ã‚¹ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
-LRESULT	CALLBACK gpfTreeViewProc( HWND , UINT, WPARAM, LPARAM );	//!<	ãƒ„ãƒªãƒ¼ãƒ“ãƒ¥ãƒ¼ã®ã‚µãƒ–ã‚¯ãƒ©ã‚¹ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
-LRESULT	CALLBACK gpfTabMultiProc( HWND , UINT, WPARAM, LPARAM );	//!<	ã‚¿ãƒ–ã®ã‚µãƒ–ã‚¯ãƒ©ã‚¹ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
+LRESULT	CALLBACK gpfFavListProc(  HWND , UINT, WPARAM, LPARAM );	//!<	Žg—pƒŠƒXƒg‚ÌƒTƒuƒNƒ‰ƒXƒvƒƒV[ƒWƒƒ
+LRESULT	CALLBACK gpfTreeViewProc( HWND , UINT, WPARAM, LPARAM );	//!<	ƒcƒŠ[ƒrƒ…[‚ÌƒTƒuƒNƒ‰ƒXƒvƒƒV[ƒWƒƒ
+LRESULT	CALLBACK gpfTabMultiProc( HWND , UINT, WPARAM, LPARAM );	//!<	ƒ^ƒu‚ÌƒTƒuƒNƒ‰ƒXƒvƒƒV[ƒWƒƒ
 
 VOID	Mtb_OnMButtonUp( HWND, INT, INT, UINT );	//!<	
 
@@ -148,11 +148,11 @@ VOID	TabMultipleOnLButtonUp(   HWND, INT, INT, UINT );	//!<
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒ„ãƒªãƒ¼ãƒ“ãƒ¥ãƒ¼ãƒ»è¡¨ç¤ºé¸æŠžã‚¿ã‚°ã¨ã‹ã‚’ä½œã‚‹
-	@param[in]	hWnd	è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«ãƒ»NULLã§ç ´å£Šå‡¦ç†
-	@param[in]	hInst	ã‚¢ãƒ—ãƒªã®å®Ÿå­˜
-	@param[in]	ptRect	ãƒ¡ã‚¤ãƒ³ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ä½ç½®ã¨å¤§ãã•
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	ƒcƒŠ[ƒrƒ…[E•\Ž¦‘I‘ðƒ^ƒO‚Æ‚©‚ðì‚é
+	@param[in]	hWnd	eƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹ENULL‚Å”j‰óˆ—
+	@param[in]	hInst	ƒAƒvƒŠ‚ÌŽÀ‘¶
+	@param[in]	ptRect	ƒƒCƒ“ƒEƒCƒ“ƒhƒE‚ÌˆÊ’u‚Æ‘å‚«‚³
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT TreeInitialise( HWND hWnd, HINSTANCE hInst, LPRECT ptRect )
 {
@@ -167,13 +167,13 @@ HRESULT TreeInitialise( HWND hWnd, HINSTANCE hInst, LPRECT ptRect )
 	HICON	hIcon;
 
 
-	//	ç ´å£Šã™ã‚‹ã¨ã
+	//	”j‰ó‚·‚é‚Æ‚«
 	if( !(hWnd) )
 	{
 		SetWindowFont( ghTabWnd, GetStockFont(DEFAULT_GUI_FONT), FALSE );
 		DeleteFont( ghTabFont );
 
-		//	é–‹ã„ã¦ã‚‹å‰¯ã‚¿ãƒ–ã‚’INIã«ä¿å­˜
+		//	ŠJ‚¢‚Ä‚é•›ƒ^ƒu‚ðINI‚É•Û‘¶
 		TabMultipleStore( hWnd );
 
 		return S_OK;
@@ -196,9 +196,9 @@ HRESULT TreeInitialise( HWND hWnd, HINSTANCE hInst, LPRECT ptRect )
 	gbTabDraging = FALSE;
 #endif
 
-//è¡¨ç¤ºé¸æŠžã‚¿ãƒ–
+//•\Ž¦‘I‘ðƒ^ƒu
 	dwStyles = WS_VISIBLE | WS_CHILD | WS_CLIPSIBLINGS | TCS_RIGHTJUSTIFY;
-	//	å¤šæ®µãƒ¢ãƒ¼ãƒ‰ãªã‚‰ã€ã‚¹ã‚¿ã‚¤ãƒ«ã‚’ãã£ã¤ã‘ã¦ãŠã
+	//	‘½’iƒ‚[ƒh‚È‚çAƒXƒ^ƒCƒ‹‚ð‚­‚Á‚Â‚¯‚Ä‚¨‚­
 	if( !(InitParamValue( INIT_LOAD, VL_MAATAB_SNGL, 0 )) ){	dwStyles |= TCS_MULTILINE;	}
 
 	ghTabWnd = CreateWindowEx( 0, WC_TABCONTROL, TEXT("treetab"), dwStyles, 0, 0, TREE_WIDTH, 0, hWnd, (HMENU)IDTB_TREESEL, hInst, NULL );
@@ -206,10 +206,10 @@ HRESULT TreeInitialise( HWND hWnd, HINSTANCE hInst, LPRECT ptRect )
 
 	ZeroMemory( &stTcItem, sizeof(stTcItem) );
 	stTcItem.mask = TCIF_TEXT;
-	stTcItem.pszText = TEXT("å…¨ã¦");	TabCtrl_InsertItem( ghTabWnd, 0, &stTcItem );
-	stTcItem.pszText = TEXT("ä½¿ç”¨");	TabCtrl_InsertItem( ghTabWnd, 1, &stTcItem );
+	stTcItem.pszText = TEXT("‘S‚Ä");	TabCtrl_InsertItem( ghTabWnd, 0, &stTcItem );
+	stTcItem.pszText = TEXT("Žg—p");	TabCtrl_InsertItem( ghTabWnd, 1, &stTcItem );
 
-	//	é¸ã°ã‚Œã—ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚¿ãƒ–çš„ã«è¿½åŠ ï¼Ÿã€€ã‚¿ãƒ–å¹…ã¯ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦å¹…
+	//	‘I‚Î‚ê‚µƒtƒ@ƒCƒ‹‚ðƒ^ƒu“I‚É’Ç‰ÁH@ƒ^ƒu•‚ÍƒEƒCƒ“ƒhƒE•
 
 	TabCtrl_GetItemRect( ghTabWnd, 1, &itRect );
 	itRect.bottom -= itRect.top;
@@ -221,19 +221,19 @@ HRESULT TreeInitialise( HWND hWnd, HINSTANCE hInst, LPRECT ptRect )
 
 	MoveWindow( ghTabWnd, 0, 0, clRect.right, itRect.top, TRUE );
 
-	//	ã‚µãƒ–ã‚¯ãƒ©ã‚¹åŒ–
+	//	ƒTƒuƒNƒ‰ƒX‰»
 	gpfOriginTabMultiProc = SubclassWindow( ghTabWnd, gpfTabMultiProc );
 
-//ãŠæ°—ã«å…¥ã‚Šç”¨ãƒªã‚¹ãƒˆãƒœãƒƒã‚¯ã‚¹
+//‚¨‹C‚É“ü‚è—pƒŠƒXƒgƒ{ƒbƒNƒX
 	ghFavLtWnd = CreateWindowEx( WS_EX_CLIENTEDGE, WC_LISTBOX, TEXT("favlist"),
 		WS_CHILD | WS_VSCROLL | LBS_NOTIFY | LBS_SORT | LBS_NOINTEGRALHEIGHT,
 		0, itRect.bottom, TREE_WIDTH, ptRect->bottom-itRect.bottom-1, hWnd, (HMENU)IDLB_FAVLIST, hInst, NULL );
 
-	//	ã‚µãƒ–ã‚¯ãƒ©ã‚¹åŒ–
+	//	ƒTƒuƒNƒ‰ƒX‰»
 	gpfOriginFavListProc = SubclassWindow( ghFavLtWnd, gpfFavListProc );
 
 
-//å…¨ï¼¡ï¼¡ãƒªã‚¹ãƒˆãƒ„ãƒªãƒ¼
+//‘S‚`‚`ƒŠƒXƒgƒcƒŠ[
 //	ghImageList = (HIMAGELIST)SHGetFileInfo( TEXT(""), 0, &stShFileInfo, sizeof(SHFILEINFO), (SHGFI_SYSICONINDEX|SHGFI_SMALLICON) );
 
 	ghTreeWnd = CreateWindowEx( WS_EX_CLIENTEDGE | WS_EX_ACCEPTFILES, WC_TREEVIEW, TEXT("itemtree"),
@@ -241,10 +241,10 @@ HRESULT TreeInitialise( HWND hWnd, HINSTANCE hInst, LPRECT ptRect )
 		0, itRect.bottom, TREE_WIDTH, ptRect->bottom-itRect.bottom-1, hWnd, (HMENU)IDTV_ITEMTREE, hInst, NULL );
 //	TreeView_SetImageList( ghTreeWnd, ghImageList, TVSIL_NORMAL );
 
-	//	ã‚µãƒ–ã‚¯ãƒ©ã‚¹åŒ–
+	//	ƒTƒuƒNƒ‰ƒX‰»
 	gpfOriginTreeViewProc = SubclassWindow( ghTreeWnd, gpfTreeViewProc );
 
-	//	ã‚¢ã‚¤ã‚³ãƒ³ãã£ã¤ã‘ã‚‹
+	//	ƒAƒCƒRƒ“‚­‚Á‚Â‚¯‚é
 	hTreeImgList = ImageList_Create( 16, 16, ILC_COLOR24 | ILC_MASK, 6, 0 );
 	hIcon = LoadIcon( hInst , MAKEINTRESOURCE(IDI_TREE_DIR_CLOSE) );	ImageList_AddIcon( hTreeImgList, hIcon );	DeleteObject( hIcon );
 	hIcon = LoadIcon( hInst , MAKEINTRESOURCE(IDI_TREE_DIR_OPEN)  );	ImageList_AddIcon( hTreeImgList, hIcon );	DeleteObject( hIcon );
@@ -260,12 +260,12 @@ HRESULT TreeInitialise( HWND hWnd, HINSTANCE hInst, LPRECT ptRect )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãŠæ°—ã«ãƒªã‚¹ãƒˆã®ã‚µãƒ–ã‚¯ãƒ©ã‚¹ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
-	@param[in]	hWnd	ãƒªã‚¹ãƒˆã®ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	msg		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®è­˜åˆ¥ç•ªå·
-	@param[in]	wParam	è¿½åŠ ã®æƒ…å ±ï¼‘
-	@param[in]	lParam	è¿½åŠ ã®æƒ…å ±ï¼’
-	@return	å‡¦ç†çµæžœã¨ã‹
+	‚¨‹C‚ÉƒŠƒXƒg‚ÌƒTƒuƒNƒ‰ƒXƒvƒƒV[ƒWƒƒ
+	@param[in]	hWnd	ƒŠƒXƒg‚Ìƒnƒ“ƒhƒ‹
+	@param[in]	msg		ƒEƒCƒ“ƒhƒEƒƒbƒZ[ƒW‚ÌŽ¯•Ê”Ô†
+	@param[in]	wParam	’Ç‰Á‚Ìî•ñ‚P
+	@param[in]	lParam	’Ç‰Á‚Ìî•ñ‚Q
+	@return	ˆ—Œ‹‰Ê‚Æ‚©
 */
 LRESULT CALLBACK gpfFavListProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
@@ -274,7 +274,7 @@ LRESULT CALLBACK gpfFavListProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 	switch( msg )
 	{
 		HANDLE_MSG( hWnd, WM_CHAR,    Maa_OnChar  );	//	
-		HANDLE_MSG( hWnd, WM_COMMAND, Maa_OnCommand );	//	ã‚¢ã‚¯ã‚»ãƒ­ãƒªãƒ¼ã‚¿ç”¨
+		HANDLE_MSG( hWnd, WM_COMMAND, Maa_OnCommand );	//	ƒAƒNƒZƒƒŠ[ƒ^—p
 
 		HANDLE_MSG( hWnd, WM_KEYDOWN, Aai_OnKey );			//	20120221
 		HANDLE_MSG( hWnd, WM_KEYUP,   Aai_OnKey );			//	
@@ -293,12 +293,12 @@ LRESULT CALLBACK gpfFavListProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 
 
 /*!
-	ãƒ„ãƒªãƒ¼ãƒ“ãƒ¥ãƒ¼ã®ã‚µãƒ–ã‚¯ãƒ©ã‚¹ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
-	@param[in]	hWnd	ãƒªã‚¹ãƒˆã®ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	msg		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®è­˜åˆ¥ç•ªå·
-	@param[in]	wParam	è¿½åŠ ã®æƒ…å ±ï¼‘
-	@param[in]	lParam	è¿½åŠ ã®æƒ…å ±ï¼’
-	@return	å‡¦ç†çµæžœã¨ã‹
+	ƒcƒŠ[ƒrƒ…[‚ÌƒTƒuƒNƒ‰ƒXƒvƒƒV[ƒWƒƒ
+	@param[in]	hWnd	ƒŠƒXƒg‚Ìƒnƒ“ƒhƒ‹
+	@param[in]	msg		ƒEƒCƒ“ƒhƒEƒƒbƒZ[ƒW‚ÌŽ¯•Ê”Ô†
+	@param[in]	wParam	’Ç‰Á‚Ìî•ñ‚P
+	@param[in]	lParam	’Ç‰Á‚Ìî•ñ‚Q
+	@return	ˆ—Œ‹‰Ê‚Æ‚©
 */
 LRESULT CALLBACK gpfTreeViewProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
@@ -307,13 +307,13 @@ LRESULT CALLBACK gpfTreeViewProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 	switch( msg )
 	{
 		HANDLE_MSG( hWnd, WM_CHAR,      Maa_OnChar  );		//	
-		HANDLE_MSG( hWnd, WM_COMMAND,   Maa_OnCommand );	//	ã‚¢ã‚¯ã‚»ãƒ­ãƒªãƒ¼ã‚¿ç”¨
+		HANDLE_MSG( hWnd, WM_COMMAND,   Maa_OnCommand );	//	ƒAƒNƒZƒƒŠ[ƒ^—p
 
 		HANDLE_MSG( hWnd, WM_KEYDOWN,   Aai_OnKey );		//	20120221
 		HANDLE_MSG( hWnd, WM_KEYUP,     Aai_OnKey );		//	
 
 		HANDLE_MSG( hWnd, WM_MBUTTONUP, Mtv_OnMButtonUp );	//	
-		HANDLE_MSG( hWnd, WM_DROPFILES, Mtv_OnDropFiles );	//	ãƒ‰ãƒ©ã‚°ãƒ³ãƒ‰ãƒ­ãƒƒãƒ—ã®å—ä»˜
+		HANDLE_MSG( hWnd, WM_DROPFILES, Mtv_OnDropFiles );	//	ƒhƒ‰ƒOƒ“ƒhƒƒbƒv‚ÌŽó•t
 
 		case WM_MOUSEWHEEL:
 			ulRslt = Maa_OnMouseWheel( hWnd, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam), (int)(short)HIWORD(wParam), (UINT)(short)LOWORD(wParam) );
@@ -329,10 +329,10 @@ LRESULT CALLBACK gpfTreeViewProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 
 
 /*!
-	ãƒ„ãƒªãƒ¼ãƒ“ãƒ¥ãƒ¼ã§ãƒžã‚¦ã‚¹ã®ä¸­ãƒãƒ©ã‚¡ãƒ³ãŒã†ï½ã•ã‚ŒãŸã‚‰
-	@param[in]	hWnd	ãƒ„ãƒªãƒ¼ãƒ“ãƒ¥ãƒ¼ã®ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	x		ã‚¯ãƒ«ãƒƒã‚¯ã•ã‚ŒãŸã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆï¼¸ä½ç½®
-	@param[in]	y		ã‚¯ãƒ«ãƒƒã‚¯ã•ã‚ŒãŸã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆï¼¹ä½ç½®
+	ƒcƒŠ[ƒrƒ…[‚Åƒ}ƒEƒX‚Ì’†ƒoƒ‰ƒ@ƒ“‚ª‚¤‚‚³‚ê‚½‚ç
+	@param[in]	hWnd	ƒcƒŠ[ƒrƒ…[‚Ìƒnƒ“ƒhƒ‹
+	@param[in]	x		ƒNƒ‹ƒbƒN‚³‚ê‚½ƒNƒ‰ƒCƒ„ƒ“ƒg‚wˆÊ’u
+	@param[in]	y		ƒNƒ‹ƒbƒN‚³‚ê‚½ƒNƒ‰ƒCƒ„ƒ“ƒg‚xˆÊ’u
 	@param[in]	flags	
 */
 VOID Mtv_OnMButtonUp( HWND hWnd, INT x, INT y, UINT flags )
@@ -341,16 +341,16 @@ VOID Mtv_OnMButtonUp( HWND hWnd, INT x, INT y, UINT flags )
 	HTREEITEM	hTreeItem;
 	TVHITTESTINFO	stTvItemInfo;
 
-	TRACE( TEXT("ãƒ„ãƒªãƒ¼ãƒ“ãƒ¥ãƒ¼ã§ä¸­ã‚¯ãƒ«ãƒƒã‚¯[%d x %d]"), x, y );
+	TRACE( TEXT("ƒcƒŠ[ƒrƒ…[‚Å’†ƒNƒ‹ƒbƒN[%d x %d]"), x, y );
 
 	ZeroMemory( &stTvItemInfo, sizeof(TVHITTESTINFO) );
 	stTvItemInfo.pt.x = x;
 	stTvItemInfo.pt.y = y;
 
-	//	è©²å½“ã™ã‚‹ã‚¢ã‚¤ãƒ†ãƒ ã‚’ç¢ºä¿ã—ã¦
+	//	ŠY“–‚·‚éƒAƒCƒeƒ€‚ðŠm•Û‚µ‚Ä
 	hTreeItem = TreeView_HitTest( ghTreeWnd, &stTvItemInfo );
 
-	//	æ“ä½œã™ã‚‹
+	//	‘€ì‚·‚é
 	iRslt = TreeSelItemProc( GetParent( hWnd ), hTreeItem, 1 );
 
 	return;
@@ -358,9 +358,9 @@ VOID Mtv_OnMButtonUp( HWND hWnd, INT x, INT y, UINT flags )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒ‰ãƒ©ãƒƒã‚°ãƒ³ãƒ‰ãƒ­ãƒƒãƒ—ã®å—ã‘å…¥ã‚Œ
-	@param[in]	hWnd	è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	hDrop	ãƒ‰ãƒ­ãƒƒãƒ”ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãƒãƒ³ãƒ‰ã‚¥
+	ƒhƒ‰ƒbƒOƒ“ƒhƒƒbƒv‚ÌŽó‚¯“ü‚ê
+	@param[in]	hWnd	eƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
+	@param[in]	hDrop	ƒhƒƒbƒsƒ“ƒIƒuƒWƒFƒNƒgƒnƒ“ƒhƒD
 */
 VOID Mtv_OnDropFiles( HWND hWnd, HDROP hDrop )
 {
@@ -377,11 +377,11 @@ VOID Mtv_OnDropFiles( HWND hWnd, HDROP hDrop )
 
 	TRACE( TEXT("MTV DROP[%u][%s]"), bRslt, atFileName );
 
-	if( bRslt ){	 return;	}	//	ãƒ•ã‚¡ã‚¤ãƒ«ã§ç„¡ã„ã®ãªã‚‰ä½•ã‚‚ã—ãªã„
+	if( bRslt ){	 return;	}	//	ƒtƒ@ƒCƒ‹‚Å–³‚¢‚Ì‚È‚ç‰½‚à‚µ‚È‚¢
 
 #ifdef EXTRA_NODE_STYLE
 
-	//	SQLã«è¿½åŠ ã—ã¦ã€ãƒ„ãƒªãƒ¼ã«è¿½åŠ ã™ã‚‹
+	//	SQL‚É’Ç‰Á‚µ‚ÄAƒcƒŠ[‚É’Ç‰Á‚·‚é
 	TreeNodeExtraAdding( atFileName );
 
 #endif
@@ -393,19 +393,19 @@ VOID Mtv_OnDropFiles( HWND hWnd, HDROP hDrop )
 
 
 /*!
-	ãƒžãƒ«ãƒãƒ—ãƒ«ã‚¿ãƒ–ã®ã‚µãƒ–ã‚¯ãƒ©ã‚¹ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
-	@param[in]	hWnd	ãƒªã‚¹ãƒˆã®ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	msg		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®è­˜åˆ¥ç•ªå·
-	@param[in]	wParam	è¿½åŠ ã®æƒ…å ±ï¼‘
-	@param[in]	lParam	è¿½åŠ ã®æƒ…å ±ï¼’
-	@return	å‡¦ç†çµæžœã¨ã‹
+	ƒ}ƒ‹ƒ`ƒvƒ‹ƒ^ƒu‚ÌƒTƒuƒNƒ‰ƒXƒvƒƒV[ƒWƒƒ
+	@param[in]	hWnd	ƒŠƒXƒg‚Ìƒnƒ“ƒhƒ‹
+	@param[in]	msg		ƒEƒCƒ“ƒhƒEƒƒbƒZ[ƒW‚ÌŽ¯•Ê”Ô†
+	@param[in]	wParam	’Ç‰Á‚Ìî•ñ‚P
+	@param[in]	lParam	’Ç‰Á‚Ìî•ñ‚Q
+	@return	ˆ—Œ‹‰Ê‚Æ‚©
 */
 LRESULT	CALLBACK gpfTabMultiProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
 	switch( msg )
 	{
 		HANDLE_MSG( hWnd, WM_CHAR,    Maa_OnChar  );	
-		HANDLE_MSG( hWnd, WM_COMMAND, Maa_OnCommand );	//	ã‚¢ã‚¯ã‚»ãƒ­ãƒªãƒ¼ã‚¿ç”¨
+		HANDLE_MSG( hWnd, WM_COMMAND, Maa_OnCommand );	//	ƒAƒNƒZƒƒŠ[ƒ^—p
 
 		HANDLE_MSG( hWnd, WM_KEYDOWN, Aai_OnKey );			//	20120221
 		HANDLE_MSG( hWnd, WM_KEYUP,   Aai_OnKey );			//	
@@ -428,12 +428,12 @@ LRESULT	CALLBACK gpfTabMultiProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚¿ãƒ–ã‚’ãƒ€ãƒ–ãƒ«ã‚¯ãƒ«ãƒƒã‚¯ã—ãŸã¨ã
-	@param[in]	hWnd			ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	fDoubleClick	éžï¼ãƒ€ãƒ–ãƒ«ã‚¯ãƒ«ãƒƒã‚¯
-	@param[in]	x				ç™ºç”Ÿã—ãŸã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆï¼¸åº§æ¨™å€¤
-	@param[in]	y				ç™ºç”Ÿã—ãŸã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆï¼¹åº§æ¨™å€¤
-	@param[in]	keyFlags		ä»–ã«æŠ¼ã•ã‚Œã¦ã‚‹ã‚­ãƒ¼ã«ã¤ã„ã¦
+	ƒ^ƒu‚ðƒ_ƒuƒ‹ƒNƒ‹ƒbƒN‚µ‚½‚Æ‚«
+	@param[in]	hWnd			ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	fDoubleClick	”ñ‚Oƒ_ƒuƒ‹ƒNƒ‹ƒbƒN
+	@param[in]	x				”­¶‚µ‚½ƒNƒ‰ƒCƒ„ƒ“ƒg‚wÀ•W’l
+	@param[in]	y				”­¶‚µ‚½ƒNƒ‰ƒCƒ„ƒ“ƒg‚xÀ•W’l
+	@param[in]	keyFlags		‘¼‚É‰Ÿ‚³‚ê‚Ä‚éƒL[‚É‚Â‚¢‚Ä
 */
 VOID Mtb_OnLButtonDblclk( HWND hWnd, BOOL fDoubleClick, INT x, INT y, UINT keyFlags )
 {
@@ -443,27 +443,27 @@ VOID Mtb_OnLButtonDblclk( HWND hWnd, BOOL fDoubleClick, INT x, INT y, UINT keyFl
 	//stTcHitInfo.pt.x = x;
 	//stTcHitInfo.pt.y = y;
 	//curSel = TabCtrl_HitTest( ghTabWnd, &stTcHitInfo );
-	//ãã®ã¨ãã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ãªã£ã¦ã„ã‚‹ã‚¿ãƒ–ã‚’é¸æŠžã™ã‚‹
+	//‚»‚Ì‚Æ‚«ƒAƒNƒeƒBƒu‚É‚È‚Á‚Ä‚¢‚éƒ^ƒu‚ð‘I‘ð‚·‚é
 	curSel = TabCtrl_GetCurSel( ghTabWnd );
 
 	TRACE( TEXT("TAB DBLCLICK [%d] [%d x %d]"), curSel, x, y );
 
-	if( 1 >= curSel ){	 return;	}	//	ã‚¿ãƒ–ã€€ï¼ãƒ„ãƒªãƒ¼ã€ï¼‘ä½¿ç”¨ã®ã¨ãã¯ä½•ã‚‚ã—ãªã„
+	if( 1 >= curSel ){	 return;	}	//	ƒ^ƒu@‚OƒcƒŠ[A‚PŽg—p‚Ì‚Æ‚«‚Í‰½‚à‚µ‚È‚¢
 
-	TabMultipleNameChange( hWnd, curSel );	//	åç§°å¤‰æ›´
+	TabMultipleNameChange( hWnd, curSel );	//	–¼Ì•ÏX
 
-#pragma message ("ãƒ€ãƒ–ãƒ«ã‚¯ãƒ«ãƒƒã‚¯ã®æ©Ÿèƒ½ã‚’è¨­å®šå‡ºæ¥ã‚‹ã‚ˆã†ã«ã™ã‚‹ã¨ãŠã„ã—ã„ã‹ã‚‚")
+#pragma message ("ƒ_ƒuƒ‹ƒNƒ‹ƒbƒN‚Ì‹@”\‚ðÝ’èo—ˆ‚é‚æ‚¤‚É‚·‚é‚Æ‚¨‚¢‚µ‚¢‚©‚à")
 
 	return;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	å‰¯ã‚¿ãƒ–ã§ãƒžã‚¦ã‚¹ã®ä¸­ãƒœã‚¿ãƒ³ãŒã†ï½ã•ã‚ŒãŸã¨ã
-	@param[in]	hWnd		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	x			ç™ºç”Ÿã—ãŸã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆï¼¸åº§æ¨™å€¤
-	@param[in]	y			ç™ºç”Ÿã—ãŸã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆï¼¹åº§æ¨™å€¤
-	@param[in]	keyFlags	ä»–ã«æŠ¼ã•ã‚Œã¦ã‚‹ã‚­ãƒ¼ã«ã¤ã„ã¦
+	•›ƒ^ƒu‚Åƒ}ƒEƒX‚Ì’†ƒ{ƒ^ƒ“‚ª‚¤‚‚³‚ê‚½‚Æ‚«
+	@param[in]	hWnd		ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	x			”­¶‚µ‚½ƒNƒ‰ƒCƒ„ƒ“ƒg‚wÀ•W’l
+	@param[in]	y			”­¶‚µ‚½ƒNƒ‰ƒCƒ„ƒ“ƒg‚xÀ•W’l
+	@param[in]	keyFlags	‘¼‚É‰Ÿ‚³‚ê‚Ä‚éƒL[‚É‚Â‚¢‚Ä
 */
 VOID Mtb_OnMButtonUp( HWND hWnd, INT x, INT y, UINT flags )
 {
@@ -473,7 +473,7 @@ VOID Mtb_OnMButtonUp( HWND hWnd, INT x, INT y, UINT flags )
 	stTcHitInfo.pt.x = x;
 	stTcHitInfo.pt.y = y;
 	curSel = TabCtrl_HitTest( ghTabWnd, &stTcHitInfo );
-	//	ã‚¿ãƒ–ã€€ï¼ãƒ„ãƒªãƒ¼ã€ï¼‘ä½¿ç”¨ã®ã¨ãã¯ä½•ã‚‚ã—ãªã„
+	//	ƒ^ƒu@‚OƒcƒŠ[A‚PŽg—p‚Ì‚Æ‚«‚Í‰½‚à‚µ‚È‚¢
 
 	TRACE( TEXT("MTAB start TAB [%d] [%d x %d]"), curSel, x, y );
 
@@ -488,11 +488,11 @@ VOID Mtb_OnMButtonUp( HWND hWnd, INT x, INT y, UINT flags )
 #ifdef HUKUTAB_DRAGMOVE
 
 /*!
-	å‰¯ã‚¿ãƒ–ã§ãƒžã‚¦ã‚¹ã®å·¦ãƒœã‚¿ãƒ³ãŒãƒ€ã‚¦ãƒ³ã•ã‚ŒãŸã¨ã
-	@param[in]	hWnd		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	x			ç™ºç”Ÿã—ãŸã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆï¼¸åº§æ¨™å€¤
-	@param[in]	y			ç™ºç”Ÿã—ãŸã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆï¼¹åº§æ¨™å€¤
-	@param[in]	keyFlags	ä»–ã«æŠ¼ã•ã‚Œã¦ã‚‹ã‚­ãƒ¼ã«ã¤ã„ã¦
+	•›ƒ^ƒu‚Åƒ}ƒEƒX‚Ì¶ƒ{ƒ^ƒ“‚ªƒ_ƒEƒ“‚³‚ê‚½‚Æ‚«
+	@param[in]	hWnd		ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	x			”­¶‚µ‚½ƒNƒ‰ƒCƒ„ƒ“ƒg‚wÀ•W’l
+	@param[in]	y			”­¶‚µ‚½ƒNƒ‰ƒCƒ„ƒ“ƒg‚xÀ•W’l
+	@param[in]	keyFlags	‘¼‚É‰Ÿ‚³‚ê‚Ä‚éƒL[‚É‚Â‚¢‚Ä
 */
 VOID TabMultipleOnLButtonDown( HWND hWnd, INT x, INT y, UINT keyFlags )
 {
@@ -500,12 +500,12 @@ VOID TabMultipleOnLButtonDown( HWND hWnd, INT x, INT y, UINT keyFlags )
 
 	TRACE( TEXT("MTAB LDOWN [%d x %d]"), x, y );
 
-	gstMouseDown.x = x;	//	ãƒ€ã‚¦ãƒ³ã—ãŸä½ç½®ã‚’åŸºç‚¹ã¨ã™ã‚‹
+	gstMouseDown.x = x;	//	ƒ_ƒEƒ“‚µ‚½ˆÊ’u‚ðŠî“_‚Æ‚·‚é
 	gstMouseDown.y = y;
 
 	stTcHitInfo.pt = gstMouseDown;
 	giDragSel = TabCtrl_HitTest( ghTabWnd, &stTcHitInfo );
-	//	ã‚¿ãƒ–ã€€ï¼ãƒ„ãƒªãƒ¼ã€ï¼‘ä½¿ç”¨ã®ã¨ãã¯ä½•ã‚‚ã—ãªã„
+	//	ƒ^ƒu@‚OƒcƒŠ[A‚PŽg—p‚Ì‚Æ‚«‚Í‰½‚à‚µ‚È‚¢
 
 	TRACE( TEXT("MTAB start TAB [%d]"), giDragSel );
 
@@ -514,22 +514,22 @@ VOID TabMultipleOnLButtonDown( HWND hWnd, INT x, INT y, UINT keyFlags )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	å‰¯ã‚¿ãƒ–ã§ãƒžã‚¦ã‚¹ã‚’å‹•ã‹ã—ãŸã¨ã
-	@param[in]	hWnd		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	x			ç™ºç”Ÿã—ãŸã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆï¼¸åº§æ¨™å€¤
-	@param[in]	y			ç™ºç”Ÿã—ãŸã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆï¼¹åº§æ¨™å€¤
-	@param[in]	keyFlags	ä»–ã«æŠ¼ã•ã‚Œã¦ã‚‹ã‚­ãƒ¼ã«ã¤ã„ã¦
+	•›ƒ^ƒu‚Åƒ}ƒEƒX‚ð“®‚©‚µ‚½‚Æ‚«
+	@param[in]	hWnd		ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	x			”­¶‚µ‚½ƒNƒ‰ƒCƒ„ƒ“ƒg‚wÀ•W’l
+	@param[in]	y			”­¶‚µ‚½ƒNƒ‰ƒCƒ„ƒ“ƒg‚xÀ•W’l
+	@param[in]	keyFlags	‘¼‚É‰Ÿ‚³‚ê‚Ä‚éƒL[‚É‚Â‚¢‚Ä
 */
 VOID TabMultipleOnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
 {
 	INT	mx, my, rx, ry;
 
-	//	ã‚¿ãƒ–ã€€ï¼ãƒ„ãƒªãƒ¼ã€ï¼‘ä½¿ç”¨ã®ã¨ãã¯ä½•ã‚‚ã—ãªã„
+	//	ƒ^ƒu@‚OƒcƒŠ[A‚PŽg—p‚Ì‚Æ‚«‚Í‰½‚à‚µ‚È‚¢
 	if( 1 >= giDragSel )	return;
 
 	if( (keyFlags & MK_LBUTTON) && !(gbTabDraging) )
 	{
-		//	åŸºç‚¹ã‹ã‚‰ã®ç§»å‹•é‡ã®çµ¶å¯¾å€¤ã‚’ç¢ºèª
+		//	Šî“_‚©‚ç‚ÌˆÚ“®—Ê‚Ìâ‘Î’l‚ðŠm”F
 		mx = abs( gstMouseDown.x - x );
 		my = abs( gstMouseDown.y - y );
 
@@ -537,11 +537,11 @@ VOID TabMultipleOnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
 		ry = GetSystemMetrics( SM_CYDRAG );
 
 
-		//	ç‰¹å®šé‡ç§»å‹•ã—ãŸã‚‰ãƒ‰ãƒ©ãƒƒã‚°é–‹å§‹ã¨ã™ã‚‹
+		//	“Á’è—ÊˆÚ“®‚µ‚½‚çƒhƒ‰ƒbƒOŠJŽn‚Æ‚·‚é
 		if( rx < mx || ry < my )
 		{
 			TRACE( TEXT("MTAB start DRAG [%d x %d] [%d x %d]"), rx, ry, mx, my );
-			SetCapture( hWnd  );	//	ãƒžã‚¦ã‚¹ã‚­ãƒ£ãƒ—ãƒãƒ£
+			SetCapture( hWnd  );	//	ƒ}ƒEƒXƒLƒƒƒvƒ`ƒƒ
 			gbTabDraging = TRUE;
 		}
 
@@ -552,11 +552,11 @@ VOID TabMultipleOnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	å‰¯ã‚¿ãƒ–ã§ãƒžã‚¦ã‚¹ã®å·¦ãƒœã‚¿ãƒ³ãŒã†ã£ï½ã•ã‚ŒãŸã¨ã
-	@param[in]	hWnd			ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	x				ç™ºç”Ÿã—ãŸã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆï¼¸åº§æ¨™å€¤
-	@param[in]	y				ç™ºç”Ÿã—ãŸã‚¯ãƒ©ã‚¤ãƒ¤ãƒ³ãƒˆï¼¹åº§æ¨™å€¤
-	@param[in]	keyFlags		ä»–ã«æŠ¼ã•ã‚Œã¦ã‚‹ã‚­ãƒ¼ã«ã¤ã„ã¦
+	•›ƒ^ƒu‚Åƒ}ƒEƒX‚Ì¶ƒ{ƒ^ƒ“‚ª‚¤‚Á‚‚³‚ê‚½‚Æ‚«
+	@param[in]	hWnd			ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	x				”­¶‚µ‚½ƒNƒ‰ƒCƒ„ƒ“ƒg‚wÀ•W’l
+	@param[in]	y				”­¶‚µ‚½ƒNƒ‰ƒCƒ„ƒ“ƒg‚xÀ•W’l
+	@param[in]	keyFlags		‘¼‚É‰Ÿ‚³‚ê‚Ä‚éƒL[‚É‚Â‚¢‚Ä
 */
 VOID TabMultipleOnLButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
 {
@@ -584,11 +584,11 @@ VOID TabMultipleOnLButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
 #endif
 
 /*!
-	MAAã®ã©ã£ã‹ã§æ–‡å­—ã‚­ãƒ¼ã‚ªã‚µãƒ¬ãŒç™ºç”Ÿ
-	@param[in]	hWnd	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«ãƒ»ç™ºç”Ÿæºã«æ³¨æ„
-	@param[in]	ch		æŠ¼ã•ã‚ŒãŸæ–‡å­—
-	@param[in]	cRepeat	ã‚­ãƒ¼ãƒªãƒ”ãƒ¼ãƒˆå›žæ•°ãƒ»åŠ¹ã„ã¦ãªã„ï¼Ÿ
-	@return		ç„¡ã—
+	MAA‚Ì‚Ç‚Á‚©‚Å•¶ŽšƒL[ƒIƒTƒŒ‚ª”­¶
+	@param[in]	hWnd	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹E”­¶Œ¹‚É’ˆÓ
+	@param[in]	ch		‰Ÿ‚³‚ê‚½•¶Žš
+	@param[in]	cRepeat	ƒL[ƒŠƒs[ƒg‰ñ”EŒø‚¢‚Ä‚È‚¢H
+	@return		–³‚µ
 */
 VOID Maa_OnChar( HWND hWnd, TCHAR ch, INT cRepeat )
 {
@@ -600,17 +600,17 @@ VOID Maa_OnChar( HWND hWnd, TCHAR ch, INT cRepeat )
 
 	TRACE( TEXT("CHAR[%04X][%d]"), ch, bShift );
 
-	if( VK_RETURN == ch )	//	ã‚¨ãƒ³ã‚¿ãƒ¼æŠ¼ã•ã‚ŒãŸã‚‰
+	if( VK_RETURN == ch )	//	ƒGƒ“ƒ^[‰Ÿ‚³‚ê‚½‚ç
 	{
 		AaItemsDoSelect( hWnd, MAA_DEFAULT, FALSE );
 		return;
 	}
 
-	if( VK_TAB != ch ){	return;	}	//	ã‚¿ãƒ–ä»¥å¤–ã¯ä½•ã‚‚ç„¡ã„
+	if( VK_TAB != ch ){	return;	}	//	ƒ^ƒuˆÈŠO‚Í‰½‚à–³‚¢
 
 	iTabs = TabCtrl_GetItemCount( ghTabWnd );
 
-	if( bShift )	//	é€†å›žã—
+	if( bShift )	//	‹t‰ñ‚µ
 	{
 		iTarget = gixUseTab - 1;
 		if( 0 > iTarget ){	iTarget = iTabs - 1;	}
@@ -634,12 +634,12 @@ VOID Maa_OnChar( HWND hWnd, TCHAR ch, INT cRepeat )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãƒ¡ãƒ‹ãƒ¥ãƒ¼å‘¼ã³ã ã—ã‚¢ã‚¯ã‚·ãƒ§ãƒ³(è¦ã¯å³ã‚¯ãƒ«ãƒƒã‚¯ï¼‰
-	@param[in]	hWnd		ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	hWndContext	ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãŒç™ºç”Ÿã—ãŸã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	xPos		ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ï¼¸åº§æ¨™
-	@param[in]	yPos		ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ï¼¹åº§æ¥­
-	@return		ç„¡ã—
+	ƒRƒ“ƒeƒLƒXƒgƒƒjƒ…[ŒÄ‚Ñ‚¾‚µƒAƒNƒVƒ‡ƒ“(—v‚Í‰EƒNƒ‹ƒbƒNj
+	@param[in]	hWnd		ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	hWndContext	ƒRƒ“ƒeƒLƒXƒg‚ª”­¶‚µ‚½ƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
+	@param[in]	xPos		ƒXƒNƒŠ[ƒ“‚wÀ•W
+	@param[in]	yPos		ƒXƒNƒŠ[ƒ“‚xÀ‹Æ
+	@return		–³‚µ
 */
 VOID Maa_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 {
@@ -664,28 +664,28 @@ VOID Maa_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 
 	HTREEITEM		hTvHitItem;
 
-	stPost.x = (SHORT)xPos;	//	ç”»é¢åº§æ¨™ã¯ãƒžã‚¤ãƒŠã‚¹ã‚‚ã‚ã‚Šã†ã‚‹
+	stPost.x = (SHORT)xPos;	//	‰æ–ÊÀ•W‚Íƒ}ƒCƒiƒX‚à‚ ‚è‚¤‚é
 	stPost.y = (SHORT)yPos;
 
-	TRACE( TEXT("MAAã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãƒ¡ãƒ‹ãƒ¥ãƒ¼") );
+	TRACE( TEXT("MAAƒRƒ“ƒeƒLƒXƒgƒƒjƒ…[") );
 
-	//	ãŠæ°—ã«ãƒªã‚¹ãƒˆãƒœãƒƒã‚¯ã‚¹ã®ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
+	//	‚¨‹C‚ÉƒŠƒXƒgƒ{ƒbƒNƒX‚ÌƒRƒ“ƒeƒLƒXƒg
 	if( ghFavLtWnd == hWndContext )
 	{
 		ZeroMemory( atSelName, sizeof(atSelName) );
 		ZeroMemory( atMenuStr, sizeof(atMenuStr) );
 
 		curSel = ListBox_GetCurSel( ghFavLtWnd );
-		TRACE( TEXT("ãƒªã‚¹ãƒˆãƒœãƒƒã‚¯ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ %d"), curSel );
+		TRACE( TEXT("ƒŠƒXƒgƒ{ƒbƒNƒXƒRƒ“ƒeƒLƒXƒg %d"), curSel );
 		if( 0 > curSel )	return;
 
 		ListBox_GetText( ghFavLtWnd, curSel, atSelName );
-		StringCchPrintf( atMenuStr,  MAX_PATH, TEXT("[ %s ]ã§å‰¯ã‚¿ãƒ–ã‚’è¿½åŠ "), atSelName );
-		StringCchPrintf( atMenuStr2, MAX_PATH, TEXT("[ %s ]ã‚°ãƒ«ãƒ¼ãƒ—ã‚’å‰Šé™¤"), atSelName );
+		StringCchPrintf( atMenuStr,  MAX_PATH, TEXT("[ %s ]‚Å•›ƒ^ƒu‚ð’Ç‰Á"), atSelName );
+		StringCchPrintf( atMenuStr2, MAX_PATH, TEXT("[ %s ]ƒOƒ‹[ƒv‚ðíœ"), atSelName );
 
-		//	ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã¯å¸¸ã«å‹•çš„ã«ä½œæˆã™ã‚‹
+		//	ƒƒjƒ…[‚Íí‚É“®“I‚Éì¬‚·‚é
 		hMenu = CreatePopupMenu(  );
-		//	ãŠæ°—ã«ãƒªã‚¹ãƒˆã®ã‚»ãƒƒãƒˆã‚’å‰¯ã‚¿ãƒ–ã«è¡¨ç¤ºã™ã‚‹æ©Ÿèƒ½
+		//	‚¨‹C‚ÉƒŠƒXƒg‚ÌƒZƒbƒg‚ð•›ƒ^ƒu‚É•\Ž¦‚·‚é‹@”\
 		AppendMenu( hMenu, MF_STRING, IDM_AATREE_SUBADD, atMenuStr );
 		AppendMenu( hMenu, MF_SEPARATOR, 0, TEXT("----") );
 		AppendMenu( hMenu, MF_STRING, IDM_MAA_FAVFLDR_DELETE, atMenuStr2 );
@@ -696,16 +696,16 @@ VOID Maa_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 			case IDM_AATREE_SUBADD:
 				ZeroMemory( &stMulti, sizeof(MULTIPLEMAA) );
 				StringCchCopy( stMulti.atBaseName, MAX_PATH, atSelName );
-				//	atFilePathã‚’ç©ºã«ã™ã‚‹ã“ã¨ã§ã€ä½¿ç”¨ãƒªã‚¹ãƒˆã‹ã‚‰ã£ã¦ã“ã¨ã§
-				stMulti.dTabNum = 0;	//	åˆæœŸåŒ–ãƒ»å‰²å½“ã¯ï¼’ä»¥é™
+				//	atFilePath‚ð‹ó‚É‚·‚é‚±‚Æ‚ÅAŽg—pƒŠƒXƒg‚©‚ç‚Á‚Ä‚±‚Æ‚Å
+				stMulti.dTabNum = 0;	//	‰Šú‰»EŠ„“–‚Í‚QˆÈ~
 
 				gltMultiFiles.push_back( stMulti );
 				TabMultipleAppend( hWnd );
 				break;
 
-			case IDM_MAA_FAVFLDR_DELETE:	//	ãŠæ°—ã«å…¥ã‚Šãƒªã‚¹ãƒˆã‚’åŸºç‚¹ã”ã¨å‰Šé™¤
+			case IDM_MAA_FAVFLDR_DELETE:	//	‚¨‹C‚É“ü‚èƒŠƒXƒg‚ðŠî“_‚²‚Æíœ
 				SqlFavFolderDelete( atSelName );
-				//	å†æç”»
+				//	Ä•`‰æ
 				while( ListBox_GetCount( ghFavLtWnd ) ){	ListBox_DeleteString( ghFavLtWnd, 0 );	}
 				SqlFavFolderEnum( FavListFolderNameBack );
 				break;
@@ -716,7 +716,7 @@ VOID Maa_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 		return;
 	}
 
-	//	ãƒ„ãƒªãƒ¼ãƒ“ãƒ¥ãƒ¼ã®ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
+	//	ƒcƒŠ[ƒrƒ…[‚ÌƒRƒ“ƒeƒLƒXƒg
 	if( ghTreeWnd == hWndContext )
 	{
 		hMenu = LoadMenu( GetModuleHandle(NULL), MAKEINTRESOURCE(IDM_AATREE_POPUP) );
@@ -728,39 +728,39 @@ VOID Maa_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 
 		if( hTvHitItem )
 		{
-			//	é¸æŠžã•ã‚ŒãŸã‚„ã¤ã®ãƒ•ã‚¡ã‚¤ãƒ«åã€ã‚‚ã—ãã¯ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåç¢ºä¿
+			//	‘I‘ð‚³‚ê‚½‚â‚Â‚Ìƒtƒ@ƒCƒ‹–¼A‚à‚µ‚­‚ÍƒfƒBƒŒƒNƒgƒŠ–¼Šm•Û
 			lPrm = TreeItemInfoGet( hTvHitItem, atName, MAX_PATH );
-			//ï¼ ï¼ 	lParamã®åˆ¤æ–­
+			//——	lParam‚Ì”»’f
 
 #ifdef EXTRA_NODE_STYLE
-			//	ã©ã‚Œã§ã‚‚ãªã„ã®ãªã‚‰ã€ã‚¨ã‚­ã‚¹ãƒˆãƒ©ãƒ•ã‚¡ã‚¤ãƒ«ãªã®ã§ã€ãƒ•ã‚¡ã‚¤ãƒ«ã«ã—ã¦ãŠããƒ»æ›¸æ›æ³¨æ„
+			//	‚Ç‚ê‚Å‚à‚È‚¢‚Ì‚È‚çAƒGƒLƒXƒgƒ‰ƒtƒ@ƒCƒ‹‚È‚Ì‚ÅAƒtƒ@ƒCƒ‹‚É‚µ‚Ä‚¨‚­E‘Š·’ˆÓ
 			if( NODE_DIR != lPrm && NODE_FILE != lPrm && NODE_EXTRA != lPrm )
 			{
 				iSelID = lPrm;
 				lPrm = NODE_FILE;
 				EnableMenuItem( hSubMenu, IDM_MAA_ITEM_DELETE, MF_ENABLED );
-				//	ã‚¨ã‚­ã‚¹ãƒˆãƒ©ãƒ•ã‚¡ã‚¤ãƒ«ã®å‰Šé™¤ã‚’æœ‰åŠ¹ã«ã™ã‚‹
+				//	ƒGƒLƒXƒgƒ‰ƒtƒ@ƒCƒ‹‚Ìíœ‚ð—LŒø‚É‚·‚é
 			}
 #endif
 
-			StringCchCat( atName, MAX_PATH, TEXT(" ã®æ“ä½œ") );
-			//	åç§°ã‚’æ˜Žç¤ºã—ã¦ãŠã
+			StringCchCat( atName, MAX_PATH, TEXT(" ‚Ì‘€ì") );
+			//	–¼Ì‚ð–¾Ž¦‚µ‚Ä‚¨‚­
 			ModifyMenu( hSubMenu, IDM_DUMMY, MF_BYCOMMAND | MF_STRING | MF_GRAYED, IDM_DUMMY, atName );
 		}
 
-		if( NODE_FILE != lPrm || !(hTvHitItem) )	//	ãƒ•ã‚¡ã‚¤ãƒ«ã§ãªã„ã‹ã€æœªé¸æŠžãªã‚‰
+		if( NODE_FILE != lPrm || !(hTvHitItem) )	//	ƒtƒ@ƒCƒ‹‚Å‚È‚¢‚©A–¢‘I‘ð‚È‚ç
 		{
 			EnableMenuItem( hSubMenu, IDM_AATREE_MAINOPEN, MF_GRAYED );
 			EnableMenuItem( hSubMenu, IDM_AATREE_SUBADD,   MF_GRAYED );
 			EnableMenuItem( hSubMenu, IDM_AATREE_GOEDIT,   MF_GRAYED );
-		//	EnableMenuItem( hSubMenu, IDM_MAA_IADD_OPEN,   MF_GRAYED );	//	ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚ŒãŸ
+		//	EnableMenuItem( hSubMenu, IDM_MAA_IADD_OPEN,   MF_GRAYED );	//	ƒLƒƒƒ“ƒZƒ‹‚³‚ê‚½
 		}
-		//	ãƒ—ãƒ­ãƒ•å†…ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚‚å‰Šé™¤å‡ºæ¥ã‚‹ã‚ˆã†ã«ã—ã¦ãŠãã‹ï¼Ÿ
+		//	ƒvƒƒt“à‚Ìƒtƒ@ƒCƒ‹‚àíœo—ˆ‚é‚æ‚¤‚É‚µ‚Ä‚¨‚­‚©H
 
-		//	ãƒ—ãƒ­ãƒ•å±¥æ­´å…¥æ›¿
-		ModifyMenu( hSubMenu, IDM_OPEN_HISTORY, MF_BYCOMMAND | MF_POPUP, (UINT_PTR)ghProfHisMenu, TEXT("ãƒ•ã‚¡ã‚¤ãƒ«ä½¿ç”¨å±¥æ­´(&H)") );
-	//	ModifyMenu( hSubMenu, 2, MF_BYPOSITION | MF_POPUP, (UINT_PTR)ghProfHisMenu, TEXT("ãƒ•ã‚¡ã‚¤ãƒ«ä½¿ç”¨å±¥æ­´(&H)") );
-		//	ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—ã¸ã®å¤‰æ›´ã¯ã€PositionæŒ‡å®šã§ãªã„ã¨å‡ºæ¥ãªã„ï¼Ÿ
+		//	ƒvƒƒt—š—ð“ü‘Ö
+		ModifyMenu( hSubMenu, IDM_OPEN_HISTORY, MF_BYCOMMAND | MF_POPUP, (UINT_PTR)ghProfHisMenu, TEXT("ƒtƒ@ƒCƒ‹Žg—p—š—ð(&H)") );
+	//	ModifyMenu( hSubMenu, 2, MF_BYPOSITION | MF_POPUP, (UINT_PTR)ghProfHisMenu, TEXT("ƒtƒ@ƒCƒ‹Žg—p—š—ð(&H)") );
+		//	ƒ|ƒbƒvƒAƒbƒv‚Ö‚Ì•ÏX‚ÍAPositionŽw’è‚Å‚È‚¢‚Æo—ˆ‚È‚¢H
 
 #ifdef _ORRVW
 		rdExStyle = GetWindowLongPtr( hWnd, GWL_EXSTYLE );
@@ -768,17 +768,17 @@ VOID Maa_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 #endif
 
 
-		//	å³ã‚¯ãƒªã§ã¯ãƒŽãƒ¼ãƒ‰é¸æŠžã•ã‚Œãªã„ã‚ˆã†ã 
+		//	‰EƒNƒŠ‚Å‚Íƒm[ƒh‘I‘ð‚³‚ê‚È‚¢‚æ‚¤‚¾
 		dRslt = TrackPopupMenu( hSubMenu, TPM_RETURNCMD, stPost.x, stPost.y, 0, hWnd, NULL );	//	TPM_CENTERALIGN | TPM_VCENTERALIGN | 
 		RemoveMenu( hSubMenu, 2, MF_BYPOSITION );
-		DestroyMenu( hMenu );	//ã“ã®ãƒ‡ã‚¹ãƒˆãƒ­ã‚¤ã§ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—ã¾ã§ç ´æ£„ã•ã‚Œã‚‹ã®ã§ã€removeã—ã¦ãŠã
+		DestroyMenu( hMenu );	//‚±‚ÌƒfƒXƒgƒƒC‚Åƒ|ƒbƒvƒAƒbƒv‚Ü‚Å”jŠü‚³‚ê‚é‚Ì‚ÅAremove‚µ‚Ä‚¨‚­
 	
 		switch( dRslt )
 		{
-			//	ãƒ—ãƒ­ãƒ•ãƒ•ã‚¡ã‚¤ãƒ«é–‹ã
+			//	ƒvƒƒtƒtƒ@ƒCƒ‹ŠJ‚­
 			case IDM_MAA_PROFILE_MAKE:	TreeProfileOpen( hWnd );	break;
 
-			//	ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªç³»ã‚’å†ã‚»ãƒƒãƒˆ	ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªè¨­å®šãƒ€ã‚¤ãƒ¤ãƒ­ã‚°ã‚’é–‹ã
+			//	ƒfƒBƒŒƒNƒgƒŠŒn‚ðÄƒZƒbƒg	ƒfƒBƒŒƒNƒgƒŠÝ’èƒ_ƒCƒ„ƒƒO‚ðŠJ‚­
 			case IDM_TREE_RECONSTRUCT:	TreeProfileRebuild( hWnd  );	break;
 
 			case IDM_FINDMAA_DLG_OPEN:	TreeMaaFileFind( hWnd );	break;
@@ -791,22 +791,22 @@ VOID Maa_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 			case  IDM_AATREE_GOEDIT:	TreeSelItemProc( hWnd, hTvHitItem , 2 );	break;
   #ifndef MAA_IADD_PLUS
 		//	case  IDM_MAA_IADD_OPEN:	TreeSelItemProc( hWnd, hTvHitItem , 3 );	break;
-			//ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚ŒãŸ
+			//ƒLƒƒƒ“ƒZƒ‹‚³‚ê‚½
   #endif
 #endif
 #ifdef EXTRA_NODE_STYLE
 			case IDM_MAA_ITEM_DELETE:	TreeSelItemProc( hWnd, hTvHitItem , 4 );	break;
 #endif
-			//	ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒãƒ³å±¥æ­´ã‚¯ãƒ«ãƒ¤ãƒ¼
+			//	ƒtƒ@ƒCƒ‹ƒI[ƒ|ƒ“—š—ðƒNƒ‹ƒ„[
 			case IDM_OPEN_HIS_CLEAR:	OpenProfileLogging( hWnd, NULL );	break;
 
 			default:
-				//	ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒãƒ³å±¥æ­´
+				//	ƒtƒ@ƒCƒ‹ƒI[ƒ|ƒ“—š—ð
 				if( IDM_OPEN_HIS_FIRST <= dRslt && dRslt <= IDM_OPEN_HIS_LAST )
 				{
 					OpenProfileLoad( hWnd, dRslt );
 				}
-#ifdef _ORRVW	//	ãã®ä»–ã¯ãƒ¡ã‚¤ãƒ³ã‚³ãƒžãƒ³ãƒ‰ã«å›žã™
+#ifdef _ORRVW	//	‚»‚Ì‘¼‚ÍƒƒCƒ“ƒRƒ}ƒ“ƒh‚É‰ñ‚·
 				else
 				{
 					Maa_OnCommand( hWnd, dRslt, hWndContext, 0 );
@@ -818,16 +818,16 @@ VOID Maa_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 		return;
 	}
 
-	//	ã‚¿ãƒ–ãƒãƒ¼ã®ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
+	//	ƒ^ƒuƒo[‚ÌƒRƒ“ƒeƒLƒXƒg
 	if( ghTabWnd == hWndContext )
 	{
 		stTcHitInfo.pt = stPost;
 		ScreenToClient( ghTabWnd, &(stTcHitInfo.pt) );
 		curSel = TabCtrl_HitTest( ghTabWnd, &stTcHitInfo );
 
-		//	å›ºå®šã®äºŒã¤ã®å ´åˆã¯ç„¡è¦–
+		//	ŒÅ’è‚Ì“ñ‚Â‚Ìê‡‚Í–³Ž‹
 		if( 1 >= curSel )	return;
-#pragma message ("MAAã‚¿ãƒ–ã®å›ºå®šã‚¿ãƒ–ã®åˆ¤åˆ¥ã«æ³¨æ„")
+#pragma message ("MAAƒ^ƒu‚ÌŒÅ’èƒ^ƒu‚Ì”»•Ê‚É’ˆÓ")
 
 		hMenu = LoadMenu( GetModuleHandle(NULL), MAKEINTRESOURCE(IDM_AATABS_POPUP) );
 		hSubMenu = GetSubMenu( hMenu, 0 );
@@ -838,7 +838,7 @@ VOID Maa_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 		stTcItem.cchTextMax = MAX_PATH;
 		TabCtrl_GetItem( ghTabWnd, curSel, &stTcItem );
 
-		StringCchCat( atText, MAX_PATH, TEXT(" ã‚’é–‰ã˜ã‚‹(&Q)") );
+		StringCchCat( atText, MAX_PATH, TEXT(" ‚ð•Â‚¶‚é(&Q)") );
 		StringCchLength( atText, MAX_PATH, &cchSize );
 
 		ZeroMemory( &stMenuItemInfo, sizeof(MENUITEMINFO) );
@@ -849,10 +849,10 @@ VOID Maa_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 		stMenuItemInfo.dwTypeData = atText;
 		SetMenuItemInfo( hSubMenu, IDM_AATABS_DELETE, FALSE, &stMenuItemInfo );
 
-		//ã‚‚ã—ã€ãŠæ°—ã«ã‚¿ãƒ–ãªã‚‰ã€ç·¨é›†ã§é–‹ãã¯ç„¡åŠ¹ã«ã™ã‚‹
+		//‚à‚µA‚¨‹C‚Éƒ^ƒu‚È‚çA•ÒW‚ÅŠJ‚­‚Í–³Œø‚É‚·‚é
 		if( TabMultipleIsFavTab( curSel, NULL, 0 ) ){	EnableMenuItem( hSubMenu, IDM_AATREE_GOEDIT, MF_GRAYED );	}
 
-		//	ã‚‚ã—å£±è¡Œè¡¨ç¤ºã‚¹ã‚¿ã‚¤ãƒ«ãªã‚‰ã€ãƒã‚§ãƒƒã‚¯ãƒžãƒ¼ã‚¯ã„ã‚Œã¨ã
+		//	‚à‚µˆës•\Ž¦ƒXƒ^ƒCƒ‹‚È‚çAƒ`ƒFƒbƒNƒ}[ƒN‚¢‚ê‚Æ‚­
 		dwStyles = GetWindowStyle( ghTabWnd );
 		if( !(TCS_MULTILINE & dwStyles) ){	CheckMenuItem( hSubMenu, IDM_AATABS_SINGLETAB, MF_CHECKED );	}
 
@@ -862,15 +862,15 @@ VOID Maa_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 		{
 			case  IDM_AATABS_DELETE:	TabMultipleDelete( hWnd, curSel );	break;
 			case  IDM_AATREE_GOEDIT:	TabMultipleSelect( hWnd, curSel, 1 );	break;
-			//	ãƒ„ãƒªãƒ¼å´ã¨ã¯ã‚¢ãƒ—ãƒ­ãƒ¼ãƒãŒé•ã†ã‹ã‚‰æ³¨æ„
+			//	ƒcƒŠ[‘¤‚Æ‚ÍƒAƒvƒ[ƒ`‚ªˆá‚¤‚©‚ç’ˆÓ
 			case  IDM_AATABS_ALLDELETE:	
-				iRslt = MessageBox( hWnd, TEXT("å…¨ã¦ã®å‰¯ã‚¿ãƒ–ã‚’é–‰ã˜ã‚ˆã†ã¨ã—ã¦ã‚‹ã‚ˆã€‚\r\næœ¬å½“ã«é–‰ã˜ã¡ã‚ƒã£ã¦ã„ã„ã‹ã„ï¼Ÿ"), TEXT("ãŠç‡ã‹ã‚‰ã®ç¢ºèª"), MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON2 );
+				iRslt = MessageBox( hWnd, TEXT("‘S‚Ä‚Ì•›ƒ^ƒu‚ð•Â‚¶‚æ‚¤‚Æ‚µ‚Ä‚é‚æB\r\n–{“–‚É•Â‚¶‚¿‚á‚Á‚Ä‚¢‚¢‚©‚¢H"), TEXT("‚¨—Ó‚©‚ç‚ÌŠm”F"), MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON2 );
 				if( IDYES == iRslt ){	TabMultipleDeleteAll( hWnd );	}
 
-			//	ãƒªãƒãƒ¼ãƒ 
+			//	ƒŠƒl[ƒ€
 			case IDM_AATABS_RENAME:	TabMultipleNameChange( hWnd, curSel );	break;
 
-			//	å‰¯ã‚¿ãƒ–ã®ã€å¤šæ®µãƒ»ã‚·ãƒ³ã‚°ãƒ«åˆ‡æ›¿	20130521
+			//	•›ƒ^ƒu‚ÌA‘½’iEƒVƒ“ƒOƒ‹Ø‘Ö	20130521
 			case IDM_AATABS_SINGLETAB:	TabLineMultiSingleToggle( hWnd );	break;
 
 			default:	break;
@@ -880,7 +880,7 @@ VOID Maa_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 	}
 
 #ifndef _ORRVW
-	//	ãã‚Œä»¥å¤–ã®å ´æ‰€ã®ãƒãƒƒãƒ‘ãƒƒãƒ—ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãƒ»å¸¸ã«æ‰‹å‰ã«è¡¨ç¤ºã®ã‚¢ãƒ¬
+	//	‚»‚êˆÈŠO‚ÌêŠ‚Ìƒ|ƒbƒpƒbƒvƒƒjƒ…[Eí‚ÉŽè‘O‚É•\Ž¦‚ÌƒAƒŒ
 	hMenu = LoadMenu( GetModuleHandle(NULL), MAKEINTRESOURCE(IDM_TEMPLATE_POPUP) );
 	hSubMenu = GetSubMenu( hMenu, 0 );
 
@@ -888,7 +888,7 @@ VOID Maa_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 	if( WS_EX_TOPMOST & rdExStyle ){	CheckMenuItem( hSubMenu , IDM_TOPMOST_TOGGLE, MF_BYCOMMAND | MF_CHECKED );	}
 
 	dRslt = TrackPopupMenu( hSubMenu, 0, stPost.x, stPost.y, 0, hWnd, NULL );
-	//	é¸æŠžã›ãšã§ï¼ã‹ï¼ï¼‘ï¼Ÿã€é¸æŠžã—ãŸã‚‰ãã®ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®ï¼©ï¼¤ã§WM_COMMANDãŒç™ºè¡Œ
+	//	‘I‘ð‚¹‚¸‚Å‚O‚©|‚PHA‘I‘ð‚µ‚½‚ç‚»‚Ìƒƒjƒ…[‚Ì‚h‚c‚ÅWM_COMMAND‚ª”­s
 	DestroyMenu( hMenu );
 #endif
 	return;
@@ -896,16 +896,16 @@ VOID Maa_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ç”»é¢ã‚µã‚¤ã‚ºãŒå¤‰ã‚ã£ãŸã®ã§ã‚µã‚¤ã‚ºå¤‰æ›´
-	@param[in]	hWnd	è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	ptRect	MAAã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®å¤§ãã•ãƒ»é«˜ã•ã¯ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒãƒ¼ã¨ã‚¿ãƒ–ãƒãƒ¼ã®è€ƒæ…®ãšã¿
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	‰æ–ÊƒTƒCƒY‚ª•Ï‚í‚Á‚½‚Ì‚ÅƒTƒCƒY•ÏX
+	@param[in]	hWnd	eƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	ptRect	MAAƒEƒCƒ“ƒhƒE‚Ì‘å‚«‚³E‚‚³‚ÍƒXƒe[ƒ^ƒXƒo[‚Æƒ^ƒuƒo[‚Ìl—¶‚¸‚Ý
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT TreeResize( HWND hWnd, LPRECT ptRect )
 {
 	RECT	rect, sptRect;
 
-	//	ã‚¿ãƒ–ãƒãƒ¼ã®å¹…ã‚’ä¿®æ­£
+	//	ƒ^ƒuƒo[‚Ì•‚ðC³
 	MaaTabBarSizeGet( &rect );
 	//MoveWindow( ghTabWnd, 0, 0, ptRect->right, rect.bottom, TRUE );
 
@@ -920,11 +920,11 @@ HRESULT TreeResize( HWND hWnd, LPRECT ptRect )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚«ãƒ¬ãƒ³ãƒˆãƒ€ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’å—ã‘å–ã£ã¦ã€ãƒ„ãƒªãƒ¼ã‚’ã‚¢ãƒƒã‚»ãƒ³ãƒ–ãƒªãƒ¼ã™ã‚‹
-	@param[in]	hWnd		è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	ptCurrent	ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªå
-	@param[in]	bSubTabReb	éžï¼ã§å‰¯ã‚¿ãƒ–å¾©å…ƒ
-	@return		HRESULT		çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	ƒJƒŒƒ“ƒgƒ_ƒfƒBƒŒƒNƒgƒŠ‚ðŽó‚¯Žæ‚Á‚ÄAƒcƒŠ[‚ðƒAƒbƒZƒ“ƒuƒŠ[‚·‚é
+	@param[in]	hWnd		eƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	ptCurrent	ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ–¼
+	@param[in]	bSubTabReb	”ñ‚O‚Å•›ƒ^ƒu•œŒ³
+	@return		HRESULT		I—¹ó‘ÔƒR[ƒh
 */
 HRESULT TreeConstruct( HWND hWnd, LPCTSTR ptCurrent, BOOLEAN bSubTabReb )
 {
@@ -937,18 +937,18 @@ HRESULT TreeConstruct( HWND hWnd, LPCTSTR ptCurrent, BOOLEAN bSubTabReb )
 
 	StringCchPrintf( atRoote, MAX_PATH, TEXT("ROOT[%s]"), gatAARoot );
 
-	StatusBarMsgSet( SBMAA_FILENAME, TEXT("ãƒ„ãƒªãƒ¼ã‚’æ§‹ç¯‰ä¸­ã§ã™") );
+	StatusBarMsgSet( SBMAA_FILENAME, TEXT("ƒcƒŠ[‚ð\’z’†‚Å‚·") );
 
-	TreeView_DeleteAllItems( ghTreeWnd );	//	ã‚¢ã‚¤ãƒ†ãƒ å…¨ç ´å£Š
-	//	ãƒ«ãƒ¼ãƒˆã‚¢ã‚¤ãƒ†ãƒ ä½œã‚‹
+	TreeView_DeleteAllItems( ghTreeWnd );	//	ƒAƒCƒeƒ€‘S”j‰ó
+	//	ƒ‹[ƒgƒAƒCƒeƒ€ì‚é
 	ZeroMemory( &stTreeIns, sizeof(TVINSERTSTRUCT) );
 	stTreeIns.hParent        = TVI_ROOT;
 	stTreeIns.hInsertAfter   = TVI_SORT;
 	stTreeIns.item.mask      = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_CHILDREN;
 	stTreeIns.item.pszText   = atRoote;//TEXT("ROOT");
-	stTreeIns.item.lParam    = NODE_DIR;	//	ï¼‘ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã€€ï¼ãƒ•ã‚¡ã‚¤ãƒ«
+	stTreeIns.item.lParam    = NODE_DIR;	//	‚PƒfƒBƒŒƒNƒgƒŠ@‚Oƒtƒ@ƒCƒ‹
 	stTreeIns.item.cChildren = 1;
-	//	ãƒ«ãƒ¼ãƒˆã®ï¼©ï¼¤ã¯ï¼
+	//	ƒ‹[ƒg‚Ì‚h‚c‚Í‚O
 
 	//SHGetFileInfo( TEXT(""), 0, &stShFileInfo, sizeof(SHFILEINFO), (SHGFI_SYSICONINDEX|SHGFI_SMALLICON) );
 	stTreeIns.item.iImage = I_IMAGECALLBACK;//stShFileInfo.iIcon;
@@ -957,33 +957,33 @@ HRESULT TreeConstruct( HWND hWnd, LPCTSTR ptCurrent, BOOLEAN bSubTabReb )
 
 	ghTreeRoot = TreeView_InsertItem( ghTreeWnd, &stTreeIns );
 
-	//	ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªæŒ‡å®šãŒç„¡ã‹ã£ãŸã‚‰çµ‚ã‚ã‚Š
+	//	ƒfƒBƒŒƒNƒgƒŠŽw’è‚ª–³‚©‚Á‚½‚çI‚í‚è
 	if( 0 == ptCurrent[0] )
 	{
 		StatusBarMsgSet( SBMAA_FILENAME, TEXT("") );
 		return E_INVALIDARG;
 	}
 
-	//	ã‚«ãƒ¬ãƒ³ãƒˆãƒ€ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã¯ãƒ•ãƒ«ãƒ‘ã‚¹ã®ã¯ãš
+	//	ƒJƒŒƒ“ƒgƒ_ƒfƒBƒŒƒNƒgƒŠ‚Íƒtƒ‹ƒpƒX‚Ì‚Í‚¸
 
-	//	ãƒ—ãƒ­ãƒ•ã‚¡ã‚¤ãƒ«ãƒ¢ãƒ¼ãƒ‰ãªã‚‰ã€å¸¸ã«SQLã‹ã‚‰ã§ãŠï½‹
+	//	ƒvƒƒtƒ@ƒCƒ‹ƒ‚[ƒh‚È‚çAí‚ÉSQL‚©‚ç‚Å‚¨‚‹
 
-	//	SQLã‹ã‚‰å±•é–‹ã€€ã“ã“ã§ã¯å±•é–‹ã—ãªã„
+	//	SQL‚©‚ç“WŠJ@‚±‚±‚Å‚Í“WŠJ‚µ‚È‚¢
 
 	StatusBarMsgSet( SBMAA_FILENAME, TEXT("") );
 	TreeView_Expand( ghTreeWnd, ghTreeRoot, TVE_EXPAND );
 
-	//	å‰¯ã‚¿ãƒ–ã‚‚SQLã‹ã‚‰å†æ§‹ç¯‰
-	if( bSubTabReb ){	TabMultipleRestore( hWnd  );	}	//	çµ‚äº†æ™‚ã®å‰¯ã‚¿ãƒ–ã‚’å¾©å¸°ã™ã‚‹
+	//	•›ƒ^ƒu‚àSQL‚©‚çÄ\’z
+	if( bSubTabReb ){	TabMultipleRestore( hWnd  );	}	//	I—¹Žž‚Ì•›ƒ^ƒu‚ð•œ‹A‚·‚é
 
 	return S_OK;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒ„ãƒªãƒ¼ãƒŽãƒ¼ãƒ‰ã®ãƒ•ãƒ«ãƒ‘ã‚¹ã‚’ç¢ºä¿
-	@param[in]	hNode	å¯¾è±¡ã®ãƒ„ãƒªãƒ¼ãƒŽãƒ¼ãƒ‰
-	@param[out]	ptPath	ãƒ•ãƒ«ãƒ‘ã‚¹å…¥ã‚Œã‚‹ãƒãƒƒãƒ•ã‚¡ãƒ»MAX_PATHã§ã‚ã‚‹ã“ã¨
+	ƒcƒŠ[ƒm[ƒh‚Ìƒtƒ‹ƒpƒX‚ðŠm•Û
+	@param[in]	hNode	‘ÎÛ‚ÌƒcƒŠ[ƒm[ƒh
+	@param[out]	ptPath	ƒtƒ‹ƒpƒX“ü‚ê‚éƒoƒbƒtƒ@EMAX_PATH‚Å‚ ‚é‚±‚Æ
 */
 UINT TreeNodePathGet( HTREEITEM hNode, LPTSTR ptPath )
 {
@@ -992,32 +992,32 @@ UINT TreeNodePathGet( HTREEITEM hNode, LPTSTR ptPath )
 	HTREEITEM	hParent;
 
 
-	if( ghTreeRoot == hNode )	//	ãƒ«ãƒ¼ãƒˆè‡ªèº«ã§ã‚ã£ãŸå ´åˆã¯ã™ãè¿”ã—ã¦ãŠï½‹
+	if( ghTreeRoot == hNode )	//	ƒ‹[ƒgŽ©g‚Å‚ ‚Á‚½ê‡‚Í‚·‚®•Ô‚µ‚Ä‚¨‚‹
 	{
 		StringCchCopy( ptPath, MAX_PATH, gatAARoot );
 		return 1;
 	}
 
-	//	é¸æŠžã•ã‚ŒãŸã‚„ã¤ã®ãƒ•ã‚¡ã‚¤ãƒ«åã€ã‚‚ã—ãã¯ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåç¢ºä¿
+	//	‘I‘ð‚³‚ê‚½‚â‚Â‚Ìƒtƒ@ƒCƒ‹–¼A‚à‚µ‚­‚ÍƒfƒBƒŒƒNƒgƒŠ–¼Šm•Û
 	TreeItemInfoGet( hNode, atName, MAX_PATH );
 
-	//	ä¸Šã«è¾¿ã£ã¦ã€ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’ä½œã‚‹
-	for( i = 0; 12 > i; i++ )	//	ï¼‘ï¼’ã‚ˆã‚Šè…æµ·éšŽå±¤ã¯ãŸã©ã‚Œãªã„
+	//	ã‚É’H‚Á‚ÄAƒtƒ@ƒCƒ‹ƒpƒX‚ðì‚é
+	for( i = 0; 12 > i; i++ )	//	‚P‚Q‚æ‚è•…ŠCŠK‘w‚Í‚½‚Ç‚ê‚È‚¢
 	{
 		hParent = TreeView_GetParent( ghTreeWnd, hNode );
-		if( !(hParent) )	return 0;	//	ãƒ«ãƒ¼ãƒˆã®ä¸Šã¯ãªã„
-		if( ghTreeRoot == hParent ){	break;	}	//	æ¤œç´¢ãŒãƒ«ãƒ¼ãƒˆã¾ã§ã‚¤ãƒƒãŸã‚‰çµ‚ã‚ã‚Š
+		if( !(hParent) )	return 0;	//	ƒ‹[ƒg‚Ìã‚Í‚È‚¢
+		if( ghTreeRoot == hParent ){	break;	}	//	ŒŸõ‚ªƒ‹[ƒg‚Ü‚ÅƒCƒb‚½‚çI‚í‚è
 
 		TreeItemInfoGet( hParent, atPath, MAX_PATH );
 
-		//	ä»Šã®ãƒ‘ã‚¹ã‚’è¨˜éŒ²ã—ã¦ã„ãã¨ã€æœ€çµ‚çš„ã«ãƒ«ãƒ¼ãƒˆç›´ä¸‹ã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåã«ãªã‚‹
+		//	¡‚ÌƒpƒX‚ð‹L˜^‚µ‚Ä‚¢‚­‚ÆAÅI“I‚Éƒ‹[ƒg’¼‰º‚ÌƒfƒBƒŒƒNƒgƒŠ–¼‚É‚È‚é
 		PathAppend( atPath, atName );
 		StringCchCopy( atName, MAX_PATH, atPath );
 
 		hNode = hParent;
 	}
 
-	//	ãƒ«ãƒ¼ãƒˆä½ç½®ã‚’ãã£ã¤ã‘ã¦ãƒ•ãƒ«ãƒ‘ã‚¹ã«ã™ã‚‹
+	//	ƒ‹[ƒgˆÊ’u‚ð‚­‚Á‚Â‚¯‚Äƒtƒ‹ƒpƒX‚É‚·‚é
 	StringCchCopy( atPath, MAX_PATH, gatAARoot );
 	PathAppend( atPath, atName );
 
@@ -1030,9 +1030,9 @@ UINT TreeNodePathGet( HTREEITEM hNode, LPTSTR ptPath )
 #ifdef EXTRA_NODE_STYLE
 
 /*!
-	ã‚¨ã‚­ã‚¹ãƒˆãƒ©ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ ã™ã‚‹
-	@param[out]	ptPath	å¯¾è±¡ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ•ãƒ«ãƒ‘ã‚¹
-	@return	è¿½åŠ ã—ãŸãƒ•ã‚¡ã‚¤ãƒ«ã®SqlIDãƒ»ç™»éŒ²å‡ºæ¥ãªã‹ã£ãŸã‚‰ï¼
+	ƒGƒLƒXƒgƒ‰ƒtƒ@ƒCƒ‹‚ð’Ç‰Á‚·‚é
+	@param[out]	ptPath	‘ÎÛƒtƒ@ƒCƒ‹‚Ìƒtƒ‹ƒpƒX
+	@return	’Ç‰Á‚µ‚½ƒtƒ@ƒCƒ‹‚ÌSqlIDE“o˜^o—ˆ‚È‚©‚Á‚½‚ç‚O
 */
 UINT TreeNodeExtraAdding( LPCTSTR ptPath )
 {
@@ -1040,50 +1040,50 @@ UINT TreeNodeExtraAdding( LPCTSTR ptPath )
 	LPARAM	lParam;
 	HTREEITEM	hTreeRoot, hChildItem, hNextItem, hBuffItem;
 
-	//	è¿½åŠ æ¸ˆãªã‚‰ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡ºã—ã¦çµ‚äº†ã‚»ãƒ¨
+	//	’Ç‰ÁÏ‚È‚çƒƒbƒZ[ƒWo‚µ‚ÄI—¹ƒZƒˆ
 	id = SqlTreeNodeExtraIsFileExist( ptPath );
 	if( 0 < id )
 	{
-		MessageBox( GetDesktopWindow( ), TEXT("å·²ã«ç™»éŒ²ã—ã¦ã‚ã‚‹ã¿ãŸã„ã ã‚ˆã€‚"), TEXT("ãŠç‡ã‹ã‚‰ã®ãŠçŸ¥ã‚‰ã›"), MB_OK | MB_ICONINFORMATION );
+		MessageBox( GetDesktopWindow( ), TEXT("›ß‚É“o˜^‚µ‚Ä‚ ‚é‚Ý‚½‚¢‚¾‚æB"), TEXT("‚¨—Ó‚©‚ç‚Ì‚¨’m‚ç‚¹"), MB_OK | MB_ICONINFORMATION );
 		return id;
 	}
 
-	//	ãƒ«ãƒ¼ãƒˆç¢ºä¿
+	//	ƒ‹[ƒgŠm•Û
 	hTreeRoot = TreeView_GetRoot( ghTreeWnd );
 
-	//	ãã®å­ãƒŽãƒ¼ãƒ‰ã§ã‚ã‚‹è¿½åŠ ç”¨ãƒŽãƒ¼ãƒ‰ã‚’æŽ¢ã™
+	//	‚»‚ÌŽqƒm[ƒh‚Å‚ ‚é’Ç‰Á—pƒm[ƒh‚ð’T‚·
 	hChildItem = TreeView_GetChild( ghTreeWnd, hTreeRoot );
 	hNextItem = NULL;
 
 	do{
-		//	ãƒŽãƒ¼ãƒ‰lParamã‚’ã²ã£ã±ã‚‹ãƒ»ï¼ï¼‘ãŒè©²å½“ãƒ–ãƒ„ã§ã‚ã‚‹
+		//	ƒm[ƒhlParam‚ð‚Ð‚Á‚Ï‚éE|‚P‚ªŠY“–ƒuƒc‚Å‚ ‚é
 		lParam = TreeItemInfoGet( hChildItem, NULL, 0 );
 
-		//	ãƒ’ãƒƒãƒˆã—ãŸã‚‰çµ‚ã‚ã‚Š
+		//	ƒqƒbƒg‚µ‚½‚çI‚í‚è
 		if( NODE_EXTRA == lParam  ){	break;	}
 
-		//	ãªã‹ã£ãŸã‚‰ãã®æ¬¡ã‚’æŽ¢ã™ã€‚
+		//	‚È‚©‚Á‚½‚ç‚»‚ÌŽŸ‚ð’T‚·B
 		hNextItem = TreeView_GetNextSibling( ghTreeWnd, hChildItem );
-		if( hNextItem == hChildItem ){	hNextItem = NULL;	}	//	å…¨éƒ¨å»»ã£ãŸã‚‰åŒã˜ç‰©ãŒæˆ»ã‚‹ã‚‰ã—ã„ï¼Ÿ
+		if( hNextItem == hChildItem ){	hNextItem = NULL;	}	//	‘S•”‰ô‚Á‚½‚ç“¯‚¶•¨‚ª–ß‚é‚ç‚µ‚¢H
 		hChildItem = hNextItem;
 
 	}while( hChildItem );
 
-	if( !(hChildItem) )	return 0;	//	ãƒ’ãƒƒãƒˆã—ãªã‹ã£ãŸ
-	//	ãƒ’ãƒƒãƒˆã—ãŸã®ãŒè¿½åŠ ç”¨ãƒŽãƒ¼ãƒ‰ã§ã‚ã‚‹
+	if( !(hChildItem) )	return 0;	//	ƒqƒbƒg‚µ‚È‚©‚Á‚½
+	//	ƒqƒbƒg‚µ‚½‚Ì‚ª’Ç‰Á—pƒm[ƒh‚Å‚ ‚é
 
-	//	é–‹ã‘ã°ã€æ—¢å­˜ã®ãƒ–ãƒ„ã‚‚å±•é–‹ã•ã‚Œã‚‹
+	//	ŠJ‚¯‚ÎAŠù‘¶‚Ìƒuƒc‚à“WŠJ‚³‚ê‚é
 	TreeView_Expand( ghTreeWnd, hChildItem, TVE_EXPAND );
-	//æœ€åˆã®ï¼‘å€‹ç›®ã ã£ãŸå ´åˆã€å±•é–‹ã•ã‚Œãªã„ã®ã§å±•é–‹æ¸ˆãƒ•ãƒ©ã‚°ãŒç«‹ãŸãªã„
+	//Å‰‚Ì‚PŒÂ–Ú‚¾‚Á‚½ê‡A“WŠJ‚³‚ê‚È‚¢‚Ì‚Å“WŠJÏƒtƒ‰ƒO‚ª—§‚½‚È‚¢
 	hBuffItem = TreeView_GetChild( ghTreeWnd, hChildItem );
 
-	//	å±•é–‹ã—ã¦ã‹ã‚‰é–‹ã‹ãªã„ã¨å¤šé‡ã«ãƒ„ãƒªãƒ¼ã«å‡ºã¦ãã‚‹
-	id = SqlTreeNodeExtraInsert( 0, ptPath );	//	SQLã«ç™»éŒ²
-	if( 0 >= id )	return 0;	//	å¤±æ•—
+	//	“WŠJ‚µ‚Ä‚©‚çŠJ‚©‚È‚¢‚Æ‘½d‚ÉƒcƒŠ[‚Éo‚Ä‚­‚é
+	id = SqlTreeNodeExtraInsert( 0, ptPath );	//	SQL‚É“o˜^
+	if( 0 >= id )	return 0;	//	Ž¸”s
 
-	if( hBuffItem ){	TreeExtraItemFromSql( hChildItem, id-1 );	}	//	è©²å½“ï¼©ï¼¤ã®æ¬¡ã‹ã‚‰æŽ¢ã™ã®ã§æ³¨æ„
+	if( hBuffItem ){	TreeExtraItemFromSql( hChildItem, id-1 );	}	//	ŠY“–‚h‚c‚ÌŽŸ‚©‚ç’T‚·‚Ì‚Å’ˆÓ
 	else{	TreeView_Expand( ghTreeWnd, hChildItem, TVE_EXPAND );	}
-	//	æœ€åˆã®ä¸€å€‹ã®å ´åˆã¯ã€è¿½åŠ ã—ã¦ã‹ã‚‰é–‹ãã‚ˆã‚ã—
+	//	Å‰‚ÌˆêŒÂ‚Ìê‡‚ÍA’Ç‰Á‚µ‚Ä‚©‚çŠJ‚­‚æ‚ë‚µ
 
 
 	return id;
@@ -1092,10 +1092,10 @@ UINT TreeNodeExtraAdding( LPCTSTR ptPath )
 
 
 /*!
-	ã‚¨ã‚­ã‚¹ãƒˆãƒ©ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ï¼³ï¼±ï¼¬ã‹ã‚‰ãƒ„ãƒªãƒ¼ãƒ“ãƒ¥ãƒ¼ã«å±•é–‹
-	@param[in]	hTreeParent	å¯¾è±¡ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ãƒ„ãƒªãƒ¼ã‚¢ã‚¤ãƒ†ãƒ ãƒ»ã“ã„ã¤ã«ã¶ã‚‰ä¸‹ã’ã¦ã„ã
-	@param[in]	dFinID		ã“ã®ï¼©ï¼¤ä»¥é™ã®ã‚¢ã‚¤ãƒ†ãƒ ã‚’ãƒ„ãƒªãƒ¼ã«è¿½åŠ ã™ã‚‹ã€‚é€šå¸¸ï¼ã€è¿½åŠ æ™‚ã«æ³¨æ„ã‚»ãƒ¨
-	@return	HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	ƒGƒLƒXƒgƒ‰ƒtƒ@ƒCƒ‹‚ð‚r‚p‚k‚©‚çƒcƒŠ[ƒrƒ…[‚É“WŠJ
+	@param[in]	hTreeParent	‘ÎÛƒfƒBƒŒƒNƒgƒŠ‚ÌƒcƒŠ[ƒAƒCƒeƒ€E‚±‚¢‚Â‚É‚Ô‚ç‰º‚°‚Ä‚¢‚­
+	@param[in]	dFinID		‚±‚Ì‚h‚cˆÈ~‚ÌƒAƒCƒeƒ€‚ðƒcƒŠ[‚É’Ç‰Á‚·‚éB’Êí‚OA’Ç‰ÁŽž‚É’ˆÓƒZƒˆ
+	@return	HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT TreeExtraItemFromSql( HTREEITEM hTreeParent, UINT dFinID )
 {
@@ -1128,10 +1128,10 @@ HRESULT TreeExtraItemFromSql( HTREEITEM hTreeParent, UINT dFinID )
 		stTreeIns.item.iImage = iFileType;//stShFileInfo.iIcon;
 		//SHGetFileInfo( atPath, 0, &stShFileInfo, sizeof(SHFILEINFO), (SHGFI_SYSICONINDEX|SHGFI_SMALLICON|SHGFI_OPENICON) );
 		stTreeIns.item.iSelectedImage = iFileType;//stShFileInfo.iIcon;
-		stTreeIns.item.pszText = PathFindFileName( atPath );	//	ãƒ•ã‚¡ã‚¤ãƒ«åãƒ–ãƒƒã‚³æŠœã
+		stTreeIns.item.pszText = PathFindFileName( atPath );	//	ƒtƒ@ƒCƒ‹–¼ƒuƒbƒR”²‚­
 
-		stTreeIns.item.lParam    = tgtID;	//	ã“ã“ã¯ç‰¹æ®Šãªã®ã§æ³¨æ„
-		stTreeIns.item.cChildren = 0;	//	å­ãƒŽãƒ¼ãƒ‰ãªã—
+		stTreeIns.item.lParam    = tgtID;	//	‚±‚±‚Í“ÁŽê‚È‚Ì‚Å’ˆÓ
+		stTreeIns.item.cChildren = 0;	//	Žqƒm[ƒh‚È‚µ
 		stTreeIns.hInsertAfter   = TVI_LAST;
 		hNewParent = TreeView_InsertItem( ghTreeWnd, &stTreeIns );
 
@@ -1145,9 +1145,9 @@ HRESULT TreeExtraItemFromSql( HTREEITEM hTreeParent, UINT dFinID )
 #endif
 
 /*!
-	ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã¨ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ï¼³ï¼±ï¼¬ã‹ã‚‰ãƒ„ãƒªãƒ¼ãƒ“ãƒ¥ãƒ¼ã«å±•é–‹ãƒ»å†å¸°ã™ã‚‹ã‚ã‘ã§ã¯ãªã„
-	@param[in]	hTreeParent	å¯¾è±¡ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ãƒ„ãƒªãƒ¼ã‚¢ã‚¤ãƒ†ãƒ ãƒ»ã“ã„ã¤ã«ã¶ã‚‰ä¸‹ã’ã¦ã„ã
-	@return		HRESULT		çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	ƒfƒBƒŒƒNƒgƒŠ‚Æƒtƒ@ƒCƒ‹‚ð‚r‚p‚k‚©‚çƒcƒŠ[ƒrƒ…[‚É“WŠJEÄ‹A‚·‚é‚í‚¯‚Å‚Í‚È‚¢
+	@param[in]	hTreeParent	‘ÎÛƒfƒBƒŒƒNƒgƒŠ‚ÌƒcƒŠ[ƒAƒCƒeƒ€E‚±‚¢‚Â‚É‚Ô‚ç‰º‚°‚Ä‚¢‚­
+	@return		HRESULT		I—¹ó‘ÔƒR[ƒh
 */
 HRESULT TreeItemFromSqlII( HTREEITEM hTreeParent )
 {
@@ -1167,27 +1167,27 @@ HRESULT TreeItemFromSqlII( HTREEITEM hTreeParent )
 	ZeroMemory( atCurrent, sizeof(atCurrent) );
 	TreeNodePathGet( hTreeParent, atCurrent );
 
-	dPrntID = MaaSearchTreeID( hTreeParent );	//	ã“ã„ã¤ã®ï¼©ï¼¤ãŒã€ã“ã‚Œã‹ã‚‰å±•é–‹ã™ã‚‹ãƒŽãƒ¼ãƒ‰ã®è¦ªã«ãªã‚‹
-	//	ï¼©ï¼¤ï¼ã¯ãƒ«ãƒ¼ãƒˆãƒŽãƒ¼ãƒ‰
+	dPrntID = MaaSearchTreeID( hTreeParent );	//	‚±‚¢‚Â‚Ì‚h‚c‚ªA‚±‚ê‚©‚ç“WŠJ‚·‚éƒm[ƒh‚Ìe‚É‚È‚é
+	//	‚h‚c‚O‚Íƒ‹[ƒgƒm[ƒh
 	tgtID = 0;
 
-	//	ãƒ«ãƒ¼ãƒˆã®ã¨ãã®ã¿ã€[*è¿½åŠ é …ç›®*]  ã¿ãŸã„ãªã®ã‚’ä»˜ã‘åŠ ãˆã‚‹ã€‚lParamã¯ï¼’ã¨ã‹ï¼Ÿ
+	//	ƒ‹[ƒg‚Ì‚Æ‚«‚Ì‚ÝA[*’Ç‰Á€–Ú*]  ‚Ý‚½‚¢‚È‚Ì‚ð•t‚¯‰Á‚¦‚éBlParam‚Í‚Q‚Æ‚©H
 #ifdef EXTRA_NODE_STYLE
-	//æœ€å‰åˆ—ã«è¿½åŠ 
+	//Å‘O—ñ‚É’Ç‰Á
 	if( 0 == dPrntID )
 	{
 		StringCchCopy( atNodeName, MAX_PATH, EXTRA_NODE );
-		//	ã¨ã‚Šã‚„ãˆãšã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ã‚¢ã‚¤ã‚³ãƒ³ã§è‰¯ã„ã¯ãš	
+		//	‚Æ‚è‚â‚¦‚¸ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ÌƒAƒCƒRƒ“‚Å—Ç‚¢‚Í‚¸	
 		//SHGetFileInfo( atCurrent, 0, &stShFileInfo, sizeof(SHFILEINFO), (SHGFI_SYSICONINDEX|SHGFI_SMALLICON) );
 		stTreeIns.item.iImage = TICO_DIR_EXTRA;//stShFileInfo.iIcon;
 		//SHGetFileInfo( atCurrent, 0, &stShFileInfo, sizeof(SHFILEINFO), (SHGFI_SYSICONINDEX|SHGFI_SMALLICON|SHGFI_OPENICON) );
 		stTreeIns.item.iSelectedImage = TICO_DIR_EXTRA;//stShFileInfo.iIcon;
 		stTreeIns.item.pszText = atNodeName;
 		stTreeIns.item.lParam    = NODE_EXTRA;
-		stTreeIns.item.cChildren = 1;	//	å­ãƒŽãƒ¼ãƒ‰ã‚¢ãƒª
+		stTreeIns.item.cChildren = 1;	//	Žqƒm[ƒhƒAƒŠ
 		stTreeIns.hInsertAfter   = hLastDir;
 		hNewParent = TreeView_InsertItem( ghTreeWnd, &stTreeIns );
-		hLastDir = hNewParent;	//	ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªä½ç½®ã®æœ€çµ‚ãƒ»ãƒ•ã‚¡ã‚¤ãƒ«ã®æ‰‹å‰	I_IMAGECALLBACK
+		hLastDir = hNewParent;	//	ƒfƒBƒŒƒNƒgƒŠˆÊ’u‚ÌÅIEƒtƒ@ƒCƒ‹‚ÌŽè‘O	I_IMAGECALLBACK
 	}
 #endif
 
@@ -1205,17 +1205,17 @@ HRESULT TreeItemFromSqlII( HTREEITEM hTreeParent )
 		//stTreeIns.item.iSelectedImage = stShFileInfo.iIcon;
 		stTreeIns.item.pszText = atNodeName;
 
-		if( FILE_ATTRIBUTE_DIRECTORY == type )	//	ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®å ´åˆ
+		if( FILE_ATTRIBUTE_DIRECTORY == type )	//	ƒfƒBƒŒƒNƒgƒŠ‚Ìê‡
 		{
 			stTreeIns.item.iImage         = I_IMAGECALLBACK;//TICO_DIR_CLOSE;
 			stTreeIns.item.iSelectedImage = I_IMAGECALLBACK;//TICO_DIR_OPEN;
 			stTreeIns.item.lParam    = NODE_DIR;
-			stTreeIns.item.cChildren = 1;	//	å­ãƒŽãƒ¼ãƒ‰ã‚ã‚Š
+			stTreeIns.item.cChildren = 1;	//	Žqƒm[ƒh‚ ‚è
 			stTreeIns.hInsertAfter   = hLastDir;
 			hNewParent = TreeView_InsertItem( ghTreeWnd, &stTreeIns );
-			hLastDir = hNewParent;	//	ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªä½ç½®ã®æœ€çµ‚ãƒ»ãƒ•ã‚¡ã‚¤ãƒ«ã®æ‰‹å‰
+			hLastDir = hNewParent;	//	ƒfƒBƒŒƒNƒgƒŠˆÊ’u‚ÌÅIEƒtƒ@ƒCƒ‹‚ÌŽè‘O
 		}
-		else	//	ãƒ•ã‚¡ã‚¤ãƒ«ã®å ´åˆ
+		else	//	ƒtƒ@ƒCƒ‹‚Ìê‡
 		{
 			if( FileExtensionCheck( atNodeName, TEXT(".ast") ) ){	iFileType = TICO_FILE_AST;	}
 			else if( FileExtensionCheck( atNodeName, TEXT(".mlt") ) ){	iFileType = TICO_FILE_MLT;	}
@@ -1224,7 +1224,7 @@ HRESULT TreeItemFromSqlII( HTREEITEM hTreeParent )
 			stTreeIns.item.iImage = iFileType;
 			stTreeIns.item.iSelectedImage = iFileType;
 			stTreeIns.item.lParam    = NODE_FILE;
-			stTreeIns.item.cChildren = 0;	//	å­ãƒŽãƒ¼ãƒ‰ãªã—
+			stTreeIns.item.cChildren = 0;	//	Žqƒm[ƒh‚È‚µ
 			stTreeIns.hInsertAfter   = TVI_LAST;
 			hNewParent = TreeView_InsertItem( ghTreeWnd, &stTreeIns );
 		}
@@ -1237,7 +1237,7 @@ HRESULT TreeItemFromSqlII( HTREEITEM hTreeParent )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒ„ãƒªãƒ¼ãƒŽãƒ¼ãƒ‰ãƒãƒ³ãƒ‰ãƒ«ã‚’æ¸¡ã—ã¦ã€è©²å½“ã™ã‚‹SqlIDã‚’å¼•ã£å¼µã‚‹ãƒ»å†å¸°
+	ƒcƒŠ[ƒm[ƒhƒnƒ“ƒhƒ‹‚ð“n‚µ‚ÄAŠY“–‚·‚éSqlID‚ðˆø‚Á’£‚éEÄ‹A
 */
 INT MaaSearchTreeID( HTREEITEM hItem )
 {
@@ -1245,15 +1245,15 @@ INT MaaSearchTreeID( HTREEITEM hItem )
 	HTREEITEM	hPrntItem;
 	UINT	dPrntID, ownID;
 
-	TreeItemInfoGet( hItem, atName, MAX_PATH );	//	ãƒŽãƒ¼ãƒ‰ã®åå‰ã¨ã£ã¦
+	TreeItemInfoGet( hItem, atName, MAX_PATH );	//	ƒm[ƒh‚Ì–¼‘O‚Æ‚Á‚Ä
 
-	hPrntItem = TreeView_GetParent( ghTreeWnd, hItem );	//	è¦ªãƒŽãƒ¼ãƒ‰ç¢ºèª
+	hPrntItem = TreeView_GetParent( ghTreeWnd, hItem );	//	eƒm[ƒhŠm”F
 
-	//	è¦ªãƒŽãƒ¼ãƒ‰ã®ï¼©ï¼¤ã‚’ç¢ºä¿ãƒ»è¦ªãŒãƒ«ãƒ¼ãƒˆãªã‚‰hPrntItemã¯NULL
+	//	eƒm[ƒh‚Ì‚h‚c‚ðŠm•ÛEe‚ªƒ‹[ƒg‚È‚çhPrntItem‚ÍNULL
 	if( !(hPrntItem)  ){	return 0;	}
 	else{	dPrntID = MaaSearchTreeID( hPrntItem );	}
 
-	//	è©²å½“ã™ã‚‹è¦ªãƒŽãƒ¼ãƒ‰ã¨åç§°ã‚’ã‚‚ã¤ãƒŽãƒ¼ãƒ‰ã¯ä¸€ã¤ã—ã‹ãªã„
+	//	ŠY“–‚·‚éeƒm[ƒh‚Æ–¼Ì‚ð‚à‚Âƒm[ƒh‚Íˆê‚Â‚µ‚©‚È‚¢
 	ownID = SqlTreeFileGetOnParent( atName, dPrntID );
 
 	return ownID;
@@ -1261,9 +1261,9 @@ INT MaaSearchTreeID( HTREEITEM hItem )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	IDã‚’æ¸¡ã—ã¦ã€è©²å½“ã‚¢ã‚¤ãƒ†ãƒ ã®ãƒ„ãƒªãƒ¼ãƒŽãƒ¼ãƒ‰ãƒãƒ³ãƒ‰ãƒ«ã‚’ã¨ã‚‹ãƒ»å†å¸°
-	@param[in]	dOwnID	æ¤œç´¢ã—ãŸã„ãƒŽãƒ¼ãƒ‰ã®SqlID
-	@return		ãƒ’ãƒƒãƒˆã—ãŸãƒ„ãƒªãƒ¼ãƒŽãƒ¼ãƒ‰ãƒãƒ³ãƒ‰ãƒ«ãƒ»ã‚‚ã—ãã¯NULL
+	ID‚ð“n‚µ‚ÄAŠY“–ƒAƒCƒeƒ€‚ÌƒcƒŠ[ƒm[ƒhƒnƒ“ƒhƒ‹‚ð‚Æ‚éEÄ‹A
+	@param[in]	dOwnID	ŒŸõ‚µ‚½‚¢ƒm[ƒh‚ÌSqlID
+	@return		ƒqƒbƒg‚µ‚½ƒcƒŠ[ƒm[ƒhƒnƒ“ƒhƒ‹E‚à‚µ‚­‚ÍNULL
 */
 HTREEITEM MaaSearchTreeItem( INT dOwnID )
 {
@@ -1275,34 +1275,34 @@ HTREEITEM MaaSearchTreeItem( INT dOwnID )
 	dType   = 0;
 	dPrntID = 0;
 
-	//	IDã§ã€SQLã‹ã‚‰è©²å½“ã‚¢ã‚¤ãƒ†ãƒ ã®æƒ…å ±ã‚’ã²ã£ã±ã‚‹
+	//	ID‚ÅASQL‚©‚çŠY“–ƒAƒCƒeƒ€‚Ìî•ñ‚ð‚Ð‚Á‚Ï‚é
 	SqlTreeNodePickUpID( dOwnID, &dType, &dPrntID, atFileName, 0x11 );
 
-	if( dPrntID )	//	ä¸ŠãŒæœ‰ã‚‹ã‚ˆã†ãªã‚‰ã€å†å¸°ã™ã‚‹
+	if( dPrntID )	//	ã‚ª—L‚é‚æ‚¤‚È‚çAÄ‹A‚·‚é
 	{
 		hPrntItem = MaaSearchTreeItem( dPrntID );
 	}
-	else	//	ä¸ŠãŒãªã‹ã£ãŸã‚‰ã€ãƒ«ãƒ¼ãƒˆã¨è¦‹ãªã—ã¦ã€ãƒ«ãƒ¼ãƒˆã‚’ç¨®ã«ã—ã¦CHILDæ¤œç´¢
+	else	//	ã‚ª‚È‚©‚Á‚½‚çAƒ‹[ƒg‚ÆŒ©‚È‚µ‚ÄAƒ‹[ƒg‚ðŽí‚É‚µ‚ÄCHILDŒŸõ
 	{
 		hPrntItem = ghTreeRoot;
 	}
 
-	if( !(hPrntItem) )	return NULL;	//	ãƒ‡ãƒ¼ã‚¿ç„¡ã‹ã£ãŸã‚‰çµ‚ã‚ã‚‹
+	if( !(hPrntItem) )	return NULL;	//	ƒf[ƒ^–³‚©‚Á‚½‚çI‚í‚é
 
-	//	ãƒ„ãƒªãƒ¼ãƒŽãƒ¼ãƒ‰ãƒãƒ³ãƒ‰ãƒ«ãŒè¿”ã£ã¦ããŸã‚‰ã€ãã‚Œã‚’ç¨®ã«ã—ã¦CHILDæ¤œç´¢
-	//	ãƒ’ãƒƒãƒˆã—ãŸã‚‰ã€è©²å½“ãƒ„ãƒªãƒ¼ãƒŽãƒ¼ãƒ‰ãƒãƒ³ãƒ‰ãƒ«ã‚’è¿”ã™
-	//	ã‚‚ã—æœªå±•é–‹ãªã‚‰ã€ã“ã“ã§NULLãŒå¸°ã‚‹ãƒ»ãã®ã¨ãã¯ã€dPrntIDã¨atFileNameã§è©²å½“ã‚¢ã‚¤ãƒ†ãƒ ã‚’æŽ¢ã—ã¦é–‹ã‘ã‚‹å¿…è¦ãŒã‚ã‚‹
+	//	ƒcƒŠ[ƒm[ƒhƒnƒ“ƒhƒ‹‚ª•Ô‚Á‚Ä‚«‚½‚çA‚»‚ê‚ðŽí‚É‚µ‚ÄCHILDŒŸõ
+	//	ƒqƒbƒg‚µ‚½‚çAŠY“–ƒcƒŠ[ƒm[ƒhƒnƒ“ƒhƒ‹‚ð•Ô‚·
+	//	‚à‚µ–¢“WŠJ‚È‚çA‚±‚±‚ÅNULL‚ª‹A‚éE‚»‚Ì‚Æ‚«‚ÍAdPrntID‚ÆatFileName‚ÅŠY“–ƒAƒCƒeƒ€‚ð’T‚µ‚ÄŠJ‚¯‚é•K—v‚ª‚ ‚é
 	TreeView_Expand( ghTreeWnd, hPrntItem, TVE_EXPAND );
-	//	ã‚‚ã—ãã¯ã€å…ˆã«è©²å½“ãƒ‘ãƒ¬ãƒ³ãƒˆã®ã‚¢ã‚¤ãƒ†ãƒ ã‚’å±•é–‹ã—ã¦ã‹ã‚‰ã•ãŒã™
+	//	‚à‚µ‚­‚ÍAæ‚ÉŠY“–ƒpƒŒƒ“ƒg‚ÌƒAƒCƒeƒ€‚ð“WŠJ‚µ‚Ä‚©‚ç‚³‚ª‚·
 	hChildItem = TreeView_GetChild( ghTreeWnd, hPrntItem );
 
 	do{
-		//	åå‰å¼•ã£å¼µã£ã¦ atFileName ã¨ç…§åˆ
+		//	–¼‘Oˆø‚Á’£‚Á‚Ä atFileName ‚ÆÆ‡
 		TreeItemInfoGet( hChildItem, atCmprName, MAX_PATH );
 
 		if( !( StrCmp( atFileName, atCmprName ) ) )
 		{
-			//	ãƒ’ãƒƒãƒˆã—ãŸã‚‰
+			//	ƒqƒbƒg‚µ‚½‚ç
 			break;
 		}
 
@@ -1312,35 +1312,35 @@ HTREEITEM MaaSearchTreeItem( INT dOwnID )
 	}while( hNextItem );
 
 
-	return hChildItem;	//	ãƒ’ãƒƒãƒˆã—ãŸã‚‰ã€è©²å½“ãƒ„ãƒªãƒ¼ãƒŽãƒ¼ãƒ‰ãƒãƒ³ãƒ‰ãƒ«ã‚’è¿”ã™
+	return hChildItem;	//	ƒqƒbƒg‚µ‚½‚çAŠY“–ƒcƒŠ[ƒm[ƒhƒnƒ“ƒhƒ‹‚ð•Ô‚·
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	å¯¾è±¡ã®SqlIDã‚’å—ã‘å–ã£ã¦ã€è©²å½“ã®ãƒ„ãƒªãƒ¼ã‚¢ã‚¤ãƒ†ãƒ ã‚’ã²ã‚‰ã
-	@param[in]	hDlg	ãƒ€ã‚¤ãƒ¤ãƒ­ã‚°ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	tgtID	å¯¾è±¡ã®SqlID
-	@return		ãƒ’ãƒƒãƒˆã—ãŸãƒ„ãƒªãƒ¼ãƒŽãƒ¼ãƒ‰ãƒãƒ³ãƒ‰ãƒ«ãƒ»ã‚‚ã—ãã¯NULL
+	‘ÎÛ‚ÌSqlID‚ðŽó‚¯Žæ‚Á‚ÄAŠY“–‚ÌƒcƒŠ[ƒAƒCƒeƒ€‚ð‚Ð‚ç‚­
+	@param[in]	hDlg	ƒ_ƒCƒ„ƒƒOƒnƒ“ƒhƒ‹
+	@param[in]	tgtID	‘ÎÛ‚ÌSqlID
+	@return		ƒqƒbƒg‚µ‚½ƒcƒŠ[ƒm[ƒhƒnƒ“ƒhƒ‹E‚à‚µ‚­‚ÍNULL
 */
 HTREEITEM MaaSelectIDfile( HWND hDlg, INT tgtID )
 {
 	HTREEITEM	hTgtItem;
 
-	//	SqlIDã‚’æ¸¡ã™ã¨ã€è©²å½“ã™ã‚‹ãƒ„ãƒªãƒ¼ãƒŽãƒ¼ãƒ‰ãƒãƒ³ãƒ‰ãƒ«ãŒæˆ»ã£ã¦ãã‚‹ã¯ãš
+	//	SqlID‚ð“n‚·‚ÆAŠY“–‚·‚éƒcƒŠ[ƒm[ƒhƒnƒ“ƒhƒ‹‚ª–ß‚Á‚Ä‚­‚é‚Í‚¸
 	hTgtItem = MaaSearchTreeItem( tgtID );
 
-	if( hTgtItem ){	TreeView_SelectItem( ghTreeWnd, hTgtItem );	}	//	é¸æŠžçŠ¶æ…‹ã«ã™ã‚‹
+	if( hTgtItem ){	TreeView_SelectItem( ghTreeWnd, hTgtItem );	}	//	‘I‘ðó‘Ô‚É‚·‚é
 
 	return hTgtItem;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒ„ãƒªãƒ¼ã®ã‚¢ã‚¤ãƒ†ãƒ ã®åå‰ã¨ï¼°ï¼¡ï¼²ï¼¡ï¼­æƒ…å ±ã‚’ç¢ºä¿
-	@param[in]	hTrItem	ã‚¢ã‚¤ãƒ†ãƒ ãƒãƒ³ãƒ‰ãƒ«
-	@param[out]	ptName	åå‰ã‚’å…¥ã‚Œã‚‹ãƒãƒƒãƒ•ã‚¡ã¸ã®ãƒã‚¤ãƒ³ã‚¿ãƒ»NULLã§ã‚‚è‰¯ã„
-	@param[in]	cchName	ãƒãƒƒãƒ•ã‚¡ã‚µã‚¤ã‚º
-	@return		LPARAM	ï¼‘ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã€€ï¼ãƒ•ã‚¡ã‚¤ãƒ«
+	ƒcƒŠ[‚ÌƒAƒCƒeƒ€‚Ì–¼‘O‚Æ‚o‚`‚q‚`‚lî•ñ‚ðŠm•Û
+	@param[in]	hTrItem	ƒAƒCƒeƒ€ƒnƒ“ƒhƒ‹
+	@param[out]	ptName	–¼‘O‚ð“ü‚ê‚éƒoƒbƒtƒ@‚Ö‚Ìƒ|ƒCƒ“ƒ^ENULL‚Å‚à—Ç‚¢
+	@param[in]	cchName	ƒoƒbƒtƒ@ƒTƒCƒY
+	@return		LPARAM	‚PƒfƒBƒŒƒNƒgƒŠ@‚Oƒtƒ@ƒCƒ‹
 */
 LPARAM TreeItemInfoGet( HTREEITEM hTrItem, LPTSTR ptName, size_t cchName )
 {
@@ -1350,14 +1350,14 @@ LPARAM TreeItemInfoGet( HTREEITEM hTrItem, LPTSTR ptName, size_t cchName )
 	ZeroMemory( &stTvItem, sizeof(TVITEM) );
 	ZeroMemory( atBuffer, sizeof(atBuffer) );
 
-	//	åå‰ã¨ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‹ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚’å¼•ã£å¼µã‚Šå‡ºã™
+	//	–¼‘O‚ÆƒfƒBƒŒƒNƒgƒŠ‚©ƒtƒ@ƒCƒ‹‚©‚ðˆø‚Á’£‚èo‚·
 	stTvItem.hItem      = hTrItem;
 	stTvItem.mask       = TVIF_TEXT | TVIF_PARAM;
 	stTvItem.pszText    = atBuffer;
 	stTvItem.cchTextMax = MAX_PATH;
 	TreeView_GetItem( ghTreeWnd, &stTvItem );
 
-	if( ptName )	//	ãƒãƒƒãƒ•ã‚¡ãŒæœ‰åŠ¹ãªã‚‰
+	if( ptName )	//	ƒoƒbƒtƒ@‚ª—LŒø‚È‚ç
 	{
 		ZeroMemory( ptName, sizeof(TCHAR) * cchName );
 		StringCchCopy( ptName, cchName, atBuffer );
@@ -1368,10 +1368,10 @@ LPARAM TreeItemInfoGet( HTREEITEM hTrItem, LPTSTR ptName, size_t cchName )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒ„ãƒªãƒ¼ã®ãƒŽãƒ¼ãƒ†ã‚£ãƒ•ã‚¡ã‚¤ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®å‡¦ç†
-	@param[in]	hWnd		è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	pstNmTrView	NOTIFYã®è©³ç´°
-	@return		å‡¦ç†ã—ãŸå†…å®¹ã¨ã‹
+	ƒcƒŠ[‚Ìƒm[ƒeƒBƒtƒ@ƒCƒƒbƒZ[ƒW‚Ìˆ—
+	@param[in]	hWnd		eƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
+	@param[in]	pstNmTrView	NOTIFY‚ÌÚ×
+	@return		ˆ—‚µ‚½“à—e‚Æ‚©
 */
 LRESULT TreeNotify( HWND hWnd, LPNMTREEVIEW pstNmTrView )
 {
@@ -1387,31 +1387,31 @@ LRESULT TreeNotify( HWND hWnd, LPNMTREEVIEW pstNmTrView )
 
 	nmCode = pstNmTrView->hdr.code;
 
-	//	å³ã‚¯ãƒªãƒƒã‚¯ã¯ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãƒ¡ãƒ‹ãƒ¥ãƒ¼ã¸
+	//	‰EƒNƒŠƒbƒN‚ÍƒRƒ“ƒeƒLƒXƒgƒƒjƒ…[‚Ö
 
-	if( TVN_SELCHANGED == nmCode )	//	é¸æŠžã—ãŸå¾Œ
+	if( TVN_SELCHANGED == nmCode )	//	‘I‘ð‚µ‚½Œã
 	{
-		hSelItem = TreeView_GetSelection( ghTreeWnd );	//	é¸æŠžã•ã‚Œã¦ã‚‹ã‚¢ã‚¤ãƒ†ãƒ 
-		//	ã‚³ãƒ³ãƒœãƒƒã‚¯ã‚¹ã‚¯ãƒ«ãƒ¤ãƒ¼ä½ç½®å¤‰æ›´ã—ã¦ã¿ã‚‹
+		hSelItem = TreeView_GetSelection( ghTreeWnd );	//	‘I‘ð‚³‚ê‚Ä‚éƒAƒCƒeƒ€
+		//	ƒRƒ“ƒ{ƒbƒNƒXƒNƒ‹ƒ„[ˆÊ’u•ÏX‚µ‚Ä‚Ý‚é
 		TreeSelItemProc( hWnd, hSelItem, 0 );
 	}
 
 
-	if( TVN_ITEMEXPANDING == nmCode )	//	å­ãƒŽãƒ¼ãƒ‰ã‚’å±•é–‹ã¾ãŸã¯é–‰ã˜ã‚‹ã¨ã
+	if( TVN_ITEMEXPANDING == nmCode )	//	Žqƒm[ƒh‚ð“WŠJ‚Ü‚½‚Í•Â‚¶‚é‚Æ‚«
 	{
 		TRACE( TEXT("TVN_ITEMEXPANDING[%X]"), pstNmTrView->action );
 
-		if( pstNmTrView->action & TVE_EXPAND )	//	å±•é–‹ã™ã‚‹
+		if( pstNmTrView->action & TVE_EXPAND )	//	“WŠJ‚·‚é
 		{
 			pstTvItem = &(pstNmTrView->itemNew);
 
 			if( pstTvItem->state & TVIS_EXPANDEDONCE )	return 0;
-			//	å±•é–‹æ¸ˆãªã‚‰ä½•ã‚‚ã—ãªã„ã§ãŠï½‹
+			//	“WŠJÏ‚È‚ç‰½‚à‚µ‚È‚¢‚Å‚¨‚‹
 
 #ifdef EXTRA_NODE_STYLE
-			//	ã‚‚ã—lPmaramãŒ-1ãªã‚‰
+			//	‚à‚µlPmaram‚ª-1‚È‚ç
 			lParam = TreeItemInfoGet( pstTvItem->hItem, NULL, 0 );
-			if( NODE_EXTRA == lParam )	//	è¿½åŠ åˆ†ã§ã‚ã‚‹
+			if( NODE_EXTRA == lParam )	//	’Ç‰Á•ª‚Å‚ ‚é
 			{
 				TRACE( TEXT("TREE EX DIR") );
 				TreeExtraItemFromSql( pstTvItem->hItem, 0 );
@@ -1425,7 +1425,7 @@ LRESULT TreeNotify( HWND hWnd, LPNMTREEVIEW pstNmTrView )
 #endif
 		}
 
-		if( pstNmTrView->action & TVE_COLLAPSE )	//	é–‰ã˜ã‚‹
+		if( pstNmTrView->action & TVE_COLLAPSE )	//	•Â‚¶‚é
 		{
 			pstTvItem = &(pstNmTrView->itemNew);
 			TRACE( TEXT("TVE_COLLAPSE[%d, %d]"), pstTvItem->iImage, pstTvItem->iSelectedImage );
@@ -1433,8 +1433,8 @@ LRESULT TreeNotify( HWND hWnd, LPNMTREEVIEW pstNmTrView )
 	}
 
 
-	//	ç‰¹ç•°ãªã‚¢ã‚¤ã‚³ãƒ³è¿½åŠ ã™ã‚‹ãªã‚‰
-	if( TVN_GETDISPINFO == nmCode )	//	ãªã‚“ã‹ç”»åƒæƒ…å ±ãŒå±…ã‚‹ã¨ã
+	//	“ÁˆÙ‚ÈƒAƒCƒRƒ“’Ç‰Á‚·‚é‚È‚ç
+	if( TVN_GETDISPINFO == nmCode )	//	‚È‚ñ‚©‰æ‘œî•ñ‚ª‹‚é‚Æ‚«
 	{
 		pstDispInfo = (LPNMTVDISPINFO)pstNmTrView;
 		TRACE( TEXT("TVN_GETDISPINFO[%X]"), pstDispInfo->item.mask );
@@ -1460,11 +1460,11 @@ LRESULT TreeNotify( HWND hWnd, LPNMTREEVIEW pstNmTrView )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒ„ãƒªãƒ¼ã®é¸æŠžã—ãŸã‚¢ã‚¤ãƒ†ãƒ ã‹ã‚‰ã®å‡¦ç†ã®ãƒã‚§ã‚¤ãƒ³ãƒ»æ“ä½œã‚’çµ±åˆ
-	@param[in]	hWnd		è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	hSelItem	é¸æŠžã—ã¦ã‚‹ãƒŽãƒ¼ãƒ‰ã®ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	dMode		ï¼ä¸»ã‚¿ãƒ–ã§é–‹ãã€€ï¼‘å‰¯ã‚¿ãƒ–è¿½åŠ ã€€ï¼’ç·¨é›†ãƒ“ãƒ¥ãƒ¼ã§é–‹ãã€€ï¼“ã‚¢ã‚¤ãƒ†ãƒ è¿½åŠ ã€€ï¼”ãƒŽãƒ¼ãƒ‰å‰Šé™¤
-	@return		éžï¼å‡¦ç†ã—ãŸã€€ï¼ã—ã¦ãªã„
+	ƒcƒŠ[‚Ì‘I‘ð‚µ‚½ƒAƒCƒeƒ€‚©‚ç‚Ìˆ—‚Ìƒ`ƒFƒCƒ“E‘€ì‚ð“‡
+	@param[in]	hWnd		eƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
+	@param[in]	hSelItem	‘I‘ð‚µ‚Ä‚éƒm[ƒh‚Ìƒnƒ“ƒhƒ‹
+	@param[in]	dMode		‚OŽåƒ^ƒu‚ÅŠJ‚­@‚P•›ƒ^ƒu’Ç‰Á@‚Q•ÒWƒrƒ…[‚ÅŠJ‚­@‚RƒAƒCƒeƒ€’Ç‰Á@‚Sƒm[ƒhíœ
+	@return		”ñ‚Oˆ—‚µ‚½@‚O‚µ‚Ä‚È‚¢
 */
 INT TreeSelItemProc( HWND hWnd, HTREEITEM hSelItem, UINT dMode )
 {
@@ -1478,72 +1478,72 @@ INT TreeSelItemProc( HWND hWnd, HTREEITEM hSelItem, UINT dMode )
 	UINT	id = 0;
 #endif
 
-	//	å³ã‚¯ãƒªãƒ»ãƒ„ãƒªãƒ¼é¸æŠžã‹ã‚‰åˆæµ
+	//	‰EƒNƒŠEƒcƒŠ[‘I‘ð‚©‚ç‡—¬
 
-	if( !(hSelItem) ){	return 0;	}	//	ãªã‚“ã‹ç„¡åŠ¹ãªã‚‰ä½•ã‚‚ã—ãªã„
+	if( !(hSelItem) ){	return 0;	}	//	‚È‚ñ‚©–³Œø‚È‚ç‰½‚à‚µ‚È‚¢
 
-	//	é¸æŠžã•ã‚ŒãŸã®ãŒã‚¨ã‚­ã‚¹ãƒˆãƒ©ãƒ•ã‚¡ã‚¤ãƒ«ã§ã‚ã‚Œã°ï¼Ÿè¦ªãƒŽãƒ¼ãƒ‰ã®lParamè¦‹ã‚Œã°ã‚ã‹ã‚‹
-	//	ã‚¨ã‚­ã‚¹ãƒˆãƒ©ãªã‚‰ã€ãƒ•ãƒ«ãƒ‘ã‚¹ç¢ºä¿ã›ãªã„ã‹ã‚“ã€€ãƒ™ãƒ¼ã‚¹åã¨ã‹æ³¨æ„ã‚»ãƒ¨
+	//	‘I‘ð‚³‚ê‚½‚Ì‚ªƒGƒLƒXƒgƒ‰ƒtƒ@ƒCƒ‹‚Å‚ ‚ê‚ÎHeƒm[ƒh‚ÌlParamŒ©‚ê‚Î‚í‚©‚é
+	//	ƒGƒLƒXƒgƒ‰‚È‚çAƒtƒ‹ƒpƒXŠm•Û‚¹‚È‚¢‚©‚ñ@ƒx[ƒX–¼‚Æ‚©’ˆÓƒZƒˆ
 #ifdef EXTRA_NODE_STYLE
 	hParentItem = TreeView_GetParent( ghTreeWnd, hSelItem );
 	lParam = TreeItemInfoGet( hParentItem, NULL, 0 );
 	if( NODE_EXTRA == lParam )
 	{
-		//	é¸æŠžã•ã‚ŒãŸã‚„ã¤ã«ã¯è©²å½“ã‚¢ã‚¤ãƒ†ãƒ ã®sqlIDãŒå…¥ã£ã¦ã‚‹
+		//	‘I‘ð‚³‚ê‚½‚â‚Â‚É‚ÍŠY“–ƒAƒCƒeƒ€‚ÌsqlID‚ª“ü‚Á‚Ä‚é
 		lParam = TreeItemInfoGet( hSelItem, NULL, 0 );
-		//	è©²å½“ã®ã‚¢ã‚¤ãƒ†ãƒ ã‚’ç¢ºä¿
+		//	ŠY“–‚ÌƒAƒCƒeƒ€‚ðŠm•Û
 		id = SqlTreeNodeExtraSelect( lParam, 0, atPath );
-		if( 0 == id )	return 0;	//	ãªã‚“ã‹ãŠã‹ã—ã„ãªã‚‰ä½•ã‚‚ã—ãªã„
+		if( 0 == id )	return 0;	//	‚È‚ñ‚©‚¨‚©‚µ‚¢‚È‚ç‰½‚à‚µ‚È‚¢
 
-		//	ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ãƒ™ãƒ¼ã‚¹åã«ã—ã¦ãŠã
+		//	ƒtƒ@ƒCƒ‹–¼‚ðƒx[ƒX–¼‚É‚µ‚Ä‚¨‚­
 		if( 0 == dMode )
 		{
 			StringCchCopy( gatBaseName, MAX_PATH, PathFindFileName( atPath ) );
-			StatusBarMsgSet( SBMAA_FILENAME , gatBaseName );	//	ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒãƒ¼ã«ãƒ•ã‚¡ã‚¤ãƒ«åè¡¨ç¤º
+			StatusBarMsgSet( SBMAA_FILENAME , gatBaseName );	//	ƒXƒe[ƒ^ƒXƒo[‚Éƒtƒ@ƒCƒ‹–¼•\Ž¦
 		}
-		StringCchCopy( atBaseName, MAX_PATH, PathFindFileName( atPath ) );	//	ã„ã¤ã§ã‚‚è¨˜éŒ²ã§å¤§ä¸ˆå¤«ã‹	20120530
+		StringCchCopy( atBaseName, MAX_PATH, PathFindFileName( atPath ) );	//	‚¢‚Â‚Å‚à‹L˜^‚Å‘åä•v‚©	20120530
 	}
 	else
 	{
 #endif
-		//	é¸æŠžã•ã‚ŒãŸã‚„ã¤ã®ãƒ•ã‚¡ã‚¤ãƒ«åã€ã‚‚ã—ãã¯ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåç¢ºä¿
+		//	‘I‘ð‚³‚ê‚½‚â‚Â‚Ìƒtƒ@ƒCƒ‹–¼A‚à‚µ‚­‚ÍƒfƒBƒŒƒNƒgƒŠ–¼Šm•Û
 		lParam = TreeItemInfoGet( hSelItem, atName, MAX_PATH );
-		//ï¼ ï¼ 	lParamã®åˆ¤æ–­
-		if( NODE_FILE != lParam ){	return 0;	}	//	ãƒ•ã‚¡ã‚¤ãƒ«ã§ç„¡ã„ãªã‚‰ä½•ã‚‚ã—ãªã„
+		//——	lParam‚Ì”»’f
+		if( NODE_FILE != lParam ){	return 0;	}	//	ƒtƒ@ƒCƒ‹‚Å–³‚¢‚È‚ç‰½‚à‚µ‚È‚¢
 
-		//	é¸æŠžã—ãŸåå‰ã‚’ç¢ºä¿ãƒ»ãƒ«ãƒ¼ãƒˆã«ã‚ã‚‹å ´åˆã“ã‚Œã§é©ç”¨ã•ã‚Œã‚‹
+		//	‘I‘ð‚µ‚½–¼‘O‚ðŠm•ÛEƒ‹[ƒg‚É‚ ‚éê‡‚±‚ê‚Å“K—p‚³‚ê‚é
 		if( 0 == dMode )
 		{
 			StringCchCopy( gatBaseName, MAX_PATH, atName );
-			StatusBarMsgSet( SBMAA_FILENAME, atName );	//	ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒãƒ¼ã«ãƒ•ã‚¡ã‚¤ãƒ«åè¡¨ç¤º
+			StatusBarMsgSet( SBMAA_FILENAME, atName );	//	ƒXƒe[ƒ^ƒXƒo[‚Éƒtƒ@ƒCƒ‹–¼•\Ž¦
 		}
-		StringCchCopy( atBaseName, MAX_PATH, atName );	//	ã„ã¤ã§ã‚‚è¨˜éŒ²ã§å¤§ä¸ˆå¤«ã‹	20120530
+		StringCchCopy( atBaseName, MAX_PATH, atName );	//	‚¢‚Â‚Å‚à‹L˜^‚Å‘åä•v‚©	20120530
 
-		//	ãƒ™ãƒ¼ã‚¹åã‚’ã€æ‰€å±žã™ã‚‹ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåã«ã™ã‚‹ã€‚ãƒ«ãƒ¼ãƒˆã®ãƒ•ã‚¡ã‚¤ãƒ«ãªã‚‰ãã®ã¾ã¾
+		//	ƒx[ƒX–¼‚ðAŠ‘®‚·‚éƒfƒBƒŒƒNƒgƒŠ–¼‚É‚·‚éBƒ‹[ƒg‚Ìƒtƒ@ƒCƒ‹‚È‚ç‚»‚Ì‚Ü‚Ü
 
-		//	ä¸Šã«è¾¿ã£ã¦ã€ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’ä½œã‚‹
-		for( i = 0; 12 > i; i++ )	//	ï¼‘ï¼’ã‚ˆã‚Šè…æµ·éšŽå±¤ã¯ãŸã©ã‚Œãªã„
+		//	ã‚É’H‚Á‚ÄAƒtƒ@ƒCƒ‹ƒpƒX‚ðì‚é
+		for( i = 0; 12 > i; i++ )	//	‚P‚Q‚æ‚è•…ŠCŠK‘w‚Í‚½‚Ç‚ê‚È‚¢
 		{
 			hParentItem = TreeView_GetParent( ghTreeWnd, hSelItem );
-			if( !(hParentItem) )	return 0;	//	ãƒ«ãƒ¼ãƒˆã®ä¸Šã¯ãªã„ãƒ»ãã—ã¦é¸æŠžã‚‚ã•ã‚Œãªã„
-			if( ghTreeRoot == hParentItem ){	break;	}	//	æ¤œç´¢ãŒãƒ«ãƒ¼ãƒˆã¾ã§ã‚¤ãƒƒãŸã‚‰çµ‚ã‚ã‚Š
+			if( !(hParentItem) )	return 0;	//	ƒ‹[ƒg‚Ìã‚Í‚È‚¢E‚»‚µ‚Ä‘I‘ð‚à‚³‚ê‚È‚¢
+			if( ghTreeRoot == hParentItem ){	break;	}	//	ŒŸõ‚ªƒ‹[ƒg‚Ü‚ÅƒCƒb‚½‚çI‚í‚è
 
 			TreeItemInfoGet( hParentItem, atPath, MAX_PATH );
 
-			if( 0 == i )	//	åˆå›žã®ã¿ãªã‚‰ã€æ‰€å±žã™ã‚‹ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåã«ãªã‚‹	20110928
+			if( 0 == i )	//	‰‰ñ‚Ì‚Ý‚È‚çAŠ‘®‚·‚éƒfƒBƒŒƒNƒgƒŠ–¼‚É‚È‚é	20110928
 			{
 				if( 0 == dMode ){	StringCchCopy( gatBaseName, MAX_PATH, atPath );	}
 				else{				StringCchCopy( atBaseName, MAX_PATH, atPath );	}
 			}
 
-			//	ä»Šã®ãƒ‘ã‚¹ã‚’è¨˜éŒ²ã—ã¦ã„ãã¨ã€æœ€çµ‚çš„ã«ãƒ«ãƒ¼ãƒˆç›´ä¸‹ã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåã«ãªã‚‹
+			//	¡‚ÌƒpƒX‚ð‹L˜^‚µ‚Ä‚¢‚­‚ÆAÅI“I‚Éƒ‹[ƒg’¼‰º‚ÌƒfƒBƒŒƒNƒgƒŠ–¼‚É‚È‚é
 			PathAppend( atPath, atName );
 			StringCchCopy( atName, MAX_PATH, atPath );
 
 			hSelItem = hParentItem;
 		}
 
-		//	ãƒ«ãƒ¼ãƒˆä½ç½®ã‚’ãã£ã¤ã‘ã¦ãƒ•ãƒ«ãƒ‘ã‚¹ã«ã™ã‚‹
+		//	ƒ‹[ƒgˆÊ’u‚ð‚­‚Á‚Â‚¯‚Äƒtƒ‹ƒpƒX‚É‚·‚é
 		StringCchCopy( atPath, MAX_PATH, gatAARoot );
 		PathAppend( atPath, atName );
 
@@ -1553,35 +1553,35 @@ INT TreeSelItemProc( HWND hWnd, HTREEITEM hSelItem, UINT dMode )
 
 	switch( dMode )
 	{
-		default:	//	ä¸»ã‚¿ãƒ–ã§é–‹ãå ´åˆ
-		case  0:	AaItemsDoShow( hWnd , atPath, ACT_ALLTREE );	break;	//	ãã®MLTã‚’é–‹ã
+		default:	//	Žåƒ^ƒu‚ÅŠJ‚­ê‡
+		case  0:	AaItemsDoShow( hWnd , atPath, ACT_ALLTREE );	break;	//	‚»‚ÌMLT‚ðŠJ‚­
 
-		case  1:	//	å‰¯ã‚¿ãƒ–ã«é–‹ãå ´åˆ
+		case  1:	//	•›ƒ^ƒu‚ÉŠJ‚­ê‡
 			ZeroMemory( &stMulti, sizeof(MULTIPLEMAA) );
 			StringCchCopy( stMulti.atFilePath, MAX_PATH, atPath );
 			StringCchCopy( stMulti.atBaseName, MAX_PATH, atBaseName );
-			stMulti.dTabNum = 0;	//	åˆæœŸåŒ–ãƒ»å‰²å½“ã¯ï¼’ä»¥é™
+			stMulti.dTabNum = 0;	//	‰Šú‰»EŠ„“–‚Í‚QˆÈ~
 
 			gltMultiFiles.push_back( stMulti );
 			TabMultipleAppend( hWnd );
 			break;
 #ifndef _ORRVW
-		case  2:	//	ç·¨é›†ãƒ“ãƒ¥ãƒ¼ã§é–‹ãå ´åˆ
-			DocDoOpenFile( hWnd, atPath );	//	é–‹ã„ã¦ä¸­èº«å±•é–‹
+		case  2:	//	•ÒWƒrƒ…[‚ÅŠJ‚­ê‡
+			DocDoOpenFile( hWnd, atPath );	//	ŠJ‚¢‚Ä’†g“WŠJ
 			break;
 
   #ifndef MAA_IADD_PLUS
-		//	ã‚¢ã‚¤ãƒ†ãƒ è¿½åŠ ãƒ»ã‚­ãƒ£ãƒ³ã‚»ãƒ«
+		//	ƒAƒCƒeƒ€’Ç‰ÁEƒLƒƒƒ“ƒZƒ‹
 		//case  3:	AacItemAdding( hWnd, atPath );	break;
   #endif
 #endif	//	_ORRVW
 
 #ifdef EXTRA_NODE_STYLE
-		case  4:	//	ãƒŽãƒ¼ãƒ‰å‰Šé™¤ãƒ»ã¨ã‚Šã‚„ãˆãšã‚¨ã‚­ã‚¹ãƒˆãƒ©ãƒ•ã‚¡ã‚¤ãƒ«
-			if( 0 < id )	//	æœ‰åŠ¹ãªå ´åˆ
+		case  4:	//	ƒm[ƒhíœE‚Æ‚è‚â‚¦‚¸ƒGƒLƒXƒgƒ‰ƒtƒ@ƒCƒ‹
+			if( 0 < id )	//	—LŒø‚Èê‡
 			{
-				TreeView_DeleteItem( ghTreeWnd , hSelItem );	//	ãƒ„ãƒªãƒ¼ã‹ã‚‰å‰Šé™¤ã—ã¦
-				SqlTreeNodeExtraDelete( id );	//	ãƒªã‚¹ãƒˆã‹ã‚‰ã‚‚å‰Šé™¤
+				TreeView_DeleteItem( ghTreeWnd , hSelItem );	//	ƒcƒŠ[‚©‚çíœ‚µ‚Ä
+				SqlTreeNodeExtraDelete( id );	//	ƒŠƒXƒg‚©‚ç‚àíœ
 			}
 			break;
 #endif
@@ -1592,8 +1592,8 @@ INT TreeSelItemProc( HWND hWnd, HTREEITEM hSelItem, UINT dMode )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	é¸æŠžã—ã¦ã„ã‚‹ãƒªã‚¹ãƒˆã®ä¸»ä½“ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåã‚‚ã—ãã¯ãƒ•ã‚¡ã‚¤ãƒ«åã®ãƒãƒƒãƒ•ã‚¡ãƒã‚¤ãƒ³ã‚¿ã‚’ç¢ºä¿
-	@return	ãƒã‚¤ãƒ³ã‚¿
+	‘I‘ð‚µ‚Ä‚¢‚éƒŠƒXƒg‚ÌŽå‘ÌƒfƒBƒŒƒNƒgƒŠ–¼‚à‚µ‚­‚Íƒtƒ@ƒCƒ‹–¼‚Ìƒoƒbƒtƒ@ƒ|ƒCƒ“ƒ^‚ðŠm•Û
+	@return	ƒ|ƒCƒ“ƒ^
 */
 LPTSTR TreeBaseNameGet( VOID )
 {
@@ -1605,8 +1605,8 @@ LPTSTR TreeBaseNameGet( VOID )
 
 
 /*!
-	ã‚¿ãƒ–ãƒãƒ¼ã®ã‚µã‚¤ã‚ºã‚’ç¢ºä¿ã™ã‚‹
-	@param[in]	pstRect	ã‚µã‚¤ã‚ºå…¥ã‚Œã‚‹ã‚¢ãƒ¬
+	ƒ^ƒuƒo[‚ÌƒTƒCƒY‚ðŠm•Û‚·‚é
+	@param[in]	pstRect	ƒTƒCƒY“ü‚ê‚éƒAƒŒ
 */
 VOID MaaTabBarSizeGet( LPRECT pstRect )
 {
@@ -1641,8 +1641,8 @@ VOID MaaTabBarSizeGet( LPRECT pstRect )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚¿ãƒ–ã®ã‚µã‚¤ã‚ºå¤‰æ›´
-	@param[in]	hWnd	è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
+	ƒ^ƒu‚ÌƒTƒCƒY•ÏX
+	@param[in]	hWnd	eƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
 	@param[in]	pstRect	
 */
 VOID TabBarResize( HWND hWnd, LPRECT pstRect )
@@ -1658,10 +1658,10 @@ VOID TabBarResize( HWND hWnd, LPRECT pstRect )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚¿ãƒ–ãƒãƒ¼ã®ãƒŽãƒ¼ãƒ†ã‚£ãƒ•ã‚¡ã‚¤ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®å‡¦ç†
-	@param[in]	hWnd		è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	pstNmhdr	NOTIFYã®è©³ç´°
-	@return		å‡¦ç†ã—ãŸå†…å®¹ã¨ã‹
+	ƒ^ƒuƒo[‚Ìƒm[ƒeƒBƒtƒ@ƒCƒƒbƒZ[ƒW‚Ìˆ—
+	@param[in]	hWnd		eƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
+	@param[in]	pstNmhdr	NOTIFY‚ÌÚ×
+	@return		ˆ—‚µ‚½“à—e‚Æ‚©
 */
 LRESULT TabBarNotify( HWND hWnd, LPNMHDR pstNmhdr )
 {
@@ -1673,9 +1673,9 @@ LRESULT TabBarNotify( HWND hWnd, LPNMHDR pstNmhdr )
 	//pstNmhdr->hwndFrom;
 	nmCode   = pstNmhdr->code;
 
-	//	å³ã‚¯ãƒªãƒƒã‚¯ã¯ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãƒ¡ãƒ‹ãƒ¥ãƒ¼ã¸
+	//	‰EƒNƒŠƒbƒN‚ÍƒRƒ“ƒeƒLƒXƒgƒƒjƒ…[‚Ö
 
-	if( TCN_SELCHANGE == nmCode )	//	ã‚¿ãƒ–ã‚’ãƒã‚§ãƒ³ã‚¸ã—ãŸã‚ã¨
+	if( TCN_SELCHANGE == nmCode )	//	ƒ^ƒu‚ðƒ`ƒFƒ“ƒW‚µ‚½‚ ‚Æ
 	{
 		curSel = TabCtrl_GetCurSel( ghTabWnd );
 
@@ -1690,17 +1690,17 @@ LRESULT TabBarNotify( HWND hWnd, LPNMHDR pstNmhdr )
 	//		AacMatrixClear(  );
 			ShowWindow( ghTreeWnd, SW_SHOW );
 			gixUseTab = ACT_ALLTREE;
-			//	é¸æŠžã‚’ç™ºç”Ÿã•ã›ã‚‹
+			//	‘I‘ð‚ð”­¶‚³‚¹‚é
 			ZeroMemory( &stNmTrView, sizeof(NMTREEVIEW) );
 			stNmTrView.hdr.hwndFrom = ghTreeWnd;
 			stNmTrView.hdr.idFrom   = IDTV_ITEMTREE;
 			stNmTrView.hdr.code     = TVN_SELCHANGED;
-			//	ä»–ã¯ä½¿ã£ã¦ãªã„ã‹ã‚‰ï¼ã§ãŠï½‹
+			//	‘¼‚ÍŽg‚Á‚Ä‚È‚¢‚©‚ç‚O‚Å‚¨‚‹
 			TreeNotify( hWnd, &stNmTrView );
 		}
 		else if( ACT_FAVLIST == curSel )
 		{
-			//	ã‚ªãƒ¼ãƒãƒ³ã•ã‚ŒãŸã¨ãã«ã€å…¨éƒ¨æ›¸æ›
+			//	ƒI[ƒ|ƒ“‚³‚ê‚½‚Æ‚«‚ÉA‘S•”‘Š·
 			while( ListBox_GetCount( ghFavLtWnd ) ){	ListBox_DeleteString( ghFavLtWnd, 0 );	}
 			SqlFavFolderEnum( FavListFolderNameBack );
 
@@ -1710,7 +1710,7 @@ LRESULT TabBarNotify( HWND hWnd, LPNMHDR pstNmhdr )
 		}
 		else
 		{
-			AaTitleClear(  );	//	ä¸­èº«ã®ã‚ã‚‹æ™‚ã«æ›¸æ›ã‚’
+			AaTitleClear(  );	//	’†g‚Ì‚ ‚éŽž‚É‘Š·‚ð
 			TabMultipleSelect( hWnd, curSel, 0 );
 		}
 	}
@@ -1720,11 +1720,11 @@ LRESULT TabBarNotify( HWND hWnd, LPNMHDR pstNmhdr )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	å‰¯ã‚¿ãƒ–ã¯ãŠæ°—ã«ãƒªã‚¹ãƒˆã®ã§ã‚ã‚‹ã‹
-	@param[in]	tabSel	é¸æŠžã•ã‚ŒãŸã‚¿ãƒ–ç•ªå·
-	@param[out]	ptBase	ãƒ™ãƒ¼ã‚¹åã‚’å…¥ã‚Œã‚‹ãƒãƒƒãƒ•ã‚¡ã¸ã®ãƒã‚¤ãƒ³ã‚¿ãƒ¼ãƒ»NULLå¯
-	@param[in]	cchSize	ãƒãƒƒãƒ•ã‚¡ã®æ–‡å­—æ•°
-	@return	éžï¼ãŠæ°—ã«ã§ã‚ã‚‹ã€€ï¼é•ã†
+	•›ƒ^ƒu‚Í‚¨‹C‚ÉƒŠƒXƒg‚Ì‚Å‚ ‚é‚©
+	@param[in]	tabSel	‘I‘ð‚³‚ê‚½ƒ^ƒu”Ô†
+	@param[out]	ptBase	ƒx[ƒX–¼‚ð“ü‚ê‚éƒoƒbƒtƒ@‚Ö‚Ìƒ|ƒCƒ“ƒ^[ENULL‰Â
+	@param[in]	cchSize	ƒoƒbƒtƒ@‚Ì•¶Žš”
+	@return	”ñ‚O‚¨‹C‚É‚Å‚ ‚é@‚Oˆá‚¤
 */
 UINT TabMultipleIsFavTab( INT tabSel, LPTSTR ptBase, UINT_PTR cchSize )
 {
@@ -1732,26 +1732,26 @@ UINT TabMultipleIsFavTab( INT tabSel, LPTSTR ptBase, UINT_PTR cchSize )
 
 	for( itNulti = gltMultiFiles.begin( ); gltMultiFiles.end( ) != itNulti; itNulti++ )
 	{
-		if( tabSel == itNulti->dTabNum )	//	é¸æŠžã•ã‚Œã¦ã‚‹ã‚„ã¤ã‚’ã•ãŒã™
+		if( tabSel == itNulti->dTabNum )	//	‘I‘ð‚³‚ê‚Ä‚é‚â‚Â‚ð‚³‚ª‚·
 		{
-			//	ã¨ã‚Šã‚ãˆãšã‚³ãƒ”ãƒ¼
+			//	‚Æ‚è‚ ‚¦‚¸ƒRƒs[
 			if( ptBase ){	StringCchCopy( ptBase, cchSize, itNulti->atBaseName );	}
 
-			if( NULL == itNulti->atFilePath[0] )	return 1;	//	ãŠæ°—ã«ã§ã‚ã‚‹
-			else	return 0;	//	æˆ»ã£ã¦ãŠï½‹
+			if( NULL == itNulti->atFilePath[0] )	return 1;	//	‚¨‹C‚É‚Å‚ ‚é
+			else	return 0;	//	–ß‚Á‚Ä‚¨‚‹
 		}
 	}
 
-	return 0;	//	ãƒ’ãƒƒãƒˆã—ãªã‹ã£ãŸã‚‰ã¨ã‚Šã‚ãˆãšé•ã†ã“ã¨ã«ã™ã‚‹
+	return 0;	//	ƒqƒbƒg‚µ‚È‚©‚Á‚½‚ç‚Æ‚è‚ ‚¦‚¸ˆá‚¤‚±‚Æ‚É‚·‚é
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	å‰¯ã‚¿ãƒ–ã‹ã‚‰é¸æŠžã—ãŸå ´åˆ
-	@param[in]	hWnd	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	tabSel	é¸æŠžã•ã‚ŒãŸã‚¿ãƒ–ç•ªå·
-	@param[in]	dMode	ï¼ã‚¿ãƒ–é¸æŠžã—ãŸã€€ï¼‘ç·¨é›†ãƒ“ãƒ¥ãƒ¼ã§é–‹ã
-	@return	éžï¼MLTé–‹ã„ãŸã€€ï¼ãªã‹ã£ãŸ
+	•›ƒ^ƒu‚©‚ç‘I‘ð‚µ‚½ê‡
+	@param[in]	hWnd	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	tabSel	‘I‘ð‚³‚ê‚½ƒ^ƒu”Ô†
+	@param[in]	dMode	‚Oƒ^ƒu‘I‘ð‚µ‚½@‚P•ÒWƒrƒ…[‚ÅŠJ‚­
+	@return	”ñ‚OMLTŠJ‚¢‚½@‚O‚È‚©‚Á‚½
 */
 INT TabMultipleSelect( HWND hWnd, INT tabSel, UINT dMode )
 {
@@ -1766,37 +1766,37 @@ INT TabMultipleSelect( HWND hWnd, INT tabSel, UINT dMode )
 
 	for( itNulti = gltMultiFiles.begin( ); gltMultiFiles.end( ) != itNulti; itNulti++ )
 	{
-		if( tabSel == itNulti->dTabNum )	//	é¸æŠžã•ã‚Œã¦ã‚‹ã‚„ã¤ã‚’ã•ãŒã™
+		if( tabSel == itNulti->dTabNum )	//	‘I‘ð‚³‚ê‚Ä‚é‚â‚Â‚ð‚³‚ª‚·
 		{
-			if( 0 == dMode )	//	ãƒ“ãƒ¥ãƒ¼ã‚¨ãƒªã‚¢ã«è¡¨ç¤º
+			if( 0 == dMode )	//	ƒrƒ…[ƒGƒŠƒA‚É•\Ž¦
 			{
-				//	åŸºç‚¹ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’ã‚»ãƒƒãƒˆ
+				//	Šî“_ƒfƒBƒŒƒNƒgƒŠ‚ðƒZƒbƒg
 				StringCchCopy( gatBaseName, MAX_PATH, itNulti->atBaseName );
 
-				//	ã“ã“ã§ã€ãƒ•ã‚¡ã‚¤ãƒ«ã‹ãŠæ°—ã«ã‹ã‚’åˆ¤æ–­ã™ã‚‹ãƒ»atFilePathãŒç©ºã§ã‚ã‚Œã°
-				if( NULL == itNulti->atFilePath[0] )	//	ãŠæ°—ã«ã§ã‚ã‚‹
+				//	‚±‚±‚ÅAƒtƒ@ƒCƒ‹‚©‚¨‹C‚É‚©‚ð”»’f‚·‚éEatFilePath‚ª‹ó‚Å‚ ‚ê‚Î
+				if( NULL == itNulti->atFilePath[0] )	//	‚¨‹C‚É‚Å‚ ‚é
 				{
 					StringCchCopy( atName, MAX_PATH, gatBaseName );
 					StringCchCat(  atName, MAX_PATH, TEXT("[F]") );
 
-					AaItemsDoShow( hWnd, gatBaseName, ACT_FAVLIST );	//	å¼•ã£å¼µã£ã¦ãã‚‹å…ƒã®æŒ‡å®šã§ã‚ã‚‹
+					AaItemsDoShow( hWnd, gatBaseName, ACT_FAVLIST );	//	ˆø‚Á’£‚Á‚Ä‚­‚éŒ³‚ÌŽw’è‚Å‚ ‚é
 				}
 				else
 				{
-					//	ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ç¢ºä¿ãƒ»è¡¨ç¤ºç”¨
+					//	ƒtƒ@ƒCƒ‹–¼‚ðŠm•ÛE•\Ž¦—p
 					StringCchCopy( atName, MAX_PATH, itNulti->atFilePath );
 					PathStripPath( atName );
 
-					//	ãã®MLTã‚’é–‹ããƒ»é•ã„ãŒé‡è¦
+					//	‚»‚ÌMLT‚ðŠJ‚­Eˆá‚¢‚ªd—v
 					AaItemsDoShow( hWnd, itNulti->atFilePath, ACT_SUBITEM );
 				}
 
-				StatusBarMsgSet( SBMAA_FILENAME, atName );	//	ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒãƒ¼ã«ãƒ•ã‚¡ã‚¤ãƒ«åè¡¨ç¤º
+				StatusBarMsgSet( SBMAA_FILENAME, atName );	//	ƒXƒe[ƒ^ƒXƒo[‚Éƒtƒ@ƒCƒ‹–¼•\Ž¦
 			}
 #ifndef _ORRVW
-			else	//	ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ç¢ºä¿ã—ã¦ã€ã•ã‚‰ã«ç·¨é›†ãƒ“ãƒ¥ãƒ¼å´ã§é–‹ãå‡¦ç†ã‚’ã™ã‚‹
+			else	//	ƒtƒ@ƒCƒ‹–¼‚ðŠm•Û‚µ‚ÄA‚³‚ç‚É•ÒWƒrƒ…[‘¤‚ÅŠJ‚­ˆ—‚ð‚·‚é
 			{
-				DocDoOpenFile( hWnd, itNulti->atFilePath );	//	ãƒ“ãƒ¥ãƒ¼ãƒ¯å´ã®å‰¯ã‚¿ãƒ–ã‹ã‚‰ç·¨é›†ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã«é–‹ãã¨ã
+				DocDoOpenFile( hWnd, itNulti->atFilePath );	//	ƒrƒ…[ƒ‘¤‚Ì•›ƒ^ƒu‚©‚ç•ÒWƒEƒCƒ“ƒhƒE‚ÉŠJ‚­‚Æ‚«
 			}
 #endif
 			return 1;
@@ -1808,49 +1808,49 @@ INT TabMultipleSelect( HWND hWnd, INT tabSel, UINT dMode )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	è¡¨ç¤ºã—ãŸå¤©è¾ºä½ç½®ã‚’è¨˜æ†¶ã™ã‚‹
-	@param[in]	dTop	æ–°ã—ã„ä½ç½®ãƒ»ï¼ï¼‘ãªã‚‰ã€è¨˜æ†¶ã•ã‚Œã¦ã„ã‚‹ä½ç½®ã‚’è¿”ã™
-	@return	INT	å‘¼å‡ºãªã‚‰è©²å½“ã™ã‚‹å€¤
+	•\Ž¦‚µ‚½“V•ÓˆÊ’u‚ð‹L‰¯‚·‚é
+	@param[in]	dTop	V‚µ‚¢ˆÊ’uE|‚P‚È‚çA‹L‰¯‚³‚ê‚Ä‚¢‚éˆÊ’u‚ð•Ô‚·
+	@return	INT	ŒÄo‚È‚çŠY“–‚·‚é’l
 */
 INT TabMultipleTopMemory( INT dTop )
 {
 	MLTT_ITR	itNulti;
 
-	//	é–¢ä¿‚ãªã„ãªã‚‰ä½•ã‚‚ã—ãªã„
+	//	ŠÖŒW‚È‚¢‚È‚ç‰½‚à‚µ‚È‚¢
 	if( ACT_SUBITEM > gixUseTab )	return 0;
 
 	for( itNulti = gltMultiFiles.begin( ); gltMultiFiles.end( ) != itNulti; itNulti++ )
 	{
-		if( gixUseTab == itNulti->dTabNum )	//	é¸æŠžã•ã‚Œã¦ã‚‹ã‚„ã¤ã‚’ã•ãŒã™
+		if( gixUseTab == itNulti->dTabNum )	//	‘I‘ð‚³‚ê‚Ä‚é‚â‚Â‚ð‚³‚ª‚·
 		{
-			//	å€¤ã‚’å…¥ã‚ŒãŸã‚Šå‡ºã—ãŸã‚Š
+			//	’l‚ð“ü‚ê‚½‚èo‚µ‚½‚è
 			if( 0 >  dTop ){	dTop = itNulti->dLastTop;	}
 			else{	itNulti->dLastTop = dTop;	}
 			break;
 		}
 	}
 
-	if( 0 > dTop )	dTop = 0;	//	ä¸€å¿œå®‰å…¨å¯¾ç­–
+	if( 0 > dTop )	dTop = 0;	//	ˆê‰žˆÀ‘S‘Îô
 
 	return dTop;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	è¤‡ã‚¿ãƒ–ã®æ§‹æˆã‚’ãƒ—ãƒ­ãƒ•ã‚¡ã‚¤ãƒ«ã«ä¿å­˜ã™ã‚‹
-	@param[in]	hWnd	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	•¡ƒ^ƒu‚Ì\¬‚ðƒvƒƒtƒ@ƒCƒ‹‚É•Û‘¶‚·‚é
+	@param[in]	hWnd	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT TabMultipleStore( HWND hWnd )
 {
 	MLTT_ITR	itNulti;
 
 
-	SqlMultiTabDelete(  );	//	ä¸€æ—¦SQLã®å†…å®¹å…¨æ¶ˆã—ã—ã¦æ›¸ãç›´ã—ã—ã¦ã‚‹
+	SqlMultiTabDelete(  );	//	ˆê’USQL‚Ì“à—e‘SÁ‚µ‚µ‚Ä‘‚«’¼‚µ‚µ‚Ä‚é
 
 	for( itNulti = gltMultiFiles.begin( ); gltMultiFiles.end( ) != itNulti; itNulti++ )
 	{
-		//	è¨˜éŒ²ã—ãªã„ã§ã‚ˆã‚ã—ã„ã‹ï¼Ÿ
+		//	‹L˜^‚µ‚È‚¢‚Å‚æ‚ë‚µ‚¢‚©H
 		if( StrCmp( DROP_OBJ_NAME, itNulti->atBaseName ) )
 		{
 			SqlMultiTabInsert( itNulti->atFilePath, itNulti->atBaseName, itNulti->atDispName );
@@ -1862,9 +1862,9 @@ HRESULT TabMultipleStore( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	è¤‡ã‚¿ãƒ–ã‚’ãƒ—ãƒ­ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰èª­ã¿è¾¼ã‚“ã§å†å±•é–‹ã™ã‚‹
-	@param[in]	hWnd	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	•¡ƒ^ƒu‚ðƒvƒƒtƒ@ƒCƒ‹‚©‚ç“Ç‚Ýž‚ñ‚ÅÄ“WŠJ‚·‚é
+	@param[in]	hWnd	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT TabMultipleRestore( HWND hWnd )
 {
@@ -1890,10 +1890,10 @@ HRESULT TabMultipleRestore( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒ‰ãƒ©ãƒƒã‚°ãƒ³ãƒ‰ãƒ­ãƒƒãƒšã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«ã‚’å‰¯ã‚¿ãƒ–ã«ã—ã¡ã‚ƒã†
-	@param[in]	hWnd	å…ƒã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	ptFile	ãƒ‰ãƒ­ãƒƒãƒ—ã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	ƒhƒ‰ƒbƒOƒ“ƒhƒƒbƒy‚³‚ê‚½ƒtƒ@ƒCƒ‹‚ð•›ƒ^ƒu‚É‚µ‚¿‚á‚¤
+	@param[in]	hWnd	Œ³ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	ptFile	ƒhƒƒbƒv‚³‚ê‚½ƒtƒ@ƒCƒ‹‚ÌƒpƒX
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT TabMultipleDropAdd( HWND hWnd, LPCTSTR ptFile )
 {
@@ -1903,13 +1903,13 @@ HRESULT TabMultipleDropAdd( HWND hWnd, LPCTSTR ptFile )
 
 	ZeroMemory( &stMulti, sizeof(MULTIPLEMAA) );
 	StringCchCopy( stMulti.atFilePath, MAX_PATH, ptFile );
-	StringCchCopy( stMulti.atBaseName, MAX_PATH, DROP_OBJ_NAME );	//	ç‰¹æ®Šåç§°ãƒ»å¤§ä¸ˆå¤«ã‹
-	stMulti.dTabNum = 0;	//	åˆæœŸåŒ–ãƒ»å‰²å½“ã¯ï¼’ä»¥é™
+	StringCchCopy( stMulti.atBaseName, MAX_PATH, DROP_OBJ_NAME );	//	“ÁŽê–¼ÌE‘åä•v‚©
+	stMulti.dTabNum = 0;	//	‰Šú‰»EŠ„“–‚Í‚QˆÈ~
 
 	gltMultiFiles.push_back( stMulti );
 	iTabNum = TabMultipleAppend( hWnd );
 
-	//	ãã®ä»–æ­¦ã‚’é–‹ã„ã¡ã‚ƒã†ï¼Ÿ
+	//	‚»‚Ì‘¼•‚ðŠJ‚¢‚¿‚á‚¤H
 	TabCtrl_SetCurSel( ghTabWnd, iTabNum );
 	TabMultipleSelect( hWnd, iTabNum, 0 );
 
@@ -1918,9 +1918,9 @@ HRESULT TabMultipleDropAdd( HWND hWnd, LPCTSTR ptFile )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚¿ãƒ–ã‚’å¢—ã‚„ã™ãƒ»ä¿æŒãƒªã‚¹ãƒˆã«ãƒ•ã‚¡ã‚¤ãƒ«åã¶ã¡è¾¼ã‚“ã ã‚‰ç›´ã¡ã«å‘¼ã¶ã¹ã—
-	@param[in]	hWnd	è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
-	@return	INT	é–‹ã„ãŸã‚¿ãƒ–ã®ç•ªå·
+	ƒ^ƒu‚ð‘‚â‚·E•ÛŽƒŠƒXƒg‚Éƒtƒ@ƒCƒ‹–¼‚Ô‚¿ž‚ñ‚¾‚ç’¼‚¿‚ÉŒÄ‚Ô‚×‚µ
+	@param[in]	hWnd	eƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
+	@return	INT	ŠJ‚¢‚½ƒ^ƒu‚Ì”Ô†
 */
 INT TabMultipleAppend( HWND hWnd )
 {
@@ -1933,42 +1933,42 @@ INT TabMultipleAppend( HWND hWnd )
 
 
 	itNulti = gltMultiFiles.end( );
-	itNulti--;	//	æ–°ã—ãé–‹ãã®ã¯æœ«ç«¯ã«ã‚ã‚‹ã¯ãš
+	itNulti--;	//	V‚µ‚­ŠJ‚­‚Ì‚Í––’[‚É‚ ‚é‚Í‚¸
 	StringCchCopy( atName, MAX_PATH, itNulti->atFilePath );
-	if( NULL !=  atName[0] )	//	ãƒ„ãƒªãƒ¼ã‚‚ã—ãã¯ãƒ‰ãƒ©ãƒƒã‚°ãƒ³ãƒ‰ãƒ­ãƒƒãƒš
+	if( NULL !=  atName[0] )	//	ƒcƒŠ[‚à‚µ‚­‚Íƒhƒ‰ƒbƒOƒ“ƒhƒƒbƒy
 	{
-		PathStripPath( atName );	//	ãƒ•ã‚¡ã‚¤ãƒ«åã ã‘ã«ã—ã¦
-		PathRemoveExtension( atName );	//	æ‹¡å¼µå­ã‚’å¤–ã™
+		PathStripPath( atName );	//	ƒtƒ@ƒCƒ‹–¼‚¾‚¯‚É‚µ‚Ä
+		PathRemoveExtension( atName );	//	Šg’£Žq‚ðŠO‚·
 	}
-	else	//	ãŠæ°—ã«ãƒªã‚¹ãƒˆã‹ã‚‰è¿½åŠ ã™ã‚‹
+	else	//	‚¨‹C‚ÉƒŠƒXƒg‚©‚ç’Ç‰Á‚·‚é
 	{
 		StringCchCopy( atName, MAX_PATH, itNulti->atBaseName );
 		StringCchCat(  atName, MAX_PATH, TEXT("[F]") );
 	}
 
 	if( NULL == itNulti->atDispName[0] )
-	{	StringCchCopy( itNulti->atDispName , MAX_PATH, atName );	}	//	è¡¨ç¤ºåãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ
+	{	StringCchCopy( itNulti->atDispName , MAX_PATH, atName );	}	//	•\Ž¦–¼ƒfƒtƒHƒ‹ƒg
 
 	ZeroMemory( &stTcItem, sizeof(TCITEM) );
 	stTcItem.mask = TCIF_TEXT | TCIF_PARAM;
 
 	tCount = TabCtrl_GetItemCount( ghTabWnd );
 
-	stTcItem.lParam  = 0;//tCount;ãƒ•ã‚¡ã‚¤ãƒ«ãªã®ã§ï¼ã§ã„ã„ãƒ»ã‚¿ãƒ–ã®ã¯æœªä½¿ç”¨
+	stTcItem.lParam  = 0;//tCount;ƒtƒ@ƒCƒ‹‚È‚Ì‚Å‚O‚Å‚¢‚¢Eƒ^ƒu‚Ì‚Í–¢Žg—p
 	stTcItem.pszText = itNulti->atDispName;
 	TabCtrl_InsertItem( ghTabWnd, tCount, &stTcItem );
 
 	itNulti->dTabNum = tCount;
 
-	Maa_OnSize( hWnd, 0, 0, 0 );	//	å¼•æ•°ã¯ä½¿ã£ã¦ãªã‹ã£ãŸã‹
+	Maa_OnSize( hWnd, 0, 0, 0 );	//	ˆø”‚ÍŽg‚Á‚Ä‚È‚©‚Á‚½‚©
 
 	return tCount;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	é–‹ã„ã¦ã‚‹ãƒ¤ãƒ„ã®ç•ªå·ã‚’è¿”ã™ã€‚ä¸»ã‚¿ãƒ–ãƒ»ä½¿ç”¨ãƒ»å‰¯ã‚¿ãƒ–
-	@return	INT	é–‹ã„ã¦ã‚‹å¥´ã®ç•ªå·
+	ŠJ‚¢‚Ä‚éƒ„ƒc‚Ì”Ô†‚ð•Ô‚·BŽåƒ^ƒuEŽg—pE•›ƒ^ƒu
+	@return	INT	ŠJ‚¢‚Ä‚é“z‚Ì”Ô†
 */
 INT TabMultipleNowSel( VOID )
 {
@@ -1977,9 +1977,9 @@ INT TabMultipleNowSel( VOID )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	å‰¯ã‚¿ãƒ–ã‚’å…¨éƒ¨é–‰ã˜ã‚‹
-	@param[in]	hWnd	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	•›ƒ^ƒu‚ð‘S•”•Â‚¶‚é
+	@param[in]	hWnd	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT TabMultipleDeleteAll( HWND hWnd )
 {
@@ -1988,13 +1988,13 @@ HRESULT TabMultipleDeleteAll( HWND hWnd )
 
 	ttlSel = TabCtrl_GetItemCount( ghTabWnd );
 
-	//	å…¨ç ´å£Š
-//	for( i = 2; ttlSel > i; i++ ){	TabCtrl_DeleteItem( ghTabWnd, i );	}é–“é•ã„
+	//	‘S”j‰ó
+//	for( i = 2; ttlSel > i; i++ ){	TabCtrl_DeleteItem( ghTabWnd, i );	}ŠÔˆá‚¢
 	for( i = (ttlSel-1); 2 <= i; i-- ){	TabCtrl_DeleteItem( ghTabWnd, i );	}
 
 	gltMultiFiles.clear();
 
-	//	ãƒ„ãƒªãƒ¼ã«é¸æŠžã‚’æˆ»ã™
+	//	ƒcƒŠ[‚É‘I‘ð‚ð–ß‚·
 	TabCtrl_SetCurSel( ghTabWnd, ACT_ALLTREE );
 	stNmHdr.hwndFrom = ghTabWnd;
 	stNmHdr.idFrom   = IDTB_TREESEL;
@@ -2006,10 +2006,10 @@ HRESULT TabMultipleDeleteAll( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	æŒ‡å®šã®ã‚¿ãƒ–ã‚’é–‰ã˜ã‚‹
-	@param[in]	hWnd	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	tabSel	ã‚¿ãƒ–ç•ªå·
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	Žw’è‚Ìƒ^ƒu‚ð•Â‚¶‚é
+	@param[in]	hWnd	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	tabSel	ƒ^ƒu”Ô†
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT TabMultipleDelete( HWND hWnd, CONST INT tabSel )
 {
@@ -2032,7 +2032,7 @@ HRESULT TabMultipleDelete( HWND hWnd, CONST INT tabSel )
 		}
 	}
 
-	//	20110808	ã‚¿ãƒ–ç•ªå·æŒ¯ã‚Šç›´ã—
+	//	20110808	ƒ^ƒu”Ô†U‚è’¼‚µ
 	i = 2;
 	for( itNulti = gltMultiFiles.begin( ); gltMultiFiles.end( ) != itNulti; itNulti++ )
 	{
@@ -2040,7 +2040,7 @@ HRESULT TabMultipleDelete( HWND hWnd, CONST INT tabSel )
 		i++;
 	}
 
-	//	ã‚‚ã—ã€å‰Šé™¤ã‚¿ãƒ–ãŒé–‹ã„ã¦ã‚‹ã‚¿ãƒ–ã ã£ãŸã‚‰ãƒ»ãƒ„ãƒªãƒ¼ã«é¸æŠžã‚’æˆ»ã™
+	//	‚à‚µAíœƒ^ƒu‚ªŠJ‚¢‚Ä‚éƒ^ƒu‚¾‚Á‚½‚çEƒcƒŠ[‚É‘I‘ð‚ð–ß‚·
 	if( nowSel == tabSel )
 	{
 		TabCtrl_SetCurSel( ghTabWnd, ACT_ALLTREE );
@@ -2050,18 +2050,18 @@ HRESULT TabMultipleDelete( HWND hWnd, CONST INT tabSel )
 		TabBarNotify( hWnd, &stNmHdr );
 	}
 
-	Maa_OnSize( hWnd, 0, 0, 0 );	//	å¼•æ•°ã¯ä½¿ã£ã¦ãªã‹ã£ãŸã‹
+	Maa_OnSize( hWnd, 0, 0, 0 );	//	ˆø”‚ÍŽg‚Á‚Ä‚È‚©‚Á‚½‚©
 
-//ã“ã®æ®µéšŽã§ã¯ã€è¨˜éŒ²ã®æ›¸ãç›´ã—ã¯ã—ãªã„
+//‚±‚Ì’iŠK‚Å‚ÍA‹L˜^‚Ì‘‚«’¼‚µ‚Í‚µ‚È‚¢
 
 	return S_OK;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ä»Šç¾åœ¨é–‹ã„ã¦ã„ã‚‹å‰¯ã‚¿ãƒ–ã‚’é–‰ã˜ã‚‹
-	@param[in]	hWnd	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	¡Œ»ÝŠJ‚¢‚Ä‚¢‚é•›ƒ^ƒu‚ð•Â‚¶‚é
+	@param[in]	hWnd	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT TabMultipleSelDelete( HWND hWnd )
 {
@@ -2071,24 +2071,24 @@ HRESULT TabMultipleSelDelete( HWND hWnd )
 
 	TRACE( TEXT("VIEW FILE CLOSE [%d]"), curSel );
 
-	//	å›ºå®šã®äºŒã¤ã®å ´åˆã¯ç„¡è¦–
+	//	ŒÅ’è‚Ì“ñ‚Â‚Ìê‡‚Í–³Ž‹
 	if( 1 >= curSel )	return E_ACCESSDENIED;
 
-	return TabMultipleDelete( hWnd, curSel );	//	ã‚¿ãƒ–å‰Šé™¤ã«æ¸¡ã™
+	return TabMultipleDelete( hWnd, curSel );	//	ƒ^ƒuíœ‚É“n‚·
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	æ¤œç´¢ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã‹ã‚‰ã®é¸æŠžã®å‡¦ç†ã‚’ã™ã‚‹
-	@param[in]	hWnd	MAAã®ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«ã§ã‚ã‚‹ã“ã¨
+	ŒŸõƒEƒCƒ“ƒhƒE‚©‚ç‚Ì‘I‘ð‚Ìˆ—‚ð‚·‚é
+	@param[in]	hWnd	MAA‚ÌƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹‚Å‚ ‚é‚±‚Æ
 */
 HRESULT TabMultipleCtrlFromFind( HWND hWnd )
 {
 	NMHDR	stNmHdr;
 
-	//ã“ã“ã«æ¥ã‚‹å‰ã«ã€ãƒ„ãƒªãƒ¼å†…ã§è©²å½“ãƒŽãƒ¼ãƒ‰ãŒé¸æŠžæ¸ˆ
+	//‚±‚±‚É—ˆ‚é‘O‚ÉAƒcƒŠ[“à‚ÅŠY“–ƒm[ƒh‚ª‘I‘ðÏ
 
-	//	é¸æŠžã‚¿ãƒ–ãƒã‚§ãƒ³ã‚¸ã—ã¦ã€ãƒ„ãƒªãƒ¼ã®é¸æŠžã‚’ç™ºç”Ÿã•ã›ã‚‹
+	//	‘I‘ðƒ^ƒuƒ`ƒFƒ“ƒW‚µ‚ÄAƒcƒŠ[‚Ì‘I‘ð‚ð”­¶‚³‚¹‚é
 	TabCtrl_SetCurSel( ghTabWnd, ACT_ALLTREE );
 	stNmHdr.hwndFrom = ghTabWnd;
 	stNmHdr.idFrom   = IDTB_TREESEL;
@@ -2100,12 +2100,12 @@ HRESULT TabMultipleCtrlFromFind( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãŠæ°—ã«å…¥ã‚Šã®ãƒªã‚¹ãƒˆã‚’ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã§å—ã‘å–ã‚‹
-	@param[in]	dNumber		é€šã—ç•ªå·ã‹ã‚‚ã 
-	@param[in]	dummy		æœªä½¿ç”¨
-	@param[in]	fake		æœªä½¿ç”¨
-	@param[in]	ptFdrName	æ–‡å­—åˆ—
-	@return		å‡¦ç†ã—ãŸå†…å®¹ã¨ã‹
+	‚¨‹C‚É“ü‚è‚ÌƒŠƒXƒg‚ðƒR[ƒ‹ƒoƒbƒN‚ÅŽó‚¯Žæ‚é
+	@param[in]	dNumber		’Ê‚µ”Ô†‚©‚à‚¾
+	@param[in]	dummy		–¢Žg—p
+	@param[in]	fake		–¢Žg—p
+	@param[in]	ptFdrName	•¶Žš—ñ
+	@return		ˆ—‚µ‚½“à—e‚Æ‚©
 */
 LRESULT CALLBACK FavListFolderNameBack( UINT dNumber, UINT dummy, UINT fake, LPCVOID ptFdrName )
 {
@@ -2118,10 +2118,10 @@ LRESULT CALLBACK FavListFolderNameBack( UINT dNumber, UINT dummy, UINT fake, LPC
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãŠæ°—ã«å…¥ã‚Šã®ãƒªã‚¹ãƒˆãŒã‚¯ãƒ«ãƒƒã‚¯ã•ã‚ŒãŸã¨ã
-	@param[in]	hWnd	è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	iCode	ç™ºç”Ÿã—ãŸã‚¤ãƒ™ãƒ³ãƒˆ
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	‚¨‹C‚É“ü‚è‚ÌƒŠƒXƒg‚ªƒNƒ‹ƒbƒN‚³‚ê‚½‚Æ‚«
+	@param[in]	hWnd	eƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
+	@param[in]	iCode	”­¶‚µ‚½ƒCƒxƒ“ƒg
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT FavListSelected( HWND hWnd, UINT iCode )
 {
@@ -2136,7 +2136,7 @@ HRESULT FavListSelected( HWND hWnd, UINT iCode )
 		ListBox_GetText( ghFavLtWnd, selIndex, atFdrName );
 
 		StringCchCopy( gatBaseName, MAX_PATH, atFdrName );
-		//	ç¢ºä¿ã—ãŸãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåã«è©²å½“ã™ã‚‹ï¼¡ï¼¡ã‚’ï¼³ï¼±ï¼¬ã‹ã‚‰å¼•ã£å¼µã‚‹
+		//	Šm•Û‚µ‚½ƒfƒBƒŒƒNƒgƒŠ–¼‚ÉŠY“–‚·‚é‚`‚`‚ð‚r‚p‚k‚©‚çˆø‚Á’£‚é
 		AaItemsDoShow( hWnd, atFdrName, ACT_FAVLIST );
 	}
 
@@ -2145,14 +2145,14 @@ HRESULT FavListSelected( HWND hWnd, UINT iCode )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãŠæ°—ã«å…¥ã‚Šã®å ´åˆã¯ã‚¯ãƒ«ãƒƒã‚¯ã•ã‚ŒãŸã¨ãã«å†æç”»ã™ã‚‹ã‹ãƒ»é¸æŠžå‡ºæ¥ã‚‹ã‚ˆã†ã«
-	@param[in]	hWnd	è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ«
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	‚¨‹C‚É“ü‚è‚Ìê‡‚ÍƒNƒ‹ƒbƒN‚³‚ê‚½‚Æ‚«‚ÉÄ•`‰æ‚·‚é‚©E‘I‘ðo—ˆ‚é‚æ‚¤‚É
+	@param[in]	hWnd	eƒEƒCƒ“ƒhƒE‚Ìƒnƒ“ƒhƒ‹
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT FavContsRedrawRequest( HWND hWnd )
 {
-	//	é–¢ä¿‚ãªã„ã¨ãã¯ä½•ã‚‚ã—ãªã„ãƒ»é–¢ä¿‚ãªã„ã¨ãã¯å‘¼ã°ãªã„ã‚ˆã†ã«æ³¨æ„ã‚»ãƒ¨
-	//	ãŠæ°—ã«ãƒªã‚¹ãƒˆã‚’ã‚¿ãƒ–ã«è¡¨ç¤ºã—ãŸã¨ãã€å†æç”»æŒ‡å®šã‚’åˆ¤å®šã™ã‚‹å¿…è¦ãŒæœ‰ã‚‹
+	//	ŠÖŒW‚È‚¢‚Æ‚«‚Í‰½‚à‚µ‚È‚¢EŠÖŒW‚È‚¢‚Æ‚«‚ÍŒÄ‚Î‚È‚¢‚æ‚¤‚É’ˆÓƒZƒˆ
+	//	‚¨‹C‚ÉƒŠƒXƒg‚ðƒ^ƒu‚É•\Ž¦‚µ‚½‚Æ‚«AÄ•`‰æŽw’è‚ð”»’è‚·‚é•K—v‚ª—L‚é
 	if( ACT_FAVLIST == gixUseTab || TabMultipleIsFavTab( gixUseTab, NULL, 0 ) )
 	{
 		AaItemsDoShow( hWnd, gatBaseName, ACT_FAVLIST );
@@ -2163,14 +2163,14 @@ HRESULT FavContsRedrawRequest( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ãƒ›ã‚¦ã‚£ãƒ¼ãƒ«å›žè»¢ãŒè‡ªåˆ†ã®ä¸Šã§ç™ºç”Ÿã—ãŸã‹
-	@param[in]	hWnd	è¦ªã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	hChdWnd	ãƒžã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã®â†“ã«ã‚ã£ãŸå­ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦
-	@param[in]	xPos	ç™ºç”Ÿã—ãŸåº§æ¨™ï¼¸
-	@param[in]	yPos	ç™ºç”Ÿã—ãŸåº§æ¨™ï¼¹
-	@param[in]	zDelta	å›žè»¢é‡ãƒ»WHEEL_DELTAã®å€æ•°ãƒ»æ­£ã®å€¤ã¯å‰(å¥¥)ã€è² ã®å€¤ã¯å¾Œã‚(æ‰‹å‰)ã¸å›žã•ã‚ŒãŸ
-	@param[in]	fwKeys	æŠ¼ã•ã‚Œã¦ã‚‹ã‚­ãƒ¼
-	@return		éžï¼è‡ªåˆ†ã ã£ãŸã€€ï¼é–¢ä¿‚ãªã„ã­
+	ƒzƒEƒB[ƒ‹‰ñ“]‚ªŽ©•ª‚Ìã‚Å”­¶‚µ‚½‚©
+	@param[in]	hWnd	eƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	hChdWnd	ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚Ì«‚É‚ ‚Á‚½ŽqƒEƒCƒ“ƒhƒE
+	@param[in]	xPos	”­¶‚µ‚½À•W‚w
+	@param[in]	yPos	”­¶‚µ‚½À•W‚x
+	@param[in]	zDelta	‰ñ“]—ÊEWHEEL_DELTA‚Ì”{”E³‚Ì’l‚Í‘O(‰œ)A•‰‚Ì’l‚ÍŒã‚ë(Žè‘O)‚Ö‰ñ‚³‚ê‚½
+	@param[in]	fwKeys	‰Ÿ‚³‚ê‚Ä‚éƒL[
+	@return		”ñ‚OŽ©•ª‚¾‚Á‚½@‚OŠÖŒW‚È‚¢‚Ë
 */
 UINT TreeFavIsUnderCursor( HWND hWnd, HWND hChdWnd, INT xPos, INT yPos, INT zDelta, UINT fwKeys )
 {
@@ -2198,13 +2198,13 @@ UINT TreeFavIsUnderCursor( HWND hWnd, HWND hChdWnd, INT xPos, INT yPos, INT zDel
 
 
 /*!
-	åç§°å¤‰æ›´ãƒ€ã‚¤ãƒ¤ãƒ­ã‚°ãƒœãƒƒã‚¯ã‚¹ã®ãƒ¡ã‚»ãƒ¼ã‚¸ãƒãƒ³ãƒ‰ãƒ©ãƒ»é åã®ä½¿ã„å›žã—ãªã®ã§æ³¨æ„
-	@param[in]	hDlg	ãƒ€ã‚¤ãƒ¤ãƒ­ã‚°ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	message	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®è­˜åˆ¥ç•ªå·
-	@param[in]	wParam	è¿½åŠ ã®æƒ…å ±ï¼‘
-	@param[in]	lParam	è¿½åŠ ã®æƒ…å ±ï¼’
-	@retval 0	ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¯å‡¦ç†ã—ã¦ã„ãªã„
-	@retval no0	ãªã‚“ã‹å‡¦ç†ã•ã‚ŒãŸ
+	–¼Ì•ÏXƒ_ƒCƒ„ƒƒOƒ{ƒbƒNƒX‚ÌƒƒZ[ƒWƒnƒ“ƒhƒ‰E•Å–¼‚ÌŽg‚¢‰ñ‚µ‚È‚Ì‚Å’ˆÓ
+	@param[in]	hDlg	ƒ_ƒCƒ„ƒƒOƒnƒ“ƒhƒ‹
+	@param[in]	message	ƒEƒCƒ“ƒhƒEƒƒbƒZ[ƒW‚ÌŽ¯•Ê”Ô†
+	@param[in]	wParam	’Ç‰Á‚Ìî•ñ‚P
+	@param[in]	lParam	’Ç‰Á‚Ìî•ñ‚Q
+	@retval 0	ƒƒbƒZ[ƒW‚Íˆ—‚µ‚Ä‚¢‚È‚¢
+	@retval no0	‚È‚ñ‚©ˆ—‚³‚ê‚½
 */
 INT_PTR CALLBACK TabMultipleRenameDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
@@ -2214,7 +2214,7 @@ INT_PTR CALLBACK TabMultipleRenameDlgProc( HWND hDlg, UINT message, WPARAM wPara
 	switch( message )
 	{
 		case WM_INITDIALOG:
-			cptName = (LPTSTR)lParam;	//	å…ƒæ–‡å­—åˆ—ã¯ MAX_PATH ã§ã‚ã‚‹ã“ã¨
+			cptName = (LPTSTR)lParam;	//	Œ³•¶Žš—ñ‚Í MAX_PATH ‚Å‚ ‚é‚±‚Æ
 			Edit_SetText( GetDlgItem(hDlg,IDE_PAGENAME), cptName );
 			SetFocus( GetDlgItem(hDlg,IDE_PAGENAME) );
 			return (INT_PTR)FALSE;
@@ -2241,10 +2241,10 @@ INT_PTR CALLBACK TabMultipleRenameDlgProc( HWND hDlg, UINT message, WPARAM wPara
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚¿ãƒ–åå‰å¤‰æ›´ã®å‡¦ç†ãƒ»ãƒ€ã‚¤ãƒ¤ãƒ­ã‚°é–‹ã„ãŸã‚Šå¤‰æ›´ã‚’è¨˜éŒ²ã—ãŸã‚Š
-	@param[in]	hWnd	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@param[in]	iTabSel	é¸æŠžã—ãŸã‚¿ãƒ–ç•ªå·
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	ƒ^ƒu–¼‘O•ÏX‚Ìˆ—Eƒ_ƒCƒ„ƒƒOŠJ‚¢‚½‚è•ÏX‚ð‹L˜^‚µ‚½‚è
+	@param[in]	hWnd	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@param[in]	iTabSel	‘I‘ð‚µ‚½ƒ^ƒu”Ô†
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT TabMultipleNameChange( HWND hWnd, INT iTabSel )
 {
@@ -2255,14 +2255,14 @@ HRESULT TabMultipleNameChange( HWND hWnd, INT iTabSel )
 
 	for( itNulti = gltMultiFiles.begin( ); gltMultiFiles.end( ) != itNulti; itNulti++ )
 	{
-		if( iTabSel == itNulti->dTabNum )	//	é¸æŠžã•ã‚Œã¦ã‚‹ã‚„ã¤ã‚’ã•ãŒã™
+		if( iTabSel == itNulti->dTabNum )	//	‘I‘ð‚³‚ê‚Ä‚é‚â‚Â‚ð‚³‚ª‚·
 		{
 			StringCchCopy( atName, MAX_PATH, itNulti->atDispName );
 
 			iRslt = DialogBoxParam( GetModuleHandle( NULL ), MAKEINTRESOURCE(IDD_PAGE_NAME_DLG), hWnd, TabMultipleRenameDlgProc, (LPARAM)atName );
-			if( IDOK == iRslt )	//	ï¼¯ï¼«ã—ã¦ãŸã‚‰ã€å¤‰æ›´ã•ã‚ŒãŸåå‰ãŒãƒãƒƒãƒ•ã‚¡ã«å…¥ã£ã¦ã‚‹ã¯ãš
+			if( IDOK == iRslt )	//	‚n‚j‚µ‚Ä‚½‚çA•ÏX‚³‚ê‚½–¼‘O‚ªƒoƒbƒtƒ@‚É“ü‚Á‚Ä‚é‚Í‚¸
 			{
-				StringCchCopy( itNulti->atDispName, MAX_PATH, atName );	//	è¨˜éŒ²å¤‰æ›´
+				StringCchCopy( itNulti->atDispName, MAX_PATH, atName );	//	‹L˜^•ÏX
 
 				ZeroMemory( &stTcItem, sizeof(TCITEM) );
 				stTcItem.mask = TCIF_TEXT;
@@ -2281,9 +2281,9 @@ HRESULT TabMultipleNameChange( HWND hWnd, INT iTabSel )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ã‚¿ãƒ–ã®å¤šæ®µè¡¨ç¤ºãƒ»ä¸€è¡Œè¡¨ç¤ºã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
-	@param[in]	hWnd	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
-	@return		HRESULT	çµ‚äº†çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
+	ƒ^ƒu‚Ì‘½’i•\Ž¦Eˆês•\Ž¦‚ðØ‚è‘Ö‚¦‚é
+	@param[in]	hWnd	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	@return		HRESULT	I—¹ó‘ÔƒR[ƒh
 */
 HRESULT TabLineMultiSingleToggle( HWND hWnd )
 {
@@ -2292,22 +2292,22 @@ HRESULT TabLineMultiSingleToggle( HWND hWnd )
 
 	dWndwStyle = GetWindowStyle( ghTabWnd );
 
-	if( TCS_MULTILINE & dWndwStyle )	//	å¤šæ®µãƒ¢ãƒ¼ãƒ‰ä¸­ãƒ»ã‚·ãƒ³ã‚°ãƒ«ã‚¹ã‚¿ã‚¤ãƒ«ã«ã™ã‚‹
+	if( TCS_MULTILINE & dWndwStyle )	//	‘½’iƒ‚[ƒh’†EƒVƒ“ƒOƒ‹ƒXƒ^ƒCƒ‹‚É‚·‚é
 	{
 		doSingle = 1;
-		dWndwStyle &= ~TCS_MULTILINE;	//	ã‚¹ã‚¿ã‚¤ãƒ«ã‚’å¤–ã™
+		dWndwStyle &= ~TCS_MULTILINE;	//	ƒXƒ^ƒCƒ‹‚ðŠO‚·
 	}
-	else	//	ã‚·ãƒ³ã‚°ãƒ«ãƒ¢ãƒ¼ãƒ‰ä¸­ãƒ»å¤šæ®µã‚¹ã‚¿ã‚¤ãƒ«ã«ã™ã‚‹
+	else	//	ƒVƒ“ƒOƒ‹ƒ‚[ƒh’†E‘½’iƒXƒ^ƒCƒ‹‚É‚·‚é
 	{
 		doSingle = 0;
-		dWndwStyle |= TCS_MULTILINE;	//	ã‚¹ã‚¿ã‚¤ãƒ«ã‚’ãã£ã¤ã‘ã‚‹
+		dWndwStyle |= TCS_MULTILINE;	//	ƒXƒ^ƒCƒ‹‚ð‚­‚Á‚Â‚¯‚é
 	}
 
-	SetWindowLong( ghTabWnd, GWL_STYLE, dWndwStyle );	//	ã‚¹ã‚¿ã‚¤ãƒ«æ›¸ãæˆ»ã™
-	//	å†æç”»ã¨ã‹ï¼Ÿãªãã¦ã‚ˆã•ãã†
-	InitParamValue( INIT_SAVE, VL_MAATAB_SNGL, doSingle );	//	è¨˜éŒ²
+	SetWindowLong( ghTabWnd, GWL_STYLE, dWndwStyle );	//	ƒXƒ^ƒCƒ‹‘‚«–ß‚·
+	//	Ä•`‰æ‚Æ‚©H‚È‚­‚Ä‚æ‚³‚»‚¤
+	InitParamValue( INIT_SAVE, VL_MAATAB_SNGL, doSingle );	//	‹L˜^
 
-	Maa_OnSize( hWnd, 0, 0, 0 );	//	å¼•æ•°ã¯ä½¿ã£ã¦ãªã‹ã£ãŸã‹
+	Maa_OnSize( hWnd, 0, 0, 0 );	//	ˆø”‚ÍŽg‚Á‚Ä‚È‚©‚Á‚½‚©
 
 	return S_OK;
 }

@@ -1,6 +1,6 @@
 /*! @file
-	@brief ドキュメントの内容の管理をします
-	このファイルは DocCore.cpp です。
+	@brief �h�L�������g�̓��e�̊Ǘ������܂�
+	���̃t�@�C���� DocCore.cpp �ł��B
 	@author	SikigamiHNQ
 	@date	2011/04/30
 */
@@ -21,12 +21,12 @@ If not, see <http://www.gnu.org/licenses/>.
 #include "OrinrinEditor.h"
 //-------------------------------------------------------------------------------------------------
 /*
-	文字数は、キャレットの左側の文字数で数える。キャレットが左端なら０文字目
+	�������́A�L�����b�g�̍����̕������Ő�����B�L�����b�g�����[�Ȃ�O������
 */
 
 //-------------------------------------------------------------------------------------------------
 
-//	構造体宣言はコモンへ移動
+//	�\���̐錾�̓R�����ֈړ�
 
 //-------------------------------------------------------------------------------------------------
 
@@ -35,43 +35,43 @@ If not, see <http://www.gnu.org/licenses/>.
 //-------------------------------------------------------------------------------------------------
 
 /*
-(*pstTexts).acSjis	構造体ポインタはこれでもおｋ
+(*pstTexts).acSjis	�\���̃|�C���^�͂���ł�����
 
-ポインタ確保はこうやる
-vector<int>::iterator it = vec.begin();   // vec は vector<int>型の変数
+�|�C���^�m�ۂ͂������
+vector<int>::iterator it = vec.begin();   // vec �� vector<int>�^�̕ϐ�
 it++;
-int* p = &*it;  // 内部要素のアドレスを取得しようとしている。OK
+int* p = &*it;  // �����v�f�̃A�h���X���擾���悤�Ƃ��Ă���BOK
 
-gstFileを、マクロでイテレータポインタに仕立て上げる
-フォーカスしてるファイルは常に一つなので、ポインタの中身を変えるか、
-もしくはマクロでイテレータ自体にしてしまえばいいか
+gstFile���A�}�N���ŃC�e���[�^�|�C���^�Ɏd���ďグ��
+�t�H�[�J�X���Ă�t�@�C���͏�Ɉ�Ȃ̂ŁA�|�C���^�̒��g��ς��邩�A
+�������̓}�N���ŃC�e���[�^���̂ɂ��Ă��܂��΂�����
 
-(*ltrItr).cchMozi;	これでおｋっぽい
+(*ltrItr).cchMozi;	����ł������ۂ�
 */
 
-//#define FILE_PRELOAD	//	先に頁のvectorを確保してみる・リストで要らない・文字用にいるか？
+//#define FILE_PRELOAD	//	��ɕł�vector���m�ۂ��Ă݂�E���X�g�ŗv��Ȃ��E�����p�ɂ��邩�H
 
 
-EXTERNED list<ONEFILE>	gltMultiFiles;	//!<	複数ファイル保持
-//イテレータのtypedefはヘッダへ
+EXTERNED list<ONEFILE>	gltMultiFiles;	//!<	�����t�@�C���ێ�
+//�C�e���[�^��typedef�̓w�b�_��
 
-static LPARAM	gdNextNumber;		//!<	開いたファイルの通し番号・常にインクリ
+static LPARAM	gdNextNumber;		//!<	�J�����t�@�C���̒ʂ��ԍ��E��ɃC���N��
 
-EXTERNED FILES_ITR	gitFileIt;		//!<	今見てるファイルの本体
+EXTERNED FILES_ITR	gitFileIt;		//!<	�����Ă�t�@�C���̖{��
 
-EXTERNED INT		gixFocusPage;	//!<	注目中のページ・とりあえず０・０インデックス
+EXTERNED INT		gixFocusPage;	//!<	���ڒ��̃y�[�W�E�Ƃ肠�����O�E�O�C���f�b�N�X
 
-EXTERNED INT		gixDropPage;	//!<	投下ホット番号
+EXTERNED INT		gixDropPage;	//!<	�����z�b�g�ԍ�
 
-extern  UINT		gbUniRadixHex;	//	ユニコード数値参照が１６進数であるか
-extern  UINT		gbCrLfCode;		//	改行コード：０したらば・非０ＹＹ 
+extern  UINT		gbUniRadixHex;	//	���j�R�[�h���l�Q�Ƃ��P�U�i���ł��邩
+extern  UINT		gbCrLfCode;		//	���s�R�[�h�F�O������΁E��O�x�x 
 //-------------------------------------------------------------------------------------------------
 
 UINT	CALLBACK DocPageLoad( LPTSTR, LPCTSTR, INT );
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	なんか初期化
+	�Ȃ񂩏�����
 */
 HRESULT DocInitialise( UINT dMode )
 {
@@ -79,7 +79,7 @@ HRESULT DocInitialise( UINT dMode )
 	PAGE_ITR	itPage;
 
 
-	if( dMode )	//	作成時
+	if( dMode )	//	�쐬��
 	{
 		gdNextNumber = 1;
 	}
@@ -99,16 +99,16 @@ HRESULT DocInitialise( UINT dMode )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	変更したか
-	@param[in]	dMode	非０変更した　０保存したから変更はなかったことに
-	@return		HRESULT	終了状態コード
+	�ύX������
+	@param[in]	dMode	��O�ύX�����@�O�ۑ���������ύX�͂Ȃ��������Ƃ�
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT DocModifyContent( UINT dMode )
 {
 	if( dMode )
 	{
 		if( (*gitFileIt).dModify )	return S_FALSE;
-		//	変更のとき、已に変更の処理してたら何もしなくて良い
+		//	�ύX�̂Ƃ��A�߂ɕύX�̏������Ă��牽�����Ȃ��ėǂ�
 
 		MainStatusBarSetText( SB_MODIFY, MODIFY_MSG );
 	}
@@ -119,16 +119,16 @@ HRESULT DocModifyContent( UINT dMode )
 
 	DocMultiFileModify( dMode );
 
-	(*gitFileIt).dModify =  dMode;	//	ここで記録しておく
+	(*gitFileIt).dModify =  dMode;	//	�����ŋL�^���Ă���
 
 	return S_OK;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	新しいファイル置き場を作ってフォーカスする・ファイルコア函数
-	@param[in]	ptDmyName	ダミー名を返す。NULL可。MAX_PATHであること
-	@return		LPARAM	対応するユニーク番号
+	�V�����t�@�C���u���������ăt�H�[�J�X����E�t�@�C���R�A����
+	@param[in]	ptDmyName	�_�~�[����Ԃ��BNULL�BMAX_PATH�ł��邱��
+	@return		LPARAM	�Ή����郆�j�[�N�ԍ�
 */
 LPARAM DocMultiFileCreate( LPTSTR ptDmyName )
 {
@@ -155,16 +155,16 @@ LPARAM DocMultiFileCreate( LPTSTR ptDmyName )
 
 	gltMultiFiles.push_back( stFile );
 
-	//	新規作成の準備
+	//	�V�K�쐬�̏���
 	gixFocusPage = -1;
 
-	PageListClear(  );	//	ページリストビューも破棄
+	PageListClear(  );	//	�y�[�W���X�g�r���[���j��
 
 
 	itNew = gltMultiFiles.end( );
-	itNew--;	//	末端に追加したからこれでおｋ
+	itNew--;	//	���[�ɒǉ��������炱��ł���
 
-	gitFileIt = itNew;	//	ファイルなう
+	gitFileIt = itNew;	//	�t�@�C���Ȃ�
 
 #ifdef DO_TRY_CATCH
 	}
@@ -177,19 +177,19 @@ LPARAM DocMultiFileCreate( LPTSTR ptDmyName )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	起動時の完全新規作成・開くファイルが全く無い場合の処理
-	@param[in]	ptFile	開いたファイルのDummy名を返す・MAX_PATHであること
-	@return		HRESULT	終了状態コード
+	�N�����̊��S�V�K�쐬�E�J���t�@�C�����S�������ꍇ�̏���
+	@param[in]	ptFile	�J�����t�@�C����Dummy����Ԃ��EMAX_PATH�ł��邱��
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT DocActivateEmptyCreate( LPTSTR ptFile )
 {
 	INT	iNewPage;
 
-	DocMultiFileCreate( ptFile );	//	新しいファイル置き場の準備・ここで返り血は要らない
-	iNewPage = DocPageCreate( -1 );	//	ページ作っておく
-	PageListInsert( iNewPage  );	//	ページリストビューに追加
-	DocPageChange( iNewPage );		//	その頁にフォーカスを合わせる
-	MultiFileTabFirst( ptFile );	//	完全新規作成
+	DocMultiFileCreate( ptFile );	//	�V�����t�@�C���u����̏����E�����ŕԂ茌�͗v��Ȃ�
+	iNewPage = DocPageCreate( -1 );	//	�y�[�W����Ă���
+	PageListInsert( iNewPage  );	//	�y�[�W���X�g�r���[�ɒǉ�
+	DocPageChange( iNewPage );		//	���̕łɃt�H�[�J�X�����킹��
+	MultiFileTabFirst( ptFile );	//	���S�V�K�쐬
 	AppTitleChange( ptFile );
 
 	return S_OK;
@@ -197,13 +197,13 @@ HRESULT DocActivateEmptyCreate( LPTSTR ptFile )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	内容を変更したらタブのファイル名に[変更]つける
-	@param[in]	dMode	非０変更した　０変更はなかったことに
-	@return		HRESULT	終了状態コード
+	���e��ύX������^�u�̃t�@�C������[�ύX]����
+	@param[in]	dMode	��O�ύX�����@�O�ύX�͂Ȃ��������Ƃ�
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT DocMultiFileModify( UINT dMode )
 {
-	TCHAR	atFile[MAX_PATH];	//!<	ファイル名
+	TCHAR	atFile[MAX_PATH];	//!<	�t�@�C����
 
 	StringCchCopy( atFile, MAX_PATH, (*gitFileIt).atFileName );
 	if( 0 == atFile[0] ){	StringCchCopy( atFile, MAX_PATH , (*gitFileIt).atDummyName );	}
@@ -219,9 +219,9 @@ HRESULT DocMultiFileModify( UINT dMode )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ファイルタブを選択した・ファイルコア函数
-	@param[in]	uqNumber	選択されたファイルのUNIQUE番号
-	@return		HRESULT	終了状態コード
+	�t�@�C���^�u��I�������E�t�@�C���R�A����
+	@param[in]	uqNumber	�I�����ꂽ�t�@�C����UNIQUE�ԍ�
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT DocMultiFileSelect( LPARAM uqNumber )
 {
@@ -234,35 +234,35 @@ HRESULT DocMultiFileSelect( LPARAM uqNumber )
 	}
 	if( itNow == gltMultiFiles.end() )	return E_OUTOFMEMORY;
 
-	ViewSelPageAll( -1 );	//	今開いてる頁の範囲選択を破棄
+	ViewSelPageAll( -1 );	//	���J���Ă�ł͈̔͑I����j��
 
-	PageListClear(  );	//	ページリストビューも破棄
+	PageListClear(  );	//	�y�[�W���X�g�r���[���j��
 
-	gitFileIt = itNow;	//	ファイルなう
+	gitFileIt = itNow;	//	�t�@�C���Ȃ�
 
-//	TODO:	初回読み込み時のバイト数計算間違えてるようだ・なおった？
+//	TODO:	����ǂݍ��ݎ��̃o�C�g���v�Z�ԈႦ�Ă�悤���E�Ȃ������H
 
-	PageListBuild( NULL );	//	ページリスト作り直し
+	PageListBuild( NULL );	//	�y�[�W���X�g��蒼��
 
-	AppTitleChange( itNow->atFileName );	//	キャプションの内容も変更
+	AppTitleChange( itNow->atFileName );	//	�L���v�V�����̓��e���ύX
 
 	gixFocusPage = itNow->dNowPage;
 
-	DocModifyContent( itNow->dModify );	//	変更したかどうか
+	DocModifyContent( itNow->dModify );	//	�ύX�������ǂ���
 
-	DocCaretPosMemory( INIT_LOAD, &stCaret );	//	先に読み出さないと次でクルヤーされる
+	DocCaretPosMemory( INIT_LOAD, &stCaret );	//	��ɓǂݏo���Ȃ��Ǝ��ŃN�����[�����
 
-	PageListViewChange( gixFocusPage,  -1 );	//	全部読み込んだのでラストページを表示する
+	PageListViewChange( gixFocusPage,  -1 );	//	�S���ǂݍ��񂾂̂Ń��X�g�y�[�W��\������
 
-	ViewPosResetCaret( stCaret.x, stCaret.y );	//	Caret位置再設定
+	ViewPosResetCaret( stCaret.x, stCaret.y );	//	Caret�ʒu�Đݒ�
 
 	return S_OK;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	全内容を破棄・ファイルコア函数
-	@return		HRESULT	終了状態コード
+	�S���e��j���E�t�@�C���R�A����
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT DocMultiFileCloseAll( VOID )
 {
@@ -280,13 +280,13 @@ HRESULT DocMultiFileCloseAll( VOID )
 			itLine = itNow->vcCont.at( i ).ltPage.begin();
 			for( itLine = itNow->vcCont.at( i ).ltPage.begin(); itLine != itNow->vcCont.at( i ).ltPage.end(); itLine++ )
 			{
-				itLine->vcLine.clear( );	//	各行の中身全消し
+				itLine->vcLine.clear( );	//	�e�s�̒��g�S����
 			}
-			itNow->vcCont.at( i ).ltPage.clear( );	//	行を全消し
+			itNow->vcCont.at( i ).ltPage.clear( );	//	�s��S����
 
 			SqnFreeAll( &(itNow->vcCont.at( i ).stUndoLog) );
 		}
-		itNow->vcCont.clear(  );	//	ページを全消し
+		itNow->vcCont.clear(  );	//	�y�[�W��S����
 	}
 
 	gltMultiFiles.clear(  );
@@ -296,10 +296,10 @@ HRESULT DocMultiFileCloseAll( VOID )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ファイルタブを閉じるとき・最後の一つは閉じれないようにするか・ファイルコア函数
-	@param[in]	hWnd		ウインドウハンドル
-	@param[in]	uqNumber	閉じたいタブの通し番号
-	@return		LPARAM		開き直したタブの通し番号・失敗したら０
+	�t�@�C���^�u�����Ƃ��E�Ō�̈�͕���Ȃ��悤�ɂ��邩�E�t�@�C���R�A����
+	@param[in]	hWnd		�E�C���h�E�n���h��
+	@param[in]	uqNumber	�������^�u�̒ʂ��ԍ�
+	@return		LPARAM		�J���������^�u�̒ʂ��ԍ��E���s������O
 */
 LPARAM DocMultiFileClose( HWND hWnd, LPARAM uqNumber )
 {
@@ -311,48 +311,48 @@ LPARAM DocMultiFileClose( HWND hWnd, LPARAM uqNumber )
 	LINE_ITR	itLine;
 	TCHAR		atBuffer[MAX_PATH];
 
-	//	一つしか開いてないなら閉じない
+	//	������J���ĂȂ��Ȃ���Ȃ�
 	iCount = gltMultiFiles.size();
 	if( 1 >= iCount )	return 0;
 
-	//	対象は今のファイル以外かもしれない。そういうときはそのファイルに移動して処理する。
-	//	閉じたら、元ファイルにフォーカスする。開いているファイルを閉じたら、隣のファイルにフォーカスする
+	//	�Ώۂ͍��̃t�@�C���ȊO��������Ȃ��B���������Ƃ��͂��̃t�@�C���Ɉړ����ď�������B
+	//	������A���t�@�C���Ƀt�H�[�J�X����B�J���Ă���t�@�C���������A�ׂ̃t�@�C���Ƀt�H�[�J�X����
 
-	dNowNum = gitFileIt->dUnique;	//	今開いてるヤツの番号
+	dNowNum = gitFileIt->dUnique;	//	���J���Ă郄�c�̔ԍ�
 
 	itNow = gltMultiFiles.begin( );
-	itNow++;	//	次のやつの通し番号を確保しておく。
+	itNow++;	//	���̂�̒ʂ��ԍ����m�ۂ��Ă����B
 	dPrevi = itNow->dUnique;
 
-	//	閉じたいファイルイテレータを探す
+	//	�������t�@�C���C�e���[�^��T��
 	for( itNow = gltMultiFiles.begin( ); itNow != gltMultiFiles.end(); itNow++ )
 	{
 		if( uqNumber == itNow->dUnique )	break;
 		dPrevi = itNow->dUnique;
 	}
 	if( itNow == gltMultiFiles.end() )	return 0;
-	//	もし削除対象が先頭なら、dPreviは次のやつのまま、次以降なら、直前のが入ってるはず
-	//	この時点で、itNow は削除するファイルである
+	//	�����폜�Ώۂ��擪�Ȃ�AdPrevi�͎��̂�̂܂܁A���ȍ~�Ȃ�A���O�̂������Ă�͂�
+	//	���̎��_�ŁAitNow �͍폜����t�@�C���ł���
 
-	if( dNowNum != uqNumber )	//	開いてるファイルと閉じたいファイルが異なるなら
+	if( dNowNum != uqNumber )	//	�J���Ă�t�@�C���ƕ������t�@�C�����قȂ�Ȃ�
 	{
 		gixFocusPage = -1;
-		DocMultiFileSelect( uqNumber  );	//	閉じる予定ファイルを開く
-		dPrevi = dNowNum;	//	元に戻さにゃ
+		DocMultiFileSelect( uqNumber  );	//	����\��t�@�C�����J��
+		dPrevi = dNowNum;	//	���ɖ߂��ɂ�
 	}
 
 
-	//	もし変更が残ってるなら注意を促す
+	//	�����ύX���c���Ă�Ȃ璍�ӂ𑣂�
 	if( gitFileIt->dModify )
 	{
-		StringCchPrintf( atBuffer, MAX_PATH, TEXT("ちょっとまって！\r\n[%s] は変更したままだよ。\r\nここで保存して閉じるかい？"), PathFindFileName( gitFileIt->atFileName ) );
-		iRslt = MessageBox( hWnd, atBuffer, TEXT("お燐からの確認"), MB_YESNOCANCEL | MB_ICONQUESTION );
+		StringCchPrintf( atBuffer, MAX_PATH, TEXT("������Ƃ܂��āI\r\n[%s] �͕ύX�����܂܂���B\r\n�����ŕۑ����ĕ��邩���H"), PathFindFileName( gitFileIt->atFileName ) );
+		iRslt = MessageBox( hWnd, atBuffer, TEXT("���ӂ���̊m�F"), MB_YESNOCANCEL | MB_ICONQUESTION );
 		if( IDCANCEL == iRslt ){	return 0;	}
 
 		if( IDYES == iRslt ){	DocFileSave( hWnd, D_SJIS );	}
 	}
 
-	//	DocContentsObliterate内のやつ
+	//	DocContentsObliterate���̂��
 
 	iPage = itNow->vcCont.size( );
 	for( i = 0; iPage > i; i++ )
@@ -361,32 +361,32 @@ LPARAM DocMultiFileClose( HWND hWnd, LPARAM uqNumber )
 
 		for( itLine = itNow->vcCont.at( i ).ltPage.begin(); itLine != itNow->vcCont.at( i ).ltPage.end(); itLine++ )
 		{
-			itLine->vcLine.clear( );	//	各行の中身全消し
+			itLine->vcLine.clear( );	//	�e�s�̒��g�S����
 		}
-		itNow->vcCont.at( i ).ltPage.clear( );	//	行を全消し
+		itNow->vcCont.at( i ).ltPage.clear( );	//	�s��S����
 
 		FREE( itNow->vcCont.at( i ).ptRawData );
 
 		SqnFreeAll( &(itNow->vcCont.at( i ).stUndoLog) );
 	}
-	itNow->vcCont.clear(  );	//	ページを全消し
+	itNow->vcCont.clear(  );	//	�y�[�W��S����
 
-	gltMultiFiles.erase( itNow );	//	本体を消し
+	gltMultiFiles.erase( itNow );	//	�{�̂�����
 
 
 	gixFocusPage = -1;
-	DocMultiFileSelect( dPrevi );	//	元ファイルもしくは隣ファイルを開き直す
+	DocMultiFileSelect( dPrevi );	//	���t�@�C���������͗׃t�@�C�����J������
 
 	return dPrevi;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	開いてるタブをもってくる
-	@param[in]	iTgt		読み込みたい番号・負数ならファイル数のみ確保
-	@param[in]	ptFile		ファイルパスいれる・MAX_PATHであること
-	@param[in]	ptIniPath	INIファイルのパス
-	@return		HRESULT	終了状態コード
+	�J���Ă�^�u�������Ă���
+	@param[in]	iTgt		�ǂݍ��݂����ԍ��E�����Ȃ�t�@�C�����̂݊m��
+	@param[in]	ptFile		�t�@�C���p�X�����EMAX_PATH�ł��邱��
+	@param[in]	ptIniPath	INI�t�@�C���̃p�X
+	@return		HRESULT	�I����ԃR�[�h
 */
 INT DocMultiFileFetch( INT iTgt, LPTSTR ptFile, LPTSTR ptIniPath )
 {
@@ -401,7 +401,7 @@ INT DocMultiFileFetch( INT iTgt, LPTSTR ptFile, LPTSTR ptIniPath )
 	assert( ptFile );
 
 	if( iCount <= iTgt ){	ptFile[0] = NULL;	return iCount;	}
-	//	オーバーしてたら無効にして終了
+	//	�I�[�o�[���Ă��疳���ɂ��ďI��
 
 	StringCchPrintf( atKeyName, MIN_STRING, TEXT("Item%u"), iTgt );
 
@@ -412,9 +412,9 @@ INT DocMultiFileFetch( INT iTgt, LPTSTR ptFile, LPTSTR ptIniPath )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	開いてるタブを記録する・ファイルコア函数
-	@param[in]	ptIniPath	INIファイルのパス
-	@return		HRESULT	終了状態コード
+	�J���Ă�^�u���L�^����E�t�@�C���R�A����
+	@param[in]	ptIniPath	INI�t�@�C���̃p�X
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT DocMultiFileStore( LPTSTR ptIniPath )
 {
@@ -424,11 +424,11 @@ HRESULT DocMultiFileStore( LPTSTR ptIniPath )
 
 	assert( ptIniPath );
 
-	//	一旦セクションを空にする
+	//	��U�Z�N�V��������ɂ���
 	ZeroMemory( atBuff, sizeof(atBuff) );
 	WritePrivateProfileSection( TEXT("MultiOpen"), atBuff, ptIniPath );
 
-	//	ファイルを順次記録
+	//	�t�@�C���������L�^
 	i = 0;
 	for( itNow = gltMultiFiles.begin( ); itNow != gltMultiFiles.end(); itNow++ )
 	{
@@ -440,7 +440,7 @@ HRESULT DocMultiFileStore( LPTSTR ptIniPath )
 		}
 	}
 
-	//	個数を記録
+	//	�����L�^
 	StringCchPrintf( atBuff, MIN_STRING, TEXT("%u"), i );
 	WritePrivateProfileString( TEXT("MultiOpen"), TEXT("Count"), atBuff, ptIniPath );
 
@@ -449,42 +449,42 @@ HRESULT DocMultiFileStore( LPTSTR ptIniPath )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	対象ファイルの名前をゲッツ！する
-	@param[in]	tabNum	名前を知りたいヤツのタブ番号
-	@return		LPTSTR	名前バッファのポインター・無効ならNULLを返す
+	�Ώۃt�@�C���̖��O���Q�b�c�I����
+	@param[in]	tabNum	���O��m�肽�����c�̃^�u�ԍ�
+	@return		LPTSTR	���O�o�b�t�@�̃|�C���^�[�E�����Ȃ�NULL��Ԃ�
 */
 LPTSTR DocMultiFileNameGet( INT tabNum )
 {
 	INT	i;
 	FILES_ITR	itNow;
 
-	//	ヒットするまでサーチ
+	//	�q�b�g����܂ŃT�[�`
 	for( i = 0, itNow = gltMultiFiles.begin(); itNow != gltMultiFiles.end(); i++, itNow++ )
 	{
 		if( tabNum == i )	break;
 	}
-	if( itNow == gltMultiFiles.end() )	return NULL;	//	ヒット無し・アリエナーイ
+	if( itNow == gltMultiFiles.end() )	return NULL;	//	�q�b�g�����E�A���G�i�[�C
 
-	//	名無しならダミー名
+	//	�������Ȃ�_�~�[��
 	if( NULL == itNow->atFileName[ 0] ){	return itNow->atDummyName;	}
 
-	return itNow->atFileName;	//	ファイル名戻す
+	return itNow->atFileName;	//	�t�@�C�����߂�
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	Caret位置を常時記録・ファイル切り替えたときに意味がある
-	@param[in]		dMode	非０ロード　０セーブ
-	@param[in,out]	pstPos	Caret位置、ドット、行数
+	Caret�ʒu���펞�L�^�E�t�@�C���؂�ւ����Ƃ��ɈӖ�������
+	@param[in]		dMode	��O���[�h�@�O�Z�[�u
+	@param[in,out]	pstPos	Caret�ʒu�A�h�b�g�A�s��
 */
 VOID DocCaretPosMemory( UINT dMode, LPPOINT pstPos )
 {
-	if( dMode )	//	ロード
+	if( dMode )	//	���[�h
 	{
 		pstPos->x = gitFileIt->stCaret.x;
 		pstPos->y = gitFileIt->stCaret.y;
 	}
-	else	//	セーブ
+	else	//	�Z�[�u
 	{
 		gitFileIt->stCaret.x = pstPos->x;
 		gitFileIt->stCaret.y = pstPos->y;
@@ -495,26 +495,26 @@ VOID DocCaretPosMemory( UINT dMode, LPPOINT pstPos )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	新しいファイルを開く
-	@param[in]	hWnd	親にするウインドウハンドル
-	@return		HRESULT	終了状態コード
+	�V�����t�@�C�����J��
+	@param[in]	hWnd	�e�ɂ���E�C���h�E�n���h��
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT DocOpenFromNull( HWND hWnd )
 {
 	LPARAM	dNumber;
 
 	TCHAR	atDummyName[MAX_PATH];
-	//	複数ファイル扱うなら、破棄は不要、新しいファイルインスタンス作って対応
+	//	�����t�@�C�������Ȃ�A�j���͕s�v�A�V�����t�@�C���C���X�^���X����đΉ�
 
-	//	新しいファイル置き場の準備
-	dNumber = DocMultiFileCreate( atDummyName );	//	ファイルを新規作成するとき
+	//	�V�����t�@�C���u����̏���
+	dNumber = DocMultiFileCreate( atDummyName );	//	�t�@�C����V�K�쐬����Ƃ�
 
-	MultiFileTabAppend( dNumber, (*gitFileIt).atDummyName );	//	ファイルの新規作成した
+	MultiFileTabAppend( dNumber, (*gitFileIt).atDummyName );	//	�t�@�C���̐V�K�쐬����
 
 	AppTitleChange( atDummyName );
 
 	gixFocusPage = DocPageCreate( -1 );
-	PageListInsert( gixFocusPage  );	//	ページリストビューに追加
+	PageListInsert( gixFocusPage  );	//	�y�[�W���X�g�r���[�ɒǉ�
 	DocPageChange( 0 );
 
 	ViewRedrawSetLine( -1 );
@@ -524,10 +524,10 @@ HRESULT DocOpenFromNull( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ファイル閉じる前に変更を確認
-	@param[in]	hWnd	親にするウインドウハンドル
-	@param[in]	dMode	非０閉じるメッセージあり　０変更無かったら素通り
-	@return	１閉じておｋ　０ダメ
+	�t�@�C������O�ɕύX���m�F
+	@param[in]	hWnd	�e�ɂ���E�C���h�E�n���h��
+	@param[in]	dMode	��O���郁�b�Z�[�W����@�O�ύX����������f�ʂ�
+	@return	�P���Ă����@�O�_��
 */
 INT DocFileCloseCheck( HWND hWnd, UINT dMode )
 {
@@ -537,23 +537,23 @@ INT DocFileCloseCheck( HWND hWnd, UINT dMode )
 	BOOLEAN	bMod = FALSE;
 	FILES_ITR	itFiles;
 
-	//	未保存のファイルをチェキ
+	//	���ۑ��̃t�@�C�����`�F�L
 	for( itFiles = gltMultiFiles.begin(); itFiles != gltMultiFiles.end(); itFiles++ )
 	{
 		if( itFiles->dModify )
 		{
-			StringCchPrintf( atMessage, BIG_STRING, TEXT("ちょっとまった！\r\n%s は保存してないよ。ここで保存するかい？"), itFiles->atFileName[0] ? PathFindFileName( itFiles->atFileName ) : itFiles->atDummyName );
-			rslt = MessageBox( hWnd, atMessage, TEXT("お燐からの確認"), MB_YESNOCANCEL | MB_ICONQUESTION );
-			if( IDCANCEL ==  rslt ){	return 0;	}	//	キャンセルなら終わること自体とりやめ
-			if( IDYES == rslt ){	DocFileSave( hWnd, D_SJIS );	}	//	保存するならセーブを呼ぶ
-			//	NOなら何もせず次を確認
-			bMod = TRUE;	//	未保存があった
+			StringCchPrintf( atMessage, BIG_STRING, TEXT("������Ƃ܂����I\r\n%s �͕ۑ����ĂȂ���B�����ŕۑ����邩���H"), itFiles->atFileName[0] ? PathFindFileName( itFiles->atFileName ) : itFiles->atDummyName );
+			rslt = MessageBox( hWnd, atMessage, TEXT("���ӂ���̊m�F"), MB_YESNOCANCEL | MB_ICONQUESTION );
+			if( IDCANCEL ==  rslt ){	return 0;	}	//	�L�����Z���Ȃ�I��邱�Ǝ��̂Ƃ���
+			if( IDYES == rslt ){	DocFileSave( hWnd, D_SJIS );	}	//	�ۑ�����Ȃ�Z�[�u���Ă�
+			//	NO�Ȃ牽�����������m�F
+			bMod = TRUE;	//	���ۑ���������
 		}
 	}
 
-	if( !(bMod) )	//	未保存がなかったなら確認メッセージ
+	if( !(bMod) )	//	���ۑ����Ȃ������Ȃ�m�F���b�Z�[�W
 	{
-		rslt = MessageBox( hWnd, TEXT("もう終わるかい？"), TEXT("お燐からの確認"), MB_YESNO | MB_ICONQUESTION );
+		rslt = MessageBox( hWnd, TEXT("�����I��邩���H"), TEXT("���ӂ���̊m�F"), MB_YESNO | MB_ICONQUESTION );
 		if( IDYES == rslt ){	ret = 1;	}
 		else{					ret = 0;	}
 	}
@@ -565,10 +565,10 @@ INT DocFileCloseCheck( HWND hWnd, UINT dMode )
 #ifdef BIG_TEXT_SEPARATE
 //	2014/05/28
 /*!
-	ファイル内容を確認して、分割が必要かどうか確認する
-	@param[in]	ptStr	対象文字列へのポインター
-	@param[in]	cchSize	その文字列の文字数
-	@return	０なにもしない　１分割モード　２読込中止
+	�t�@�C�����e���m�F���āA�������K�v���ǂ����m�F����
+	@param[in]	ptStr	�Ώە�����ւ̃|�C���^�[
+	@param[in]	cchSize	���̕�����̕�����
+	@return	�O�Ȃɂ����Ȃ��@�P�������[�h�@�Q�Ǎ����~
 */
 UINT DocFileHugeCheck( LPTSTR ptStr, UINT_PTR cchSize )
 {
@@ -577,32 +577,32 @@ UINT DocFileHugeCheck( LPTSTR ptStr, UINT_PTR cchSize )
 	UINT_PTR	dCount;
 	UINT		dRslt;
 
-	//	ＡＳＴなら何もする必要は無い
+	//	�`�r�s�Ȃ牽������K�v�͖���
 	if( 0 == StrCmpN( AST_SEPARATERW , ptStr, 4 ) ){	return 0;	}
 
-	ptBuff = StrStr( ptStr, MLT_SEPARATERW );	//	セパレータを探す
-	if( ptBuff ){	return 0;	}	//	有るなら問題無い
+	ptBuff = StrStr( ptStr, MLT_SEPARATERW );	//	�Z�p���[�^��T��
+	if( ptBuff ){	return 0;	}	//	�L��Ȃ��薳��
 
-	//	行数を確認・１００行以上あるなら分割が必要とみなす
+	//	�s�����m�F�E�P�O�O�s�ȏ゠��Ȃ番�����K�v�Ƃ݂Ȃ�
 	dCount = 0;
 
 	do{
-		ptBuff = StrStr( ptStr , TEXT("\r\n") );	//	改行を探す
+		ptBuff = StrStr( ptStr , TEXT("\r\n") );	//	���s��T��
 		if( ptBuff ){	dCount++;	}else{	break;	}
 
-		ptStr = ptBuff+2;	//	改行分進んだ位置が必要
+		ptStr = ptBuff+2;	//	���s���i�񂾈ʒu���K�v
 	}while( ptBuff );
 
-	//	改行がなく１０００文字以上もある場合はエラーとする
+	//	���s���Ȃ��P�O�O�O�����ȏ������ꍇ�̓G���[�Ƃ���
 	if( 0 == dCount && 1000 <= cchSize )
 	{
 		DocHugeFileTreatment( 2 );
 		return 2;
 	}
 
-	if( 100 >= dCount ){	return 0;	}	//	１００行以下なら問題無い
+	if( 100 >= dCount ){	return 0;	}	//	�P�O�O�s�ȉ��Ȃ��薳��
 
-	//	ここで、大型ファイルなのでどうするかの確認・そのまま／分割／やめる
+	//	�����ŁA��^�t�@�C���Ȃ̂łǂ����邩�̊m�F�E���̂܂܁^�����^��߂�
 	dRslt = DocHugeFileTreatment( 1 );
 
 	return dRslt;
@@ -610,60 +610,60 @@ UINT DocFileHugeCheck( LPTSTR ptStr, UINT_PTR cchSize )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ファイル内容を分割する
-	@param[in]	ptSource	対象文字列へのポインター・終端NULLが２つ以上確保されていること
-	@param[in]	cchSource	その文字列の文字数
-	@return	分割結果の入ったポインター・開放は呼んだ方でやる・NULLなら失敗
+	�t�@�C�����e�𕪊�����
+	@param[in]	ptSource	�Ώە�����ւ̃|�C���^�[�E�I�[NULL���Q�ȏ�m�ۂ���Ă��邱��
+	@param[in]	cchSource	���̕�����̕�����
+	@return	�������ʂ̓������|�C���^�[�E�J���͌Ă񂾕��ł��ENULL�Ȃ玸�s
 */
 LPTSTR DocFileHugeSeparate( LPTSTR ptSource, UINT_PTR cchSource )
 {
 	LPTSTR		ptDest, ptBuff;
 	UINT_PTR	dd, ds, dLineCnt, dEmptyCnt, cchDest;
 
-	cchDest = cchSource;	//	とりあえず現状で確保・足りなくなったらreallocするか
+	cchDest = cchSource;	//	�Ƃ肠��������Ŋm�ہE����Ȃ��Ȃ�����realloc���邩
 	ptDest = (LPTSTR)malloc( sizeof(TCHAR) * cchDest );
-	if( !(ptDest) ){	return NULL;	}	//	なんかエラー・普通は無い
+	if( !(ptDest) ){	return NULL;	}	//	�Ȃ񂩃G���[�E���ʂ͖���
 	ZeroMemory( ptDest, sizeof(TCHAR) * cchDest );
 
 	dd = 0;
-	dLineCnt = 0;	//	この行数は、頁更新があったらリセットする
+	dLineCnt = 0;	//	���̍s���́A�ōX�V���������烊�Z�b�g����
 	dEmptyCnt = 0;
 	for( ds = 0; cchSource > ds; ds++ )
 	{
 		if( NULL == ptSource[ds] )	break;
 
-		ptDest[dd] = ptSource[ds];	//	とりあえず文字を写していく
-		dd++;	//	こっちは進めておｋ
-		ptDest[dd] = NULL;	//	ターミネート
+		ptDest[dd] = ptSource[ds];	//	�Ƃ肠�����������ʂ��Ă���
+		dd++;	//	�������͐i�߂Ă���
+		ptDest[dd] = NULL;	//	�^�[�~�l�[�g
 
-		if( 0xD == ptSource[ds] && 0xA == ptSource[ds+1] )	//	改行があった場合
+		if( 0xD == ptSource[ds] && 0xA == ptSource[ds+1] )	//	���s���������ꍇ
 		{
-			ds++;	//	その改行をうつす
+			ds++;	//	���̉��s������
 			ptDest[dd] = ptSource[ds];
-			dd++;	//	こっちは進めておｋ
-			ptDest[dd] = NULL;	//	ターミネート
+			dd++;	//	�������͐i�߂Ă���
+			ptDest[dd] = NULL;	//	�^�[�~�l�[�g
 
-			if( cchDest <= (dd+12) )	//	残り少なくなってきたら
+			if( cchDest <= (dd+12) )	//	�c�菭�Ȃ��Ȃ��Ă�����
 			{
-				ptBuff = (LPTSTR)realloc( ptDest, sizeof(TCHAR) * (cchDest + 0x800) );	//	適当に拡張
-				if( !(ptBuff)  )	//	もしエラーになったら
+				ptBuff = (LPTSTR)realloc( ptDest, sizeof(TCHAR) * (cchDest + 0x800) );	//	�K���Ɋg��
+				if( !(ptBuff)  )	//	�����G���[�ɂȂ�����
 				{
-					free( ptDest );	//	使用領域は開放する
-					return NULL;	//	エラー戻り
+					free( ptDest );	//	�g�p�̈�͊J������
+					return NULL;	//	�G���[�߂�
 				}
-				ptDest = ptBuff;	//	付け替える
-				cchDest += 0x800;	//	サイズ拡張
-			}//ここには要らないかも
+				ptDest = ptBuff;	//	�t���ւ���
+				cchDest += 0x800;	//	�T�C�Y�g��
+			}//�����ɂ͗v��Ȃ�����
 
-			dLineCnt++;	//	行数増える
-			if( 40 <= dLineCnt ){	dEmptyCnt++;	}	//	規定行数超えたら空行カウント開始
+			dLineCnt++;	//	�s��������
+			if( 40 <= dLineCnt ){	dEmptyCnt++;	}	//	�K��s�����������s�J�E���g�J�n
 
-			//	４０行以降で４行以上の空きがあるか、１００行以降で１行以上の空きがあるか、２５６行以上続いている
+			//	�S�O�s�ȍ~�łS�s�ȏ�̋󂫂����邩�A�P�O�O�s�ȍ~�łP�s�ȏ�̋󂫂����邩�A�Q�T�U�s�ȏ㑱���Ă���
 			if( (5 <= dEmptyCnt) || (100 <= dLineCnt && 2 <= dEmptyCnt) || (256 <= dLineCnt) )
 			{
 				StringCchCat( ptDest, cchDest, MLT_SEPARATERW );
 				StringCchCat( ptDest, cchDest, TEXT("\r\n") );
-				StringCchLength( ptDest, cchDest, &dd );	//	位置合わせ
+				StringCchLength( ptDest, cchDest, &dd );	//	�ʒu���킹
 
 				dLineCnt = 0;
 				dEmptyCnt = 0;
@@ -671,19 +671,19 @@ LPTSTR DocFileHugeSeparate( LPTSTR ptSource, UINT_PTR cchSource )
 		}
 		else
 		{
-			dEmptyCnt = 0;	//	改行以外ならリセット・５０行超えてても、通常の文字列が続くなら空カウントは進まない
+			dEmptyCnt = 0;	//	���s�ȊO�Ȃ烊�Z�b�g�E�T�O�s�����ĂĂ��A�ʏ�̕����񂪑����Ȃ��J�E���g�͐i�܂Ȃ�
 		}
 
-		if( cchDest <= (dd+12) )	//	残り少なくなってきたら
+		if( cchDest <= (dd+12) )	//	�c�菭�Ȃ��Ȃ��Ă�����
 		{
-			ptBuff = (LPTSTR)realloc( ptDest, sizeof(TCHAR) * (cchDest + 0x800) );	//	適当に拡張
-			if( !(ptBuff)  )	//	もしエラーになったら
+			ptBuff = (LPTSTR)realloc( ptDest, sizeof(TCHAR) * (cchDest + 0x800) );	//	�K���Ɋg��
+			if( !(ptBuff)  )	//	�����G���[�ɂȂ�����
 			{
-				free( ptDest );	//	使用領域は開放する
-				return NULL;	//	エラー戻り
+				free( ptDest );	//	�g�p�̈�͊J������
+				return NULL;	//	�G���[�߂�
 			}
-			ptDest = ptBuff;	//	付け替える
-			cchDest += 0x800;	//	サイズ拡張
+			ptDest = ptBuff;	//	�t���ւ���
+			cchDest += 0x800;	//	�T�C�Y�g��
 		}
 
 	}
@@ -695,19 +695,19 @@ LPTSTR DocFileHugeSeparate( LPTSTR ptSource, UINT_PTR cchSource )
 #endif
 
 /*!
-	ファイルを確保
-	@param[in]	ptFileName	指定されたファイル名で開く
-	@return		LPARAM	０失敗　１～成功
+	�t�@�C�����m��
+	@param[in]	ptFileName	�w�肳�ꂽ�t�@�C�����ŊJ��
+	@return		LPARAM	�O���s�@�P�`����
 */
 LPARAM DocFileInflate( LPTSTR ptFileName )
 {
-	CONST WCHAR rtHead = 0xFEFF;	//	ユニコードテキストヘッダ
+	CONST WCHAR rtHead = 0xFEFF;	//	���j�R�[�h�e�L�X�g�w�b�_
 	WCHAR	rtUniBuf;
 
 	HANDLE	hFile;
 	DWORD	readed;
 
-	LPVOID	pBuffer;	//	文字列バッファ用ポインター
+	LPVOID	pBuffer;	//	������o�b�t�@�p�|�C���^�[
 	INT		iByteSize;
 
 	LPTSTR	ptString;
@@ -716,7 +716,7 @@ LPARAM DocFileInflate( LPTSTR ptFileName )
 
 	LPARAM	dNumber;
 
-#ifdef BIG_TEXT_SEPARATE	//	頁区切りのないTXTかどうかを確認する
+#ifdef BIG_TEXT_SEPARATE	//	�ŋ�؂�̂Ȃ�TXT���ǂ������m�F����
 	UINT	dSepRslt;
 	LPTSTR	ptSepBuff;
 #endif
@@ -731,76 +731,76 @@ LPARAM DocFileInflate( LPTSTR ptFileName )
 #ifdef _DEBUG
 	dTcStart = GetTickCount(  );
 #endif
-	assert( ptFileName );	//	ファイル開けないのはバグ
+	assert( ptFileName );	//	�t�@�C���J���Ȃ��̂̓o�O
 
-	//	ファイル名が空っぽだったら自動的にアウツ！
+	//	�t�@�C����������ۂ������玩���I�ɃA�E�c�I
 	if( NULL == ptFileName[0] ){	return 0;	}
 
-	//	レッツオーポン
+	//	���b�c�I�[�|��
 	hFile = CreateFile( ptFileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
 	if( INVALID_HANDLE_VALUE == hFile ){	return 0;	}
 
-	//InitLastOpen( INIT_SAVE, ptFileName );	//	複数ファイルでは意味が無い
+	//InitLastOpen( INIT_SAVE, ptFileName );	//	�����t�@�C���ł͈Ӗ�������
 
-	//	処理順番入替
+	//	�������ԓ���
 
 	iByteSize = GetFileSize( hFile, NULL );
-	pBuffer = malloc( iByteSize + 4 );	//	バッファは少し大きめに取る
+	pBuffer = malloc( iByteSize + 4 );	//	�o�b�t�@�͏����傫�߂Ɏ��
 	ZeroMemory( pBuffer, iByteSize + 4 );
 
 	SetFilePointer( hFile, 0, NULL, FILE_BEGIN );
 	ReadFile( hFile, pBuffer, iByteSize, &readed, NULL );
-	CloseHandle( hFile );	//	内容全部取り込んだから開放
+	CloseHandle( hFile );	//	���e�S����荞�񂾂���J��
 
-	//	ユニコードチェック
+	//	���j�R�[�h�`�F�b�N
 	CopyMemory( &rtUniBuf, pBuffer, 2 );
-	if( rtHead == rtUniBuf )	//	ユニコードヘッダがあれば
+	if( rtHead == rtUniBuf )	//	���j�R�[�h�w�b�_�������
 	{
 		ptString = (LPTSTR)pBuffer;
-		ptString++;	//	ユニコードヘッダ分進めておく
+		ptString++;	//	���j�R�[�h�w�b�_���i�߂Ă���
 	}
 	else
 	{
 		pcText = (LPSTR)pBuffer;
-		//	シフトJISを開く場合、&#0000;の部分をどうにかせんといかん
-		ptString = SjisDecodeAlloc( pcText );	//	ファイルを開くとき
+		//	�V�t�gJIS���J���ꍇ�A&#0000;�̕������ǂ��ɂ�����Ƃ�����
+		ptString = SjisDecodeAlloc( pcText );	//	�t�@�C�����J���Ƃ�
 
-		FREE( pBuffer );	//	こっちで開放
-		pBuffer = ptString;	//	ポイントするところを変更
+		FREE( pBuffer );	//	�������ŊJ��
+		pBuffer = ptString;	//	�|�C���g����Ƃ����ύX
 
 	}
 
 	StringCchLength( ptString, STRSAFE_MAX_CCH, &cchSize );
 
-#ifdef BIG_TEXT_SEPARATE	//	頁区切りのないTXTかどうかを確認する
+#ifdef BIG_TEXT_SEPARATE	//	�ŋ�؂�̂Ȃ�TXT���ǂ������m�F����
 	dSepRslt = DocFileHugeCheck( ptString, cchSize );
-	if(  1 == dSepRslt )	//	分割処理する
+	if(  1 == dSepRslt )	//	������������
 	{
 		ptSepBuff = DocFileHugeSeparate( ptString, cchSize );
-		if( !(ptSepBuff)  ){	return 0;	}	//	なんかミスってるなら中止
+		if( !(ptSepBuff)  ){	return 0;	}	//	�Ȃ񂩃~�X���Ă�Ȃ璆�~
 
-		FREE( pBuffer );	//	大本を一旦開放
-		pBuffer = ptSepBuff;	//	最後に開放する領域としてポイントするところを変更
-		ptString = ptSepBuff;	//	読込処理を続ける位置としてセット
+		FREE( pBuffer );	//	��{����U�J��
+		pBuffer = ptSepBuff;	//	�Ō�ɊJ������̈�Ƃ��ă|�C���g����Ƃ����ύX
+		ptString = ptSepBuff;	//	�Ǎ������𑱂���ʒu�Ƃ��ăZ�b�g
 
-		StringCchLength( ptString, STRSAFE_MAX_CCH , &cchSize );	//	サイズ読込直し
+		StringCchLength( ptString, STRSAFE_MAX_CCH , &cchSize );	//	�T�C�Y�Ǎ�����
 	}
-	else if( 2 == dSepRslt )	//	読込中止
+	else if( 2 == dSepRslt )	//	�Ǎ����~
 	{
-		FREE( pBuffer );	//	大本を開放
+		FREE( pBuffer );	//	��{���J��
 		return 0;
 	}
-	//	０なら何もしない
+	//	�O�Ȃ牽�����Ȃ�
 #endif
 
-	//	新しいファイル置き場の準備	2014/05/28↑にあったのを移動した
-	dNumber = DocMultiFileCreate( NULL );	//	実際のファイルを開くとき
+	//	�V�����t�@�C���u����̏���	2014/05/28���ɂ������̂��ړ�����
+	dNumber = DocMultiFileCreate( NULL );	//	���ۂ̃t�@�C�����J���Ƃ�
 	if( 0 >= dNumber )	return 0;
 
 	StringCchCopy( (*gitFileIt).atFileName, MAX_PATH, ptFileName );
 
 
-	//	もしASTなら、先頭は[AA]になってるはず・分割は中でやる
+	//	����AST�Ȃ�A�擪��[AA]�ɂȂ��Ă�͂��E�����͒��ł��
 	if( StrCmpN( AST_SEPARATERW, ptString, 4 ) )
 	{
 		DocStringSplitMLT( ptString , cchSize, DocPageLoad );
@@ -810,13 +810,13 @@ LPARAM DocFileInflate( LPTSTR ptFileName )
 		DocStringSplitAST( ptString , cchSize, DocPageLoad );
 	}
 
-	//	ファイル開いたらキャレットとかスクロールをリセットする
+	//	�t�@�C���J������L�����b�g�Ƃ��X�N���[�������Z�b�g����
 	ViewEditReset(  );
 
-	FREE( pBuffer );	//	＝ptString
+	FREE( pBuffer );	//	��ptString
 
-	DocPageChange( 0  );	//	全部読み込んだので最初のページを表示する
-	PageListViewChange( -1, -1 );	//	直前頁リセット
+	DocPageChange( 0  );	//	�S���ǂݍ��񂾂̂ōŏ��̃y�[�W��\������
+	PageListViewChange( -1, -1 );	//	���O�Ń��Z�b�g
 
 	AppTitleChange( ptFileName );
 
@@ -830,29 +830,29 @@ LPARAM DocFileInflate( LPTSTR ptFileName )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	頁を作って内容をぶち込む
-	@param[in]	ptName	項目の名前・無い時はNULL
-	@param[in]	ptCont	項目の内容
-	@param[in]	cchSize	内容の文字数
-	@return		UINT	特に意味なし
+	�ł�����ē��e���Ԃ�����
+	@param[in]	ptName	���ڂ̖��O�E��������NULL
+	@param[in]	ptCont	���ڂ̓��e
+	@param[in]	cchSize	���e�̕�����
+	@return		UINT	���ɈӖ��Ȃ�
 */
 UINT CALLBACK DocPageLoad( LPTSTR ptName, LPCTSTR ptCont, INT cchSize )
 {
-	gixFocusPage = DocPageCreate(  -1 );	//	頁を作成
-	PageListInsert( gixFocusPage  );	//	ページリストビューに追加
+	gixFocusPage = DocPageCreate(  -1 );	//	�ł��쐬
+	PageListInsert( gixFocusPage  );	//	�y�[�W���X�g�r���[�ɒǉ�
 
-	//	新しく作ったページにうつる
+	//	�V����������y�[�W�ɂ���
 
-	if( ptName ){	DocPageNameSet( ptName );	}	//	名前をセットしておく
+	if( ptName ){	DocPageNameSet( ptName );	}	//	���O���Z�b�g���Ă���
 	(*gitFileIt).vcCont.at( gixFocusPage ).ptRawData = (LPTSTR)malloc( (cchSize+2) * sizeof(TCHAR) );
 	ZeroMemory( (*gitFileIt).vcCont.at( gixFocusPage ).ptRawData, (cchSize+2) * sizeof(TCHAR) );
 
 	//HRESULT hRslt = 
 	StringCchCopy( (*gitFileIt).vcCont.at( gixFocusPage ).ptRawData, (cchSize+2), ptCont );
 
-	//	バッファに文字列を保存だけしておく
+	//	�o�b�t�@�ɕ������ۑ��������Ă���
 
-	DocPageParamGet( NULL, NULL );	//	再計算しちゃう・遅延読込ヒット
+	DocPageParamGet( NULL, NULL );	//	�Čv�Z�����Ⴄ�E�x���Ǎ��q�b�g
 
 	return 1;
 }
@@ -860,45 +860,45 @@ UINT CALLBACK DocPageLoad( LPTSTR ptName, LPCTSTR ptCont, INT cchSize )
 
 #ifdef FILE_PRELOAD
 /*!
-	ＭＬＴもしくはＴＸＴの頁数を調べる
-	@param[in]	ptStr	分解対象文字列へのポインター
-	@param[in]	cchSize	その文字列の文字数
-	@return		UINT	頁数
+	�l�k�s�������͂s�w�s�̕Ő��𒲂ׂ�
+	@param[in]	ptStr	����Ώە�����ւ̃|�C���^�[
+	@param[in]	cchSize	���̕�����̕�����
+	@return		UINT	�Ő�
 */
 UINT DocPreloadMLT( LPTSTR ptString, INT cchSize )
 {
-	LPTSTR	ptCaret;	//	読込開始・現在位置
-	LPTSTR	ptEnd;		//	ページの末端位置・セパレータの直前
+	LPTSTR	ptCaret;	//	�Ǎ��J�n�E���݈ʒu
+	LPTSTR	ptEnd;		//	�y�[�W�̖��[�ʒu�E�Z�p���[�^�̒��O
 	INT		iLines, iDots, iMozis;
 	UINT	dPage;
 	UINT_PTR	cchItem;
 	BOOLEAN	bLast = FALSE;
 
-	ptCaret = ptString;	//	まずは最初から
+	ptCaret = ptString;	//	�܂��͍ŏ�����
 
 	dPage = 0;
 
-	//	始点にはセパレータ無いものとみなす。連続するセパレータは、空白内容として扱う
+	//	�n�_�ɂ̓Z�p���[�^�������̂Ƃ݂Ȃ��B�A������Z�p���[�^�́A�󔒓��e�Ƃ��Ĉ���
 	do
 	{
-		ptEnd = StrStr( ptCaret, MLT_SEPARATERW );	//	セパレータを探す
-		if( !ptEnd )	//	見つからなかったら＝これが最後なら＝NULL
+		ptEnd = StrStr( ptCaret, MLT_SEPARATERW );	//	�Z�p���[�^��T��
+		if( !ptEnd )	//	������Ȃ������灁���ꂪ�Ō�Ȃ灁NULL
 		{
 			ptEnd = ptString + cchSize;
 			bLast = TRUE;
 		}
-		cchItem = ptEnd - ptCaret;	//	WCHAR単位なので計算結果は文字数のようだ
-		//	最終頁でない場合は末端の改行分引く
+		cchItem = ptEnd - ptCaret;	//	WCHAR�P�ʂȂ̂Ōv�Z���ʂ͕������̂悤��
+		//	�ŏI�łłȂ��ꍇ�͖��[�̉��s������
 		if( !(bLast) && 0 < cchItem ){	cchItem -=  CH_CRLF_CCH;	}
 
 		dPage++;
 
-		//	頁の情報を確保
+		//	�ł̏����m��
 		iLines = DocStringInfoCount( ptCaret, cchItem, &iDots, &iMozis );
 
-		ptCaret = NextLineW( ptEnd );	//	セパレータの次の行からが本体
+		ptCaret = NextLineW( ptEnd );	//	�Z�p���[�^�̎��̍s���炪�{��
 
-	}while( *ptCaret  );	//	データ有る限りループで探す
+	}while( *ptCaret  );	//	�f�[�^�L����胋�[�v�ŒT��
 
 
 	return dPage;
@@ -907,17 +907,17 @@ UINT DocPreloadMLT( LPTSTR ptString, INT cchSize )
 #endif
 
 /*!
-	ＭＬＴもしくはＴＸＴなユニコード文字列を受け取って分解しつつページに入れる
-	@param[in]	ptStr		分解対象文字列へのポインター
-	@param[in]	cchSize		その文字列の文字数
-	@param[in]	pfPageLoad	内容を入れるコールバック函数のアレ
-	@return		UINT		作成した頁数
+	�l�k�s�������͂s�w�s�ȃ��j�R�[�h��������󂯎���ĕ������y�[�W�ɓ����
+	@param[in]	ptStr		����Ώە�����ւ̃|�C���^�[
+	@param[in]	cchSize		���̕�����̕�����
+	@param[in]	pfPageLoad	���e������R�[���o�b�N�����̃A��
+	@return		UINT		�쐬�����Ő�
 */
 UINT DocStringSplitMLT( LPTSTR ptStr, INT cchSize, PAGELOAD pfPageLoad )
 {
-	LPTSTR	ptCaret;	//	読込開始・現在位置
-	LPTSTR	ptEnd;		//	ページの末端位置・セパレータの直前
-	UINT	iNumber;	//	通し番号カウント
+	LPTSTR	ptCaret;	//	�Ǎ��J�n�E���݈ʒu
+	LPTSTR	ptEnd;		//	�y�[�W�̖��[�ʒu�E�Z�p���[�^�̒��O
+	UINT	iNumber;	//	�ʂ��ԍ��J�E���g
 #ifdef FILE_PRELOAD
 	UINT	dPage;		
 #endif
@@ -925,10 +925,10 @@ UINT DocStringSplitMLT( LPTSTR ptStr, INT cchSize, PAGELOAD pfPageLoad )
 //	INT		dmyX = 0, dmyY = 0;
 	BOOLEAN	bLast = FALSE;
 
-	ptCaret = ptStr;	//	まずは最初から
+	ptCaret = ptStr;	//	�܂��͍ŏ�����
 
-	iNumber = 0;	//	通し番号０インデックス
-	//	始点にはセパレータ無いものとみなす。連続するセパレータは、空白内容として扱う
+	iNumber = 0;	//	�ʂ��ԍ��O�C���f�b�N�X
+	//	�n�_�ɂ̓Z�p���[�^�������̂Ƃ݂Ȃ��B�A������Z�p���[�^�́A�󔒓��e�Ƃ��Ĉ���
 
 #ifdef FILE_PRELOAD
 	dPage = DocPreloadMLT( ptStr, cchSize );
@@ -936,15 +936,15 @@ UINT DocStringSplitMLT( LPTSTR ptStr, INT cchSize, PAGELOAD pfPageLoad )
 
 	do
 	{
-		ptEnd = StrStr( ptCaret, MLT_SEPARATERW );	//	セパレータを探す
-		if( !ptEnd )	//	見つからなかったら＝これが最後なら＝NULL
+		ptEnd = StrStr( ptCaret, MLT_SEPARATERW );	//	�Z�p���[�^��T��
+		if( !ptEnd )	//	������Ȃ������灁���ꂪ�Ō�Ȃ灁NULL
 		{
-			ptEnd = ptStr + cchSize;	//	WCHARサイズで計算おｋ？
+			ptEnd = ptStr + cchSize;	//	WCHAR�T�C�Y�Ōv�Z�����H
 			bLast = TRUE;
 		}
-		cchItem = ptEnd - ptCaret;	//	WCHAR単位なので計算結果は文字数のようだ
+		cchItem = ptEnd - ptCaret;	//	WCHAR�P�ʂȂ̂Ōv�Z���ʂ͕������̂悤��
 
-		//	最終頁でない場合は末端の改行分引く
+		//	�ŏI�łłȂ��ꍇ�͖��[�̉��s������
 		if( !(bLast) && 0 < cchItem )
 		{
 			cchItem -=  CH_CRLF_CCH;
@@ -955,62 +955,62 @@ UINT DocStringSplitMLT( LPTSTR ptStr, INT cchSize, PAGELOAD pfPageLoad )
 
 		iNumber++;
 
-		ptCaret = NextLineW( ptEnd );	//	セパレータの次の行からが本体
+		ptCaret = NextLineW( ptEnd );	//	�Z�p���[�^�̎��̍s���炪�{��
 
-	}while( *ptCaret );	//	データ有る限りループで探す
+	}while( *ptCaret );	//	�f�[�^�L����胋�[�v�ŒT��
 
 	return iNumber;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ＡＳＴなユニコード文字列を受け取って分解しつつページに入れる
-	@param[in]	ptStr		分解対象文字列へのポインター
-	@param[in]	cchSize		その文字列の文字数
-	@param[in]	pfPageLoad	内容を入れるコールバック函数のアレ
-	@return		UINT		作成した頁数
+	�`�r�s�ȃ��j�R�[�h��������󂯎���ĕ������y�[�W�ɓ����
+	@param[in]	ptStr		����Ώە�����ւ̃|�C���^�[
+	@param[in]	cchSize		���̕�����̕�����
+	@param[in]	pfPageLoad	���e������R�[���o�b�N�����̃A��
+	@return		UINT		�쐬�����Ő�
 */
 UINT DocStringSplitAST( LPTSTR ptStr, INT cchSize, PAGELOAD pfPageLoad )
 {
-	LPTSTR	ptCaret;	//	読込開始・現在位置
-	LPTSTR	ptStart;	//	セパレータの直前
+	LPTSTR	ptCaret;	//	�Ǎ��J�n�E���݈ʒu
+	LPTSTR	ptStart;	//	�Z�p���[�^�̒��O
 	LPTSTR	ptEnd;
-	UINT	iNumber;	//	通し番号カウント
+	UINT	iNumber;	//	�ʂ��ԍ��J�E���g
 	UINT	cchItem;
 	BOOLEAN	bLast;
 	TCHAR	atName[MAX_PATH];
 
-	ptCaret = ptStr;	//	まずは最初から
+	ptCaret = ptStr;	//	�܂��͍ŏ�����
 
-	iNumber = 0;	//	通し番号０インデックス
+	iNumber = 0;	//	�ʂ��ԍ��O�C���f�b�N�X
 
 	bLast = FALSE;
 
 
 
-	do	//	とりあえず一番最初はptCaretは[AA]になってる
+	do	//	�Ƃ肠������ԍŏ���ptCaret��[AA]�ɂȂ��Ă�
 	{
-		ptStart = NextLineW( ptCaret );	//	次の行からが本番
+		ptStart = NextLineW( ptCaret );	//	���̍s���炪�{��
 
 		ptCaret += 5;	//	[AA][
-		cchItem = ptStart - ptCaret;	//	名前部分の文字数
+		cchItem = ptStart - ptCaret;	//	���O�����̕�����
 		cchItem -= 3;	//	]rn
 
-		ZeroMemory( atName, sizeof(atName) );	//	名前確保
+		ZeroMemory( atName, sizeof(atName) );	//	���O�m��
 		if( 0 < cchItem )	StringCchCopyN( atName, MAX_PATH, ptCaret, cchItem );
 
-		ptCaret = ptStart;	//	本体部分
+		ptCaret = ptStart;	//	�{�̕���
 
-		ptEnd = StrStr( ptCaret, AST_SEPARATERW );	//	セパレータを探す
-		//	この時点でptEndは次の[AA]をさしてる・もしくはNULL(最後のコマ)
-		if( !ptEnd )	//	見つからなかったら＝これが最後なら＝NULL
+		ptEnd = StrStr( ptCaret, AST_SEPARATERW );	//	�Z�p���[�^��T��
+		//	���̎��_��ptEnd�͎���[AA]�������Ă�E��������NULL(�Ō�̃R�})
+		if( !ptEnd )	//	������Ȃ������灁���ꂪ�Ō�Ȃ灁NULL
 		{
-			ptEnd = ptStr + cchSize;	//	WCHARサイズで計算おｋ？
+			ptEnd = ptStr + cchSize;	//	WCHAR�T�C�Y�Ōv�Z�����H
 			bLast = TRUE;
 		}
-		cchItem = ptEnd - ptCaret;	//	WCHAR単位なので計算結果は文字数のようだ
+		cchItem = ptEnd - ptCaret;	//	WCHAR�P�ʂȂ̂Ōv�Z���ʂ͕������̂悤��
 
-		if( !(bLast) && 0 < cchItem )	//	最終頁でない場合は末端の改行分引く
+		if( !(bLast) && 0 < cchItem )	//	�ŏI�łłȂ��ꍇ�͖��[�̉��s������
 		{
 			cchItem -= CH_CRLF_CCH;
 			ptCaret[cchItem] = 0;
@@ -1022,27 +1022,27 @@ UINT DocStringSplitAST( LPTSTR ptStr, INT cchSize, PAGELOAD pfPageLoad )
 
 		ptCaret = ptEnd;
 
-	}while( *ptCaret );	//	データ有る限りループで探す
+	}while( *ptCaret );	//	�f�[�^�L����胋�[�v�ŒT��
 
 	return iNumber;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ＡＳＤなＳＪＩＳ文字列を受け取って分解しつつページに入れる
-	@param[in]	pcStr		分解対象SJIS文字列へのポインター
-	@param[in]	cbSize		その文字列の文字数
-	@param[in]	pfPageLoad	内容を入れるコールバック函数のアレ
-	@return		UINT		作成した頁数
+	�`�r�c�Ȃr�i�h�r��������󂯎���ĕ������y�[�W�ɓ����
+	@param[in]	pcStr		����Ώ�SJIS������ւ̃|�C���^�[
+	@param[in]	cbSize		���̕�����̕�����
+	@param[in]	pfPageLoad	���e������R�[���o�b�N�����̃A��
+	@return		UINT		�쐬�����Ő�
 */
 UINT DocImportSplitASD( LPSTR pcStr, INT cbSize, PAGELOAD pfPageLoad )
 {
-//ASDなら、SJISのままで0x01,0x01、0x02,0x02を対応する必要がある
-//0x01,0x01が改行、0x02,0x02が説明の区切り、アイテム区切りが改行
+//ASD�Ȃ�ASJIS�̂܂܂�0x01,0x01�A0x02,0x02��Ή�����K�v������
+//0x01,0x01�����s�A0x02,0x02�������̋�؂�A�A�C�e����؂肪���s
 
-	LPSTR	pcCaret;	//	読込開始・現在位置
+	LPSTR	pcCaret;	//	�Ǎ��J�n�E���݈ʒu
 	LPSTR	pcEnd, pcDesc;
-	UINT	iNumber;	//	通し番号カウント
+	UINT	iNumber;	//	�ʂ��ԍ��J�E���g
 	UINT	cbItem, d;
 	BOOLEAN	bLast;
 
@@ -1050,23 +1050,23 @@ UINT DocImportSplitASD( LPSTR pcStr, INT cbSize, PAGELOAD pfPageLoad )
 	UINT_PTR	cchItem;
 
 
-	pcCaret = pcStr;	//	まずは最初から
+	pcCaret = pcStr;	//	�܂��͍ŏ�����
 
-	iNumber = 0;	//	通し番号０インデックス
+	iNumber = 0;	//	�ʂ��ԍ��O�C���f�b�N�X
 
 	bLast = FALSE;
 
 
-	do	//	とりやえず実行
+	do	//	�Ƃ�₦�����s
 	{
-		pcEnd = NextLineA( pcCaret );	//	次の行までで１アイテム
-		//if( !(*pcEnd) )	//	見つからなかったら＝これが最後なら＝NULL
+		pcEnd = NextLineA( pcCaret );	//	���̍s�܂łłP�A�C�e��
+		//if( !(*pcEnd) )	//	������Ȃ������灁���ꂪ�Ō�Ȃ灁NULL
 		//{
-		//	pcEnd = pcStr + cbSize;	//	CHARサイズで計算おｋ？
+		//	pcEnd = pcStr + cbSize;	//	CHAR�T�C�Y�Ōv�Z�����H
 		//	bLast = TRUE;
 		//}
-		//	中身がNULLなだけで、ポインタは有効なので特に位置計算は不要か
-		cbItem  = pcEnd - pcCaret;	//	壱行の文字数
+		//	���g��NULL�Ȃ����ŁA�|�C���^�͗L���Ȃ̂œ��Ɉʒu�v�Z�͕s�v��
+		cbItem  = pcEnd - pcCaret;	//	��s�̕�����
 
 		pcDesc = NULL;
 		ptName = NULL;
@@ -1074,9 +1074,9 @@ UINT DocImportSplitASD( LPSTR pcStr, INT cbSize, PAGELOAD pfPageLoad )
 
 		for( d = 0; cbItem > d; d++ )
 		{
-			if( (0x0D == pcCaret[d]) && (0x0A == pcCaret[d+1]) )	//	末端であるか
+			if( (0x0D == pcCaret[d]) && (0x0A == pcCaret[d+1]) )	//	���[�ł��邩
 			{
-				pcCaret[d]   = 0x00;	//	末端なのでNULLにする
+				pcCaret[d]   = 0x00;	//	���[�Ȃ̂�NULL�ɂ���
 				pcCaret[d+1] = 0x00;
 
 				if( pcDesc ){	ptName =  SjisDecodeAlloc( pcDesc );	}
@@ -1084,25 +1084,25 @@ UINT DocImportSplitASD( LPSTR pcStr, INT cbSize, PAGELOAD pfPageLoad )
 				break;
 			}
 
-			//	処理順番注意
-			if( (0x01 == pcCaret[d]) && (0x01 == pcCaret[d+1]) )	//	改行であるか
+			//	�������Ԓ���
+			if( (0x01 == pcCaret[d]) && (0x01 == pcCaret[d+1]) )	//	���s�ł��邩
 			{
-				pcCaret[d]   = 0x0D;	//	￥ｒ
-				pcCaret[d+1] = 0x0A;	//	￥ｎ
-				d++;	//	変換したので次に進めるのがよい
+				pcCaret[d]   = 0x0D;	//	����
+				pcCaret[d+1] = 0x0A;	//	����
+				d++;	//	�ϊ������̂Ŏ��ɐi�߂�̂��悢
 			}
 
-			if( (0x02 == pcCaret[d]) && (0x02 == pcCaret[d+1]) )	//	アイテムと説明の区切り
+			if( (0x02 == pcCaret[d]) && (0x02 == pcCaret[d+1]) )	//	�A�C�e���Ɛ����̋�؂�
 			{
-				pcDesc = &(pcCaret[d+2]);	//	説明開始位置
+				pcDesc = &(pcCaret[d+2]);	//	�����J�n�ʒu
 
-				pcCaret[d]   = 0x00;	//	仕切りなのでNULLにする
+				pcCaret[d]   = 0x00;	//	�d�؂�Ȃ̂�NULL�ɂ���
 				pcCaret[d+1] = 0x00;
-				d++;	//	変換したので次に進めるのがよい
+				d++;	//	�ϊ������̂Ŏ��ɐi�߂�̂��悢
 			}
 		}
 
-		ptCont = SjisDecodeAlloc( pcCaret );	//	作っておく
+		ptCont = SjisDecodeAlloc( pcCaret );	//	����Ă���
 		StringCchLength( ptCont, STRSAFE_MAX_CCH, &cchItem );
 
 		pfPageLoad( ptName, ptCont, cchItem );
@@ -1114,7 +1114,7 @@ UINT DocImportSplitASD( LPSTR pcStr, INT cbSize, PAGELOAD pfPageLoad )
 
 		pcCaret = pcEnd;
 
-	}while( *pcCaret  );	//	データ有る限りループで探す
+	}while( *pcCaret  );	//	�f�[�^�L����胋�[�v�ŒT��
 
 	return iNumber;
 }
@@ -1122,9 +1122,9 @@ UINT DocImportSplitASD( LPSTR pcStr, INT cbSize, PAGELOAD pfPageLoad )
 
 
 /*!
-	頁名をセットする・ファイルコア函数
-	@param[in]	ptName	セットする頁名称へのポインター
-	@return		HRESULT	終了状態コード
+	�Ŗ����Z�b�g����E�t�@�C���R�A����
+	@param[in]	ptName	�Z�b�g����Ŗ��̂ւ̃|�C���^�[
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT DocPageNameSet( LPTSTR ptName )
 {
@@ -1137,9 +1137,9 @@ HRESULT DocPageNameSet( LPTSTR ptName )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ページ追加処理・ファイルコア函数
-	@param[in]	iAdding	この指定ページの次に追加・-1で末端に追加
-	@return	INT	新規作成したページ番号
+	�y�[�W�ǉ������E�t�@�C���R�A����
+	@param[in]	iAdding	���̎w��y�[�W�̎��ɒǉ��E-1�Ŗ��[�ɒǉ�
+	@return	INT	�V�K�쐬�����y�[�W�ԍ�
 */
 INT DocPageCreate( INT iAdding )
 {
@@ -1156,38 +1156,38 @@ INT DocPageCreate( INT iAdding )
 	try{
 #endif
 
-	ZeroONELINE( &stLine  );	//	新規作成したら、壱行目が０文字な枠を作る
+	ZeroONELINE( &stLine  );	//	�V�K�쐬������A��s�ڂ��O�����Șg�����
 
-	//	こっちもZeroONEPAGEとかにまとめるか
+	//	��������ZeroONEPAGE�Ƃ��ɂ܂Ƃ߂邩
 	ZeroMemory( stPage.atPageName, sizeof(stPage.atPageName) );
 //	stPage.dDotCnt = 0;
 	stPage.dByteSz = 0;
 	stPage.ltPage.clear(  );
-	stPage.ltPage.push_back( stLine );	//	１頁の枠を作って
-	stPage.dSelLineTop    =  -1;		//	無効は－１を注意
+	stPage.ltPage.push_back( stLine );	//	�P�ł̘g�������
+	stPage.dSelLineTop    =  -1;		//	�����́|�P�𒍈�
 	stPage.dSelLineBottom =  -1;		//	
 	stPage.ptRawData = NULL;
 	SqnInitialise( &(stPage.stUndoLog) );
 
-	//	今の頁の次に作成
+	//	���̕ł̎��ɍ쐬
 	iTotal = DocNowFilePageCount(  );
 
 	if( 0 <= iAdding )
 	{
-		iNext = iAdding + 1;	//	次の頁
-		if( iTotal <= iNext ){	iNext =  -1;	}	//	全頁より多いなら末端指定
+		iNext = iAdding + 1;	//	���̕�
+		if( iTotal <= iNext ){	iNext =  -1;	}	//	�S�ł�葽���Ȃ疖�[�w��
 	}
 	else
 	{
 		iNext = -1;
 	}
 
-	if( 0 >  iNext )	//	末尾に追加
+	if( 0 >  iNext )	//	�����ɒǉ�
 	{
-		(*gitFileIt).vcCont.push_back( stPage  );	//	ファイル構造体に追加
+		(*gitFileIt).vcCont.push_back( stPage  );	//	�t�@�C���\���̂ɒǉ�
 
 		iAddPage = DocNowFilePageCount( );
-		iAddPage--;	//	末端に追加したんだから、個数数えて－１したら０インデックス番号
+		iAddPage--;	//	���[�ɒǉ������񂾂���A�������ā|�P������O�C���f�b�N�X�ԍ�
 	}
 	else
 	{
@@ -1204,15 +1204,15 @@ INT DocPageCreate( INT iAdding )
 	catch( ... ){	return  ETC_MSG( ("etc error"), 0 );	}
 #endif
 
-	return iAddPage;	//	追加したページ番号
+	return iAddPage;	//	�ǉ������y�[�W�ԍ�
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	頁を削除・ファイルコア函数
-	@param[in]	iPage	削除する頁の番号
-	@param[in]	iBack	－１無視　０～削除したあと移動する頁指定
-	@return		HRESULT	終了状態コード
+	�ł��폜�E�t�@�C���R�A����
+	@param[in]	iPage	�폜����ł̔ԍ�
+	@param[in]	iBack	�|�P�����@�O�`�폜�������ƈړ�����Ŏw��
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT DocPageDelete( INT iPage, INT iBack )
 {
@@ -1225,32 +1225,32 @@ HRESULT DocPageDelete( INT iPage, INT iBack )
 	try{
 #endif
 
-	//	ここでバックアップを？
+	//	�����Ńo�b�N�A�b�v���H
 
-	//	街頭位置までイテレータをもっていく
+	//	�X���ʒu�܂ŃC�e���[�^�������Ă���
 	itPage = (*gitFileIt).vcCont.begin(  );
 	for( i = 0; iPage > i; i++ ){	itPage++;	}
 
 	FREE( itPage->ptRawData );
 
-	SqnFreeAll( &(itPage->stUndoLog)  );	//	アンドゥログ削除
-	(*gitFileIt).vcCont.erase( itPage  );	//	さっくり削除
-	gixFocusPage = -1;	//	頁選択無効にする
+	SqnFreeAll( &(itPage->stUndoLog)  );	//	�A���h�D���O�폜
+	(*gitFileIt).vcCont.erase( itPage  );	//	��������폜
+	gixFocusPage = -1;	//	�őI�𖳌��ɂ���
 
 
 	PageListDelete( iPage );
 
-	if( 0 <= iBack )	//	戻り先指定
+	if( 0 <= iBack )	//	�߂��w��
 	{
 		iNew = iBack;
 	}
 	else
 	{
-		iNew = iPage - 1;	//	削除したら一つ前の頁へ
+		iNew = iPage - 1;	//	�폜�������O�̕ł�
 		if( 0 > iNew )	iNew = 0;
 	}
 
-	DocPageChange( iNew );	//	削除したら頁移動
+	DocPageChange( iNew );	//	�폜������ňړ�
 
 #ifdef DO_TRY_CATCH
 	}
@@ -1263,10 +1263,10 @@ HRESULT DocPageDelete( INT iPage, INT iBack )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ディレイしてる頁の読込
-	@param[in]	itFile	対象のファイル
-	@param[in]	iPage	そのファイルの頁・じっしつ意味ない
-	@return		非０ロードした　０ロード済であった
+	�f�B���C���Ă�ł̓Ǎ�
+	@param[in]	itFile	�Ώۂ̃t�@�C��
+	@param[in]	iPage	���̃t�@�C���̕ŁE�������Ӗ��Ȃ�
+	@return		��O���[�h�����@�O���[�h�ςł�����
 */
 UINT DocDelayPageLoad( FILES_ITR itFile, INT iPage )
 {
@@ -1280,23 +1280,23 @@ UINT DocDelayPageLoad( FILES_ITR itFile, INT iPage )
 
 		StringCchLength( itFile->vcCont.at( iPage ).ptRawData, STRSAFE_MAX_CCH, &cchSize );
 
-		//	ここで、本文を読み込む
-		if( 0 < cchSize )	//	空行でないのなら
+		//	�����ŁA�{����ǂݍ���
+		if( 0 < cchSize )	//	��s�łȂ��̂Ȃ�
 		{
-			DocStringAdd( &dmyX, &dmyY, itFile->vcCont.at( iPage ).ptRawData, cchSize );	//	この中で改行とか面倒見る
-			//	これでは、今のページロード専用になってる
+			DocStringAdd( &dmyX, &dmyY, itFile->vcCont.at( iPage ).ptRawData, cchSize );	//	���̒��ŉ��s�Ƃ��ʓ|����
+			//	����ł́A���̃y�[�W���[�h��p�ɂȂ��Ă�
 		}
 
-		//	アンドゥは一旦リセットすべき＜頁開けただけなので
-		//	変更もONなってたら解除
+		//	�A���h�D�͈�U���Z�b�g���ׂ����ŊJ���������Ȃ̂�
+		//	�ύX��ON�Ȃ��Ă������
 
-	//	DocPageParamGet( NULL, NULL );	//	再計算しちゃう＜文字追加でやってるので問題無い
+	//	DocPageParamGet( NULL, NULL );	//	�Čv�Z�����Ⴄ�������ǉ��ł���Ă�̂Ŗ�薳��
 
-		FREE( itFile->vcCont.at( iPage ).ptRawData  );	//	NULLか否かを見るので注意
+		FREE( itFile->vcCont.at( iPage ).ptRawData  );	//	NULL���ۂ�������̂Œ���
 
 #ifdef FIND_STRINGS
 #ifdef SEARCH_HIGHLIGHT
-		//	検索内容が生きてたらハイライツ処理
+		//	�������e�������Ă���n�C���C�c����
 		FindDelayPageReSearch( iPage );
 #endif
 #endif
@@ -1312,27 +1312,27 @@ UINT DocDelayPageLoad( FILES_ITR itFile, INT iPage )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ページを変更・ファイルコア函数
-	@param[in]	dPageNum	変更したい頁番号
-	@return		HRESULT	終了状態コード
+	�y�[�W��ύX�E�t�@�C���R�A����
+	@param[in]	dPageNum	�ύX�������Ŕԍ�
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT DocPageChange( INT dPageNum )
 {
 	INT	iPrePage;
 
-	//	今の表示内容破棄とかいろいろある
+	//	���̕\�����e�j���Ƃ����낢�날��
 #ifdef DO_TRY_CATCH
 	try{
 #endif
 
-	ViewSelPageAll( -1 );	//	範囲選択を破棄
+	ViewSelPageAll( -1 );	//	�͈͑I����j��
 
 	iPrePage = gixFocusPage;
-	gixFocusPage = dPageNum;	//	先に変更して
+	gixFocusPage = dPageNum;	//	��ɕύX����
 
-	(*gitFileIt).dNowPage = dPageNum;	//	記録
+	(*gitFileIt).dNowPage = dPageNum;	//	�L�^
 
-	//	まだ展開されてないなら
+	//	�܂��W�J����ĂȂ��Ȃ�
 	DocDelayPageLoad( gitFileIt, dPageNum );
 
 	PageListViewChange( dPageNum, iPrePage );
@@ -1348,10 +1348,10 @@ HRESULT DocPageChange( INT dPageNum )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	頁一覧に表示する内容を送る。
-	@param[in]	dPage	頁指定・負数なら現在の頁
-	@param[in]	bMode	非０ステータスバー表示・０ステータスバー無視
-	@return		HRESULT	終了状態コード
+	�ňꗗ�ɕ\��������e�𑗂�B
+	@param[in]	dPage	�Ŏw��E�����Ȃ猻�݂̕�
+	@param[in]	bMode	��O�X�e�[�^�X�o�[�\���E�O�X�e�[�^�X�o�[����
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT DocPageInfoRenew( INT dPage, UINT bMode )
 {
@@ -1364,7 +1364,7 @@ HRESULT DocPageInfoRenew( INT dPage, UINT bMode )
 
 	dBytes = gitFileIt->vcCont.at( dPage ).dByteSz;
 	
-	if( bMode )	//	ステータスバーにバイト数を表示する
+	if( bMode )	//	�X�e�[�^�X�o�[�Ƀo�C�g����\������
 	{
 		MainSttBarSetByteCount( dBytes );
 	}
@@ -1385,21 +1385,21 @@ HRESULT DocPageInfoRenew( INT dPage, UINT bMode )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	指定行のテキストを指定した文字数からゲットする
-	ポインタだけ渡してこっちでメモリ確保する。開放は呼んだ側で
-	@param[in]	rdLine		対象の行番号・絶対０インデックスか
-	@param[in]	iStart		開始文字位置０インデックス・この文字から開始・常時０でよい？
-	@param[out]	*pstTexts	文字とスタイルを格納するバッファを作るためのポインターへのポインター・NULLなら必要文字数だけ返す
-	@param[out]	pchLen		確保した文字数・NULLターミネータはノーカン・バイトじゃないぞ
-	@param[out]	pdFlag		文字列について・普通のとか連続空白とか・NULL不可
-	@return					文字列の使用ドット数
+	�w��s�̃e�L�X�g���w�肵������������Q�b�g����
+	�|�C���^�����n���Ă������Ń������m�ۂ���B�J���͌Ă񂾑���
+	@param[in]	rdLine		�Ώۂ̍s�ԍ��E��΂O�C���f�b�N�X��
+	@param[in]	iStart		�J�n�����ʒu�O�C���f�b�N�X�E���̕�������J�n�E�펞�O�ł悢�H
+	@param[out]	*pstTexts	�����ƃX�^�C�����i�[����o�b�t�@����邽�߂̃|�C���^�[�ւ̃|�C���^�[�ENULL�Ȃ�K�v�����������Ԃ�
+	@param[out]	pchLen		�m�ۂ����������ENULL�^�[�~�l�[�^�̓m�[�J���E�o�C�g����Ȃ���
+	@param[out]	pdFlag		������ɂ��āE���ʂ̂Ƃ��A���󔒂Ƃ��ENULL�s��
+	@return					������̎g�p�h�b�g��
 */
 INT DocLineDataGetAlloc( INT rdLine, INT iStart, LPLETTER *pstTexts, PINT pchLen, PUINT pdFlag )
 {
 	INT		iSize, i = 0, j, dotCnt;
 	INT_PTR	iCount, iLines;
 
-	//	始点と終点を使えるようにする	//	－１なら末端
+	//	�n�_�ƏI�_���g����悤�ɂ���	//	�|�P�Ȃ疖�[
 
 	LINE_ITR	itLine;
 
@@ -1413,21 +1413,21 @@ INT DocLineDataGetAlloc( INT rdLine, INT iStart, LPLETTER *pstTexts, PINT pchLen
 	iCount = itLine->vcLine.size( );
 	*pdFlag = 0;
 
-	if( 0 == iCount )	//	文字列の中身がない
+	if( 0 == iCount )	//	������̒��g���Ȃ�
 	{
 		*pchLen = 0;
 		dotCnt  = 0;
 	}
 	else
 	{
-		if( iStart >= iCount )	return 0;	//	通り過ぎた
+		if( iStart >= iCount )	return 0;	//	�ʂ�߂���
 
-		iSize = iCount - iStart;	//	文字数を入れる
-		//	色換えの必要があるところまでとか、一塊ずつで面倒見るように
+		iSize = iCount - iStart;	//	������������
+		//	�F�����̕K�v������Ƃ���܂łƂ��A��򂸂Ŗʓ|����悤��
 		*pchLen = iSize;
-		iSize++;	//	NULLターミネータの為に増やす
+		iSize++;	//	NULL�^�[�~�l�[�^�ׂ̈ɑ��₷
 
-		if( !pstTexts )	return 0;	//	入れるところないならここで終わる
+		if( !pstTexts )	return 0;	//	�����Ƃ���Ȃ��Ȃ炱���ŏI���
 
 		*pstTexts = (LPLETTER)malloc( iSize * sizeof(LETTER) );
 		if( !( *pstTexts ) ){	TRACE( TEXT("malloc error") );	return 0;	}
@@ -1444,15 +1444,15 @@ INT DocLineDataGetAlloc( INT rdLine, INT iStart, LPLETTER *pstTexts, PINT pchLen
 			dotCnt += itLine->vcLine.at( i ).rdWidth;
 		}
 
-		//	末端がspaceかどうか確認
+		//	���[��space���ǂ����m�F
 		if( iswspace( itLine->vcLine.at( iCount-1 ).cchMozi ) )
 		{	*pdFlag |= CT_LASTSP;	}
 	}
 
-	if( iLines - 1 >  rdLine )	*pdFlag |= CT_RETURN;	//	次の行があるなら改行
-	else						*pdFlag |= CT_EOF;		//	ないならこの行末端がEOF
+	if( iLines - 1 >  rdLine )	*pdFlag |= CT_RETURN;	//	���̍s������Ȃ���s
+	else						*pdFlag |= CT_EOF;		//	�Ȃ��Ȃ炱�̍s���[��EOF
 
-	//	改行の状態を確保
+	//	���s�̏�Ԃ��m��
 	*pdFlag |= itLine->dStyle;
 
 	return dotCnt;
@@ -1461,10 +1461,10 @@ INT DocLineDataGetAlloc( INT rdLine, INT iStart, LPLETTER *pstTexts, PINT pchLen
 
 
 /*!
-	ページ全体を確保する・freeは呼んだ方でやる
-	@param[in]	bStyle	１ユニコードかシフトJIS
-	@param[out]	*pText	確保した領域を返す・ワイド文字かマルチ文字になる・NULLだと必要バイト数を返すのみ
-	@return				確保したバイト数・NULLターミネータも含む
+	�y�[�W�S�̂��m�ۂ���Efree�͌Ă񂾕��ł��
+	@param[in]	bStyle	�P���j�R�[�h���V�t�gJIS
+	@param[out]	*pText	�m�ۂ����̈��Ԃ��E���C�h�������}���`�����ɂȂ�ENULL���ƕK�v�o�C�g����Ԃ��̂�
+	@return				�m�ۂ����o�C�g���ENULL�^�[�~�l�[�^���܂�
 */
 INT DocPageGetAlloc( UINT bStyle, LPVOID *pText )
 {
@@ -1473,13 +1473,13 @@ INT DocPageGetAlloc( UINT bStyle, LPVOID *pText )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ページ全体を文字列で確保する・freeは呼んだ方でやる
-	@param[in]	itFile	確保するファイル
-	@param[in]	dPage	確保する頁番号
-	@param[in]	bStyle	１ユニコードかシフトJISで、矩形かどうか
-	@param[out]	pText	確保した領域を返す・ワイド文字かマルチ文字になる・NULLだと必要バイト数を返すのみ
-	@param[in]	bCrLf	末端に改行付けるか
-	@return				確保したバイト数・NULLターミネータ含む
+	�y�[�W�S�̂𕶎���Ŋm�ۂ���Efree�͌Ă񂾕��ł��
+	@param[in]	itFile	�m�ۂ���t�@�C��
+	@param[in]	dPage	�m�ۂ���Ŕԍ�
+	@param[in]	bStyle	�P���j�R�[�h���V�t�gJIS�ŁA��`���ǂ���
+	@param[out]	pText	�m�ۂ����̈��Ԃ��E���C�h�������}���`�����ɂȂ�ENULL���ƕK�v�o�C�g����Ԃ��̂�
+	@param[in]	bCrLf	���[�ɉ��s�t���邩
+	@return				�m�ۂ����o�C�g���ENULL�^�[�~�l�[�^�܂�
 */
 INT DocPageTextGetAlloc( FILES_ITR itFile, INT dPage, UINT bStyle, LPVOID *pText, BOOLEAN bCrLf )
 {
@@ -1501,20 +1501,20 @@ INT DocPageTextGetAlloc( FILES_ITR itFile, INT dPage, UINT bStyle, LPVOID *pText
 	srString.clear( );
 	wsString.clear( );
 
-	//	デフォ的な
+	//	�f�t�H�I��
 	if( 0 > dPage ){	dPage = gixFocusPage;	}
 
 
-	if( itFile->vcCont.at( dPage ).ptRawData )	//	生データ状態なら
+	if( itFile->vcCont.at( dPage ).ptRawData )	//	���f�[�^��ԂȂ�
 	{
-		if( bStyle & D_UNI )	//	ユニコードである
+		if( bStyle & D_UNI )	//	���j�R�[�h�ł���
 		{
 			wsString = wstring( itFile->vcCont.at( dPage ).ptRawData );
 			if( bCrLf ){	wsString += wstring( CH_CRLFW );	}
 		}
-		else	//	ShiftJISである
+		else	//	ShiftJIS�ł���
 		{
-			pcStr = SjisEncodeAlloc( itFile->vcCont.at( dPage ).ptRawData );	//	ページ全体を文字列で確保
+			pcStr = SjisEncodeAlloc( itFile->vcCont.at( dPage ).ptRawData );	//	�y�[�W�S�̂𕶎���Ŋm��
 			if( pcStr )
 			{
 				srString = string( pcStr );
@@ -1524,9 +1524,9 @@ INT DocPageTextGetAlloc( FILES_ITR itFile, INT dPage, UINT bStyle, LPVOID *pText
 			}
 		}
 	}
-	else	//	ロード済みなら
+	else	//	���[�h�ς݂Ȃ�
 	{
-		//	全文字を頂く
+		//	�S�����𒸂�
 		iLines = itFile->vcCont.at( dPage ).ltPage.size( );
 
 		for( itLines = itFile->vcCont.at( dPage ).ltPage.begin(), i = 0;
@@ -1541,9 +1541,9 @@ INT DocPageTextGetAlloc( FILES_ITR itFile, INT dPage, UINT bStyle, LPVOID *pText
 				wsString += itLines->vcLine.at( j ).cchMozi;
 			}
 
-			if( !(1 == iLines && 0 == iLetters) )	//	壱行かつ零文字は空である
+			if( !(1 == iLines && 0 == iLetters) )	//	��s���땶���͋�ł���
 			{
-				if( iLines > (i+1) )	//	とりあえずファイル末端改行はここでは付けない
+				if( iLines > (i+1) )	//	�Ƃ肠�����t�@�C�����[���s�͂����ł͕t���Ȃ�
 				{
 					srString +=  string( CH_CRLFA );
 					wsString += wstring( CH_CRLFW );
@@ -1560,8 +1560,8 @@ INT DocPageTextGetAlloc( FILES_ITR itFile, INT dPage, UINT bStyle, LPVOID *pText
 
 	if( bStyle & D_UNI )
 	{
-		cchSize = wsString.size(  ) + 1;	//	NULLターミネータ
-		iSize = cchSize * sizeof(TCHAR);	//	ユニコードなのでバイト数は２倍である
+		cchSize = wsString.size(  ) + 1;	//	NULL�^�[�~�l�[�^
+		iSize = cchSize * sizeof(TCHAR);	//	���j�R�[�h�Ȃ̂Ńo�C�g���͂Q�{�ł���
 
 		if( pText )
 		{
@@ -1572,7 +1572,7 @@ INT DocPageTextGetAlloc( FILES_ITR itFile, INT dPage, UINT bStyle, LPVOID *pText
 	}
 	else
 	{
-		iSize = srString.size( ) + 1;	//	NULLターミネータ
+		iSize = srString.size( ) + 1;	//	NULL�^�[�~�l�[�^
 
 		if( pText )
 		{
@@ -1593,13 +1593,13 @@ INT DocPageTextGetAlloc( FILES_ITR itFile, INT dPage, UINT bStyle, LPVOID *pText
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	現在頁の指定行を文字列で確保する・freeは呼んだ方でやる・ファイルと頁指定できたほうがいいか
-	@param[in]	itFile	確保するファイル
-	@param[in]	dPage	確保する頁番号
-	@param[in]	bStyle	ユニコードかシフトJIS
-	@param[in]	dTarget	行番号０インデックス
-	@param[out]	pText	確保した領域を返す・ワイド文字かマルチ文字になる・NULLだと必要バイト数を返すのみ
-	@return		確保したバイト数・NULLターミネータ含む
+	���ݕł̎w��s�𕶎���Ŋm�ۂ���Efree�͌Ă񂾕��ł��E�t�@�C���ƕŎw��ł����ق���������
+	@param[in]	itFile	�m�ۂ���t�@�C��
+	@param[in]	dPage	�m�ۂ���Ŕԍ�
+	@param[in]	bStyle	���j�R�[�h���V�t�gJIS
+	@param[in]	dTarget	�s�ԍ��O�C���f�b�N�X
+	@param[out]	pText	�m�ۂ����̈��Ԃ��E���C�h�������}���`�����ɂȂ�ENULL���ƕK�v�o�C�g����Ԃ��̂�
+	@return		�m�ۂ����o�C�g���ENULL�^�[�~�l�[�^�܂�
 */
 INT DocLineTextGetAlloc( FILES_ITR itFile, INT dPage, UINT bStyle, UINT dTarget, LPVOID *pText )
 {
@@ -1612,7 +1612,7 @@ INT DocLineTextGetAlloc( FILES_ITR itFile, INT dPage, UINT bStyle, UINT dTarget,
 
 	LINE_ITR	itLines;
 
-	//	位置確認
+	//	�ʒu�m�F
 	dLines = itFile->vcCont.at( dPage ).ltPage.size( );
 	if( dLines <= dTarget ){	return 0;	}
 
@@ -1629,8 +1629,8 @@ INT DocLineTextGetAlloc( FILES_ITR itFile, INT dPage, UINT bStyle, UINT dTarget,
 
 	if( bStyle & D_UNI )
 	{
-		cchSize = wsString.size(  ) + 1;	//	NULLターミネータ
-		iSize = cchSize * sizeof(TCHAR);	//	ユニコードなのでバイト数は２倍である
+		cchSize = wsString.size(  ) + 1;	//	NULL�^�[�~�l�[�^
+		iSize = cchSize * sizeof(TCHAR);	//	���j�R�[�h�Ȃ̂Ńo�C�g���͂Q�{�ł���
 
 		if( pText )
 		{
@@ -1641,7 +1641,7 @@ INT DocLineTextGetAlloc( FILES_ITR itFile, INT dPage, UINT bStyle, UINT dTarget,
 	}
 	else
 	{
-		iSize = srString.size( ) + 1;	//	NULLターミネータ
+		iSize = srString.size( ) + 1;	//	NULL�^�[�~�l�[�^
 
 		if( pText )
 		{
@@ -1656,14 +1656,14 @@ INT DocLineTextGetAlloc( FILES_ITR itFile, INT dPage, UINT bStyle, UINT dTarget,
 
 #if 0
 /*!
-	ページ全体を確保する・freeは呼んだ方でやる
-	@param[in]	bStyle	１ユニコードかシフトJIS
-	@param[out]	*pText	確保した領域を返す・ワイド文字かマルチ文字になる・NULLだと必要バイト数を返すのみ
-	@return				確保したバイト数・NULLターミネータも含む
+	�y�[�W�S�̂��m�ۂ���Efree�͌Ă񂾕��ł��
+	@param[in]	bStyle	�P���j�R�[�h���V�t�gJIS
+	@param[out]	*pText	�m�ۂ����̈��Ԃ��E���C�h�������}���`�����ɂȂ�ENULL���ƕK�v�o�C�g����Ԃ��̂�
+	@return				�m�ۂ����o�C�g���ENULL�^�[�~�l�[�^���܂�
 */
 INT DocPageTextAllGetAlloc( UINT bStyle, LPVOID *pText )
 {
-	//	SJISの場合は、ユニコード文字は&#dddd;で確保される
+	//	SJIS�̏ꍇ�́A���j�R�[�h������&#dddd;�Ŋm�ۂ����
 
 	UINT_PTR	iLines, i, iLetters, j;
 	UINT_PTR	cchSize;
@@ -1672,7 +1672,7 @@ INT DocPageTextAllGetAlloc( UINT bStyle, LPVOID *pText )
 	LPTSTR		ptData;
 	LPSTR		pcStr;
 
-	string	srString;	//	ユニコード・シフトJISで確保
+	string	srString;	//	���j�R�[�h�E�V�t�gJIS�Ŋm��
 	wstring	wsString;
 
 	LINE_ITR	itLine;
@@ -1681,14 +1681,14 @@ INT DocPageTextAllGetAlloc( UINT bStyle, LPVOID *pText )
 	srString.clear( );
 	wsString.clear( );
 
-	if( gitFileIt->vcCont.at( gixFocusPage ).ptRawData )	//	生データ状態なら
+	if( gitFileIt->vcCont.at( gixFocusPage ).ptRawData )	//	���f�[�^��ԂȂ�
 	{
 		ptData = (*gitFileIt).vcCont.at( gixFocusPage ).ptRawData;
 		StringCchLength( ptData, STRSAFE_MAX_CCH, &cchSize );
 
-		if( bStyle & D_UNI )	//	ユニコードである
+		if( bStyle & D_UNI )	//	���j�R�[�h�ł���
 		{
-			iSize = (cchSize+1) * sizeof(TCHAR);	//	NULLターミネータ分足す
+			iSize = (cchSize+1) * sizeof(TCHAR);	//	NULL�^�[�~�l�[�^������
 
 			if( pText )
 			{
@@ -1703,7 +1703,7 @@ INT DocPageTextAllGetAlloc( UINT bStyle, LPVOID *pText )
 			if( pcStr )
 			{
 				StringCchLengthA( pcStr, STRSAFE_MAX_CCH, &cchSize );
-				iSize = cchSize + 1;	//	NULLターミネータ分足す
+				iSize = cchSize + 1;	//	NULL�^�[�~�l�[�^������
 
 				if( pText ){	*pText =  pcStr;	}
 				else{	FREE( pcStr );	}
@@ -1712,14 +1712,14 @@ INT DocPageTextAllGetAlloc( UINT bStyle, LPVOID *pText )
 	}
 	else
 	{
-		//	ページ全体の行数
+		//	�y�[�W�S�̂̍s��
 		iLines = DocNowFilePageLineCount( );
 
 		itLine = (*gitFileIt).vcCont.at( gixFocusPage ).ltPage.begin();
 
 		for( i = 0; iLines > i; i++, itLine++ )
 		{
-			//	各行の文字数
+			//	�e�s�̕�����
 			iLetters = itLine->vcLine.size( );
 
 			if( bStyle & D_UNI )
@@ -1742,10 +1742,10 @@ INT DocPageTextAllGetAlloc( UINT bStyle, LPVOID *pText )
 			}
 		}
 
-		if( bStyle & D_UNI )	//	ユニコードである
+		if( bStyle & D_UNI )	//	���j�R�[�h�ł���
 		{
-			cchSize = wsString.size(  ) + 1;	//	NULLターミネータ分足す
-			iSize = cchSize * sizeof(TCHAR);	//	ユニコードなのでバイト数は２倍である
+			cchSize = wsString.size(  ) + 1;	//	NULL�^�[�~�l�[�^������
+			iSize = cchSize * sizeof(TCHAR);	//	���j�R�[�h�Ȃ̂Ńo�C�g���͂Q�{�ł���
 
 			if( pText )
 			{
@@ -1756,7 +1756,7 @@ INT DocPageTextAllGetAlloc( UINT bStyle, LPVOID *pText )
 		}
 		else
 		{
-			iSize = srString.size( ) + 1;	//	NULLターミネータ分足す
+			iSize = srString.size( ) + 1;	//	NULL�^�[�~�l�[�^������
 
 			if( pText )
 			{
@@ -1773,21 +1773,21 @@ INT DocPageTextAllGetAlloc( UINT bStyle, LPVOID *pText )
 #endif
 
 /*!
-	指定されたページ全体をプレビュー用にSJISで確保する・freeは呼んだ方でやる
-	@param[in]	iPage	ターゲット頁番号
-	@param[out]	pdBytes	確保したバイト数返す・NULLターミネータも含む
-	@return				確保した領域・SJIS文字列である
+	�w�肳�ꂽ�y�[�W�S�̂��v���r���[�p��SJIS�Ŋm�ۂ���Efree�͌Ă񂾕��ł��
+	@param[in]	iPage	�^�[�Q�b�g�Ŕԍ�
+	@param[out]	pdBytes	�m�ۂ����o�C�g���Ԃ��ENULL�^�[�~�l�[�^���܂�
+	@return				�m�ۂ����̈�ESJIS������ł���
 */
 LPSTR DocPageTextPreviewAlloc( INT iPage, PINT pdBytes )
 {
-	//	SJISの場合は、ユニコード文字は&#dddd;で確保される
+	//	SJIS�̏ꍇ�́A���j�R�[�h������&#dddd;�Ŋm�ۂ����
 
 	UINT_PTR	iLines, i, iLetters;
 	INT_PTR		iSize;
 	LPSTR	pcText = NULL;
 	CHAR	acEntity[10];
 
-	string	srString;	//	シフトJISで確保
+	string	srString;	//	�V�t�gJIS�Ŋm��
 	LINE_ITR	itLine, itLineEnd;
 	LETR_ITR	itLtr;
 
@@ -1803,7 +1803,7 @@ LPSTR DocPageTextPreviewAlloc( INT iPage, PINT pdBytes )
 
 	widString.clear();
 
-	if(  (*gitFileIt).vcCont.at( iPage ).ptRawData )	//	生データ状態なら
+	if(  (*gitFileIt).vcCont.at( iPage ).ptRawData )	//	���f�[�^��ԂȂ�
 	{
 		ptCaret = (*gitFileIt).vcCont.at( iPage ).ptRawData;
 		StringCchLength( ptCaret, STRSAFE_MAX_CCH, &iLetters );
@@ -1817,7 +1817,7 @@ LPSTR DocPageTextPreviewAlloc( INT iPage, PINT pdBytes )
 			else if( TEXT('\r') == ptCaret[i] )
 			{
 				widString += wstring( TEXT("<br>") );
-				i++;	//	0x0A分進める
+				i++;	//	0x0A���i�߂�
 			}
 			else
 			{
@@ -1825,14 +1825,14 @@ LPSTR DocPageTextPreviewAlloc( INT iPage, PINT pdBytes )
 			}
 		}
 
-		widString += wstring( TEXT("<br>") );	//	末尾に改行あっておｋ？
+		widString += wstring( TEXT("<br>") );	//	�����ɉ��s�����Ă����H
 
-		pcText = SjisEncodeAlloc( widString.c_str() );	//	Preview用
+		pcText = SjisEncodeAlloc( widString.c_str() );	//	Preview�p
 		iSize = strlen( pcText );
 	}
 	else
 	{
-		//	ページ全体の行数
+		//	�y�[�W�S�̂̍s��
 		iLines    = (*gitFileIt).vcCont.at( iPage ).ltPage.size( );
 
 		itLine    = (*gitFileIt).vcCont.at( iPage ).ltPage.begin( );
@@ -1840,12 +1840,12 @@ LPSTR DocPageTextPreviewAlloc( INT iPage, PINT pdBytes )
 
 		for( i = 0; itLine != itLineEnd; i++, itLine++ )
 		{
-			//	各行の文字数
+			//	�e�s�̕�����
 			iLetters = itLine->vcLine.size( );
 
 			for( itLtr = itLine->vcLine.begin(); itLtr != itLine->vcLine.end(); itLtr++ )
 			{
-				//	HTML的にヤバイ文字をエンティティする
+				//	HTML�I�Ƀ��o�C�������G���e�B�e�B����
 				if( HtmlEntityCheckA( itLtr->cchMozi, acEntity, 10 ) )
 				{
 					srString +=  string( acEntity );
@@ -1856,11 +1856,11 @@ LPSTR DocPageTextPreviewAlloc( INT iPage, PINT pdBytes )
 				}
 			}
 
-	//全行に改行あってかまわない？
+	//�S�s�ɉ��s�����Ă��܂�Ȃ��H
 			srString +=  string( "<br>" );
 		}
 
-		iSize = srString.size( ) + 1;	//	NULLターミネータ分足す
+		iSize = srString.size( ) + 1;	//	NULL�^�[�~�l�[�^������
 
 		pcText = (LPSTR)malloc( iSize );
 		ZeroMemory( pcText, iSize );
@@ -1875,8 +1875,8 @@ LPSTR DocPageTextPreviewAlloc( INT iPage, PINT pdBytes )
 
 
 /*!
-	現在のユニコード数値参照の具合に合わせて文字列をチェインジ
-	@return		HRESULT	終了状態コード
+	���݂̃��j�R�[�h���l�Q�Ƃ̋�ɍ��킹�ĕ�������`�F�C���W
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT UnicodeRadixExchange( LPVOID pVoid )
 {
@@ -1888,16 +1888,16 @@ HRESULT UnicodeRadixExchange( LPVOID pVoid )
 
 	iPage = DocNowFilePageCount(  );
 
-	for( dP = 0; iPage >  dP; dP++ )	//	全頁
+	for( dP = 0; iPage >  dP; dP++ )	//	�S��
 	{
 		iLine = (*gitFileIt).vcCont.at( dP ).ltPage.size(  );
 
 		itLine = (*gitFileIt).vcCont.at( dP ).ltPage.begin();
-		for( dL = 0; iLine >  dL; dL++, itLine++ )	//	全行
+		for( dL = 0; iLine >  dL; dL++, itLine++ )	//	�S�s
 		{
 			iMozi = itLine->vcLine.size(  );
 
-			for( dM = 0; iMozi >  dM; dM++ )	//	全字
+			for( dM = 0; iMozi >  dM; dM++ )	//	�S��
 			{
 				if( itLine->vcLine.at( dM ).mzStyle & CT_CANTSJIS )
 				{
@@ -1906,7 +1906,7 @@ HRESULT UnicodeRadixExchange( LPVOID pVoid )
 					else{					StringCchPrintfA( acSjis, 10, ("&#%d;"),  cchMozi );	}
 
 					StringCchCopyA( itLine->vcLine.at( dM ).acSjis, 10, acSjis );
-//	TODO:	バイト数再計算が必要
+//	TODO:	�o�C�g���Čv�Z���K�v
 				}
 			}
 		}
@@ -1917,11 +1917,11 @@ HRESULT UnicodeRadixExchange( LPVOID pVoid )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ページ分割処理・カーソル位置の次の行から終わりまでを次の頁へ
-	@param[in]	hWnd	ウインドウハンドル
-	@param[in]	hInst	実存ハンドル
-	@param[in]	iNow	今の行
-	@return		HRESULT	終了状態コード
+	�y�[�W���������E�J�[�\���ʒu�̎��̍s����I���܂ł����̕ł�
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@param[in]	hInst	�����n���h��
+	@param[in]	iNow	���̍s
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT DocPageDivide( HWND hWnd, HINSTANCE hInst, INT iNow )
 {
@@ -1933,40 +1933,40 @@ HRESULT DocPageDivide( HWND hWnd, HINSTANCE hInst, INT iNow )
 
 	ZeroONELINE( &stLine );
 
-	//mRslt = MessageBox( hWnd, TEXT("分割しちゃったら復帰できないよ・・・\r\n本当にバラしていい？"), TEXT("確認です"), MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON2 );
+	//mRslt = MessageBox( hWnd, TEXT("��������������畜�A�ł��Ȃ���E�E�E\r\n�{���Ƀo�����Ă����H"), TEXT("�m�F�ł�"), MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON2 );
 	mRslt = MessageBoxCheckBox( hWnd, hInst, 1 );
 	if( IDNO == mRslt ){	return  E_ABORT;	}
 
-//分割は、アンドゥをリセットすべし＜要は削除なので、リセットしなくてもいいかもだ
-//今の頁の該当部分を削除しちゃう
+//�����́A�A���h�D�����Z�b�g���ׂ����v�͍폜�Ȃ̂ŁA���Z�b�g���Ȃ��Ă�����������
+//���̕ł̊Y���������폜�����Ⴄ
 
-	iLines = DocNowFilePageLineCount(  );//DocPageParamGet( NULL, NULL );	//	行数確保
+	iLines = DocNowFilePageLineCount(  );//DocPageParamGet( NULL, NULL );	//	�s���m��
 
 	if( iLines <= iDivLine )	return E_OUTOFMEMORY;
 
-	//	今の頁の次に作成
+	//	���̕ł̎��ɍ쐬
 	//iTotal = DocNowFilePageCount(  );
-	//iNext = gixFocusPage + 1;	//	次の頁
-	//if( iTotal <= iNext ){	iNext =  -1;	}	//	全頁より多いなら末端指定
+	//iNext = gixFocusPage + 1;	//	���̕�
+	//if( iTotal <= iNext ){	iNext =  -1;	}	//	�S�ł�葽���Ȃ疖�[�w��
 
-	iNewPage = DocPageCreate( gixFocusPage );	//	新頁
-	PageListInsert( iNewPage  );	//	ページリストビューに追加
+	iNewPage = DocPageCreate( gixFocusPage );	//	�V��
+	PageListInsert( iNewPage  );	//	�y�[�W���X�g�r���[�ɒǉ�
 
-	//	空の壱行が作られてるので、削除しておく
+	//	��̈�s������Ă�̂ŁA�폜���Ă���
 	(*gitFileIt).vcCont.at( iNewPage ).ltPage.clear(  );
 
 	itLine = (*gitFileIt).vcCont.at( gixFocusPage ).ltPage.begin( );
-	std::advance( itLine, iDivLine );	//	該当行まで進める
+	std::advance( itLine, iDivLine );	//	�Y���s�܂Ői�߂�
 
-	itEnd  = (*gitFileIt).vcCont.at( gixFocusPage ).ltPage.end( );	//	末端位置確保
+	itEnd  = (*gitFileIt).vcCont.at( gixFocusPage ).ltPage.end( );	//	���[�ʒu�m��
 
 	std::copy( itLine, itEnd, back_inserter( (*gitFileIt).vcCont.at( iNewPage ).ltPage ) );
 
 	(*gitFileIt).vcCont.at( gixFocusPage ).ltPage.erase( itLine, itEnd );
 
-	SqnFreeAll( &((*gitFileIt).vcCont.at( gixFocusPage ).stUndoLog) );	//	アンドゥログ削除
+	SqnFreeAll( &((*gitFileIt).vcCont.at( gixFocusPage ).stUndoLog) );	//	�A���h�D���O�폜
 
-	//	バイト情報とかの取り直し
+	//	�o�C�g���Ƃ��̎�蒼��
 	DocPageByteCount( gitFileIt, gixFocusPage, NULL, NULL );
 	DocPageInfoRenew( gixFocusPage, TRUE );
 
@@ -1980,8 +1980,8 @@ HRESULT DocPageDivide( HWND hWnd, HINSTANCE hInst, INT iNow )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ホットキーによる投下の調整
-	@return		HRESULT	終了状態コード
+	�z�b�g�L�[�ɂ�铊���̒���
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT DocThreadDropCopy( VOID )
 {
@@ -1990,15 +1990,15 @@ HRESULT DocThreadDropCopy( VOID )
 	INT	cbSize, maxPage;//, dFocusBuf;
 	LPVOID	pcString = NULL;
 
-//	dFocusBuf = gixFocusPage;	//	現在頁を一旦待避させて
-//	gixFocusPage = gixDropPage;	//	投下用頁にして
+//	dFocusBuf = gixFocusPage;	//	���ݕł���U�Ҕ�������
+//	gixFocusPage = gixDropPage;	//	�����p�łɂ���
 
 //	cbSize = DocPageTextAllGetAlloc( D_SJIS, &pcString );
 	cbSize = DocPageTextGetAlloc( gitFileIt, gixDropPage, D_SJIS, &pcString, FALSE );
 
-//	gixFocusPage = dFocusBuf;	//	終わったら戻す
+//	gixFocusPage = dFocusBuf;	//	�I�������߂�
 
-	TRACE( TEXT("%d 頁をコピー"), gixDropPage );
+	TRACE( TEXT("%d �ł��R�s�["), gixDropPage );
 
 	DocClipboardDataSet( pcString, cbSize, D_SJIS );
 
@@ -2007,17 +2007,17 @@ HRESULT DocThreadDropCopy( VOID )
 	ZeroMemory( atInfo, sizeof(atInfo) );
 	MultiByteToWideChar( CP_ACP, 0, acBuf, (INT)strlen(acBuf), atInfo, 256 );
 
-	StringCchPrintf( atTitle, 64, TEXT("%d 頁をコピーしたよ"), gixDropPage + 1 );
+	StringCchPrintf( atTitle, 64, TEXT("%d �ł��R�s�[������"), gixDropPage + 1 );
 
 	NotifyBalloonExist( atInfo, atTitle, NIIF_INFO );
 
 	FREE( pcString );
 
-	gixDropPage++;	//	次の頁へ
+	gixDropPage++;	//	���̕ł�
 
 	maxPage = DocNowFilePageCount(  );
 	if( maxPage <= gixDropPage )	gixDropPage = 0;
-	//	最終頁までイッたら先頭に戻る
+	//	�ŏI�ł܂ŃC�b����擪�ɖ߂�
 
 
 	return S_OK;
@@ -2025,8 +2025,8 @@ HRESULT DocThreadDropCopy( VOID )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	選択範囲のテキストを頁名称にする
-	@return		HRESULT	終了状態コード
+	�I��͈͂̃e�L�X�g��Ŗ��̂ɂ���
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT DocSelText2PageName( VOID )
 {
@@ -2036,15 +2036,15 @@ HRESULT DocSelText2PageName( VOID )
 	LPTSTR	ptText;
 	UINT_PTR	cchSize, d;
 
-	if( !( IsSelecting( NULL ) ) )	return  E_ABORT;	//	選択してないなら何もしない
+	if( !( IsSelecting( NULL ) ) )	return  E_ABORT;	//	�I�����ĂȂ��Ȃ牽�����Ȃ�
 
-	cbSize = DocSelectTextGetAlloc( D_UNI, &pString, NULL );	//	選択範囲をいただく
+	cbSize = DocSelectTextGetAlloc( D_UNI, &pString, NULL );	//	�I��͈͂���������
 	TRACE( TEXT("BYTE:%d"), cbSize );
 
 	ptText = (LPTSTR)pString;
 	StringCchLength( ptText, STRSAFE_MAX_CCH, &cchSize );
 
-	for( d = 0; cchSize > d; d++ )	//	改行カット
+	for( d = 0; cchSize > d; d++ )	//	���s�J�b�g
 	{
 		if( 0x0D == ptText[d] )
 		{

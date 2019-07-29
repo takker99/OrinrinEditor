@@ -1,6 +1,6 @@
 /*! @file
-	@brief MLTツリーとかの部分
-	このファイルは MaaTemplate.cpp です。
+	@brief MLT�c���[�Ƃ��̕���
+	���̃t�@�C���� MaaTemplate.cpp �ł��B
 	@author	SikigamiHNQ
 	@date	2011/06/21
 */
@@ -19,11 +19,11 @@ If not, see <http://www.gnu.org/licenses/>.
 
 /*
 
-HukuTabs の中身
-2ch\やる夫派生\やる夫\やる夫11（ミニサイズ）.mlt
-2ch\やる夫派生\やらない夫\やらない夫01（基本）.mlt
+HukuTabs �̒��g
+2ch\���v�h��\���v\���v11�i�~�j�T�C�Y�j.mlt
+2ch\���v�h��\���Ȃ��v\���Ȃ��v01�i��{�j.mlt
 
-PathStripPath	末端をファイル名ディレクトリ関係なしに切り出す
+PathStripPath	���[���t�@�C�����f�B���N�g���֌W�Ȃ��ɐ؂�o��
 
 */
 
@@ -46,40 +46,40 @@ PathStripPath	末端をファイル名ディレクトリ関係なしに切り出
 #endif
 //-------------------------------------------------------------------------------------------------
 
-static HINSTANCE	ghInst;		//!<	アプリの実存
+static HINSTANCE	ghInst;		//!<	�A�v���̎���
 
-static  HWND	ghMainWnd;		//!<	本体ウインドウ
+static  HWND	ghMainWnd;		//!<	�{�̃E�C���h�E
 
 
-static  HWND	ghMaaWnd;		//!<	このウインドウ・staticを解除してはイケナイ
+static  HWND	ghMaaWnd;		//!<	���̃E�C���h�E�Estatic���������Ă̓C�P�i�C
 
-static  HWND	ghStsBarWnd;	//!<	ステータスバーハンドル
+static  HWND	ghStsBarWnd;	//!<	�X�e�[�^�X�o�[�n���h��
 
-EXTERNED HWND	ghSplitaWnd;	//!<	スプリットバーハンドル
+EXTERNED HWND	ghSplitaWnd;	//!<	�X�v���b�g�o�[�n���h��
 
-EXTERNED UINT	gbAAtipView;	//!<	非０で、ＡＡツールチップ表示
+EXTERNED UINT	gbAAtipView;	//!<	��O�ŁA�`�`�c�[���`�b�v�\��
 
-EXTERNED HWND	ghMaaFindDlg;	//!<	MAA検索ダイヤログハンドル
+EXTERNED HWND	ghMaaFindDlg;	//!<	MAA�����_�C�����O�n���h��
 
-static TCHAR	gatProfilePath[MAX_PATH];	//!<	プロファイルディレクトリ
+static TCHAR	gatProfilePath[MAX_PATH];	//!<	�v���t�@�C���f�B���N�g��
 
-static TCHAR	gatTemplatePath[MAX_PATH];	//!<	MLTルートディレクトリ
+static TCHAR	gatTemplatePath[MAX_PATH];	//!<	MLT���[�g�f�B���N�g��
 
-static list<OPENHIST>	gltProfHist;	//!<	プロフ開いた履歴・
-EXTERNED HMENU	ghProfHisMenu;			//!<	履歴表示する部分・動的に内容作成せないかん
+static list<OPENHIST>	gltProfHist;	//!<	�v���t�J���������E
+EXTERNED HMENU	ghProfHisMenu;			//!<	����\�����镔���E���I�ɓ��e�쐬���Ȃ�����
 
 static CONST INT	giStbRoom[] = { 150 , 350 , -1 };
 //-------------------------------------------------------------------------------------------------
 
 LRESULT	CALLBACK MaaTmpltWndProc( HWND, UINT, WPARAM, LPARAM );	//!<	
-BOOLEAN	Maa_OnCreate( HWND, LPCREATESTRUCT );			//!<	WM_CREATE の処理・固定Editとかつくる
-VOID	Maa_OnPaint( HWND );							//!<	WM_PAINT の処理・枠線描画とか
-VOID	Maa_OnDestroy( HWND );							//!<	WM_DESTROY の処理・BRUSHとかのオブジェクトの破壊を忘れないように
+BOOLEAN	Maa_OnCreate( HWND, LPCREATESTRUCT );			//!<	WM_CREATE �̏����E�Œ�Edit�Ƃ�����
+VOID	Maa_OnPaint( HWND );							//!<	WM_PAINT �̏����E�g���`��Ƃ�
+VOID	Maa_OnDestroy( HWND );							//!<	WM_DESTROY �̏����EBRUSH�Ƃ��̃I�u�W�F�N�g�̔j���Y��Ȃ��悤��
 LRESULT	Maa_OnNotify( HWND , INT, LPNMHDR );			//!<	
 VOID	Maa_OnDrawItem( HWND, CONST DRAWITEMSTRUCT * );	//!<	
 VOID	Maa_OnMeasureItem( HWND, MEASUREITEMSTRUCT * );	//!<	
 
-#ifndef _ORRVW	//	エディタのみ
+#ifndef _ORRVW	//	�G�f�B�^�̂�
 VOID	Maa_OnActivate( HWND, UINT, HWND, BOOL );		//!<	
 VOID	Maa_OnShowWindow( HWND, BOOL, UINT );	//!<	
 #endif
@@ -98,11 +98,11 @@ UINT	TreeProfCheckExistent( HWND, LPTSTR, HWND, HTREEITEM, UINT );	//!<
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	複数行ＡＡテンプレウインドウの作成
-	@param[in]	hInstance	アプリのインスタンス
-	@param[in]	hParentWnd	編集ビューのくっついてるウインドウのハンドル・これが本体
+	�����s�`�`�e���v���E�C���h�E�̍쐬
+	@param[in]	hInstance	�A�v���̃C���X�^���X
+	@param[in]	hParentWnd	�ҏW�r���[�̂������Ă�E�C���h�E�̃n���h���E���ꂪ�{��
 	@param[in]	pstFrame	
-	@return		作ったビューのウインドウハンドル
+	@return		������r���[�̃E�C���h�E�n���h��
 */
 HWND MaaTmpltInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame )
 {
@@ -123,7 +123,7 @@ HWND MaaTmpltInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame )
 	ghMainWnd  = hParentWnd;
 	ghInst = hInstance;
 
-	//	専用のウインドウクラス作成
+	//	��p�̃E�C���h�E�N���X�쐬
 	ZeroMemory( &wcex, sizeof(WNDCLASSEX) );
 	wcex.cbSize			= sizeof(WNDCLASSEX);
 	wcex.style			= CS_HREDRAW | CS_VREDRAW;
@@ -146,14 +146,14 @@ HWND MaaTmpltInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame )
 
 	RegisterClassEx( &wcex );
 
-	ghMaaFindDlg = NULL;	//	初期化
+	ghMaaFindDlg = NULL;	//	������
 
 #ifdef _ORRVW
-	SplitBarClass( hInstance );	//	スプリットバーの準備
+	SplitBarClass( hInstance );	//	�X�v���b�g�o�[�̏���
 #endif
 
 	InitWindowPos( INIT_LOAD, WDP_MAATPL, &rect );
-	if( 0 == rect.right || 0 == rect.bottom )	//	幅高さが０はデータ無し
+	if( 0 == rect.right || 0 == rect.bottom )	//	���������O�̓f�[�^����
 	{
 		GetWindowRect( hParentWnd, &wdRect );
 #ifdef _ORRVW
@@ -161,11 +161,11 @@ HWND MaaTmpltInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame )
 		rect.top  = ( wdRect.bottom - MA_HEIGHT ) / 2;
 #else
 		rect.left   = wdRect.right + 64;
-		rect.top    = wdRect.top + 64;	//	オフセットは、他のウインドウとかぶらなきゃ良い
+		rect.top    = wdRect.top + 64;	//	�I�t�Z�b�g�́A���̃E�C���h�E�Ƃ��Ԃ�Ȃ���ǂ�
 #endif
 		rect.right  = MA_WIDTH;
 		rect.bottom = MA_HEIGHT;
-		InitWindowPos( INIT_SAVE, WDP_MAATPL, &rect );//起動時保存
+		InitWindowPos( INIT_SAVE, WDP_MAATPL, &rect );//�N�����ۑ�
 	}
 
 	ghMaaWnd = CreateWindowEx(
@@ -181,7 +181,7 @@ HWND MaaTmpltInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame )
 
 	if( !(ghMaaWnd) )	return NULL;
 
-	//	常に最全面に表示を？
+	//	��ɍőS�ʂɕ\�����H
 #ifdef _ORRVW
 	bTopMost = InitParamValue( INIT_LOAD, VL_MAA_TOPMOST, 1 );
 	if( bTopMost )
@@ -193,7 +193,7 @@ HWND MaaTmpltInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame )
 	ShowWindow( ghMaaWnd, SW_SHOW );
 	UpdateWindow( ghMaaWnd );
 #else
-	if( InitParamValue( INIT_LOAD, VL_MAA_TOPMOST, 1 ) )	//	非表示ならONしない
+	if( InitParamValue( INIT_LOAD, VL_MAA_TOPMOST, 1 ) )	//	��\���Ȃ�ON���Ȃ�
 	{
 		if( InitWindowTopMost( INIT_LOAD, WDP_MAATPL , 0 ) )
 		{	SetWindowPos( ghMaaWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE );	}
@@ -207,16 +207,16 @@ HWND MaaTmpltInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame )
 
 	ZeroMemory( gatTemplatePath, sizeof(gatTemplatePath) );
 
-	//	プロファイルロード
+	//	�v���t�@�C�����[�h
 	ZeroMemory( gatProfilePath, sizeof(gatProfilePath) );
 	InitParamString( INIT_LOAD, VS_PROFILE_NAME, gatProfilePath );
 
-	//	そのファイルは存在するか？
+	//	���̃t�@�C���͑��݂��邩�H
 	hFind = FindFirstFile( gatProfilePath, &stFindData );	//	TEXT("*")
 	if( INVALID_HANDLE_VALUE != hFind ){	FindClose( hFind  );	}
 	else{		ZeroMemory( gatProfilePath, sizeof(gatProfilePath) );	};
 
-	if( NULL != gatProfilePath[0] )	//	起動時無ければ何もしない
+	if( NULL != gatProfilePath[0] )	//	�N����������Ή������Ȃ�
 	{
 		bMode = TreeProfileMake( ghMaaWnd, gatProfilePath );
 		if( 0 > bMode ){	bMode = 0;	}
@@ -227,11 +227,11 @@ HWND MaaTmpltInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame )
 	gbAAtipView = InitParamValue( INIT_LOAD, VL_MAATIP_VIEW, 1 );
 
 #ifndef _ORRVW
-	//	無効高さ値を持って帰る
+	//	���������l�������ċA��
 	MaaTabBarSizeGet( pstFrame );
 	pstFrame->top = pstFrame->bottom;
 	GetClientRect( ghStsBarWnd, &sbRect );
-	pstFrame->bottom = sbRect.bottom;	//	ステータスバーの分の面倒見る
+	pstFrame->bottom = sbRect.bottom;	//	�X�e�[�^�X�o�[�̕��̖ʓ|����
 #endif
 
 	return ghMaaWnd;
@@ -239,9 +239,9 @@ HWND MaaTmpltInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ＭＡＡ窓の位置リセット
-	@param[in]	hMainWnd	メインウインドウハンドル
-	@return	HRESULT	終了状態コード
+	�l�`�`���̈ʒu���Z�b�g
+	@param[in]	hMainWnd	���C���E�C���h�E�n���h��
+	@return	HRESULT	�I����ԃR�[�h
 */
 HRESULT MaaTmpltPositionReset( HWND hMainWnd )
 {
@@ -249,7 +249,7 @@ HRESULT MaaTmpltPositionReset( HWND hMainWnd )
 
 	GetWindowRect( hMainWnd, &wdRect );
 	rect.left   = wdRect.right + 64;
-	rect.top    = wdRect.top + 64;	//	オフセットは、他のウインドウとかぶらなきゃ良い
+	rect.top    = wdRect.top + 64;	//	�I�t�Z�b�g�́A���̃E�C���h�E�Ƃ��Ԃ�Ȃ���ǂ�
 	rect.right  = MA_WIDTH;
 	rect.bottom = MA_HEIGHT;
 
@@ -262,9 +262,9 @@ HRESULT MaaTmpltPositionReset( HWND hMainWnd )
 
 #ifndef _ORRVW
 /*!
-	ＭＡＡ窓のＶＩＥＷをtoggleする
-	@param[in]	bSet	非０Toggle処理　０状態確認
-	@return	非０見えてる　０消えてる
+	�l�`�`���̂u�h�d�v��toggle����
+	@param[in]	bSet	��OToggle�����@�O��Ԋm�F
+	@return	��O�����Ă�@�O�����Ă�
 */
 BOOLEAN MaaViewToggle( UINT bSet )
 {
@@ -272,9 +272,9 @@ BOOLEAN MaaViewToggle( UINT bSet )
 
 	if( !(ghMaaWnd) )	return FALSE;
 
-	bStyle = IsWindowVisible( ghMaaWnd );	//	今の状態確認
+	bStyle = IsWindowVisible( ghMaaWnd );	//	���̏�Ԋm�F
 
-	if( bSet )	//	そして入れ替える
+	if( bSet )	//	�����ē���ւ���
 	{
 		if( bStyle )	ShowWindow( ghMaaWnd, SW_HIDE );
 		else			ShowWindow( ghMaaWnd, SW_SHOW );
@@ -289,13 +289,13 @@ BOOLEAN MaaViewToggle( UINT bSet )
 #endif
 
 /*!
-	ウインドウプロシージャ
-	@param[in]	hWnd		親ウインドウのハンドル
-	@param[in]	message		ウインドウメッセージの識別番号
-	@param[in]	wParam		追加の情報１
-	@param[in]	lParam		追加の情報２
-	@retval 0	メッセージ処理済み
-	@retval no0	ここでは処理せず次に回す
+	�E�C���h�E�v���V�[�W��
+	@param[in]	hWnd		�e�E�C���h�E�̃n���h��
+	@param[in]	message		�E�C���h�E���b�Z�[�W�̎��ʔԍ�
+	@param[in]	wParam		�ǉ��̏��P
+	@param[in]	lParam		�ǉ��̏��Q
+	@retval 0	���b�Z�[�W�����ς�
+	@retval no0	�����ł͏����������ɉ�
 */
 LRESULT CALLBACK MaaTmpltWndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
@@ -308,18 +308,18 @@ LRESULT CALLBACK MaaTmpltWndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 
 	switch( message )
 	{
-		HANDLE_MSG( hWnd, WM_CREATE,      Maa_OnCreate );		//	画面の構成パーツを作る。ボタンとか
-		HANDLE_MSG( hWnd, WM_PAINT,       Maa_OnPaint );		//	画面の更新とか
-		HANDLE_MSG( hWnd, WM_COMMAND,     Maa_OnCommand );		//	ボタン押されたとかのコマンド処理
-		HANDLE_MSG( hWnd, WM_DESTROY,     Maa_OnDestroy );		//	ソフト終了時の処理
-		HANDLE_MSG( hWnd, WM_NOTIFY,      Maa_OnNotify );		//	コモンコントロールの個別イベント
+		HANDLE_MSG( hWnd, WM_CREATE,      Maa_OnCreate );		//	��ʂ̍\���p�[�c�����B�{�^���Ƃ�
+		HANDLE_MSG( hWnd, WM_PAINT,       Maa_OnPaint );		//	��ʂ̍X�V�Ƃ�
+		HANDLE_MSG( hWnd, WM_COMMAND,     Maa_OnCommand );		//	�{�^�������ꂽ�Ƃ��̃R�}���h����
+		HANDLE_MSG( hWnd, WM_DESTROY,     Maa_OnDestroy );		//	�\�t�g�I�����̏���
+		HANDLE_MSG( hWnd, WM_NOTIFY,      Maa_OnNotify );		//	�R�����R���g���[���̌ʃC�x���g
 		HANDLE_MSG( hWnd, WM_SIZE,        Maa_OnSize  );		//	
 		HANDLE_MSG( hWnd, WM_CHAR,        Maa_OnChar  );		//	
 		HANDLE_MSG( hWnd, WM_DRAWITEM,    Maa_OnDrawItem  );	//	
 		HANDLE_MSG( hWnd, WM_MEASUREITEM, Maa_OnMeasureItem );	//	
 		HANDLE_MSG( hWnd, WM_CONTEXTMENU, Maa_OnContextMenu );	//	
-#ifndef _ORRVW	//	エディタのみ
-		HANDLE_MSG( hWnd, WM_ACTIVATE,    Maa_OnActivate  );	//	アクティブになったりはずれたり
+#ifndef _ORRVW	//	�G�f�B�^�̂�
+		HANDLE_MSG( hWnd, WM_ACTIVATE,    Maa_OnActivate  );	//	�A�N�e�B�u�ɂȂ�����͂��ꂽ��
 		HANDLE_MSG( hWnd, WM_SHOWWINDOW,  Maa_OnShowWindow );	//	
 #endif
 		HANDLE_MSG( hWnd, WM_KEYDOWN,     Aai_OnKey );			//	20120221
@@ -328,7 +328,7 @@ LRESULT CALLBACK MaaTmpltWndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 		HANDLE_MSG( hWnd, WM_VSCROLL,     Aai_OnVScroll );		//	
 
 #ifdef MAA_TEXT_FIND
-		case  WM_CTLCOLORSTATIC:	//	文字列部分の色変更
+		case  WM_CTLCOLORSTATIC:	//	�����񕔕��̐F�ύX
 			hdc = (HDC)(wParam);
 			hWndChild = (HWND)(lParam);
 
@@ -343,7 +343,7 @@ LRESULT CALLBACK MaaTmpltWndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 			}
 			break;
 #endif
-		case WM_MOUSEWHEEL:	//	返り値が必要な場合を考慮
+		case WM_MOUSEWHEEL:	//	�Ԃ�l���K�v�ȏꍇ���l��
 			uRslt = Maa_OnMouseWheel( hWnd, (INT)(SHORT)LOWORD(lParam), (INT)(SHORT)HIWORD(lParam), (INT)(SHORT)HIWORD(wParam), (UINT)(SHORT)LOWORD(wParam) );
 			break;
 
@@ -354,13 +354,13 @@ LRESULT CALLBACK MaaTmpltWndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 }
 //-------------------------------------------------------------------------------------------------
 
-#ifndef _ORRVW	//	エディタのみ
+#ifndef _ORRVW	//	�G�f�B�^�̂�
 
 /*!
-	ウインドウが非表示か表示状態にされたときに飛んでくる
-	@param[in]	hWnd	ウインドウハンドル
-	@param[in]	fShow	非０表示状態にされた　０非表示状態にされた
-	@param[in]	status	０ShowWindow函数で操作された　非０その他の理由
+	�E�C���h�E����\�����\����Ԃɂ��ꂽ�Ƃ��ɔ��ł���
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@param[in]	fShow	��O�\����Ԃɂ��ꂽ�@�O��\����Ԃɂ��ꂽ
+	@param[in]	status	�OShowWindow�����ő��삳�ꂽ�@��O���̑��̗��R
 */
 VOID Maa_OnShowWindow( HWND hWnd, BOOL fShow, UINT status )
 {
@@ -373,26 +373,26 @@ SW_PARENTOPENING 3	The window's owner window is being restored.
 */
 	TRACE( TEXT("MAA SHOWWINDOW fShow[%u] status[%u]"), fShow, status );
 
-	if( fShow )	//	表示状態にされたとき
+	if( fShow )	//	�\����Ԃɂ��ꂽ�Ƃ�
 	{
 		rslt = InitParamValue( INIT_LOAD, VL_MAA_TOPMOST, 1 );
-		if( !(rslt) )	//	非表示指示であった場合は
+		if( !(rslt) )	//	��\���w���ł������ꍇ��
 		{
-			ShowWindow( ghMaaWnd, SW_HIDE );	//	非表示にしておく
+			ShowWindow( ghMaaWnd, SW_HIDE );	//	��\���ɂ��Ă���
 		}
 	}
-	//ここでも一瞬表示される
+	//�����ł���u�\�������
 
 	return;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	あくちぶなったら呼ばれる
-	@param[in]	hWnd			ウインドウハンドル
-	@param[in]	state			状態
-	@param[in]	hWndActDeact	あくちぶ又は非あくちぶになるやつ・NULLでも可
-	@param[in]	fMinimized		最小化ならNULL
+	�������ԂȂ�����Ă΂��
+	@param[in]	hWnd			�E�C���h�E�n���h��
+	@param[in]	state			���
+	@param[in]	hWndActDeact	�������Ԗ��͔񂠂����ԂɂȂ��ENULL�ł���
+	@param[in]	fMinimized		�ŏ����Ȃ�NULL
 */
 VOID Maa_OnActivate( HWND hWnd, UINT state, HWND hWndActDeact, BOOL fMinimized )
 {
@@ -401,15 +401,15 @@ VOID Maa_OnActivate( HWND hWnd, UINT state, HWND hWndActDeact, BOOL fMinimized )
 	BOOL		bStyle;
 
 /*
-WA_INACTIVE		0	ウィンドウが非アクティブになります。
-WA_ACTIVE		1	マウスをクリックする以外の方法 (ウィンドウの選択にキーボード インターフェイスを使用する方法など) で、ウィンドウがアクティブになります。
-WA_CLICKACTIVE	2	マウスクリックによって、ウィンドウがアクティブになります。
+WA_INACTIVE		0	�E�B���h�E����A�N�e�B�u�ɂȂ�܂��B
+WA_ACTIVE		1	�}�E�X���N���b�N����ȊO�̕��@ (�E�B���h�E�̑I���ɃL�[�{�[�h �C���^�[�t�F�C�X���g�p������@�Ȃ�) �ŁA�E�B���h�E���A�N�e�B�u�ɂȂ�܂��B
+WA_CLICKACTIVE	2	�}�E�X�N���b�N�ɂ���āA�E�B���h�E���A�N�e�B�u�ɂȂ�܂��B
 */
-	bStyle = IsWindowVisible( ghMaaWnd );	//	今の状態確認
+	bStyle = IsWindowVisible( ghMaaWnd );	//	���̏�Ԋm�F
 	TRACE( TEXT("MAA ACTIVATE[%d] STATE[%u] HWND[%X][%X] MIN[%u]"), bStyle, state, hWndActDeact, ghMainWnd, fMinimized );
 
-//メイン窓もしくは他のフローティング窓からフォーカスを得た場合はなにもしない
-//単独でアクティベートしたら、メイン窓をフォアグラウンドにする？
+//���C�����������͑��̃t���[�e�B���O������t�H�[�J�X�𓾂��ꍇ�͂Ȃɂ����Ȃ�
+//�P�ƂŃA�N�e�B�x�[�g������A���C�������t�H�A�O���E���h�ɂ���H
 
 	return;
 }
@@ -418,14 +418,14 @@ WA_CLICKACTIVE	2	マウスクリックによって、ウィンドウがアクテ
 #endif
 
 /*!
-	クリエイト。
-	@param[in]	hWnd			親ウインドウのハンドル
-	@param[in]	lpCreateStruct	アプリケーションの初期化内容
-	@return	TRUE	特になし
+	�N���G�C�g�B
+	@param[in]	hWnd			�e�E�C���h�E�̃n���h��
+	@param[in]	lpCreateStruct	�A�v���P�[�V�����̏��������e
+	@return	TRUE	���ɂȂ�
 */
 BOOLEAN Maa_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 {
-	HINSTANCE lcInst = lpCreateStruct->hInstance;	//	受け取った初期化情報から、インスタンスハンドルをひっぱる
+	HINSTANCE lcInst = lpCreateStruct->hInstance;	//	�󂯎������������񂩂�A�C���X�^���X�n���h�����Ђ��ς�
 	RECT	rect, sbRect, tbRect;
 
 	INT	iTfTop;
@@ -434,63 +434,63 @@ BOOLEAN Maa_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 
 	GetClientRect( hWnd, &rect );
 
-	//	ステータスバー
+	//	�X�e�[�^�X�o�[
 	ghStsBarWnd = CreateStatusWindow( WS_CHILD | WS_VISIBLE | CCS_BOTTOM | SBARS_SIZEGRIP, TEXT(""), hWnd, IDSB_STATUSBAR );
 	GetClientRect( ghStsBarWnd, &sbRect );
 	rect.bottom -= sbRect.bottom;
 	SendMessage( ghStsBarWnd, SB_SETPARTS, 3, (LPARAM)giStbRoom );
 
 #ifdef MAA_TEXT_FIND
-	//	検索パーツ用エリア
+	//	�����p�[�c�p�G���A
 	rect.bottom -= TXTFIND_BARHEI;
 	iTfTop = rect.bottom + 1;
-	//	「検索」スタティック
-	CreateWindowEx( 0, WC_STATIC, TEXT("検索"), WS_VISIBLE | WS_CHILD | SS_RIGHT | SS_CENTERIMAGE, 1, iTfTop, 40, 23, hWnd, (HMENU)IDS_MAA_TXTFIND_FIND, lcInst, NULL );
-	//	検索単語エディット
+	//	�u�����v�X�^�e�B�b�N
+	CreateWindowEx( 0, WC_STATIC, TEXT("����"), WS_VISIBLE | WS_CHILD | SS_RIGHT | SS_CENTERIMAGE, 1, iTfTop, 40, 23, hWnd, (HMENU)IDS_MAA_TXTFIND_FIND, lcInst, NULL );
+	//	�����P��G�f�B�b�g
 	CreateWindowEx( 0, WC_EDIT, TEXT(""), WS_VISIBLE | WS_CHILD | WS_BORDER, 42, iTfTop, 139, 23, hWnd, (HMENU)IDE_MAA_TXTFIND_TEXT, lcInst, NULL );
-	//	先頭から・表示位置からラヂオボタン
-	CreateWindowEx( 0, WC_BUTTON, TEXT("先頭から"), WS_VISIBLE | WS_CHILD | WS_GROUP | BS_AUTORADIOBUTTON | BS_VCENTER, 183, iTfTop, 80, 23, hWnd, (HMENU)IDB_MAA_TXTFIND_TOP_GO, lcInst, NULL );
-	CreateWindowEx( 0, WC_BUTTON, TEXT("次頁から"), WS_VISIBLE | WS_CHILD | BS_AUTORADIOBUTTON | BS_VCENTER, 265, iTfTop, 80, 23, hWnd, (HMENU)IDB_MAA_TXTFIND_NOW_GO, lcInst, NULL );
+	//	�擪����E�\���ʒu���烉�a�I�{�^��
+	CreateWindowEx( 0, WC_BUTTON, TEXT("�擪����"), WS_VISIBLE | WS_CHILD | WS_GROUP | BS_AUTORADIOBUTTON | BS_VCENTER, 183, iTfTop, 80, 23, hWnd, (HMENU)IDB_MAA_TXTFIND_TOP_GO, lcInst, NULL );
+	CreateWindowEx( 0, WC_BUTTON, TEXT("���ł���"), WS_VISIBLE | WS_CHILD | BS_AUTORADIOBUTTON | BS_VCENTER, 265, iTfTop, 80, 23, hWnd, (HMENU)IDB_MAA_TXTFIND_NOW_GO, lcInst, NULL );
 	CheckDlgButton( hWnd, IDB_MAA_TXTFIND_TOP_GO, BST_CHECKED );
-	//	↓検索ボタン
-	CreateWindowEx( 0, WC_BUTTON, TEXT("↓検索"), WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 347, iTfTop, 65, 23, hWnd, (HMENU)IDB_MAA_TXTFIND_NEXT, lcInst, NULL );
-	//	メッセージ表示枠
+	//	�������{�^��
+	CreateWindowEx( 0, WC_BUTTON, TEXT("������"), WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 347, iTfTop, 65, 23, hWnd, (HMENU)IDB_MAA_TXTFIND_NEXT, lcInst, NULL );
+	//	���b�Z�[�W�\���g
 	CreateWindowEx( 0, WC_STATIC, TEXT(""), WS_VISIBLE | WS_CHILD | SS_CENTERIMAGE, 414, iTfTop, 120, 23, hWnd, (HMENU)IDS_MAA_TXTFIND_MSGBOX, lcInst, NULL );
 #endif
 
-	TreeInitialise( hWnd, lcInst, &rect );	//	ツリービューとお気にビュー作る
+	TreeInitialise( hWnd, lcInst, &rect );	//	�c���[�r���[�Ƃ��C�Ƀr���[���
 
 	MaaTabBarSizeGet( &tbRect );
 
-	//	設定からスプリットバーの位置を引っ張る
+	//	�ݒ肩��X�v���b�g�o�[�̈ʒu����������
 	spPos = InitParamValue( INIT_LOAD, VL_MAA_SPLIT, TMPL_DOCK );
 	ghSplitaWnd = SplitBarCreate( lcInst, hWnd, spPos, tbRect.bottom, rect.bottom - tbRect.bottom );
 
-	AaItemsInitialise( hWnd, lcInst, &rect );	//	MLTの中身表示ビューつくる
+	AaItemsInitialise( hWnd, lcInst, &rect );	//	MLT�̒��g�\���r���[����
 
 	return TRUE;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	COMMANDメッセージの受け取り。ボタン押されたとかで発生
-	@param[in]	hWnd		親ウインドウのハンドル
-	@param[in]	id			メッセージを発生させた子ウインドウの識別子	LOWORD(wParam)
-	@param[in]	hwndCtl		メッセージを発生させた子ウインドウのハンドル	lParam
-	@param[in]	codeNotify	通知メッセージ	HIWORD(wParam)
-	@return		なし
+	COMMAND���b�Z�[�W�̎󂯎��B�{�^�������ꂽ�Ƃ��Ŕ���
+	@param[in]	hWnd		�e�E�C���h�E�̃n���h��
+	@param[in]	id			���b�Z�[�W�𔭐��������q�E�C���h�E�̎��ʎq	LOWORD(wParam)
+	@param[in]	hwndCtl		���b�Z�[�W�𔭐��������q�E�C���h�E�̃n���h��	lParam
+	@param[in]	codeNotify	�ʒm���b�Z�[�W	HIWORD(wParam)
+	@return		�Ȃ�
 */
 VOID Maa_OnCommand( HWND hWnd, INT id, HWND hwndCtl, UINT codeNotify )
 {
 	LONG_PTR	rdExStyle;
 
 #ifdef _ORRVW
-	if( IDM_OPEN_HIS_FIRST <= id && id <= IDM_OPEN_HIS_LAST )	//	開く
+	if( IDM_OPEN_HIS_FIRST <= id && id <= IDM_OPEN_HIS_LAST )	//	�J��
 	{
 		OpenProfileLoad( hWnd, id );
 		return;
 	}
-	else if( IDM_OPEN_HIS_CLEAR ==  id )	//	ファイルオーポン履歴クルヤー
+	else if( IDM_OPEN_HIS_CLEAR ==  id )	//	�t�@�C���I�[�|�������N�����[
 	{
 		OpenProfileLogging( hWnd, NULL );
 		return;
@@ -499,19 +499,19 @@ VOID Maa_OnCommand( HWND hWnd, INT id, HWND hwndCtl, UINT codeNotify )
 
 	switch( id )
 	{
-		//	リストスタティックでのクリックはここにくる
+		//	���X�g�X�^�e�B�b�N�ł̃N���b�N�͂����ɂ���
 		case IDSO_AAITEMS:	TRACE( TEXT("static") );	break;
 
-		//	ドラフトボードオーポン
+		//	�h���t�g�{�[�h�I�[�|��
 		case IDM_DRAUGHT_OPEN:	DraughtWindowCreate( GetModuleHandle(NULL), ghMaaWnd, 0 );	break;
 
-		//	サムネイルオーポン
+		//	�T���l�C���I�[�|��
 		case IDM_MAA_THUMBNAIL_OPEN:	DraughtWindowCreate( GetModuleHandle(NULL), ghMaaWnd, 1 );	break;
 
-		//	使用アイテム一覧のリストボックスで操作があった
+		//	�g�p�A�C�e���ꗗ�̃��X�g�{�b�N�X�ő��삪������
 		case IDLB_FAVLIST:	FavListSelected( hWnd, codeNotify );	break;
 
-		case IDM_TOPMOST_TOGGLE:	//	常時最全面と通常ウインドウのトグル
+		case IDM_TOPMOST_TOGGLE:	//	�펞�őS�ʂƒʏ�E�C���h�E�̃g�O��
 			rdExStyle = GetWindowLongPtr( hWnd, GWL_EXSTYLE );
 			if( WS_EX_TOPMOST & rdExStyle )
 			{
@@ -538,14 +538,14 @@ VOID Maa_OnCommand( HWND hWnd, INT id, HWND hwndCtl, UINT codeNotify )
 #endif
 			break;
 
-		//	ＡＡタイトルコンボックスで操作があった
+		//	�`�`�^�C�g���R���{�b�N�X�ő��삪������
 		case IDCB_AAITEMTITLE:	AaTitleSelect( hWnd, codeNotify );	break;
 
-		//	フォーカスしてるタブを閉じる
+		//	�t�H�[�J�X���Ă�^�u�����
 		case IDM_FILE_CLOSE:	TabMultipleSelDelete( hWnd );	break;
 
 
-		//	ここに来るのは、メインメニューからの選択のみ？ホントか？
+		//	�����ɗ���̂́A���C�����j���[����̑I���̂݁H�z���g���H
 
 #ifdef _ORRVW
 		case IDM_MAAITEM_BKCOLOUR:	MaaBackColourChoose( hWnd );	break;
@@ -553,7 +553,7 @@ VOID Maa_OnCommand( HWND hWnd, INT id, HWND hwndCtl, UINT codeNotify )
 		case IDM_ABOUT:	DialogBox( ghInst , MAKEINTRESOURCE(IDD_ORRVWR_ABOUTBOX), hWnd, About );	break;
 		case IDM_EXIT:	DestroyWindow( hWnd );	break;
 
-		case IDM_GENERAL_OPTION:	//	設定
+		case IDM_GENERAL_OPTION:	//	�ݒ�
 			DialogBoxParam( ghInst, MAKEINTRESOURCE(IDD_ORRVWR_OPTION_DLG), hWnd, OptionDlgProc, NULL );
 			break;
 
@@ -564,18 +564,18 @@ VOID Maa_OnCommand( HWND hWnd, INT id, HWND hwndCtl, UINT codeNotify )
 		case  IDM_WINDOW_CHANGE:	WindowFocusChange( WND_MAAT,  1 );	break;
 		case  IDM_WINDOW_CHG_RVRS:	WindowFocusChange( WND_MAAT, -1 );	break;
 #endif
-		//	Ｅコンテキスト・アクセロリータ　Ｖメニュー・アクセロリータ
+		//	�d�R���e�L�X�g�E�A�N�Z�����[�^�@�u���j���[�E�A�N�Z�����[�^
 		case IDM_FINDMAA_DLG_OPEN:	TreeMaaFileFind( hWnd );	break;
-		//全文検索できるか？
+		//�S�������ł��邩�H
 
 		case IDM_TMPLT_GROUP_NEXT:
 		case IDM_TMPLT_GROUP_PREV:
-			TRACE( TEXT("Ctrl＋↑↓") );
+			TRACE( TEXT("Ctrl�{����") );
 			break;
 
 #ifdef MAA_TEXT_FIND
 		case IDM_FIND_JUMP_NEXT:	AacFindTextEntry( hWnd, 0 );	break;
-		//	ＡＡ内容検索セヨ
+		//	�`�`���e�����Z��
 		case IDB_MAA_TXTFIND_NEXT:	AacFindTextEntry( hWnd, 1 );	break;
 #endif
 		default:	break;
@@ -586,9 +586,9 @@ VOID Maa_OnCommand( HWND hWnd, INT id, HWND hwndCtl, UINT codeNotify )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	PAINT。無効領域が出来たときに発生。背景の扱いに注意。背景を塗りつぶしてから、オブジェクトを描画
-	@param[in]	hWnd	親ウインドウのハンドル
-	@return		無し
+	PAINT�B�����̈悪�o�����Ƃ��ɔ����B�w�i�̈����ɒ��ӁB�w�i��h��Ԃ��Ă���A�I�u�W�F�N�g��`��
+	@param[in]	hWnd	�e�E�C���h�E�̃n���h��
+	@return		����
 */
 VOID Maa_OnPaint( HWND hWnd )
 {
@@ -604,9 +604,9 @@ VOID Maa_OnPaint( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ウインドウを閉じるときに発生。デバイスコンテキストとか確保した画面構造のメモリとかも終了。
-	@param[in]	hWnd	親ウインドウのハンドル
-	@return		無し
+	�E�C���h�E�����Ƃ��ɔ����B�f�o�C�X�R���e�L�X�g�Ƃ��m�ۂ�����ʍ\���̃������Ƃ����I���B
+	@param[in]	hWnd	�e�E�C���h�E�̃n���h��
+	@return		����
 */
 VOID Maa_OnDestroy( HWND hWnd )
 {
@@ -616,21 +616,21 @@ VOID Maa_OnDestroy( HWND hWnd )
 	dwStyle = GetWindowStyle( hWnd );
 	if( !(dwStyle & WS_MINIMIZE) )
 	{
-		//	最大化してたら記録しない？
+		//	�ő剻���Ă���L�^���Ȃ��H
 
-		//	スプリットバーの位置を記録
+		//	�X�v���b�g�o�[�̈ʒu���L�^
 		SplitBarPosGet( ghSplitaWnd, &rect );
 		InitParamValue( INIT_SAVE, VL_MAA_SPLIT, rect.left );
 
-		//	ウインドウ位置も記録
+		//	�E�C���h�E�ʒu���L�^
 		GetWindowRect( hWnd, &rect );
 		rect.right  -= rect.left;
 		rect.bottom -= rect.top;
-		InitWindowPos( INIT_SAVE, WDP_MAATPL, &rect );//終了時保存
+		InitWindowPos( INIT_SAVE, WDP_MAATPL, &rect );//�I�����ۑ�
 	}
 
 	AaItemsInitialise( NULL, NULL, NULL );
-	AacMatrixClear(   );	//	既存の内容全破壊
+	AacMatrixClear(   );	//	�����̓��e�S�j��
 
 	TreeInitialise( NULL, NULL, NULL );
 
@@ -653,11 +653,11 @@ VOID Maa_OnDestroy( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ウインドウのサイズ変更
-	@param[in]	hWnd	ウインドウハンドル
-	@param[in]	state	ウインドウの状態フラグ
-	@param[in]	cx		クライヤントＸ幅
-	@param[in]	cy		クライヤントＹ高さ
+	�E�C���h�E�̃T�C�Y�ύX
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@param[in]	state	�E�C���h�E�̏�ԃt���O
+	@param[in]	cx		�N���C�����g�w��
+	@param[in]	cy		�N���C�����g�x����
 */
 VOID Maa_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 {
@@ -666,16 +666,16 @@ VOID Maa_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 
 	GetClientRect( hWnd, &rect );
 
-	MoveWindow( ghStsBarWnd, 0, 0, 0, 0, TRUE );	//	ステータスバー
+	MoveWindow( ghStsBarWnd, 0, 0, 0, 0, TRUE );	//	�X�e�[�^�X�o�[
 	GetClientRect( ghStsBarWnd, &sbRect );
-	rect.bottom -= sbRect.bottom;	//	ステータスバーの分の面倒見る
+	rect.bottom -= sbRect.bottom;	//	�X�e�[�^�X�o�[�̕��̖ʓ|����
 
 #ifdef MAA_TEXT_FIND
-	//	検索パーツ用エリア
+	//	�����p�[�c�p�G���A
 	rect.bottom -= TXTFIND_BARHEI;
 	iTfTop = rect.bottom + 1;
 
-	//	検索パーツの再配置
+	//	�����p�[�c�̍Ĕz�u
 	SetWindowPos( GetDlgItem(hWnd,IDS_MAA_TXTFIND_FIND),   HWND_TOP,   1, iTfTop, 0, 0, SWP_NOSIZE | SWP_NOZORDER );
 	SetWindowPos( GetDlgItem(hWnd,IDE_MAA_TXTFIND_TEXT),   HWND_TOP,  42, iTfTop, 0, 0, SWP_NOSIZE | SWP_NOZORDER );
 	SetWindowPos( GetDlgItem(hWnd,IDB_MAA_TXTFIND_TOP_GO), HWND_TOP, 183, iTfTop, 0, 0, SWP_NOSIZE | SWP_NOZORDER );
@@ -684,43 +684,43 @@ VOID Maa_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 	SetWindowPos( GetDlgItem(hWnd,IDS_MAA_TXTFIND_MSGBOX), HWND_TOP, 414, iTfTop, 0, 0, SWP_NOSIZE | SWP_NOZORDER );
 #endif
 
-	TabBarResize( hWnd, &rect );	//	タブバー
+	TabBarResize( hWnd, &rect );	//	�^�u�o�[
 	MaaTabBarSizeGet( &tbRect );
 	rect.top = tbRect.bottom;
-	rect.bottom -= tbRect.bottom;	//	タブバーの分の面倒も見る
+	rect.bottom -= tbRect.bottom;	//	�^�u�o�[�̕��̖ʓ|������
 
-	SplitBarResize( ghSplitaWnd, &rect );	//	ＭＡＡ窓のサイズ変更によるスプリットバー
+	SplitBarResize( ghSplitaWnd, &rect );	//	�l�`�`���̃T�C�Y�ύX�ɂ��X�v���b�g�o�[
 
-	TreeResize( hWnd, &rect );		//	ツリービュー
-	AaItemsResize( hWnd, &rect );	//	一覧ビュー
+	TreeResize( hWnd, &rect );		//	�c���[�r���[
+	AaItemsResize( hWnd, &rect );	//	�ꗗ�r���[
 
 	return;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ノーティファイメッセージの処理
-	@param[in]	hWnd		ウインドウハンドル
-	@param[in]	idFrom		NOTIFYを発生させたコントロールのＩＤ
-	@param[in]	pstNmhdr	NOTIFYの詳細
-	@return		処理した内容とか
+	�m�[�e�B�t�@�C���b�Z�[�W�̏���
+	@param[in]	hWnd		�E�C���h�E�n���h��
+	@param[in]	idFrom		NOTIFY�𔭐��������R���g���[���̂h�c
+	@param[in]	pstNmhdr	NOTIFY�̏ڍ�
+	@return		�����������e�Ƃ�
 */
 LRESULT Maa_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 {
-	//	ツリービューのやつ
+	//	�c���[�r���[�̂��
 	if( IDTV_ITEMTREE == idFrom ){	TreeNotify( hWnd , (LPNMTREEVIEW)pstNmhdr );	}
 
-	//	タブバーのやつ
+	//	�^�u�o�[�̂��
 	if( IDTB_TREESEL == idFrom ){	TabBarNotify( hWnd , pstNmhdr );	}
 
-	return 0;	//	何もないなら０を戻す
+	return 0;	//	�����Ȃ��Ȃ�O��߂�
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	オーナードローの発生した処理
-	@param[in]	hWnd			親ウインドウのハンドル
-	@param[in]	*pstDrawItem	ドローの為の情報
+	�I�[�i�[�h���[�̔�����������
+	@param[in]	hWnd			�e�E�C���h�E�̃n���h��
+	@param[in]	*pstDrawItem	�h���[�ׂ̈̏��
 */
 VOID Maa_OnDrawItem( HWND hWnd, CONST DRAWITEMSTRUCT *pstDrawItem )
 {
@@ -734,9 +734,9 @@ VOID Maa_OnDrawItem( HWND hWnd, CONST DRAWITEMSTRUCT *pstDrawItem )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	オーナードローの描画エリアの処理
-	@param[in]	hWnd			親ウインドウのハンドル
-	@param[in]	*pstMeasureItem	描画の為の情報を出したり入れたり
+	�I�[�i�[�h���[�̕`��G���A�̏���
+	@param[in]	hWnd			�e�E�C���h�E�̃n���h��
+	@param[in]	*pstMeasureItem	�`��ׂ̈̏����o��������ꂽ��
 */
 VOID Maa_OnMeasureItem( HWND hWnd, MEASUREITEMSTRUCT *pstMeasureItem )
 {
@@ -752,13 +752,13 @@ VOID Maa_OnMeasureItem( HWND hWnd, MEASUREITEMSTRUCT *pstMeasureItem )
 
 
 /*!
-	まうすほい～る廻ったら
-	@param[in]	hWnd	親ウインドウのハンドル
-	@param[in]	xPos	発生した座標Ｘ
-	@param[in]	yPos	発生した座標Ｙ
-	@param[in]	zDelta	回転量・WHEEL_DELTAの倍数・正の値は前(奥)、負の値は後ろ(手前)へ回された
-	@param[in]	fwKeys	押されてるキー
-	@return		非０フォーカスと真下が違う　０同じ
+	�܂����ق��`��������
+	@param[in]	hWnd	�e�E�C���h�E�̃n���h��
+	@param[in]	xPos	�����������W�w
+	@param[in]	yPos	�����������W�x
+	@param[in]	zDelta	��]�ʁEWHEEL_DELTA�̔{���E���̒l�͑O(��)�A���̒l�͌��(��O)�։񂳂ꂽ
+	@param[in]	fwKeys	������Ă�L�[
+	@return		��O�t�H�[�J�X�Ɛ^�����Ⴄ�@�O����
 */
 UINT Maa_OnMouseWheel( HWND hWnd, INT xPos, INT yPos, INT zDelta, UINT fwKeys )
 {
@@ -781,9 +781,9 @@ UINT Maa_OnMouseWheel( HWND hWnd, INT xPos, INT yPos, INT zDelta, UINT fwKeys )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ステータスバーになんか表示
-	@param[in]	room	描画する枠０インデックス
-	@param[in]	ptMsg	描画する文字列
+	�X�e�[�^�X�o�[�ɂȂ񂩕\��
+	@param[in]	room	�`�悷��g�O�C���f�b�N�X
+	@param[in]	ptMsg	�`�悷�镶����
 */
 VOID StatusBarMsgSet( UINT room, LPTSTR ptMsg )
 {
@@ -797,10 +797,10 @@ VOID StatusBarMsgSet( UINT room, LPTSTR ptMsg )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	プロッファイルを作ってMLTディレクトリも指定したり直ぐ開いたり
-	@param[in]	hWnd	ウインドウハンドル・どこのだろう？
-	@param[in]	ptProf	開くプロッファイル名
-	@return		UINT	正：ＳＱＬから構築　０ファイルから構築セヨ　負：エラー
+	�v���b�t�@�C���������MLT�f�B���N�g�����w�肵���蒼���J������
+	@param[in]	hWnd	�E�C���h�E�n���h���E�ǂ��̂��낤�H
+	@param[in]	ptProf	�J���v���b�t�@�C����
+	@return		UINT	���F�r�p�k����\�z�@�O�t�@�C������\�z�Z���@���F�G���[
 */
 INT TreeProfileMake( HWND hWnd, LPTSTR ptProf )
 {
@@ -820,73 +820,73 @@ INT TreeProfileMake( HWND hWnd, LPTSTR ptProf )
 	{
 		StringCchCopy( atFilePath, MAX_PATH, ptProf );
 	}
-	else	//	開く指定がなかったら、こっちから指定する
+	else	//	�J���w�肪�Ȃ�������A����������w�肷��
 	{
 		ZeroMemory( &stOpenFile, sizeof(OPENFILENAME) );
 		stOpenFile.lStructSize     = sizeof(OPENFILENAME);
 		stOpenFile.hwndOwner       = ghMaaWnd;
-		stOpenFile.lpstrFilter     = TEXT("プロファイル(*.qor)\0*.qor\0全てのファイル(*.*)\0*.*\0\0");
+		stOpenFile.lpstrFilter     = TEXT("�v���t�@�C��(*.qor)\0*.qor\0�S�Ẵt�@�C��(*.*)\0*.*\0\0");
 //		stOpenFile.nFilterIndex    = 1;
 		stOpenFile.lpstrFile       = atFilePath;
 		stOpenFile.nMaxFile        = MAX_PATH;
 		stOpenFile.lpstrFileTitle  = atFileName;
 		stOpenFile.nMaxFileTitle   = MAX_STRING;
 	//	stOpenFile.lpstrInitialDir = 
-		stOpenFile.lpstrTitle      = TEXT("ファイル名を指定するか、作成したいファイル名を入力してね");
+		stOpenFile.lpstrTitle      = TEXT("�t�@�C�������w�肷�邩�A�쐬�������t�@�C��������͂��Ă�");
 		stOpenFile.Flags           = OFN_EXPLORER | OFN_HIDEREADONLY;
 		stOpenFile.lpstrDefExt     = TEXT("qor");
 
-		//ここで FileSaveDialogue を出す
+		//������ FileSaveDialogue ���o��
 		bOpened = GetOpenFileName( &stOpenFile );
 
-		if( !(bOpened) ){	return -1;	}	//	キャンセルしてたら何もしない
+		if( !(bOpened) ){	return -1;	}	//	�L�����Z�����Ă��牽�����Ȃ�
 
 		StringCchCopy( gatProfilePath, MAX_PATH, atFilePath );
 		InitParamString( INIT_SAVE, VS_PROFILE_NAME, atFilePath );
 	}
 
 
-	TabMultipleStore( hWnd );	//	既存のデータ閉じる前に開いてる副タブを保存
-	TabMultipleDeleteAll( hWnd );	//	副タブ全部閉じる
+	TabMultipleStore( hWnd );	//	�����̃f�[�^����O�ɊJ���Ă镛�^�u��ۑ�
+	TabMultipleDeleteAll( hWnd );	//	���^�u�S������
 
-	SqlDatabaseOpenClose( M_DESTROY, NULL );	//	既存のデータは閉じる
+	SqlDatabaseOpenClose( M_DESTROY, NULL );	//	�����̃f�[�^�͕���
 
-	//	プロッファイル名をフルパスで渡す
+	//	�v���b�t�@�C�������t���p�X�œn��
 
 	SqlDatabaseOpenClose( M_CREATE, atFilePath );//MAA_TREE_CACHE	TEXT(":memory:")
-	//	中で開くか勝手に作られる
+	//	���ŊJ��������ɍ����
 
-	//	プロファイル名をステータスバーに表示しておく
+	//	�v���t�@�C�������X�e�[�^�X�o�[�ɕ\�����Ă���
 	StringCchCopy( atBuffer, MAX_PATH, atFilePath );
 	PathStripPath( atBuffer );
-	StatusBarMsgSet( SBMAA_PROFNAME, atBuffer );	//	プロファイル名
+	StatusBarMsgSet( SBMAA_PROFNAME, atBuffer );	//	�v���t�@�C����
 
 	ZeroMemory( atFolder,  sizeof(atFolder) );
 
-	//	開いたPROFILEを記録
+	//	�J����PROFILE���L�^
 	OpenProfileLogging( hWnd, atFilePath );
 
 
-	//	MLTディレクトリをセット
+	//	MLT�f�B���N�g�����Z�b�g
 	ZeroMemory( gatTemplatePath,  sizeof(gatTemplatePath) );
 	SqlTreeProfSelect( NULL, 0, gatTemplatePath, MAX_PATH );
-	//	ディレクトリがなかったらフォルダオーポンダイヤログで指定して再構築
-	//	含むディレクトリと含まないディレクトリを指定出来るようにする
-	//	ディレクトリが有ったら、Cacheを見て再構築すればいい
+	//	�f�B���N�g�����Ȃ�������t�H���_�I�[�|���_�C�����O�Ŏw�肵�čč\�z
+	//	�܂ރf�B���N�g���Ɗ܂܂Ȃ��f�B���N�g�����w��o����悤�ɂ���
+	//	�f�B���N�g�����L������ACache�����čč\�z����΂���
 	if( NULL == gatTemplatePath[0] )
 	{
-		//ダイヤログ呼び出す
-		//ダイヤログでは、ディレクトリ直下のディレクトリをリストアップ
-		//ON/OFFをCheckして、再構築釦＞ツリー再構築
-		//OFFのは再構築しない
-		//	ツリー再構築なら、このダイヤログを呼び出す
+		//�_�C�����O�Ăяo��
+		//�_�C�����O�ł́A�f�B���N�g�������̃f�B���N�g�������X�g�A�b�v
+		//ON/OFF��Check���āA�č\�z�t���c���[�č\�z
+		//OFF�͍̂č\�z���Ȃ�
+		//	�c���[�č\�z�Ȃ�A���̃_�C�����O���Ăяo��
 		iRslt = DialogBoxParam( ghInst, MAKEINTRESOURCE(IDD_PROFILE_TREESEL_DLG), hWnd, TreeProfileDlgProc, (LPARAM)atFolder );
 		if( IDCANCEL == iRslt ){	return -1;	}
 
 		StringCchCopy( gatTemplatePath, MAX_PATH, atFolder );
 	}
 
-	//	データあるか？
+	//	�f�[�^���邩�H
 	iCount = SqlTreeCount( 1, NULL );
 	if( 0 >= iCount )	return 0;
 
@@ -895,45 +895,45 @@ INT TreeProfileMake( HWND hWnd, LPTSTR ptProf )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	別Profile開いたり作ったり
+	��Profile�J������������
 */
 INT TreeProfileOpen( HWND hWnd )
 {
 	INT	iRslt;
 
 	iRslt = TreeProfileMake( hWnd, NULL );
-	if( 0 > iRslt ){	return 0;	}	//	内容変更なので、負ならナニもしない。
+	if( 0 > iRslt ){	return 0;	}	//	���e�ύX�Ȃ̂ŁA���Ȃ�i�j�����Ȃ��B
 
-	//	ここで、構築するを呼べばよろしい
+	//	�����ŁA�\�z������Ăׂ΂�낵��
 	TreeConstruct( ghMaaWnd, gatTemplatePath, TRUE );
-	//既存の開くなら１、新規作成なら０が戻るはず
-	//いずれにしても、副タブ再構築が必要
+	//�����̊J���Ȃ�P�A�V�K�쐬�Ȃ�O���߂�͂�
+	//������ɂ��Ă��A���^�u�č\�z���K�v
 
 	return 1;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	現在のプロファイルの内容を編集する
-	@param[in]	hWnd	ハンドル
+	���݂̃v���t�@�C���̓��e��ҏW����
+	@param[in]	hWnd	�n���h��
 */
 INT TreeProfileRebuild( HWND hWnd )
 {
 	TCHAR	atFolder[MAX_PATH];
 	INT_PTR	iRslt;
 
-	//	プロファイルが開けてない場合は、警告メッセージだしてなにもしない
+	//	�v���t�@�C�����J���ĂȂ��ꍇ�́A�x�����b�Z�[�W�����ĂȂɂ����Ȃ�
 
-	//	ルートディレクトリを、ダイヤログに渡してオーポン
-	StringCchCopy( atFolder, MAX_PATH, gatTemplatePath );	//	ルートディレクトリをコピー
+	//	���[�g�f�B���N�g�����A�_�C�����O�ɓn���ăI�[�|��
+	StringCchCopy( atFolder, MAX_PATH, gatTemplatePath );	//	���[�g�f�B���N�g�����R�s�[
 
 	iRslt = DialogBoxParam( ghInst, MAKEINTRESOURCE(IDD_PROFILE_TREESEL_DLG), hWnd, TreeProfileDlgProc, (LPARAM)atFolder );
-	if( IDCANCEL == iRslt ){	return (-1);	}	//	内容変更なので、キャンセルならナニもしない。
-	//	ルートディレクトリ変更してから再構築開始
-	if( NULL != atFolder[0] )	//	この時点で空はないか？
+	if( IDCANCEL == iRslt ){	return (-1);	}	//	���e�ύX�Ȃ̂ŁA�L�����Z���Ȃ�i�j�����Ȃ��B
+	//	���[�g�f�B���N�g���ύX���Ă���č\�z�J�n
+	if( NULL != atFolder[0] )	//	���̎��_�ŋ�͂Ȃ����H
 	{
 		StringCchCopy( gatTemplatePath, MAX_PATH, atFolder );
-		//	こっちから開いた場合は、副タブ再構築不要
+		//	����������J�����ꍇ�́A���^�u�č\�z�s�v
 		TreeConstruct( ghMaaWnd, gatTemplatePath, FALSE );
 	}
 
@@ -942,13 +942,13 @@ INT TreeProfileRebuild( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ツリーに取り込むディレクトリーを設定して構築する
-	@param[in]	hDlg	ダイヤログハンドル
-	@param[in]	message	ウインドウメッセージの識別番号
-	@param[in]	wParam	追加の情報１
-	@param[in]	lParam	追加の情報２
-	@retval 0	メッセージは処理していない
-	@retval no0	なんか処理された
+	�c���[�Ɏ�荞�ރf�B���N�g���[��ݒ肵�č\�z����
+	@param[in]	hDlg	�_�C�����O�n���h��
+	@param[in]	message	�E�C���h�E���b�Z�[�W�̎��ʔԍ�
+	@param[in]	wParam	�ǉ��̏��P
+	@param[in]	lParam	�ǉ��̏��Q
+	@retval 0	���b�Z�[�W�͏������Ă��Ȃ�
+	@retval no0	�Ȃ񂩏������ꂽ
 */
 INT_PTR CALLBACK TreeProfileDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
@@ -974,7 +974,7 @@ INT_PTR CALLBACK TreeProfileDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPA
 
 	SHFILEINFO		stShFileInfo;
 
-//そのままリストアップすると、内容編集のときに中身が愚茶倶邪になる
+//���̂܂܃��X�g�A�b�v����ƁA���e�ҏW�̂Ƃ��ɒ��g���𒃋�ׂɂȂ�
 
 	switch( message )
 	{
@@ -995,9 +995,9 @@ INT_PTR CALLBACK TreeProfileDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPA
 
 			chTvWnd = GetDlgItem( hDlg, IDTV_PRTREE_DIR_TVIEW );
 
-			//	ツリービュー構築
+			//	�c���[�r���[�\�z
 			TreeView_DeleteAllItems( chTvWnd );
-			//	ルートアイテム作る
+			//	���[�g�A�C�e�����
 			ZeroMemory( &cstRootIns, sizeof(TVINSERTSTRUCT) );
 			cstRootIns.hParent      = TVI_ROOT;
 			cstRootIns.hInsertAfter = TVI_SORT;
@@ -1014,13 +1014,13 @@ INT_PTR CALLBACK TreeProfileDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPA
 
 			SqlTreeCacheOpenClose( M_CREATE );
 
-			//	開いたとき、ルートフォルダ指定が有効なら、自動リストアップして、ディレクトリを確認してチェック付ける
+			//	�J�����Ƃ��A���[�g�t�H���_�w�肪�L���Ȃ�A�������X�g�A�b�v���āA�f�B���N�g�����m�F���ă`�F�b�N�t����
 			//if( NULL != ptFolder[0] )
 			//{
 			//	TreeProfListUp( hDlg, chTvWnd, ptFolder, chTreeRoot, 0, 1 );
 			//	TreeView_Expand( chTvWnd, chTreeRoot, TVE_EXPAND );
 			//}
-			//開けたときにやると重い
+			//�J�����Ƃ��ɂ��Əd��
 			return (INT_PTR)TRUE;
 
 
@@ -1028,26 +1028,26 @@ INT_PTR CALLBACK TreeProfileDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPA
 			id = LOWORD(wParam);
 			switch( id )
 			{
-				case  IDB_PRTREE_DIR_REF:	//	ディレクトリ参照
+				case  IDB_PRTREE_DIR_REF:	//	�f�B���N�g���Q��
 					if( SelectDirectoryDlg( hDlg, atTgtDir, MAX_PATH ) )
 					{
 						Edit_SetText( GetDlgItem(hDlg,IDE_PRTREE_DIR), atTgtDir );
 					}
 					return (INT_PTR)TRUE;
 
-				case  IDB_PRTREE_LISTUP:	//	リストアッポ開始
+				case  IDB_PRTREE_LISTUP:	//	���X�g�A�b�|�J�n
 					Edit_GetText( GetDlgItem(hDlg,IDE_PRTREE_DIR), atTgtDir, MAX_PATH );
 					if( NULL != atTgtDir[0] )
 					{
-						TreeView_DeleteAllItems( chTvWnd  );	//	一旦全破壊してルート作り直し
-						SqlTreeNodeAllDelete( 0 );	//	キャッシュも破壊
-						chTreeRoot = TreeView_InsertItem( chTvWnd, &cstRootIns );	//	ルート作成
+						TreeView_DeleteAllItems( chTvWnd  );	//	��U�S�j�󂵂ă��[�g��蒼��
+						SqlTreeNodeAllDelete( 0 );	//	�L���b�V�����j��
+						chTreeRoot = TreeView_InsertItem( chTvWnd, &cstRootIns );	//	���[�g�쐬
 #ifndef TREEPROF_AUTOCHECK
-						TreeView_SetCheckState( chTvWnd , chTreeRoot, TRUE );	//	チェキマーク？
+						TreeView_SetCheckState( chTvWnd , chTreeRoot, TRUE );	//	�`�F�L�}�[�N�H
 #endif
 						UpdateWindow( chTvWnd );
 
-						StringCchCopy( ptFolder, MAX_PATH, atTgtDir );	//	文字数キメうち注意
+						StringCchCopy( ptFolder, MAX_PATH, atTgtDir );	//	�������L����������
 
 						hWorkWnd = GetDlgItem( hDlg, IDPB_PRTREE_PROGRESS );
 						SendMessage( hWorkWnd, PBM_SETPOS, 0, 0 );
@@ -1055,7 +1055,7 @@ INT_PTR CALLBACK TreeProfileDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPA
 						TreeProfListUp( hDlg, chTvWnd, atTgtDir, chTreeRoot, 0, 1 );
 						TreeView_Expand( chTvWnd, chTreeRoot, TVE_EXPAND );
 #ifdef TREEPROF_AUTOCHECK
-						//	今のルートと、PROFILEのルートを確認して、同じなら、チェックを付けていく
+						//	���̃��[�g�ƁAPROFILE�̃��[�g���m�F���āA�����Ȃ�A�`�F�b�N��t���Ă���
 						TreeProfCheckExistent( hDlg, atTgtDir, chTvWnd, chTreeRoot, 0 );
 #endif
 						ShowWindow( hWorkWnd, SW_HIDE );
@@ -1066,11 +1066,11 @@ INT_PTR CALLBACK TreeProfileDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPA
 					count = TreeView_GetCount( chTvWnd );
 					if( 1 >= count )
 					{
-						MessageBox( hDlg, TEXT("リストアップ出来ていないみたい。\r\nこのままじゃツリーが作れないよ。"), TEXT("お燐からのお知らせ"), MB_OK | MB_ICONERROR );
+						MessageBox( hDlg, TEXT("���X�g�A�b�v�o���Ă��Ȃ��݂����B\r\n���̂܂܂���c���[�����Ȃ���B"), TEXT("���ӂ���̂��m�点"), MB_OK | MB_ICONERROR );
 						return (INT_PTR)TRUE;
 					}
 
-					//	ディレクトリ選択に合わせてSQLを固定
+					//	�f�B���N�g���I���ɍ��킹��SQL���Œ�
 					if( SUCCEEDED( TreeLoadDirCheck( hDlg, chTvWnd ) ) )
 					{
 						SqlTreeCacheOpenClose( M_DESTROY );
@@ -1101,18 +1101,18 @@ INT_PTR CALLBACK TreeProfileDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPA
 					MapWindowPoints( HWND_DESKTOP, chTvWnd, &stTreeHit.pt, 1 );
 					TreeView_HitTest( chTvWnd, &stTreeHit );
 
-					//	チェックが入る前に来る
+					//	�`�F�b�N������O�ɗ���
 					if ( TVHT_ONITEMSTATEICON & stTreeHit.flags )
 					{
-						//	チェックが入る時→チェックが入っていない状態
+						//	�`�F�b�N�����鎞���`�F�b�N�������Ă��Ȃ����
 						bCheck = TreeView_GetCheckState( chTvWnd, stTreeHit.hItem );
 
-						//	先に下方向をスキャァ～ンしないとおかしくなるようだ
+						//	��ɉ��������X�L���@�`�����Ȃ��Ƃ��������Ȃ�悤��
 						hItem = TreeView_GetChild( chTvWnd, stTreeHit.hItem );
 						TreeProfCheckState( chTvWnd, hItem, bCheck );
 
-						//	上方向には、チェック入ったら連鎖ＯＮにする
-						if( !(bCheck)  )	//	チェキするとき
+						//	������ɂ́A�`�F�b�N��������A���n�m�ɂ���
+						if( !(bCheck)  )	//	�`�F�L����Ƃ�
 						{
 							hItem = TreeView_GetParent( chTvWnd, stTreeHit.hItem );
 							while( hItem  )
@@ -1136,8 +1136,8 @@ INT_PTR CALLBACK TreeProfileDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPA
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	呼ばれる度に、プログレスバーを増やす
-	@param[in]	hDlg	ダイヤログハンドル
+	�Ă΂��x�ɁA�v���O���X�o�[�𑝂₷
+	@param[in]	hDlg	�_�C�����O�n���h��
 */
 VOID TreeProfProgressUp( HWND hDlg )
 {
@@ -1158,13 +1158,13 @@ VOID TreeProfProgressUp( HWND hDlg )
 
 #ifdef TREEPROF_AUTOCHECK
 /*!
-	既存のプロフの内容チェキを再現する・再帰
-	@param[in]	hDlg	ダイヤログハンドル
-	@param[in]	ptTgDir	選択してるディレクトリ・プロフのと違うなら何もしない・NULLなら確認しない
-	@param[in]	hTvWnd	ツリービューハンドル
-	@param[in]	hNode	確認するノード
-	@param[in]	sqlID	親ノードのsqlID・ルートは０
-	@return	チェックした回数
+	�����̃v���t�̓��e�`�F�L���Č�����E�ċA
+	@param[in]	hDlg	�_�C�����O�n���h��
+	@param[in]	ptTgDir	�I�����Ă�f�B���N�g���E�v���t�̂ƈႤ�Ȃ牽�����Ȃ��ENULL�Ȃ�m�F���Ȃ�
+	@param[in]	hTvWnd	�c���[�r���[�n���h��
+	@param[in]	hNode	�m�F����m�[�h
+	@param[in]	sqlID	�e�m�[�h��sqlID�E���[�g�͂O
+	@return	�`�F�b�N������
 */
 UINT TreeProfCheckExistent( HWND hDlg, LPTSTR ptTgDir, HWND hTvWnd, HTREEITEM hNode, UINT sqlID )
 {
@@ -1174,23 +1174,23 @@ UINT TreeProfCheckExistent( HWND hDlg, LPTSTR ptTgDir, HWND hTvWnd, HTREEITEM hN
 	HTREEITEM	hItem, hRoot;
 	TVITEM		stItem;
 
-	if( ptTgDir )	//	ここが有効なのはルートの時のみ
+	if( ptTgDir )	//	�������L���Ȃ̂̓��[�g�̎��̂�
 	{
 		ZeroMemory( atProfRoot, sizeof(atProfRoot) );
 		SqlTreeProfSelect( NULL, 0, atProfRoot, MAX_PATH );
-		//	異なるなら何もしない
+		//	�قȂ�Ȃ牽�����Ȃ�
 		if( StrCmp( atProfRoot, ptTgDir ) )	return 0;
 
-		//ルートなので、Childから始める
+		//���[�g�Ȃ̂ŁAChild����n�߂�
 		hRoot = hNode;
-		hItem = TreeView_GetChild( hTvWnd , hNode );	//	子ノードを確認
+		hItem = TreeView_GetChild( hTvWnd , hNode );	//	�q�m�[�h���m�F
 		hNode = hItem;
 		if( !(hNode) )	return 0;
-		sqlID = 0;	//	問題無いはず
+		sqlID = 0;	//	��薳���͂�
 	}
 
 	do{
-		//	自ノードの名称確認して、親IDと一緒にデータひっぱる
+		//	���m�[�h�̖��̊m�F���āA�eID�ƈꏏ�Ƀf�[�^�Ђ��ς�
 		ZeroMemory( &stItem, sizeof(TVITEM) );
 		stItem.mask       = TVIF_HANDLE | TVIF_TEXT;
 		stItem.hItem      = hNode;
@@ -1198,18 +1198,18 @@ UINT TreeProfCheckExistent( HWND hDlg, LPTSTR ptTgDir, HWND hTvWnd, HTREEITEM hN
 		stItem.cchTextMax = MAX_PATH;
 		TreeView_GetItem( hTvWnd, &stItem );
 		tgtID = SqlTreeFileGetOnParent( atName, sqlID );
-		//	ここでＩＤ有効であれば、プロフに含まれている
+		//	�����łh�c�L���ł���΁A�v���t�Ɋ܂܂�Ă���
 		if( tgtID )
 		{
 			checked++;
 			TreeView_SetCheckState( hTvWnd, hNode, TRUE );
-			//	ディレクトリのチェックが有効でなければ、その下は何も無い
-			hItem = TreeView_GetChild( hTvWnd , hNode );	//	子ノードを確認
-			//	存在してたら下の階層をチェック
+			//	�f�B���N�g���̃`�F�b�N���L���łȂ���΁A���̉��͉�������
+			hItem = TreeView_GetChild( hTvWnd , hNode );	//	�q�m�[�h���m�F
+			//	���݂��Ă��牺�̊K�w���`�F�b�N
 			if( hItem ){	checked += TreeProfCheckExistent( hDlg, NULL , hTvWnd, hItem, tgtID );	}
 		}
 
-		//	終わったら次にいく
+		//	�I������玟�ɂ���
 		hItem = TreeView_GetNextSibling( hTvWnd, hNode );
 		hNode = hItem;
 
@@ -1217,7 +1217,7 @@ UINT TreeProfCheckExistent( HWND hDlg, LPTSTR ptTgDir, HWND hTvWnd, HTREEITEM hN
 	}
 	while( hNode );
 
-	if( ptTgDir )	//	ここが有効なのはルートの時のみ
+	if( ptTgDir )	//	�������L���Ȃ̂̓��[�g�̎��̂�
 	{
 		if( checked ){	TreeView_SetCheckState( hTvWnd, hRoot, TRUE );	}
 	}
@@ -1227,10 +1227,10 @@ UINT TreeProfCheckExistent( HWND hDlg, LPTSTR ptTgDir, HWND hTvWnd, HTREEITEM hN
 //-------------------------------------------------------------------------------------------------
 #endif
 /*!
-	再帰で、以下のツリーのチャックのON/OFFする
-	@param[in]	hTvWnd	ツリービューハンドル
-	@param[in]	hNode	確認するノード
-	@param[in]	bCheck	ON/OFFのセット
+	�ċA�ŁA�ȉ��̃c���[�̃`���b�N��ON/OFF����
+	@param[in]	hTvWnd	�c���[�r���[�n���h��
+	@param[in]	hNode	�m�F����m�[�h
+	@param[in]	bCheck	ON/OFF�̃Z�b�g
 */
 VOID TreeProfCheckState( HWND hTvWnd, HTREEITEM hNode, UINT bCheck )
 {
@@ -1242,12 +1242,12 @@ VOID TreeProfCheckState( HWND hTvWnd, HTREEITEM hNode, UINT bCheck )
 	{
 		TreeView_SetCheckState( hTvWnd, hNode, bCheck ? FALSE : TRUE );
 
-		hItem = TreeView_GetChild( hTvWnd , hNode );	//	子ノードを確認
+		hItem = TreeView_GetChild( hTvWnd , hNode );	//	�q�m�[�h���m�F
 
-		//	存在してたら下の階層をチェック
+		//	���݂��Ă��牺�̊K�w���`�F�b�N
 		if( hItem ){	TreeProfCheckState( hTvWnd, hItem, bCheck );	}
 
-		//	終わったら次にいく
+		//	�I������玟�ɂ���
 		hItem = TreeView_GetNextSibling( hTvWnd, hNode );
 		hNode = hItem;
 	}
@@ -1258,14 +1258,14 @@ VOID TreeProfCheckState( HWND hTvWnd, HTREEITEM hNode, UINT bCheck )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	リストアップ処理
-	@param[in]	hDlg	ダイヤログハンドル
-	@param[in]	hTvWnd	ツリービューハンドル
-	@param[in]	ptRoot	MLTルートディレクトリ
-	@param[in]	hTreePr	対象ディレクトリのツリーアイテム・こいつにぶら下げていく
-	@param[in]	dPrntID	SQLのID・ディレクトリ番号
-	@param[in]	fCheck	１全チャックする　０ＳＱＬに既存ならチェキ　－１チョックしない
-	@return		HRESULT	終了状態コード
+	���X�g�A�b�v����
+	@param[in]	hDlg	�_�C�����O�n���h��
+	@param[in]	hTvWnd	�c���[�r���[�n���h��
+	@param[in]	ptRoot	MLT���[�g�f�B���N�g��
+	@param[in]	hTreePr	�Ώۃf�B���N�g���̃c���[�A�C�e���E�����ɂԂ牺���Ă���
+	@param[in]	dPrntID	SQL��ID�E�f�B���N�g���ԍ�
+	@param[in]	fCheck	�P�S�`���b�N����@�O�r�p�k�Ɋ����Ȃ�`�F�L�@�|�P�`���b�N���Ȃ�
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT TreeProfListUp( HWND hDlg, HWND hTvWnd, LPTSTR ptRoot, HTREEITEM hTreePr, UINT dPrntID, INT fCheck )
 {
@@ -1306,38 +1306,38 @@ HRESULT TreeProfListUp( HWND hDlg, HWND hTvWnd, LPTSTR ptRoot, HTREEITEM hTreePr
 			stTreeIns.item.pszText = stFindData.cFileName;
 
 			if( stFindData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
-			{	//	ディレクトリの場合
+			{	//	�f�B���N�g���̏ꍇ
 				dPnID = SqlTreeCacheInsert( FILE_ATTRIBUTE_DIRECTORY, dPrntID, stFindData.cFileName );
 
-				stTreeIns.item.lParam  = dPnID;	//	通し番号であることに注意
+				stTreeIns.item.lParam  = dPnID;	//	�ʂ��ԍ��ł��邱�Ƃɒ���
 				stTreeIns.hInsertAfter = hLastDir;
 				hNewParent = TreeView_InsertItem( hTvWnd, &stTreeIns );
 				hLastDir = hNewParent;
 
 #ifndef TREEPROF_AUTOCHECK
-				TreeView_SetCheckState( hTvWnd , hNewParent, TRUE );	//	チェキマーク？
+				TreeView_SetCheckState( hTvWnd , hNewParent, TRUE );	//	�`�F�L�}�[�N�H
 #endif
 				StringCchCopy( atNewTop, MAX_PATH, ptRoot );
 				PathAppend( atNewTop, stFindData.cFileName );
 
-				TreeProfListUp( hDlg, hTvWnd, atNewTop, hNewParent, dPnID, fCheck );	//	該当ディレクトリ内を再帰検索
+				TreeProfListUp( hDlg, hTvWnd, atNewTop, hNewParent, dPnID, fCheck );	//	�Y���f�B���N�g�������ċA����
 
 			}
 			else
-			{	//	ファイルの場合
-				bRslt  = PathMatchSpec( stFindData.cFileName, TEXT("*.mlt") );	//	ヒットしたらTRUE
-				bRslt |= PathMatchSpec( stFindData.cFileName, TEXT("*.ast") );	//	ヒットしたらTRUE
-				bRslt |= PathMatchSpec( stFindData.cFileName, TEXT("*.txt") );	//	ヒットしたらTRUE
-				if( bRslt )	//	20110720	ASTを追加	20120223	TXTも追加
+			{	//	�t�@�C���̏ꍇ
+				bRslt  = PathMatchSpec( stFindData.cFileName, TEXT("*.mlt") );	//	�q�b�g������TRUE
+				bRslt |= PathMatchSpec( stFindData.cFileName, TEXT("*.ast") );	//	�q�b�g������TRUE
+				bRslt |= PathMatchSpec( stFindData.cFileName, TEXT("*.txt") );	//	�q�b�g������TRUE
+				if( bRslt )	//	20110720	AST��ǉ�	20120223	TXT���ǉ�
 				{
 					dPnID = SqlTreeCacheInsert( FILE_ATTRIBUTE_NORMAL, dPrntID, stFindData.cFileName );
 
-					stTreeIns.item.lParam  = dPnID;	//	通し番号であることに注意
+					stTreeIns.item.lParam  = dPnID;	//	�ʂ��ԍ��ł��邱�Ƃɒ���
 					stTreeIns.hInsertAfter = TVI_LAST;
 					hNewParent = TreeView_InsertItem( hTvWnd, &stTreeIns );
 
 #ifndef TREEPROF_AUTOCHECK
-					TreeView_SetCheckState( hTvWnd , hNewParent, TRUE );	//	チェキマーク？
+					TreeView_SetCheckState( hTvWnd , hNewParent, TRUE );	//	�`�F�L�}�[�N�H
 #endif
 				}
 			}
@@ -1352,10 +1352,10 @@ HRESULT TreeProfListUp( HWND hDlg, HWND hTvWnd, LPTSTR ptRoot, HTREEITEM hTreePr
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ツリープロファイル作成で、チェックされてるでゅれくとりと麾下のファイルを記録
-	@param[in]	hDlg	ダイヤログハンドル
-	@param[in]	hTvWnd	ツリービューハンドル
-	@return		HRESULT	終了状態コード
+	�c���[�v���t�@�C���쐬�ŁA�`�F�b�N����Ă�ł�ꂭ�Ƃ�Ɵ����̃t�@�C�����L�^
+	@param[in]	hDlg	�_�C�����O�n���h��
+	@param[in]	hTvWnd	�c���[�r���[�n���h��
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT TreeLoadDirCheck( HWND hDlg, HWND hTvWnd )
 {
@@ -1366,22 +1366,22 @@ HRESULT TreeLoadDirCheck( HWND hDlg, HWND hTvWnd )
 	TCHAR	atName[MAX_PATH];
 	HWND	hWorkWnd;
 
-	hTreeRoot = TreeView_GetRoot( hTvWnd  );	//	とりやえずルート確保
-	//	ルートは関係ないので、直下を調べる
-	hItem = TreeView_GetChild( hTvWnd, hTreeRoot );	//	子ノードを確認
+	hTreeRoot = TreeView_GetRoot( hTvWnd  );	//	�Ƃ�₦�����[�g�m��
+	//	���[�g�͊֌W�Ȃ��̂ŁA�����𒲂ׂ�
+	hItem = TreeView_GetChild( hTvWnd, hTreeRoot );	//	�q�m�[�h���m�F
 
 
 	hWorkWnd = GetDlgItem( hDlg, IDPB_PRTREE_PROGRESS );
 	SendMessage( hWorkWnd, PBM_SETPOS, 0, 0 );
 	ShowWindow( hWorkWnd, SW_SHOW );
 
-	//	チェック状況を確認・ファイルのチェックが無いならヤバイ
+	//	�`�F�b�N�󋵂��m�F�E�t�@�C���̃`�F�b�N�������Ȃ烄�o�C
 	count = TreeLoadNodeProc( hDlg, hTvWnd, hItem, 0 );
 	TRACE( TEXT("%u"), count );
 	if( 0 == count )
 	{
 		ShowWindow( hWorkWnd, SW_HIDE );
-		MessageBox( hDlg, TEXT("ファイルが一つも選択されてないよ。\r\nこのままだと使えないよ。"), TEXT("お燐からのお知らせ"), MB_OK | MB_ICONERROR );
+		MessageBox( hDlg, TEXT("�t�@�C��������I������ĂȂ���B\r\n���̂܂܂��Ǝg���Ȃ���B"), TEXT("���ӂ���̂��m�点"), MB_OK | MB_ICONERROR );
 		return E_ABORT;
 	}
 
@@ -1389,11 +1389,11 @@ HRESULT TreeLoadDirCheck( HWND hDlg, HWND hTvWnd )
 
 	Edit_GetText( GetDlgItem(hDlg,IDE_PRTREE_DIR), atTgtDir, MAX_PATH );
 
-	//	ツリーデータの入れ替え
-	SqlTransactionOnOff( TRUE );	//	トランザクション開始
+	//	�c���[�f�[�^�̓���ւ�
+	SqlTransactionOnOff( TRUE );	//	�g�����U�N�V�����J�n
 
-	SqlTreeProfUpdate( NULL, atTgtDir );	//	ルートパスを変更
-	SqlTreeNodeAllDelete( 1 );	//	ファイルから構築する場合、本体SQLの中身を空にしてから
+	SqlTreeProfUpdate( NULL, atTgtDir );	//	���[�g�p�X��ύX
+	SqlTreeNodeAllDelete( 1 );	//	�t�@�C������\�z����ꍇ�A�{��SQL�̒��g����ɂ��Ă���
 
 	dCacheCnt = SqlTreeCount( 3, &dCacheMax );
 	index = 0;
@@ -1402,7 +1402,7 @@ HRESULT TreeLoadDirCheck( HWND hDlg, HWND hTvWnd )
 		ZeroMemory( atName, sizeof(atName) );
 		index = SqlTreeNodePickUpID( index, &dType, &dPrnt, atName, 0x00 );
 		TRACE( TEXT("[%4u]%4u\t%4u\t%4u\t%s"), m, index, dType, dPrnt, atName );
-		if( 0 >= index )	break;	//	データ無くなったら終わり
+		if( 0 >= index )	break;	//	�f�[�^�����Ȃ�����I���
 
 		logoa = SqlTreeNodeInsert( index, dType, dPrnt, atName );
 
@@ -1411,18 +1411,18 @@ HRESULT TreeLoadDirCheck( HWND hDlg, HWND hTvWnd )
 
 	ShowWindow( hWorkWnd, SW_HIDE );
 
-	SqlTransactionOnOff( FALSE );	//	トランザクション終了
+	SqlTransactionOnOff( FALSE );	//	�g�����U�N�V�����I��
 
 	return S_OK;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	再帰検索で、ツリーのチェック状況を調べてキャッシュを操作
-	@param[in]	hDlg	ダイヤログハンドル
-	@param[in]	hTvWnd	ツリーハンドル
-	@param[in]	hNode	チェキる基点ノード
-	@param[in]	bFixe	非０実際に操作　０Check状況の確認
+	�ċA�����ŁA�c���[�̃`�F�b�N�󋵂𒲂ׂăL���b�V���𑀍�
+	@param[in]	hDlg	�_�C�����O�n���h��
+	@param[in]	hTvWnd	�c���[�n���h��
+	@param[in]	hNode	�`�F�L���_�m�[�h
+	@param[in]	bFixe	��O���ۂɑ���@�OCheck�󋵂̊m�F
 */
 UINT TreeLoadNodeProc( HWND hDlg, HWND hTvWnd, HTREEITEM hNode, UINT bFixe )
 {
@@ -1434,7 +1434,7 @@ UINT TreeLoadNodeProc( HWND hDlg, HWND hTvWnd, HTREEITEM hNode, UINT bFixe )
 
 	do
 	{
-		//	該当するアイテムＩＤを引っ張って
+		//	�Y������A�C�e���h�c������������
 		ZeroMemory( &stItem, sizeof(TVITEM) );
 		stItem.mask  = TVIF_HANDLE | TVIF_PARAM | TVIF_TEXT;
 		stItem.hItem      = hNode;
@@ -1443,28 +1443,28 @@ UINT TreeLoadNodeProc( HWND hDlg, HWND hTvWnd, HTREEITEM hNode, UINT bFixe )
 		TreeView_GetItem( hTvWnd, &stItem );
 		param = stItem.lParam;
 
-		//	チェック状況を確認
+		//	�`�F�b�N�󋵂��m�F
 		dRslt = TreeView_GetCheckState( hTvWnd, hNode );
 		TRACE( TEXT("Node:[%d][%d]%s"), dRslt, param, atName );
 
 		if( bFixe )
 		{
-			//	チェックが無かったら
+			//	�`�F�b�N������������
 			if( !(dRslt)  ){	SqlTreeCacheDelID( param  );	}
 		}
 		else
-		{	//	入力値を超えた値なので、目標をゲットするには－１する
+		{	//	���͒l�𒴂����l�Ȃ̂ŁA�ڕW���Q�b�g����ɂ́|�P����
 			SqlTreeNodePickUpID( param-1, &dType, &dPrID, atName, 0x00 );
-			//	チェックがあり、ファイルである場合
+			//	�`�F�b�N������A�t�@�C���ł���ꍇ
 			if( dRslt && (FILE_ATTRIBUTE_NORMAL==dType) ){	count++;	}
 		}
 
-		hItem = TreeView_GetChild( hTvWnd , hNode );	//	子ノードを確認
+		hItem = TreeView_GetChild( hTvWnd , hNode );	//	�q�m�[�h���m�F
 
-		//	存在してたら下の階層をチェック
+		//	���݂��Ă��牺�̊K�w���`�F�b�N
 		if( hItem ){	count += TreeLoadNodeProc( hDlg, hTvWnd, hItem, bFixe );	}
 
-		//	終わったら次にいく
+		//	�I������玟�ɂ���
 		hItem = TreeView_GetNextSibling( hTvWnd, hNode );
 		hNode = hItem;
 
@@ -1477,10 +1477,10 @@ UINT TreeLoadNodeProc( HWND hDlg, HWND hTvWnd, HTREEITEM hNode, UINT bFixe )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	パスを受け取って、先頭のでゅれくとりをコピーする
-	@param[in]	ptSource	元パス・MAX_PATHであること
-	@param[in]	ptSplits	先頭パスをコピーするバッファ・MAX_PATHであること
-	@return		元パスの、次のディレクトリ位置
+	�p�X���󂯎���āA�擪�̂ł�ꂭ�Ƃ���R�s�[����
+	@param[in]	ptSource	���p�X�EMAX_PATH�ł��邱��
+	@param[in]	ptSplits	�擪�p�X���R�s�[����o�b�t�@�EMAX_PATH�ł��邱��
+	@return		���p�X�́A���̃f�B���N�g���ʒu
 */
 LPTSTR PathSplitFirstPath( LPTSTR ptSource, LPTSTR ptSplits )
 {
@@ -1501,10 +1501,10 @@ LPTSTR PathSplitFirstPath( LPTSTR ptSource, LPTSTR ptSplits )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	文字列の次の改行までを取る
-	@param[in]	ptSource	元文字列
-	@param[in]	*ptNextLn	次の行の先頭
-	@return		確保した文字列・freeセヨ
+	������̎��̉��s�܂ł����
+	@param[in]	ptSource	��������
+	@param[in]	*ptNextLn	���̍s�̐擪
+	@return		�m�ۂ���������Efree�Z��
 */
 LPTSTR StringLineGet( LPCTSTR ptSource, LPCTSTR *ptNextLn )
 {
@@ -1535,15 +1535,15 @@ LPTSTR StringLineGet( LPCTSTR ptSource, LPCTSTR *ptNextLn )
 //-------------------------------------------------------------------------------------------------
 
 /*
-ツリー内からサーチ
-同じ親番号を持つ者内でサーチ・同じディレクトリ内には、単一名しか入らないから、
-それが同じモノだと判断できるはず
+�c���[������T�[�`
+�����e�ԍ������ғ��ŃT�[�`�E�����f�B���N�g�����ɂ́A�P�ꖼ��������Ȃ�����A
+���ꂪ�������m���Ɣ��f�ł���͂�
 
 */
 
 /*!
-	検索してリストビューに入れる
-	@param[in]	hDlg	ダイヤログハンドル
+	�������ă��X�g�r���[�ɓ����
+	@param[in]	hDlg	�_�C�����O�n���h��
 */
 HRESULT MaaFindExecute( HWND hDlg )
 {
@@ -1562,7 +1562,7 @@ HRESULT MaaFindExecute( HWND hDlg )
 
 	ZeroMemory( atPattern, sizeof(atPattern) );
 	GetDlgItemText( hDlg, IDE_MAA_FIND_NAME, atPattern, MAX_PATH );
-	//	空文字列なら検索しない
+	//	�󕶎���Ȃ猟�����Ȃ�
 	if( NULL == atPattern[0] )	return  E_ABORT;
 
 
@@ -1571,18 +1571,18 @@ HRESULT MaaFindExecute( HWND hDlg )
 	dOwnID = 0;
 	for( d = 0; dMax > d; d++ )
 	{
-		dOwnID = SqlTreeFileSearch( atPattern, dOwnID );	//	ヒットを確認
-		if( 0 == dOwnID )	break;	//	それ以上無いようなら終わり
+		dOwnID = SqlTreeFileSearch( atPattern, dOwnID );	//	�q�b�g���m�F
+		if( 0 == dOwnID )	break;	//	����ȏ㖳���悤�Ȃ�I���
 
 		ZeroMemory( atFileName, sizeof(atFileName) );
 		dType   = 0;
 		dPrntID = 0;
 
-		//	該当ＩＤの内容を確認
+		//	�Y���h�c�̓��e���m�F
 		SqlTreeNodePickUpID( dOwnID, &dType, &dPrntID, atFileName, 0x11 );
 		if( FILE_ATTRIBUTE_NORMAL == dType )
 		{
-			//	引っ張った内容ファイル名をリストビューに表示
+			//	�������������e�t�@�C���������X�g�r���[�ɕ\��
 			dItem = ListView_GetItemCount( hLvWnd );
 
 			ZeroMemory( &stLvi, sizeof(stLvi) );
@@ -1609,11 +1609,11 @@ HRESULT MaaFindExecute( HWND hDlg )
 
 
 /*!
-	MAA検索ダイヤログのノーティファイメッセージの処理
-	@param[in]	hDlg		ダイヤログハンドル
-	@param[in]	idFrom		NOTIFYを発生させたコントロールのＩＤ
-	@param[in]	pstNmhdr	NOTIFYの詳細
-	@return		処理した内容とか
+	MAA�����_�C�����O�̃m�[�e�B�t�@�C���b�Z�[�W�̏���
+	@param[in]	hDlg		�_�C�����O�n���h��
+	@param[in]	idFrom		NOTIFY�𔭐��������R���g���[���̂h�c
+	@param[in]	pstNmhdr	NOTIFY�̏ڍ�
+	@return		�����������e�Ƃ�
 */
 INT_PTR MaaFindOnNotify( HWND hDlg, INT idFrom, LPNMHDR pstNmhdr )
 {
@@ -1630,12 +1630,12 @@ INT_PTR MaaFindOnNotify( HWND hDlg, INT idFrom, LPNMHDR pstNmhdr )
 		hLvWnd = pstNmLv->hdr.hwndFrom;
 		nmCode = pstNmLv->hdr.code;
 
-		//	選択されてる項目を確保
+		//	�I������Ă鍀�ڂ��m��
 		iItem = ListView_GetNextItem( hLvWnd, -1, LVNI_ALL | LVNI_SELECTED );
 
-		if( 0 >  iItem )	return FALSE;	//	未選択状態なら何もしない
+		if( 0 >  iItem )	return FALSE;	//	���I����ԂȂ牽�����Ȃ�
 
-		//	ダブルクルックであった場合
+		//	�_�u���N���b�N�ł������ꍇ
 		if( NM_DBLCLK == nmCode )
 		{
 			ZeroMemory( &stLvi, sizeof(stLvi) );
@@ -1644,17 +1644,17 @@ INT_PTR MaaFindOnNotify( HWND hDlg, INT idFrom, LPNMHDR pstNmhdr )
 			stLvi.iSubItem = 0;
 			ListView_GetItem( hLvWnd, &stLvi );
 
-			hTgtItem = MaaSelectIDfile( hDlg, stLvi.lParam );	//	SqlID渡して開くようにする
-			//	ツリーのを選択状態にしている
+			hTgtItem = MaaSelectIDfile( hDlg, stLvi.lParam );	//	SqlID�n���ĊJ���悤�ɂ���
+			//	�c���[�̂�I����Ԃɂ��Ă���
 
 			if( hTgtItem )
 			{
 				SetForegroundWindow( ghMaaWnd );
 
-				//	ここで、タブ選択からチェインさせればいい
+				//	�����ŁA�^�u�I������`�F�C��������΂���
 				TabMultipleCtrlFromFind( ghMaaWnd );
-				//AaTitleClear(  );	//	ここでクルヤーせないかん
-				//TreeSelItemProc( ghMaaWnd, hTgtItem, 0 );	//	渡すハンドル、MAA窓のハンドルにしておかないとまずい？
+				//AaTitleClear(  );	//	�����ŃN�����[���Ȃ�����
+				//TreeSelItemProc( ghMaaWnd, hTgtItem, 0 );	//	�n���n���h���AMAA���̃n���h���ɂ��Ă����Ȃ��Ƃ܂����H
 			}
 		}
 	}
@@ -1664,13 +1664,13 @@ INT_PTR MaaFindOnNotify( HWND hDlg, INT idFrom, LPNMHDR pstNmhdr )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	検索ダイヤログのプロシージャ
-	@param[in]	hDlg	ダイヤログハンドル
-	@param[in]	message	ウインドウメッセージの識別番号
-	@param[in]	wParam	追加の情報１
-	@param[in]	lParam	追加の情報２
-	@retval 0	メッセージは処理していない
-	@retval no0	なんか処理された
+	�����_�C�����O�̃v���V�[�W��
+	@param[in]	hDlg	�_�C�����O�n���h��
+	@param[in]	message	�E�C���h�E���b�Z�[�W�̎��ʔԍ�
+	@param[in]	wParam	�ǉ��̏��P
+	@param[in]	lParam	�ǉ��̏��Q
+	@retval 0	���b�Z�[�W�͏������Ă��Ȃ�
+	@retval no0	�Ȃ񂩏������ꂽ
 */
 INT_PTR CALLBACK TreeMaaFindDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
@@ -1690,8 +1690,8 @@ INT_PTR CALLBACK TreeMaaFindDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPA
 			ZeroMemory( &stLvColm, sizeof(LVCOLUMN) );
 			stLvColm.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
 			stLvColm.fmt = LVCFMT_LEFT;
-			stLvColm.pszText = TEXT("ファイル名");	stLvColm.cx = 250;	stLvColm.iSubItem = 0;	ListView_InsertColumn( hWorkWnd, 0, &stLvColm );
-			stLvColm.pszText = TEXT("所属");		stLvColm.cx = 250;	stLvColm.iSubItem = 1;	ListView_InsertColumn( hWorkWnd, 1, &stLvColm );
+			stLvColm.pszText = TEXT("�t�@�C����");	stLvColm.cx = 250;	stLvColm.iSubItem = 0;	ListView_InsertColumn( hWorkWnd, 0, &stLvColm );
+			stLvColm.pszText = TEXT("����");		stLvColm.cx = 250;	stLvColm.iSubItem = 1;	ListView_InsertColumn( hWorkWnd, 1, &stLvColm );
 			SetFocus( GetDlgItem(hDlg,IDE_MAA_FIND_NAME) );
 			return (INT_PTR)FALSE;
 
@@ -1702,7 +1702,7 @@ INT_PTR CALLBACK TreeMaaFindDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPA
 			{
 				case IDCANCEL:	DestroyWindow( hDlg );	ghMaaFindDlg = NULL;	return (INT_PTR)TRUE;
 
-				case IDOK:		MaaFindExecute( hDlg );	return (INT_PTR)TRUE;	//	検索する
+				case IDOK:		MaaFindExecute( hDlg );	return (INT_PTR)TRUE;	//	��������
 
 				case IDM_PASTE:	SendMessage( hWorkWnd, WM_PASTE, 0, 0 );	return (INT_PTR)TRUE;
 				case IDM_COPY:	SendMessage( hWorkWnd, WM_COPY,  0, 0 );	return (INT_PTR)TRUE;
@@ -1723,12 +1723,12 @@ INT_PTR CALLBACK TreeMaaFindDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPA
 
 	return (INT_PTR)FALSE;
 }
-//-------------------------------------------------------------------------------------------------　λ...
+//-------------------------------------------------------------------------------------------------�@��...
 
 /*!
-	MAAファイル検索窓の処理
-	@param[in]	hWnd	ウインドウハンドル
-	@return	HRESULT	終了状態コード
+	MAA�t�@�C���������̏���
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@return	HRESULT	�I����ԃR�[�h
 */
 HRESULT TreeMaaFileFind( HWND hWnd )
 {
@@ -1756,9 +1756,9 @@ HRESULT TreeMaaFileFind( HWND hWnd )
 
 
 /*!
-	ファイルからプロフ履歴取り込んだり書き込んだり
-	@param[in]	hWnd	ウインドウハンドル・NULLならデストロイ
-	@return	HRESULT	終了状態コード
+	�t�@�C������v���t������荞�񂾂菑�����񂾂�
+	@param[in]	hWnd	�E�C���h�E�n���h���ENULL�Ȃ�f�X�g���C
+	@return	HRESULT	�I����ԃR�[�h
 */
 HRESULT OpenProfileInitialise( HWND hWnd )
 {
@@ -1768,9 +1768,9 @@ HRESULT OpenProfileInitialise( HWND hWnd )
 	OPENHIST	stProfHist;
 	OPHIS_ITR	itHist;
 
-	if( hWnd )	//	ロード
+	if( hWnd )	//	���[�h
 	{
-		gltProfHist.clear( );	//	とりあえず全削除
+		gltProfHist.clear( );	//	�Ƃ肠�����S�폜
 
 		for( d = 0; OPENHIST_MAX > d; d++ )
 		{
@@ -1780,25 +1780,25 @@ HRESULT OpenProfileInitialise( HWND hWnd )
 			{
 				gltProfHist.push_back( stProfHist );
 			}
-			else{	break;	}	//	中身があったら記録・無かったら終わり
+			else{	break;	}	//	���g����������L�^�E����������I���
 		}
 
 		if( ghProfHisMenu ){	DestroyMenu( ghProfHisMenu );	}
-		//	メニュー作成
+		//	���j���[�쐬
 		ghProfHisMenu = CreatePopupMenu(  );
-		AppendMenu( ghProfHisMenu, MF_SEPARATOR, 0 , NULL );	//	セッパレター
-		AppendMenu( ghProfHisMenu, MF_STRING, IDM_OPEN_HIS_CLEAR, TEXT("履歴クリヤ") );
-		//	コマンドＩＤがファイルと同じであることに注意・受取は別だから問題無い
+		AppendMenu( ghProfHisMenu, MF_SEPARATOR, 0 , NULL );	//	�Z�b�p���^�[
+		AppendMenu( ghProfHisMenu, MF_STRING, IDM_OPEN_HIS_CLEAR, TEXT("�����N����") );
+		//	�R�}���h�h�c���t�@�C���Ɠ����ł��邱�Ƃɒ��ӁE���͕ʂ������薳��
 
 		dItems = gltProfHist.size( );
 		if( 0 == dItems )
 		{
-			//	オーポン履歴が無い場合
-			InsertMenu( ghProfHisMenu, 0, MF_STRING | MF_BYPOSITION | MF_GRAYED, IDM_OPEN_HIS_FIRST, TEXT("(无)") );
+			//	�I�[�|�������������ꍇ
+			InsertMenu( ghProfHisMenu, 0, MF_STRING | MF_BYPOSITION | MF_GRAYED, IDM_OPEN_HIS_FIRST, TEXT("(��)") );
 		}
 		else
 		{
-			//	オーポン履歴を並べる
+			//	�I�[�|����������ׂ�
 			for( itHist = gltProfHist.begin(), d = dItems-1; gltProfHist.end() != itHist; itHist++, d-- )
 			{
 				StringCchPrintf( atString, MAX_PATH+10, TEXT("(&%X) %s"), d, itHist->atFile );
@@ -1807,18 +1807,18 @@ HRESULT OpenProfileInitialise( HWND hWnd )
 			}
 		}
 		
-		//	コンテキストメニューは必要に応じてロードするので、ここではイジらない
+		//	�R���e�L�X�g���j���[�͕K�v�ɉ����ă��[�h����̂ŁA�����ł̓C�W��Ȃ�
 #ifdef _ORRVW
 		OpenProfMenuModify( hWnd );
 #endif
 	}
-	else	//	終了時
+	else	//	�I����
 	{
 		if( ghProfHisMenu ){	DestroyMenu( ghProfHisMenu );	}
 
-		InitProfHistory( INIT_SAVE, 0, NULL );	//	一旦全削除
+		InitProfHistory( INIT_SAVE, 0, NULL );	//	��U�S�폜
 
-		//	中身を保存
+		//	���g��ۑ�
 		for( itHist = gltProfHist.begin(), d = 0; gltProfHist.end() != itHist; itHist++, d++ )
 		{
 			InitProfHistory( INIT_SAVE, d, itHist->atFile );
@@ -1831,10 +1831,10 @@ HRESULT OpenProfileInitialise( HWND hWnd )
 
 
 /*!
-	開いたプロフ履歴を番号指定して読み込む
-	@param[in]	hWnd	ウインドウハンドル
-	@param[in]	id		履歴指定メッセージ・メニューＩＤである
-	@return	HRESULT	終了状態コード
+	�J�����v���t������ԍ��w�肵�ēǂݍ���
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@param[in]	id		�����w�胁�b�Z�[�W�E���j���[�h�c�ł���
+	@return	HRESULT	�I����ԃR�[�h
 */
 HRESULT OpenProfileLoad( HWND hWnd, INT id )
 {
@@ -1847,24 +1847,24 @@ HRESULT OpenProfileLoad( HWND hWnd, INT id )
 
 	dNumber = id - IDM_OPEN_HIS_FIRST;
 
-	TRACE( TEXT("プロフ -> %d"), dNumber );
+	TRACE( TEXT("�v���t -> %d"), dNumber );
 	if( OPENHIST_MAX <= dNumber ){	return E_OUTOFMEMORY;	}
 
 	dItems = gltProfHist.size();
 	dNumber = (dItems-1) - dNumber;
 
 	itHist = gltProfHist.begin();
-	std::advance( itHist , dNumber );	//	個数分進める
+	std::advance( itHist , dNumber );	//	�����i�߂�
 
-	//	選択したプロフを開く
+	//	�I�������v���t���J��
 	StringCchCopy( atFilePath, MAX_PATH, itHist->atFile );
 
-	//	そのファイルは存在するか？
+	//	���̃t�@�C���͑��݂��邩�H
 	hFind = FindFirstFile( atFilePath, &stFindData );	//	TEXT("*")
 	if( INVALID_HANDLE_VALUE != hFind ){	FindClose( hFind  );	}
 	else{	ZeroMemory( atFilePath, sizeof(atFilePath) );	};
 
-	if( NULL != atFilePath[0]  )	//	無ければ何もしない
+	if( NULL != atFilePath[0]  )	//	������Ή������Ȃ�
 	{
 		StringCchCopy( gatProfilePath, MAX_PATH, atFilePath );
 		TreeProfileMake( ghMaaWnd, gatProfilePath );
@@ -1880,10 +1880,10 @@ HRESULT OpenProfileLoad( HWND hWnd, INT id )
 
 
 /*!
-	開いたPROFILEを記録
-	@param[in]	hWnd	ウインドウハンドル
-	@param[in]	ptProf	開いたプロフファイル名
-	@return	HRESULT	終了状態コード
+	�J����PROFILE���L�^
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@param[in]	ptProf	�J�����v���t�t�@�C����
+	@return	HRESULT	�I����ԃR�[�h
 */
 HRESULT OpenProfileLogging( HWND hWnd, LPCTSTR ptProf )
 {
@@ -1896,32 +1896,32 @@ HRESULT OpenProfileLogging( HWND hWnd, LPCTSTR ptProf )
 		ZeroMemory( &stProfHist, sizeof(OPENHIST) );
 
 		StringCchCopy( stProfHist.atFile, MAX_PATH, ptProf );
-		//既存の内容なら最新に入れ替えるので、検索しておく
+		//�����̓��e�Ȃ�ŐV�ɓ���ւ���̂ŁA�������Ă���
 		for( itHist = gltProfHist.begin(); gltProfHist.end() != itHist; itHist++ )
 		{
-			if( !StrCmp( itHist->atFile, stProfHist.atFile ) )	//	同じものがあったら削除する
+			if( !StrCmp( itHist->atFile, stProfHist.atFile ) )	//	�������̂���������폜����
 			{
 				gltProfHist.erase( itHist );
 				break;
 			}
 		}
 
-		gltProfHist.push_back( stProfHist );	//	リスト末尾ほど新しい
+		gltProfHist.push_back( stProfHist );	//	���X�g�����قǐV����
 
-		//	もしはみ出すようなら古いのを削除する
+		//	�����͂ݏo���悤�Ȃ�Â��̂��폜����
 		dItems = gltProfHist.size( );
 		if( OPENHIST_MAX <  dItems )
 		{
 			gltProfHist.pop_front(  );
 		}
 	}
-	else	//	文字列指定無い場合は全クリ
+	else	//	������w�薳���ꍇ�͑S�N��
 	{
 		gltProfHist.clear();
 	}
 
-	OpenProfileInitialise( NULL );	//	古いの破壊して
-	OpenProfileInitialise( hWnd );	//	最新の内容で作り直し
+	OpenProfileInitialise( NULL );	//	�Â��̔j�󂵂�
+	OpenProfileInitialise( hWnd );	//	�ŐV�̓��e�ō�蒼��
 
 	return S_OK;
 }
