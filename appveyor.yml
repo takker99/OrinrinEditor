@@ -9,8 +9,10 @@ install:
 - vcpkg integrate install
 - cd %APPVEYOR_BUILD_FOLDER%
 - vcpkg install sqlite3:x86-windows
-build_script:
-- msbuild "OrinrinEditor.vcxproj" /m /verbosity:minimal
+build:
+  project: OrinrinEditor.vcxproj
+  parallel: true
+  verbosity: minimal
 artifacts:
 - path: ./OrinrinEditor.vcxproj
 cache: c:\tools\vcpkg\installed\
