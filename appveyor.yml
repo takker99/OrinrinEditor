@@ -13,3 +13,4 @@ build_script:
 - msbuild "OrinrinEditor.vcxproj" /m /verbosity:minimal
 artifacts:
 - path: ./OrinrinEditor.vcxproj
+cache: c:\tools\vcpkg\installed\
