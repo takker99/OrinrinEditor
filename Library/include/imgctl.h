@@ -5,302 +5,302 @@
  ************************************************
  */
 /*
- *	[���쌠�ɂ���]
- *		imgctl �� ���[�`�F �ɒ��쌠������܂��B
+ *	[著作権について]
+ *		imgctl は ルーチェ に著作権があります。
  *		imgctl copyright (C) ruche.
  *
- *	[JPEG�ɂ���]
- *		imgctl �� JPEG�ǂݏ��������ɂ� The Independent JPEG Group (IJG) ��
- *		libjpeg 6b ����ɋ{�⌫���񂪍쐬���ꂽ
- *		IJG's JPEG software with x86 SIMD extension 1.02 �����p����Ă��܂��B
+ *	[JPEGについて]
+ *		imgctl の JPEG読み書き処理には The Independent JPEG Group (IJG) の
+ *		libjpeg 6b を基に宮坂賢さんが作成された
+ *		IJG's JPEG software with x86 SIMD extension 1.02 が利用されています。
  *		http://cetus.sakura.ne.jp/softlab/jpeg-x86simd/jpegsimd.html
  *
- *	[PNG�ɂ���]
- *		imgctl ��PNG�ǂݏ��������ɂ� libpng 1.2.34 �� zlib 1.2.3 �����p����Ă��܂��B
- *		�܂��APNG�̓ǂݍ��݂́A�{�⌫������ ifpng.spi �̃\�[�X���Q�l�ɂ��Ă��܂��B
+ *	[PNGについて]
+ *		imgctl のPNG読み書き処理には libpng 1.2.34 と zlib 1.2.3 が利用されています。
+ *		また、PNGの読み込みは、宮坂賢さん作の ifpng.spi のソースを参考にしています。
  *
- *  [Version 1.25 �ł̏C���ɂ���]
- *      Version 1.25 �ɂ�����C���́A
- *      Toshi Fuku���񋟂̏C���\�[�X�R�[�h����ъ֘A���ɂ����̂ł��B
+ *  [Version 1.25 での修正について]
+ *      Version 1.25 における修正は、
+ *      Toshi Fuku氏提供の修正ソースコードおよび関連情報によるものです。
  */
 /*
- *	[�X�V����]
+ *	[更新履歴]
  *		* Version 1.00B
- *			: ����e�X�g�f���ŉ����J
+ *			: 動作テスト掲示板で仮公開
  *		* Version 1.00
- *			: �����Ɍ��J
- *			: HeadDIB�֐��ǉ�
- *			: ColorDIB�֐��ǉ�
- *			: DIBto16Bit�֐��ǉ�
- *			: DIBto24Bit�֐��d�l�ύX
- *			: DIBtoRLE�֐��d�l�ύX
- *			: RLEtoDIB�֐��d�l�ύX
- *			: SizeDIB�֐��폜
+ *			: 正式に公開
+ *			: HeadDIB関数追加
+ *			: ColorDIB関数追加
+ *			: DIBto16Bit関数追加
+ *			: DIBto24Bit関数仕様変更
+ *			: DIBtoRLE関数仕様変更
+ *			: RLEtoDIB関数仕様変更
+ *			: SizeDIB関数削除
  *		* Version 1.01B
- *			: ToDIB�֐��ǉ�
- *			: PaletteDIB�֐��ǉ�
- *			: PixelDIB�֐��ǉ�
- *			: CutDIB�֐��ǉ�
- *			: DIBtoPNGex�֐��ǉ�
- *			: HeadDIB�֐��o�O�C��
+ *			: ToDIB関数追加
+ *			: PaletteDIB関数追加
+ *			: PixelDIB関数追加
+ *			: CutDIB関数追加
+ *			: DIBtoPNGex関数追加
+ *			: HeadDIB関数バグ修正
  *		* Version 1.01B2
- *			: ImgctlBeta�֐��ǉ�
- *			: DCtoDIB�֐��ǉ�
+ *			: ImgctlBeta関数追加
+ *			: DCtoDIB関数追加
  *		* Version 1.01
- *			: DIBtoPNGex�֐������d�l�ύX
+ *			: DIBtoPNGex関数内部仕様変更
  *		* Version 1.02B
- *			: DIBto8Bit�֐��ǉ�
- *			: DIBto24Bit�֐��o�O�C��
- *			: DIBto16Bit�֐��o�O�C��
+ *			: DIBto8Bit関数追加
+ *			: DIBto24Bit関数バグ修正
+ *			: DIBto16Bit関数バグ修正
  *		* Version 1.02B2
- *			: GrayDIB�֐��ǉ�
- *			: ToneDIB�֐��ǉ�
- *			: ReplaceDIB�֐��ǉ�
+ *			: GrayDIB関数追加
+ *			: ToneDIB関数追加
+ *			: ReplaceDIB関数追加
  *		* Version 1.02
- *			: PNGtoDIB�֐��s���C��
+ *			: PNGtoDIB関数不備修正
  *		* Version 1.03B
- *			: GetImageType�֐��g��
- *			: DIBto8Bit�֐��g��
- *			: BMPtoDIB�֐��g��
+ *			: GetImageType関数拡張
+ *			: DIBto8Bit関数拡張
+ *			: BMPtoDIB関数拡張
  *		* Version 1.03B2
- *			: JPGtoDIB�֐��g��
+ *			: JPGtoDIB関数拡張
  *		* Version 1.03B3
- *			: GetImageType�֐��C��
+ *			: GetImageType関数修正
  *		* Version 1.03
- *			: GetImageType�֐��g��
+ *			: GetImageType関数拡張
  *		* Version 1.04B
- *			: GetImageType�֐��C��
+ *			: GetImageType関数修正
  *		* Version 1.04
- *			: DIBStretchDIBits2�֐��ǉ�
+ *			: DIBStretchDIBits2関数追加
  *		* Version 1.05B
- *			: PasteDIB�֐��ǉ�
- *			: CutDIB�֐��s���C��
- *			: DIBDIBits�֐��s���C��
- *			: DIBStretchDIBits�֐��s���C��
+ *			: PasteDIB関数追加
+ *			: CutDIB関数不備修正
+ *			: DIBDIBits関数不備修正
+ *			: DIBStretchDIBits関数不備修正
  *		* Version 1.05
- *			: InfoPNG�֐��ǉ�
+ *			: InfoPNG関数追加
  *		* Version 1.06B
- *			: TurnDIB�֐��ǉ�
- *			: CutDIB�֐����C��
- *			: DIBStretchDIBits2�֐����C��
- *			: �قȂ�Version�Ԃ̌݊�(v1.05���)
+ *			: TurnDIB関数追加
+ *			: CutDIB関数微修正
+ *			: DIBStretchDIBits2関数微修正
+ *			: 異なるVersion間の互換(v1.05より)
  *		* Version 1.06
- *			: RepaintDIB�֐��ǉ�
+ *			: RepaintDIB関数追加
  *		* Version 1.07B
- *			: GetImageType�֐����C��
- *			: DIBDIBits�֐��C��
- *			: DIBStretchDIBits�֐��C��
+ *			: GetImageType関数微修正
+ *			: DIBDIBits関数修正
+ *			: DIBStretchDIBits関数修正
  *		* Version 1.07B2
- *			: ImgctlError�֐��ǉ�
- *			: ImgctlErrorClear�֐��ǉ�
- *			: PixelDIB�֐��o�O�C��
- *			: GetDIB�֐��C��
+ *			: ImgctlError関数追加
+ *			: ImgctlErrorClear関数追加
+ *			: PixelDIB関数バグ修正
+ *			: GetDIB関数修正
  *		* Version 1.07B3
- *			: ImgctlError�֐��p�G���[�R�[�h�g��
- *			: HDIB�^�������Ɏ��֐���NULL�`�F�b�N�����ǉ�
- *			: �t�@�C�����������Ɏ��֐���NULL�`�F�b�N�����ǉ�
- *			: �e��֐��̈����ɂ�����s��NULL�̃`�F�b�N�����ǉ�
+ *			: ImgctlError関数用エラーコード拡張
+ *			: HDIB型を引数に取る関数のNULLチェック処理追加
+ *			: ファイル名を引数に取る関数のNULLチェック処理追加
+ *			: 各種関数の引数における不正NULLのチェック処理追加
  *		* Version 1.07
- *			: JPEG���C�u�����y��PNG���C�u�����̍č\�z
- *		* Version 1.08B (v1.08�ƌ�ݒ�)
- *			: PointerOf�֐��ǉ�
- *			: �o�[�W����������萔IMGCTL_VERSION_STRING�ǉ�
+ *			: JPEGライブラリ及びPNGライブラリの再構築
+ *		* Version 1.08B (v1.08と誤設定)
+ *			: PointerOf関数追加
+ *			: バージョン文字列定数IMGCTL_VERSION_STRING追加
  *		* Version 1.08B2
- *			: DataDIB�֐��ǉ�
- *			: DIBtoDC�֐��ǉ�(DIBDIBits�֐��Ɠ��@�\)
- *			: DIBtoDCex�֐��ǉ�(DIBStretchDIBits�֐��Ɠ��@�\)
- *			: DIBtoDCex2�֐��ǉ�(DIBStretchDIBits2�֐��Ɠ��@�\)
- *			: MapDIB�֐��̑�1������HDIBC�^����HDIB�^�ɕύX
- *			: �������̊m�ە��@��malloc����GlobalAlloc�ɕύX
+ *			: DataDIB関数追加
+ *			: DIBtoDC関数追加(DIBDIBits関数と同機能)
+ *			: DIBtoDCex関数追加(DIBStretchDIBits関数と同機能)
+ *			: DIBtoDCex2関数追加(DIBStretchDIBits2関数と同機能)
+ *			: MapDIB関数の第1引数をHDIBC型からHDIB型に変更
+ *			: メモリの確保方法をmallocからGlobalAllocに変更
  *		* Version 1.08
- *			: DataDIB�֐��d�l�ύX
- *			: �������̊m�ە��@��GlobalAlloc����malloc�ɖ߂���
+ *			: DataDIB関数仕様変更
+ *			: メモリの確保方法をGlobalAllocからmallocに戻した
  *		* Version 1.09
- *			: DIBtoDC�֐��啝�C��(BitBlt�Ɗ��S�ɓ��@�\)
- *			: DIBtoDCex�֐��啝�C��(StretchBlt�Ɗ��S�ɓ��@�\)
- *			: ��2�̊֐�������ŗ��p����֐����A���I�Ɏd�l�ύX
- *			: ImgctlError�֐��p�G���[�R�[�h�g��
- *			: DIBtoPNGex�֐��o�O�C��
+ *			: DIBtoDC関数大幅修正(BitBltと完全に同機能)
+ *			: DIBtoDCex関数大幅修正(StretchBltと完全に同機能)
+ *			: 上2つの関数を内部で利用する関数も連鎖的に仕様変更
+ *			: ImgctlError関数用エラーコード拡張
+ *			: DIBtoPNGex関数バグ修正
  *		* Version 1.10B
- *			: DIBtoDC�֐��C��(���x����BitBlt�Ɗ��S�ɓ��@�\)
- *			: DIBtoDCex�֐��C��(���x����StretchBlt�Ɗ��S�ɓ��@�\)
- *			: ��2�̊֐�������ŗ��p����֐����A���I�Ɏd�l�ύX
- *			: PasteDIB�֐��o�O���d�l�C���y�ъg��(���W�w���DIBtoDC�Ɠ����d�l)
- *			: ImgctlError�֐��p�G���[�R�[�h�g��
+ *			: DIBtoDC関数修正(今度こそBitBltと完全に同機能)
+ *			: DIBtoDCex関数修正(今度こそStretchBltと完全に同機能)
+ *			: 上2つの関数を内部で利用する関数も連鎖的に仕様変更
+ *			: PasteDIB関数バグ＆仕様修正及び拡張(座標指定はDIBtoDCと同じ仕様)
+ *			: ImgctlError関数用エラーコード拡張
  *		* Version 1.10B2
- *			: GetImageType�֐��p�萔�C��
+ *			: GetImageType関数用定数修正
  *		* Version 1.10B3
- *			: DIBtoJPG�֐��g��
- *			: JPGtoDIB�֐��g��
- *			: DIBtoPNG�֐��g��
- *			: DIBtoPNGex�֐��g��
- *			: PNGtoDIB�֐��C��
- *			: InfoPNG�֐��C��
+ *			: DIBtoJPG関数拡張
+ *			: JPGtoDIB関数拡張
+ *			: DIBtoPNG関数拡張
+ *			: DIBtoPNGex関数拡張
+ *			: PNGtoDIB関数修正
+ *			: InfoPNG関数修正
  *		* Version 1.10B4
- *			: DIBto16BitEx�֐��ǉ�
- *			: GetImageType�֐��g��
- *			: CreateDIB�֐��g��
- *			: DIBto16Bit�֐����C��
- *			: DIBto8Bit�֐��g��
- *			: BMPtoDIB�֐����C��
- *			: 16Bit/32Bit�̐F�������C��
+ *			: DIBto16BitEx関数追加
+ *			: GetImageType関数拡張
+ *			: CreateDIB関数拡張
+ *			: DIBto16Bit関数微修正
+ *			: DIBto8Bit関数拡張
+ *			: BMPtoDIB関数微修正
+ *			: 16Bit/32Bitの色処理を修正
  *		* Version 1.10B5
- *			: DIBto16BitEx�֐��g��
- *			: DIBto8Bit�֐��g��
+ *			: DIBto16BitEx関数拡張
+ *			: DIBto8Bit関数拡張
  *		* Version 1.10B6
- *			: DIBto16BitEx�֐��C���y�ъg��
- *			: DIBto8Bit�֐��C���y�ъg��
+ *			: DIBto16BitEx関数修正及び拡張
+ *			: DIBto8Bit関数修正及び拡張
  *		* Version 1.10B7
- *			: DIBto16BitEx�֐��d�l�ύX�y�яC���y�ъg��
- *			: DIBto8Bit�֐��d�l�ύX�y�яC���y�ъg��
+ *			: DIBto16BitEx関数仕様変更及び修正及び拡張
+ *			: DIBto8Bit関数仕様変更及び修正及び拡張
  *		* Version 1.10B8
- *			: DIBto16BitEx�֐��g��
- *			: DIBto8Bit�֐��g��
+ *			: DIBto16BitEx関数拡張
+ *			: DIBto8Bit関数拡張
  *		* Version 1.10
- *			: DIBto16BitEx�֐��d�l�ύX
- *			: DIBto8Bit�֐��d�l�ύX
+ *			: DIBto16BitEx関数仕様変更
+ *			: DIBto8Bit関数仕様変更
  *		* Version 1.11B
- *			: DeleteDIB�֐����C��
- *			: libpng.lib�y��zlib.lib���o�[�W�����A�b�v
+ *			: DeleteDIB関数微修正
+ *			: libpng.lib及びzlib.libをバージョンアップ
  *		* Version 1.11
- *			: DIBtoJPG�֐��v���I�o�O�C��
+ *			: DIBtoJPG関数致命的バグ修正
  *		* Version 1.12B
- *			: ResizeDIB�֐��ǉ�
- *			: InfoPNG�֐��o�O�C��
+ *			: ResizeDIB関数追加
+ *			: InfoPNG関数バグ修正
  *		* Version 1.12B2
- *			: GammaDIB�֐��ǉ�
- *			: ContrastDIB�֐��ǉ�
- *			: ResizeDIB�֐������d�l�ύX
+ *			: GammaDIB関数追加
+ *			: ContrastDIB関数追加
+ *			: ResizeDIB関数内部仕様変更
  *		* Version 1.12B3
- *			: TableDIB�֐��ǉ�
- *			: ShadeDIB�֐��ǉ�
- *			: GammaDIB�֐��d�l�ύX
- *			: ContrastDIB�֐��d�l�ύX
- *			: CreateDIB�֐������d�l�ύX�y�ъg��
- *			: ToneDIB�֐������d�l�ύX
- *			: ImgctlError�֐��p�G���[�R�[�h�g��
+ *			: TableDIB関数追加
+ *			: ShadeDIB関数追加
+ *			: GammaDIB関数仕様変更
+ *			: ContrastDIB関数仕様変更
+ *			: CreateDIB関数内部仕様変更及び拡張
+ *			: ToneDIB関数内部仕様変更
+ *			: ImgctlError関数用エラーコード拡張
  *		* Version 1.12B4
- *			: TurnDIBex�֐��ǉ�
+ *			: TurnDIBex関数追加
  *		* Version 1.12B4f
- *			: DataDIB�֐��C��(C/C++)
+ *			: DataDIB関数修正(C/C++)
  *		* Version 1.12B5
- *			: PNGAtoDIB�֐��ǉ�
- *			: PNGtoDIB�֐������d�l�ύX
- *			: ImgctlError�֐��p�G���[�R�[�h�g��
+ *			: PNGAtoDIB関数追加
+ *			: PNGtoDIB関数内部仕様変更
+ *			: ImgctlError関数用エラーコード拡張
  *		* Version 1.12B6
- *			: DIBtoPNGex�֐��C��
+ *			: DIBtoPNGex関数修正
  *		* Version 1.12B7
- *			: DIBtoPNGex�֐��C��
- *			: �\���̃����o�̃A���C�������g���w��
- *			: PNGOPT�\���̂ɗ\��ϐ��ǉ�
+ *			: DIBtoPNGex関数修正
+ *			: 構造体メンバのアラインメントを指定
+ *			: PNGOPT構造体に予約変数追加
  *		* Version 1.12B8
- *			: DIBtoJPG�֐��o�O�C��
- *			: JPGtoDIB�֐��o�O�C��
+ *			: DIBtoJPG関数バグ修正
+ *			: JPGtoDIB関数バグ修正
  *		* Version 1.12B9
- *			: GetImageType�֐��d�l�ύX
+ *			: GetImageType関数仕様変更
  *		* Version 1.12B10
- *			: GetImageType�֐��C��
+ *			: GetImageType関数修正
  *		* Version 1.12
- *			: DIBtoBMP�֐��C��
+ *			: DIBtoBMP関数修正
  *		* Version 1.13B
- *			: JPGtoDIB�֐��g��
+ *			: JPGtoDIB関数拡張
  *		* Version 1.13B2
- *			: DIBtoJPG�֐��������I�ɓ����d�l�ύX
+ *			: DIBtoJPG関数を試験的に内部仕様変更
  *		* Version 1.13B3
- *			: JPGtoDIB�֐��C��
+ *			: JPGtoDIB関数修正
  *		* Version 1.13B4
- *			: DIBtoGIF�֐��ǉ�
- *			: DIBtoGIFex�֐��ǉ�
- *			: GIFtoDIB�֐��ǉ�
- *			: GIFtoDIBex�֐��ǉ�
+ *			: DIBtoGIF関数追加
+ *			: DIBtoGIFex関数追加
+ *			: GIFtoDIB関数追加
+ *			: GIFtoDIBex関数追加
  *		* Version 1.13
- *			: DIBtoGIFAni�֐��ǉ�
- *			: DIBtoGIFAniEx�֐��ǉ�
+ *			: DIBtoGIFAni関数追加
+ *			: DIBtoGIFAniEx関数追加
  *		* Version 1.14
- *			: GIFtoDIB�֐��v���I�o�O�C��
- *			: GIFtoDIBex�֐��v���I�o�O�C��
+ *			: GIFtoDIB関数致命的バグ修正
+ *			: GIFtoDIBex関数致命的バグ修正
  *		* Version 1.15
- *			: DIBto24Bit�֐��o�O�C��
- *			: DIBto8Bit�֐��������I�ɓ����d�l�ύX
+ *			: DIBto24Bit関数バグ修正
+ *			: DIBto8Bit関数を試験的に内部仕様変更
  *		* Version 1.16B
- *			: libpng.lib�y��zlib.lib���o�[�W�����A�b�v
+ *			: libpng.lib及びzlib.libをバージョンアップ
  *		* Version 1.16B2
- *			: DIBtoPNG�֐��y��DIBtoPNGex�֐��v���I�o�O�C��
- *			: libpng.lib���o�[�W�����A�b�v
+ *			: DIBtoPNG関数及びDIBtoPNGex関数致命的バグ修正
+ *			: libpng.libをバージョンアップ
  *		* Version 1.16B3
- *			: BMPMtoDIB�֐��ǉ�
- *			: JPGMtoDIB�֐��ǉ�
- *			: PNGMtoDIB�֐��ǉ�
- *			: PNGMAtoDIB�֐��ǉ�
- *			: InfoPNGM�֐��ǉ�
- *			: GIFMtoDIB�֐��ǉ�
- *			: GIFMtoDIBex�֐��ǉ�
- *			: ImgctlError�֐��p�G���[�R�[�h�g��
+ *			: BMPMtoDIB関数追加
+ *			: JPGMtoDIB関数追加
+ *			: PNGMtoDIB関数追加
+ *			: PNGMAtoDIB関数追加
+ *			: InfoPNGM関数追加
+ *			: GIFMtoDIB関数追加
+ *			: GIFMtoDIBex関数追加
+ *			: ImgctlError関数用エラーコード拡張
  *		* Version 1.16B4
- *			: libpng.lib���o�[�W�����A�b�v(���`�����l��PNG�ǂݍ��݃o�O�C��)
+ *			: libpng.libをバージョンアップ(αチャンネルPNG読み込みバグ修正)
  *		* Version 1.16B5
- *			: DIBtoGIF�֐��o�O�C��
- *			: DIBtoGIFex�֐��o�O�C��
- *			: DIBtoGIFAni�֐��o�O�C��
- *			: DIBtoGIFAniEx�֐��o�O�C��
+ *			: DIBtoGIF関数バグ修正
+ *			: DIBtoGIFex関数バグ修正
+ *			: DIBtoGIFAni関数バグ修正
+ *			: DIBtoGIFAniEx関数バグ修正
  *		* Version 1.16
- *			: GetImageMType�֐��ǉ�
- *			: MtoDIB�֐��ǉ�
- *			: GetImageType�֐������d�l�ύX
+ *			: GetImageMType関数追加
+ *			: MtoDIB関数追加
+ *			: GetImageType関数内部仕様変更
  *		* Version 1.17
- *			: GIFtoDIB�֐��o�O�C��
- *			: GIFMtoDIB�֐��o�O�C��
- *			: GIFtoDIBex�֐��o�O�C��
- *			: GIFMtoDIBex�֐��o�O�C��
+ *			: GIFtoDIB関数バグ修正
+ *			: GIFMtoDIB関数バグ修正
+ *			: GIFtoDIBex関数バグ修正
+ *			: GIFMtoDIBex関数バグ修正
  *		* Version 1.18
- *			: BMPtoDIB�֐��C��
- *			: TurnDIB�֐��o�O�C��
+ *			: BMPtoDIB関数修正
+ *			: TurnDIB関数バグ修正
  *		* Version 1.19
- *			: PNGtoDIB�֐��o�O�C��
- *			: PNGMtoDIB�֐��o�O�C��
+ *			: PNGtoDIB関数バグ修正
+ *			: PNGMtoDIB関数バグ修正
  *		* Version 1.20
- *			: DIBtoGIFex�֐��o�O�C��
- *			: DIBtoGIFAniEx�֐��o�O�C��
+ *			: DIBtoGIFex関数バグ修正
+ *			: DIBtoGIFAniEx関数バグ修正
  *		* Version 1.21
- *			: BMPtoDIB�֐��o�O�C��
- *			: BMPMtoDIB�֐��o�O�C��
- *			: DIBtoRLE�֐��o�O�C��
- *			: CutDIB�֐��o�O�C��
+ *			: BMPtoDIB関数バグ修正
+ *			: BMPMtoDIB関数バグ修正
+ *			: DIBtoRLE関数バグ修正
+ *			: CutDIB関数バグ修正
  *		* Version 1.22
- *			: BMPtoDIB�֐��o�O�C��
- *			: BMPMtoDIB�֐��o�O�C��
+ *			: BMPtoDIB関数バグ修正
+ *			: BMPMtoDIB関数バグ修正
  *		* Version 1.23
- *			: ResizeDIB�֐������d�l�ύX
+ *			: ResizeDIB関数内部仕様変更
  *		* Version 1.24
- *			: JPEG���C�u������ IJG's JPEG software with x86 SIMD extension �ɕύX
- *			: libpng�y��zlib���o�[�W�����A�b�v
+ *			: JPEGライブラリを IJG's JPEG software with x86 SIMD extension に変更
+ *			: libpng及びzlibをバージョンアップ
  *      * Version 1.25
- *          : JPGtoDIB�֐��o�O�C���������ύX(Toshi Fuku����)
- *          : JPGMtoDIB�֐��o�O�C���������ύX(Toshi Fuku����)
- *          : DIBtoJPG�֐��o�O�C���������ύX(Toshi Fuku����)
- *          : GIFtoDIB�֐��o�O�C��(Toshi Fuku����)
- *          : GIFMtoDIB�֐��o�O�C��(Toshi Fuku����)
- *          : GIFtoDIBex�֐��o�O�C��(Toshi Fuku����)
- *          : GIFMtoDIBex�֐��o�O�C��(Toshi Fuku����)
- *          : GetImageType�֐��o�O�C��(Toshi Fuku����)
- *          : ColorDIB�֐��o�O�C��(Toshi Fuku����)
- *          : DIBto16Bit�֐��o�O�C��(Toshi Fuku����)
- *          : DIBto16BitEx�֐��o�O�C��(Toshi Fuku����)
- *          : DIBto24Bit�֐��o�O�C��(Toshi Fuku����)
- *          : GrayDIB�֐��o�O�C��(Toshi Fuku����)
- *          : PixelDIB�֐��o�O�C��(Toshi Fuku����)
- *          : RepaintDIB�֐��o�O�C��(Toshi Fuku����)
- *          : ReplaceDIB�֐��o�O�C��(Toshi Fuku����)
- *          : TableDIB�֐��o�O�C��(Toshi Fuku����)
- *          : JPEG���C�u�����Ɋւ���R�[�h�T�C�Y�팸���K�p
- *          : libpng���o�[�W�����A�b�v
+ *          : JPGtoDIB関数バグ修正＆処理変更(Toshi Fuku氏提供)
+ *          : JPGMtoDIB関数バグ修正＆処理変更(Toshi Fuku氏提供)
+ *          : DIBtoJPG関数バグ修正＆処理変更(Toshi Fuku氏提供)
+ *          : GIFtoDIB関数バグ修正(Toshi Fuku氏提供)
+ *          : GIFMtoDIB関数バグ修正(Toshi Fuku氏提供)
+ *          : GIFtoDIBex関数バグ修正(Toshi Fuku氏提供)
+ *          : GIFMtoDIBex関数バグ修正(Toshi Fuku氏提供)
+ *          : GetImageType関数バグ修正(Toshi Fuku氏提供)
+ *          : ColorDIB関数バグ修正(Toshi Fuku氏提供)
+ *          : DIBto16Bit関数バグ修正(Toshi Fuku氏提供)
+ *          : DIBto16BitEx関数バグ修正(Toshi Fuku氏提供)
+ *          : DIBto24Bit関数バグ修正(Toshi Fuku氏提供)
+ *          : GrayDIB関数バグ修正(Toshi Fuku氏提供)
+ *          : PixelDIB関数バグ修正(Toshi Fuku氏提供)
+ *          : RepaintDIB関数バグ修正(Toshi Fuku氏提供)
+ *          : ReplaceDIB関数バグ修正(Toshi Fuku氏提供)
+ *          : TableDIB関数バグ修正(Toshi Fuku氏提供)
+ *          : JPEGライブラリに関するコードサイズ削減策を適用
+ *          : libpngをバージョンアップ
  *      * Version 1.26
- *          : JPGtoDIB�֐��o�O�C���������ύX
- *          : JPGMtoDIB�֐��o�O�C���������ύX
- *          : GIFtoDIB�֐��o�O�C��(Toshi Fuku����)
- *          : GIFMtoDIB�֐��o�O�C��(Toshi Fuku����)
- *          : GIFtoDIBex�֐��o�O�C��(Toshi Fuku����)
- *          : GIFMtoDIBex�֐��o�O�C��(Toshi Fuku����)
+ *          : JPGtoDIB関数バグ修正＆処理変更
+ *          : JPGMtoDIB関数バグ修正＆処理変更
+ *          : GIFtoDIB関数バグ修正(Toshi Fuku氏提供)
+ *          : GIFMtoDIB関数バグ修正(Toshi Fuku氏提供)
+ *          : GIFtoDIBex関数バグ修正(Toshi Fuku氏提供)
+ *          : GIFMtoDIBex関数バグ修正(Toshi Fuku氏提供)
  */
 
 #ifndef _INC_IMGCTL
@@ -333,10 +333,10 @@ typedef const void *HDIBC;
 /* DIB image data ([v1.08] please read dibdata.txt) */
 typedef struct
 {
-	DWORD dwbmiSize;	/* BITMAPINFO�T�C�Y */
-	DWORD dwDataSize;	/* ���f�[�^�T�C�Y */
-	BITMAPINFO *pbmi;	/* BITMAPINFO�|�C���^ */
-	BYTE *pData;		/* ���f�[�^�|�C���^(pbmi�ƘA��) */
+	DWORD dwbmiSize;	/* BITMAPINFOサイズ */
+	DWORD dwDataSize;	/* 実データサイズ */
+	BITMAPINFO *pbmi;	/* BITMAPINFOポインタ */
+	BYTE *pData;		/* 実データポインタ(pbmiと連続) */
 }
 IMGDATA, *PIMGDATA, FAR *LPIMGDATA;
 typedef const IMGDATA FAR *LPCIMGDATA;
@@ -344,17 +344,17 @@ typedef const IMGDATA FAR *LPCIMGDATA;
 /* DIB paste information structure */
 typedef struct
 {
-	COLORREF colDest;	/* �\��t����̐F */
-	COLORREF colSrc;	/* �\��t�����̐F */
-	DWORD dwReserved;	/* �\��(���0) */
-	LPARAM lParam;		/* �֐��ɓn����LPARAM�l */
+	COLORREF colDest;	/* 貼り付け先の色 */
+	COLORREF colSrc;	/* 貼り付け元の色 */
+	DWORD dwReserved;	/* 予約(常に0) */
+	LPARAM lParam;		/* 関数に渡したLPARAM値 */
 
 	/* v1.10B */
-	RECT rcArea;		/* �\��t���ʒu */
-	long lXDest;		/* ���݂̓\��t����X���W */
-	long lYDest;		/* ���݂̓\��t����Y���W */
-	long lXSrc;			/* ���݂̓\��t����X���W */
-	long lYSrc;			/* ���݂̓\��t����Y���W */
+	RECT rcArea;		/* 貼り付け位置 */
+	long lXDest;		/* 現在の貼り付け先X座標 */
+	long lYDest;		/* 現在の貼り付け先Y座標 */
+	long lXSrc;			/* 現在の貼り付け元X座標 */
+	long lYSrc;			/* 現在の貼り付け元Y座標 */
 }
 PASTEINFO, *PPASTEINFO, FAR *LPPASTEINFO;
 typedef const PASTEINFO FAR *LPCPASTEINFO;
@@ -365,8 +365,8 @@ typedef COLORREF (CALLBACK *PASTEPROC)(LPPASTEINFO);
 /* Repaint information structure */
 typedef struct
 {
-	COLORREF colBefore;	/* ���̐F */
-	COLORREF colAfter;	/* �u��������F */
+	COLORREF colBefore;	/* 元の色 */
+	COLORREF colAfter;	/* 置き換える色 */
 }
 REPAINTINFO, *PREPAINTINFO, FAR *LPREPAINTINFO;
 typedef const REPAINTINFO FAR *LPCREPAINTINFO;
@@ -374,9 +374,9 @@ typedef const REPAINTINFO FAR *LPCREPAINTINFO;
 /* Convert table structure [v1.12B3] */
 typedef struct
 {
-	BYTE tblB[256];	/* B�ϊ��e�[�u�� */
-	BYTE tblG[256];	/* G�ϊ��e�[�u�� */
-	BYTE tblR[256];	/* R�ϊ��e�[�u�� */
+	BYTE tblB[256];	/* B変換テーブル */
+	BYTE tblG[256];	/* G変換テーブル */
+	BYTE tblR[256];	/* R変換テーブル */
 }
 CONVTABLE, *PCONVTABLE, FAR *LPCONVTABLE;
 typedef const CONVTABLE FAR *LPCCONVTABLE;
@@ -384,46 +384,46 @@ typedef const CONVTABLE FAR *LPCCONVTABLE;
 /* PNGOPT structure */
 typedef struct
 {
-	DWORD dwFlag;		/* �e��t���O�̘_���a */
-	WORD wCompLevel;	/* ���k��: [��] 0 �` 9 [��] */
+	DWORD dwFlag;		/* 各種フラグの論理和 */
+	WORD wCompLevel;	/* 圧縮率: [低] 0 ～ 9 [高] */
 
-	WORD wReserved;		/* �\��(0�ɂ���) [v1.12B7] */
+	WORD wReserved;		/* 予約(0にする) [v1.12B7] */
 
-	DWORD dwFilter;		/* �t�B���^ */
-	DWORD dwGamma;		/* �K���}�␳�l (0 �` 100000) */
-	LPARAM clrTrans;	/* �����F */
-	LPARAM clrBack;		/* �w�i�F */
-	LPSTR lpText;		/* �e�L�X�g */
+	DWORD dwFilter;		/* フィルタ */
+	DWORD dwGamma;		/* ガンマ補正値 (0 ～ 100000) */
+	LPARAM clrTrans;	/* 透明色 */
+	LPARAM clrBack;		/* 背景色 */
+	LPSTR lpText;		/* テキスト */
 
-	DWORD dwReserved1;	/* �\��(0�ɂ���) */
-	DWORD dwReserved2;	/* �\��(0�ɂ���) */
+	DWORD dwReserved1;	/* 予約(0にする) */
+	DWORD dwReserved2;	/* 予約(0にする) */
 }
 PNGOPT, *PPNGOPT, FAR *LPPNGOPT;
 typedef const PNGOPT FAR *LPCPNGOPT;
 
-/* ���ߏ��\���� for PNGOPT */
+/* 透過情報構造体 for PNGOPT */
 typedef struct
 {
-	BYTE trans[256];	/* �e�p���b�g�̓��ߓx(���l���������قǓ���) */
-	DWORD dwNum;		/* trans�̐ݒ��L���ɂ��鐔 */
+	BYTE trans[256];	/* 各パレットの透過度(数値が小さいほど透明) */
+	DWORD dwNum;		/* transの設定を有効にする数 */
 }
 PALTRANS, *PPALTRANS, FAR *LPPALTRANS;
 
 /* GIFOPT structure [v1.13B4] */
 typedef struct
 {
-	DWORD dwFlag;		/* �e��t���O�̘_���a */
+	DWORD dwFlag;		/* 各種フラグの論理和 */
 
-	LPARAM clrTrans;	/* ���ߐF */
-	LPARAM clrBack;		/* �w�i�F */
+	LPARAM clrTrans;	/* 透過色 */
+	LPARAM clrBack;		/* 背景色 */
 
-	WORD wLogWidth;		/* �_����ʕ� */
-	WORD wLogHeight;	/* �_����ʍ��� */
-	WORD wLogLeft;		/* �_����ʂł̉摜�J�nX�ʒu */
-	WORD wLogTop;		/* �_����ʂł̉摜�J�nY�ʒu */
+	WORD wLogWidth;		/* 論理画面幅 */
+	WORD wLogHeight;	/* 論理画面高さ */
+	WORD wLogLeft;		/* 論理画面での画像開始X位置 */
+	WORD wLogTop;		/* 論理画面での画像開始Y位置 */
 
-	DWORD dwLzwCount;	/* LZW�����N���A���s���G���g���� */
-	DWORD dwBitCount;	/* �r�b�g�� */
+	DWORD dwLzwCount;	/* LZW辞書クリアを行うエントリ数 */
+	DWORD dwBitCount;	/* ビット数 */
 }
 GIFOPT, *PGIFOPT, FAR *LPGIFOPT;
 typedef const GIFOPT FAR *LPCGIFOPT;
@@ -431,14 +431,14 @@ typedef const GIFOPT FAR *LPCGIFOPT;
 /* GIFANIOPT structure [v1.13] */
 typedef struct
 {
-	DWORD dwFlag;		/* �e��t���O�̘_���a */
+	DWORD dwFlag;		/* 各種フラグの論理和 */
 
-	COLORREF clrBack;	/* �w�i�F */
-	WORD wLogWidth;		/* �_����ʕ� */
-	WORD wLogHeight;	/* �_����ʍ��� */
-	WORD wLoopCount;	/* �J��Ԃ��� */
+	COLORREF clrBack;	/* 背景色 */
+	WORD wLogWidth;		/* 論理画面幅 */
+	WORD wLogHeight;	/* 論理画面高さ */
+	WORD wLoopCount;	/* 繰り返し回数 */
 
-	WORD wReserved;		/* �\��(0�ɂ���) */
+	WORD wReserved;		/* 予約(0にする) */
 }
 GIFANIOPT, *PGIFANIOPT, FAR *LPGIFANIOPT;
 typedef const GIFANIOPT FAR *LPCGIFANIOPT;
@@ -446,17 +446,17 @@ typedef const GIFANIOPT FAR *LPCGIFANIOPT;
 /* GIF animation scene block [v1.13] */
 typedef struct
 {
-	DWORD dwFlag;		/* �e��t���O�̘_���a */
+	DWORD dwFlag;		/* 各種フラグの論理和 */
 
-	LPARAM clrTrans;	/* ���ߐF */
-	WORD wLogLeft;		/* �_����ʂł̉摜�J�nX�ʒu */
-	WORD wLogTop;		/* �_����ʂł̉摜�J�nY�ʒu */
-	DWORD dwLzwCount;	/* LZW�����N���A���s���G���g���� */
-	DWORD dwBitCount;	/* �r�b�g�� */
-	WORD wDisposal;		/* �摜�\���㏈�� */
+	LPARAM clrTrans;	/* 透過色 */
+	WORD wLogLeft;		/* 論理画面での画像開始X位置 */
+	WORD wLogTop;		/* 論理画面での画像開始Y位置 */
+	DWORD dwLzwCount;	/* LZW辞書クリアを行うエントリ数 */
+	DWORD dwBitCount;	/* ビット数 */
+	WORD wDisposal;		/* 画像表示後処理 */
 
-	WORD wTime;			/* 1/100�b�P�ʂł̕\������ */
-	HDIB hDIB;			/* DIB�n���h�� */
+	WORD wTime;			/* 1/100秒単位での表示時間 */
+	HDIB hDIB;			/* DIBハンドル */
 }
 GIFANISCENE, *PGIFANISCENE, FAR *LPGIFANISCENE;
 typedef const GIFANISCENE FAR *LPCGIFANISCENE;
@@ -464,27 +464,27 @@ typedef const GIFANISCENE FAR *LPCGIFANISCENE;
 /* Default alignment [v1.12B7] */
 #pragma pack(pop)
 
-/* PNGOPT flags (������) */
-#define POF_COMPLEVEL	0x00000001	/* ���k�������g�� */
-#define POF_FILTER		0x00000002	/* �t�B���^�����g��/�擾���� */
-#define POF_GAMMA		0x00000004	/* �K���}�␳�����g��/�擾���� */
-#define POF_TRNSCOLOR	0x00000008	/* �����F�����g��/�擾���� */
-#define POF_BACKCOLOR	0x00000010	/* �w�i�F�����g��/�擾���� */
-#define POF_TEXT		0x00000020	/* �e�L�X�g�����g�� */
-#define POF_TEXTCOMP	0x00000040	/* �e�L�X�g���k���s�� */
-#define POF_INTERLACING	0x00000080	/* �C���^�[���[�X�ɂ���/�ł��� */
-#define POF_TIME		0x00000100	/* �ŏI�X�V���Ԃ�ۑ����� */
-#define POF_ALPHACHAN	0x00000200	/* �A���t�@�`���l�����擾���� [v1.12B5] */
-#define POF_BACKPALETTE	0x00010000	/* �w�i�F�̎w��/�擾�Ƀp���b�g�ԍ����g��(1,4,8Bit) */
-#define POF_TRNSPALETTE	0x00020000	/* �����F�̎w��/�擾�Ƀp���b�g�ԍ����g��(1,4,8Bit) */
-#define POF_TRNSALPHA	0x00040000	/* �����F�̎w��/�擾�ɓ��ߏ��\���̂��g��(1,4,8Bit) */
+/* PNGOPT flags (複数可) */
+#define POF_COMPLEVEL	0x00000001	/* 圧縮率情報を使う */
+#define POF_FILTER		0x00000002	/* フィルタ情報を使う/取得する */
+#define POF_GAMMA		0x00000004	/* ガンマ補正情報を使う/取得する */
+#define POF_TRNSCOLOR	0x00000008	/* 透明色情報を使う/取得する */
+#define POF_BACKCOLOR	0x00000010	/* 背景色情報を使う/取得する */
+#define POF_TEXT		0x00000020	/* テキスト情報を使う */
+#define POF_TEXTCOMP	0x00000040	/* テキスト圧縮を行う */
+#define POF_INTERLACING	0x00000080	/* インターレースにする/である */
+#define POF_TIME		0x00000100	/* 最終更新時間を保存する */
+#define POF_ALPHACHAN	0x00000200	/* アルファチャネルを取得する [v1.12B5] */
+#define POF_BACKPALETTE	0x00010000	/* 背景色の指定/取得にパレット番号を使う(1,4,8Bit) */
+#define POF_TRNSPALETTE	0x00020000	/* 透明色の指定/取得にパレット番号を使う(1,4,8Bit) */
+#define POF_TRNSALPHA	0x00040000	/* 透明色の指定/取得に透過情報構造体を使う(1,4,8Bit) */
 
-/* PNGOPT filters (������) */
-#define PO_FILTER_NONE	0x00000008	/* �t�B���^��K�p���Ȃ� */
-#define PO_FILTER_SUB	0x00000010	/* ���̃s�N�Z������̍������ */
-#define PO_FILTER_UP	0x00000020	/* ��̃s�N�Z������̍������ */
-#define PO_FILTER_AVG	0x00000040	/* ���Ə�̃s�N�Z������̗\���Ƃ̍������ */
-#define PO_FILTER_PAETH	0x00000080	/* ���Ə�ƍ���̃s�N�Z������̗\���Ƃ̍������ */
+/* PNGOPT filters (複数可) */
+#define PO_FILTER_NONE	0x00000008	/* フィルタを適用しない */
+#define PO_FILTER_SUB	0x00000010	/* 左のピクセルからの差分情報 */
+#define PO_FILTER_UP	0x00000020	/* 上のピクセルからの差分情報 */
+#define PO_FILTER_AVG	0x00000040	/* 左と上のピクセルからの予測との差分情報 */
+#define PO_FILTER_PAETH	0x00000080	/* 左と上と左上のピクセルからの予測との差分情報 */
 #define PO_FILTER_ALL \
 	(PO_FILTER_NONE | PO_FILTER_SUB | PO_FILTER_UP | PO_FILTER_AVG | PO_FILTER_PAETH)
 
@@ -493,39 +493,39 @@ typedef const GIFANISCENE FAR *LPCGIFANISCENE;
 #define PO_GAMMA_WIN	PO_GAMMA_NORMAL
 #define PO_GAMMA_MAC	55556		/* (1.0/1.8)*100000 */
 
-/* GIFOPT flags (������) */
-#define GOF_LOGICAL		0x00000001	/* �_����ʏ����g��/������ */
-#define GOF_TRNSCOLOR	0x00000008	/* �����F�����g��/������ */
-#define GOF_BACKCOLOR	0x00000010	/* �w�i�F�����g��/������ */
-#define GOF_INTERLACING	0x00000080	/* �C���^�[���[�X�ɂ���/�ł��� */
-#define GOF_BACKPALETTE	0x00010000	/* �w�i�F�̎w��/�擾�Ƀp���b�g�ԍ����g�� */
-#define GOF_TRNSPALETTE	0x00020000	/* �����F�̎w��/�擾�Ƀp���b�g�ԍ����g�� */
-#define GOF_LZWCLRCOUNT	0x00080000	/* �����N���A�J�E���g���w�肷�� */
-#define GOF_LZWNOTUSE	0x00100000	/* LZW���k���s��Ȃ�(�����kGIF) */
-#define GOF_BITCOUNT	0x00200000	/* ��������/�ǂݍ��ݎ��̍ŏ��r�b�g�����w�肷�� */
+/* GIFOPT flags (複数可) */
+#define GOF_LOGICAL		0x00000001	/* 論理画面情報を使う/がある */
+#define GOF_TRNSCOLOR	0x00000008	/* 透明色情報を使う/がある */
+#define GOF_BACKCOLOR	0x00000010	/* 背景色情報を使う/がある */
+#define GOF_INTERLACING	0x00000080	/* インターレースにする/である */
+#define GOF_BACKPALETTE	0x00010000	/* 背景色の指定/取得にパレット番号を使う */
+#define GOF_TRNSPALETTE	0x00020000	/* 透明色の指定/取得にパレット番号を使う */
+#define GOF_LZWCLRCOUNT	0x00080000	/* 辞書クリアカウントを指定する */
+#define GOF_LZWNOTUSE	0x00100000	/* LZW圧縮を行わない(無圧縮GIF) */
+#define GOF_BITCOUNT	0x00200000	/* 書き込み/読み込み時の最小ビット数を指定する */
 
-/* GIFANIOPT flags (������) */
-#define GAF_LOGICAL		0x00000001	/* �_����ʏ����g�� */
-#define GAF_BACKCOLOR	0x00000010	/* �w�i�F�����g�� */
-#define GAF_LOOPCOUNT	0x00000400	/* ���[�v�񐔂��w�肷�� */
-#define GAF_NOTANI		0x00000800	/* �A�j���[�V�������Ȃ�(�����摜�i�[GIF) */
+/* GIFANIOPT flags (複数可) */
+#define GAF_LOGICAL		0x00000001	/* 論理画面情報を使う */
+#define GAF_BACKCOLOR	0x00000010	/* 背景色情報を使う */
+#define GAF_LOOPCOUNT	0x00000400	/* ループ回数を指定する */
+#define GAF_NOTANI		0x00000800	/* アニメーションしない(複数画像格納GIF) */
 
-/* GIFANISCENE flags (������) */
-#define GSF_LOGICAL		0x00000001	/* �_����ʏ����g�� */
-#define GSF_TRNSCOLOR	0x00000008	/* �����F�����g�� */
-#define GSF_INTERLACING	0x00000080	/* �C���^�[���[�X�ɂ��� */
-#define GSF_TRNSPALETTE	0x00020000	/* �����F�̎w��Ƀp���b�g�ԍ����g�� */
-#define GSF_LZWCLRCOUNT	0x00080000	/* �����N���A�J�E���g���w�肷�� */
-#define GSF_LZWNOTUSE	0x00100000	/* LZW���k���s��Ȃ�(�����kGIF) */
-#define GSF_BITCOUNT	0x00200000	/* �������ݎ��̍ŏ��r�b�g�����w�肷�� */
-#define GSF_DISPOSAL	0x00001000	/* �摜�\����̏������w�肷�� */
-#define GSF_USERINPUT	0x00002000	/* ���[�U�̓��͏������󂯕t���� */
+/* GIFANISCENE flags (複数可) */
+#define GSF_LOGICAL		0x00000001	/* 論理画面情報を使う */
+#define GSF_TRNSCOLOR	0x00000008	/* 透明色情報を使う */
+#define GSF_INTERLACING	0x00000080	/* インターレースにする */
+#define GSF_TRNSPALETTE	0x00020000	/* 透明色の指定にパレット番号を使う */
+#define GSF_LZWCLRCOUNT	0x00080000	/* 辞書クリアカウントを指定する */
+#define GSF_LZWNOTUSE	0x00100000	/* LZW圧縮を行わない(無圧縮GIF) */
+#define GSF_BITCOUNT	0x00200000	/* 書き込み時の最小ビット数を指定する */
+#define GSF_DISPOSAL	0x00001000	/* 画像表示後の処理を指定する */
+#define GSF_USERINPUT	0x00002000	/* ユーザの入力処理を受け付ける */
 
 /* GIFANISCENE disposal methods */
-#define GS_DISP_NONE	0			/* �w�薳��(�f�t�H���g) */
-#define GS_DISP_LEAVE	1			/* ���̕\�����c�� */
-#define GS_DISP_BACK	2			/* �w�i�F�œh��ׂ� */
-#define GS_DISP_PREV	3			/* �ȑO�̕\���ɖ߂� */
+#define GS_DISP_NONE	0			/* 指定無し(デフォルト) */
+#define GS_DISP_LEAVE	1			/* 今の表示を残す */
+#define GS_DISP_BACK	2			/* 背景色で塗り潰す */
+#define GS_DISP_PREV	3			/* 以前の表示に戻す */
 
 /* Image types */
 #define IMG_ERROR	0x00FFFFFF		/* v1.12B9 */
@@ -588,8 +588,8 @@ typedef const GIFANISCENE FAR *LPCGIFANISCENE;
 #define TO8_PUT_YUV		0x00020000
 
 /* Resize flags [v1.12B] */
-#define RESZ_SAME	0		/* ���̂܂� */
-#define RESZ_RATIO	(-1)	/* �c����𑵂��� */
+#define RESZ_SAME	0		/* そのまま */
+#define RESZ_RATIO	(-1)	/* 縦横比を揃える */
 
 /* Replace colors */
 #define REP_R		0
