@@ -440,7 +440,7 @@ UINT_PTR SearchPatternStruct( LPTSTR ptDest, UINT_PTR cchSize, LPTSTR ptSource, 
 		for( d = 0, h = 0; cchSize > d; d++, h++ )
 		{
 			ptDest[h] = ptSource[d];
-			if( 0x005C == ptSource[d] )	//	0x005Cは\
+			if( 0x005C == ptSource[d] )	//	0x005Cは￥
 			{
 				d++;
 				if( TEXT('n') ==  ptSource[d] )	//	改行指示である場合

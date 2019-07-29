@@ -64,6 +64,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -88,6 +89,7 @@
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
+      <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
