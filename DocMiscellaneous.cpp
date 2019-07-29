@@ -1,6 +1,6 @@
 /*! @file
-	@brief その他色々な処理かもだ
-	このファイルは DocMiscellaneous.cpp です。
+	@brief ���̑��F�X�ȏ���������
+	���̃t�@�C���� DocMiscellaneous.cpp �ł��B
 	@author	SikigamiHNQ
 	@date	2011/11/17
 */
@@ -21,38 +21,38 @@ If not, see <http://www.gnu.org/licenses/>.
 #include "OrinrinEditor.h"
 //-------------------------------------------------------------------------------------------------
 
-//extern list<ONEFILE>	gltMultiFiles;	//	複数ファイル保持
-extern FILES_ITR	gitFileIt;		//	今見てるファイルの本体
-extern INT			gixFocusPage;	//	注目中のページ・とりあえず０・０インデックス
+//extern list<ONEFILE>	gltMultiFiles;	//	�����t�@�C���ێ�
+extern FILES_ITR	gitFileIt;		//	�����Ă�t�@�C���̖{��
+extern INT			gixFocusPage;	//	���ڒ��̃y�[�W�E�Ƃ肠�����O�E�O�C���f�b�N�X
 
-extern  UINT		gbCrLfCode;		//	改行コード：０したらば・非０ＹＹ 
+extern  UINT		gbCrLfCode;		//	���s�R�[�h�F�O������΁E��O�x�x 
 //-------------------------------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	統計情報
-	@param[in]	itFile	ファイルイテレータ
-	@param[in]	iPage	チェックしたい頁番号
-	@return		HRESULT	終了状態コード
+	���v���
+	@param[in]	itFile	�t�@�C���C�e���[�^
+	@param[in]	iPage	�`�F�b�N�������Ŕԍ�
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT DocStatisticsPage( FILES_ITR itFile, INT iPage )
 {
 
-	//	使用文字一覧とか・SQLで文字データベース作ればいい
+	//	�g�p�����ꗗ�Ƃ��ESQL�ŕ����f�[�^�x�[�X���΂���
 
-	//	プラグインに任せる？
+	//	�v���O�C���ɔC����H
 
 	return S_OK;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	文字存在の範囲外エラーが発生していないか
-	@param[in]	itFile	チェックしたいファイルのイテレータ
-	@param[in]	iPage	チェックしたい頁番号
-	@param[in]	iLine	チェックしたい行番号
-	@return	BOOLEAN		非０範囲外エラー　０問題無し
+	�������݂͈̔͊O�G���[���������Ă��Ȃ���
+	@param[in]	itFile	�`�F�b�N�������t�@�C���̃C�e���[�^
+	@param[in]	iPage	�`�F�b�N�������Ŕԍ�
+	@param[in]	iLine	�`�F�b�N�������s�ԍ�
+	@return	BOOLEAN		��O�͈͊O�G���[�@�O��薳��
 */
 BOOLEAN DocRangeIsError( FILES_ITR itFile, INT iPage, INT iLine )
 {
@@ -71,17 +71,17 @@ BOOLEAN DocRangeIsError( FILES_ITR itFile, INT iPage, INT iLine )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	空白警告ありや・ファイルコア函数
-	@param[in]	rdLine	対象の行番号・絶対０インデックスか
-	@return	BOOLEAN		非０警告あり　０無し
+	�󔒌x�������E�t�@�C���R�A����
+	@param[in]	rdLine	�Ώۂ̍s�ԍ��E��΂O�C���f�b�N�X��
+	@return	BOOLEAN		��O�x������@�O����
 */
 BOOLEAN DocBadSpaceIsExist( INT rdLine )
 {
 	LINE_ITR	itLine;
 
-	//	状態確認
+	//	��Ԋm�F
 	if( DocRangeIsError( gitFileIt, gixFocusPage, rdLine ) ){	return 0;	}
-	//	ここの範囲外発生は必然なので特に警告は不要
+	//	�����͈̔͊O�����͕K�R�Ȃ̂œ��Ɍx���͕s�v
 
 	itLine = gitFileIt->vcCont.at( gixFocusPage ).ltPage.begin();
 	std::advance( itLine, rdLine );
@@ -91,9 +91,9 @@ BOOLEAN DocBadSpaceIsExist( INT rdLine )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	連続する半角スペース、先頭半角空白が有るかどうかチェキ・ファイルコア函数？
-	@param[in]	rdLine	対象の行番号・絶対０インデックスか
-	@return	UINT		非０警告あり　０無し
+	�A�����锼�p�X�y�[�X�A�擪���p�󔒂��L�邩�ǂ����`�F�L�E�t�@�C���R�A�����H
+	@param[in]	rdLine	�Ώۂ̍s�ԍ��E��΂O�C���f�b�N�X��
+	@return	UINT		��O�x������@�O����
 */
 UINT DocBadSpaceCheck( INT rdLine )
 {
@@ -104,27 +104,27 @@ UINT DocBadSpaceCheck( INT rdLine )
 	LINE_ITR	itLine;
 
 
-//末端空白はDocLineDataGetAllocでも見てる
+//���[�󔒂�DocLineDataGetAlloc�ł����Ă�
 
-	//	状態確認
+	//	��Ԋm�F
 	if( DocRangeIsError( gitFileIt, gixFocusPage, rdLine ) )
 	{
-		TRACE( TEXT("範囲外エラー発生 PAGE[%d], LINE[%d]"), gixFocusPage, rdLine );
+		TRACE( TEXT("�͈͊O�G���[���� PAGE[%d], LINE[%d]"), gixFocusPage, rdLine );
 		return 0;
 	}
 
-	//	文字数確認
+	//	�������m�F
 	itLine = gitFileIt->vcCont.at( gixFocusPage ).ltPage.begin();
 	std::advance( itLine, rdLine );
 
 	iCount = itLine->vcLine.size( );
-	if( 0 == iCount )	//	０なら何も確認することがないので、エラー消して終わり
+	if( 0 == iCount )	//	�O�Ȃ牽���m�F���邱�Ƃ��Ȃ��̂ŁA�G���[�����ďI���
 	{
-		//	エラー残ってたら
+		//	�G���[�c���Ă���
 		if( itLine->bBadSpace )
 		{
 			itLine->bBadSpace = 0;
-			ViewRedrawSetLine( rdLine );	//	ルーラごと行再描画
+			ViewRedrawSetLine( rdLine );	//	���[�����ƍs�ĕ`��
 		}
 		return 0;
 	}
@@ -137,47 +137,47 @@ UINT DocBadSpaceCheck( INT rdLine )
 	for( ltrItr = itLine->vcLine.begin(); ltrEnd != ltrItr; ltrItr++ )
 	{
 		ch = ltrItr->cchMozi;
-		//	面倒なので警告は一旦消しておく
+		//	�ʓ|�Ȃ̂Ōx���͈�U�����Ă���
 		ltrItr->mzStyle &= ~CT_WARNING;
 
 		if( 0xFF < ch ){	bWarn = FALSE;	continue;	}
-		//	半角以外なら関係ないので警告消して終わり
+		//	���p�ȊO�Ȃ�֌W�Ȃ��̂Ōx�������ďI���
 		if( isspace( ch ) )
 		{
-			if( !(bWarn) )	//	まだ無警告だったら
+			if( !(bWarn) )	//	�܂����x����������
 			{
-				//	次の文字を確認する
+				//	���̕������m�F����
 				ltrNext = ltrItr + 1;
-				if( ltrNext !=  ltrEnd )	//	次が存在してたら
+				if( ltrNext !=  ltrEnd )	//	�������݂��Ă���
 				{
 					chn = ltrNext->cchMozi;
-					if( 0xFF >= chn )	//	次が半角で
+					if( 0xFF >= chn )	//	�������p��
 					{
-						if( isspace( chn ) )	//	また空白なら
+						if( isspace( chn ) )	//	�܂��󔒂Ȃ�
 						{
 							ltrItr->mzStyle |= CT_WARNING;
-							bWarn = TRUE;	//	次も空白だったら、警告とフラグＯＮ
+							bWarn = TRUE;	//	�����󔒂�������A�x���ƃt���O�n�m
 							iRslt = 1;
 						}
 					}
 				}
 			}
-			else	//	已に警告出てたらそのまま警告いれちゃう
+			else	//	�߂Ɍx���o�Ă��炻�̂܂܌x�����ꂿ�Ⴄ
 			{
 				ltrItr->mzStyle |= CT_WARNING;
 			}
 		}
-		else{	bWarn = FALSE;	}	//	半角空白以外なら警告モード消して終わり
+		else{	bWarn = FALSE;	}	//	���p�󔒈ȊO�Ȃ�x�����[�h�����ďI���
 	}
 
-	//	末端に空白が内かどうか確認
+	//	���[�ɋ󔒂������ǂ����m�F
 	ltrEnd--;
 	if( iswspace( ltrEnd->cchMozi ) ){	iRslt = 1;	}
 
-	//	行頭に半角空白ないか確認
+	//	�s���ɔ��p�󔒂Ȃ����m�F
 	ch = itLine->vcLine.at( 0 ).cchMozi;
 
-	if( 0xFF >= ch )	//	半角だったら
+	if( 0xFF >= ch )	//	���p��������
 	{
 		if( isspace( ch ) )
 		{
@@ -186,12 +186,12 @@ UINT DocBadSpaceCheck( INT rdLine )
 		}
 	}
 
-#pragma message ("DocBadSpaceCheck内の更新指令の最適化が必要")
+#pragma message ("DocBadSpaceCheck���̍X�V�w�߂̍œK�����K�v")
 
-	//	前回までと状況が違っていたら
+	//	�O��܂łƏ󋵂�����Ă�����
 	if( iRslt != itLine->bBadSpace )
 	{
-		ViewRedrawSetLine( rdLine );	//	ルーラごと行再描画
+		ViewRedrawSetLine( rdLine );	//	���[�����ƍs�ĕ`��
 	}
 
 	itLine->bBadSpace = iRslt;
@@ -201,8 +201,8 @@ UINT DocBadSpaceCheck( INT rdLine )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	現在のファイルの頁数を返す・ファイルコア函数
-	@return	INT_PTR	頁数
+	���݂̃t�@�C���̕Ő���Ԃ��E�t�@�C���R�A����
+	@return	INT_PTR	�Ő�
 */
 UINT_PTR DocNowFilePageCount( VOID )
 {
@@ -211,8 +211,8 @@ UINT_PTR DocNowFilePageCount( VOID )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	現在のファイルの頁の行数を返す・ファイルコア函数
-	@return	INT_PTR	行数
+	���݂̃t�@�C���̕ł̍s����Ԃ��E�t�@�C���R�A����
+	@return	INT_PTR	�s��
 */
 UINT_PTR DocNowFilePageLineCount( VOID )
 {
@@ -221,11 +221,11 @@ UINT_PTR DocNowFilePageLineCount( VOID )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	生データの、総行数と文字数とバイト数を返す
-	@param[out]	ptRaw	生データ
-	@param[out]	piMozi	文字数入れるバッファへのポインタ
-	@param[out]	piByte	バイト数入れるバッファへのポインタ
-	@return	UINT	行数
+	���f�[�^�́A���s���ƕ������ƃo�C�g����Ԃ�
+	@param[out]	ptRaw	���f�[�^
+	@param[out]	piMozi	�����������o�b�t�@�ւ̃|�C���^
+	@param[out]	piByte	�o�C�g�������o�b�t�@�ւ̃|�C���^
+	@return	UINT	�s��
 */
 UINT DocRawDataParamGet( LPCTSTR ptRaw, PINT piMozi, PINT piByte )
 {
@@ -234,7 +234,7 @@ UINT DocRawDataParamGet( LPCTSTR ptRaw, PINT piMozi, PINT piByte )
 	//LETTER	stLetter;
 
 	StringCchLength( ptRaw, STRSAFE_MAX_CCH, &cchSize );
-	//	改行を含むので、この時点では文字数ではない
+	//	���s���܂ނ̂ŁA���̎��_�ł͕������ł͂Ȃ�
 
 	iBytes = 0;
 	iMozis = 0;
@@ -242,19 +242,19 @@ UINT DocRawDataParamGet( LPCTSTR ptRaw, PINT piMozi, PINT piByte )
 
 	for( d = 0; cchSize > d; d++ )
 	{
-		if( TEXT('\r') == ptRaw[d] && TEXT('\n') == ptRaw[d+1] )	//	改行にヒットしたら
+		if( TEXT('\r') == ptRaw[d] && TEXT('\n') == ptRaw[d+1] )	//	���s�Ƀq�b�g������
 		{
 			iLines++;
 
-			//	改行のバイト数を増やして
+			//	���s�̃o�C�g���𑝂₵��
 			if( gbCrLfCode )	iBytes += YY2_CRLF;
 			else				iBytes += STRB_CRLF;
 
-			d++;	//	0x0A分進める
+			d++;	//	0x0A���i�߂�
 			continue;
 		}
 
-		iBy = DocLetterDataCheck( NULL , ptRaw[d] );	//	その文字のバイト数を確認
+		iBy = DocLetterDataCheck( NULL , ptRaw[d] );	//	���̕����̃o�C�g�����m�F
 
 		iBytes += iBy;
 		iMozis++;
@@ -269,10 +269,10 @@ UINT DocRawDataParamGet( LPCTSTR ptRaw, PINT piMozi, PINT piByte )
 
 
 /*!
-	現在のページの総行数と文字数とバイト数を返す・ついでにバイト情報とか更新・ファイルコア函数
-	@param[out]	piMozi	文字数入れるバッファへのポインタ・NULLでも可
-	@param[out]	piByte	バイト数入れるバッファへのポインタ・NULLでも可
-	@return	UINT	行数
+	���݂̃y�[�W�̑��s���ƕ������ƃo�C�g����Ԃ��E���łɃo�C�g���Ƃ��X�V�E�t�@�C���R�A����
+	@param[out]	piMozi	�����������o�b�t�@�ւ̃|�C���^�ENULL�ł���
+	@param[out]	piByte	�o�C�g�������o�b�t�@�ւ̃|�C���^�ENULL�ł���
+	@return	UINT	�s��
 */
 UINT DocPageParamGet( PINT piMozi, PINT piByte )
 {
@@ -281,7 +281,7 @@ UINT DocPageParamGet( PINT piMozi, PINT piByte )
 
 	LINE_ITR	itLine;
 
-	//	もし頁展開前に呼ばれてたら
+	//	�����œW�J�O�ɌĂ΂�Ă���
 	if( gitFileIt->vcCont.at( gixFocusPage ).ptRawData )
 	{
 		iLines = DocRawDataParamGet( gitFileIt->vcCont.at( gixFocusPage ).ptRawData, &dMozis, &dBytes );
@@ -292,18 +292,18 @@ UINT DocPageParamGet( PINT piMozi, PINT piByte )
 	{
 		iLines = DocNowFilePageLineCount( );
 
-		//	行単位で見ていく
+		//	�s�P�ʂŌ��Ă���
 		itLine = gitFileIt->vcCont.at( gixFocusPage ).ltPage.begin();
 		for( i = 0; iLines > i; i++, itLine++ )
 		{
-			//	改行のバイト数・2ch、YY＝6byte・したらば＝4byte
-			if( 1 <= i )	//	弐行目から改行分追加
+			//	���s�̃o�C�g���E2ch�AYY��6byte�E������΁�4byte
+			if( 1 <= i )	//	��s�ڂ�����s���ǉ�
 			{
 				if( gbCrLfCode )	dBytes += YY2_CRLF;
 				else				dBytes += STRB_CRLF;
 			}
 
-			dMozis += itLine->vcLine.size( );	//	文字数に改行は含まない
+			dMozis += itLine->vcLine.size( );	//	�������ɉ��s�͊܂܂Ȃ�
 			dBytes += itLine->iByteSz;
 		}
 	}
@@ -313,19 +313,19 @@ UINT DocPageParamGet( PINT piMozi, PINT piByte )
 
 	gitFileIt->vcCont.at( gixFocusPage ).dByteSz = dBytes;
 
-	DocPageInfoRenew( -1, 1 );	//	頁内容を一覧に飛ばす
+	DocPageInfoRenew( -1, 1 );	//	�œ��e���ꗗ�ɔ�΂�
 
 	return iLines;
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	指定ファイルの指定頁のバイト数と文字数をカウント
-	@param[in]	itFile	対象ファイルのイテレータ
-	@param[in]	dPage	頁指定・負数なら現在の頁
-	@param[out]	pMozi	文字数を入れるバッファへのポインタ・NULL可
-	@param[out]	pByte	バイト数入れるバッファへのポインタ・NULL可
-	@return	UINT	行数
+	�w��t�@�C���̎w��ł̃o�C�g���ƕ��������J�E���g
+	@param[in]	itFile	�Ώۃt�@�C���̃C�e���[�^
+	@param[in]	dPage	�Ŏw��E�����Ȃ猻�݂̕�
+	@param[out]	pMozi	������������o�b�t�@�ւ̃|�C���^�ENULL��
+	@param[out]	pByte	�o�C�g�������o�b�t�@�ւ̃|�C���^�ENULL��
+	@return	UINT	�s��
 */
 UINT DocPageByteCount( FILES_ITR itFile, INT dPage, PINT pMozi, PINT pByte )
 {
@@ -337,7 +337,7 @@ UINT DocPageByteCount( FILES_ITR itFile, INT dPage, PINT pMozi, PINT pByte )
 
 	if( 0 > dPage ){	dPage = gixFocusPage;	}
 
-	//	もし頁展開前に呼ばれてたら
+	//	�����œW�J�O�ɌĂ΂�Ă���
 	if( itFile->vcCont.at( dPage ).ptRawData )
 	{
 		MessageBox( NULL, TEXT("DocPageByteCount"), TEXT("DELAY_LOAD"), MB_OK );
@@ -351,14 +351,14 @@ UINT DocPageByteCount( FILES_ITR itFile, INT dPage, PINT pMozi, PINT pByte )
 
 	itLine  = itFile->vcCont.at( dPage ).ltPage.begin();
 	endLine = itFile->vcCont.at( dPage ).ltPage.end();
-	//	各行ごとにみていく
+	//	�e�s���Ƃɂ݂Ă���
 	for( i = 0; itLine != endLine; itLine++, i++ )
 	{
-		//	行の最初と最後
+		//	�s�̍ŏ��ƍŌ�
 		itMozi  = itLine->vcLine.begin();
 		endMozi = itLine->vcLine.end();
 
-		//	この行の文字数とバイト数とドット数
+		//	���̍s�̕������ƃo�C�g���ƃh�b�g��
 		iLnBy = 0;	iDots = 0;
 		for( ; itMozi != endMozi; itMozi++ )
 		{
@@ -366,13 +366,13 @@ UINT DocPageByteCount( FILES_ITR itFile, INT dPage, PINT pMozi, PINT pByte )
 			iLnBy += itMozi->mzByte;
 			iMozis++;
 		}
-		itLine->iByteSz = iLnBy;	//	各行の数値
+		itLine->iByteSz = iLnBy;	//	�e�s�̐��l
 		itLine->iDotCnt = iDots;	//	
 
-		//	全体のバイト数
+		//	�S�̂̃o�C�g��
 		iBytes += iLnBy;
-		//	改行のバイト数・2ch、YY＝6byte・したらば＝4byte
-		if( 1 <= i )	//	弐行目から改行分追加
+		//	���s�̃o�C�g���E2ch�AYY��6byte�E������΁�4byte
+		if( 1 <= i )	//	��s�ڂ�����s���ǉ�
 		{
 			if( gbCrLfCode )	iBytes += YY2_CRLF;
 			else				iBytes += STRB_CRLF;
@@ -390,10 +390,10 @@ UINT DocPageByteCount( FILES_ITR itFile, INT dPage, PINT pMozi, PINT pByte )
 
 
 /*!
-	指定範囲の最も長いＸドット数を返す
-	@param[in]	dTop	開始行・含む・−１で最初から
-	@param[in]	dBottom	終了行・含む・−１で最後まで
-	@return	INT		ドット数
+	�w��͈͂̍ł������w�h�b�g����Ԃ�
+	@param[in]	dTop	�J�n�s�E�܂ށE�|�P�ōŏ�����
+	@param[in]	dBottom	�I���s�E�܂ށE�|�P�ōŌ�܂�
+	@return	INT		�h�b�g��
 */
 INT DocPageMaxDotGet( INT dTop, INT dBottom )
 {
@@ -421,11 +421,11 @@ INT DocPageMaxDotGet( INT dTop, INT dBottom )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	指定行の使用ドット数と文字数とバイト数を返す
-	@param[in]	rdLine	対象の行番号・絶対０インデックスか
-	@param[in]	pdMozi	文字数・NULLでもOK
-	@param[in]	pdByte	バイト数・NULLでもOK
-	@return	INT		ドット数・負：異常発生
+	�w��s�̎g�p�h�b�g���ƕ������ƃo�C�g����Ԃ�
+	@param[in]	rdLine	�Ώۂ̍s�ԍ��E��΂O�C���f�b�N�X��
+	@param[in]	pdMozi	�������ENULL�ł�OK
+	@param[in]	pdByte	�o�C�g���ENULL�ł�OK
+	@return	INT		�h�b�g���E���F�ُ픭��
 */
 INT DocLineParamGet( INT rdLine, PINT pdMozi, PINT pdByte )
 {
@@ -446,7 +446,7 @@ INT DocLineParamGet( INT rdLine, PINT pdMozi, PINT pdByte )
 
 	iCount = itLine->vcLine.size( );
 
-	//	文字数必要なら
+	//	�������K�v�Ȃ�
 	if( pdMozi )	*pdMozi = iCount;
 
 	dDotCnt = 0;
@@ -454,12 +454,12 @@ INT DocLineParamGet( INT rdLine, PINT pdMozi, PINT pdByte )
 	for( i = 0; iCount > i; i++ )
 	{
 		dDotCnt  += itLine->vcLine.at( i ).rdWidth;
-		dByteCnt += itLine->vcLine.at( i ).mzByte;	//	総バイト数
+		dByteCnt += itLine->vcLine.at( i ).mzByte;	//	���o�C�g��
 	}
 
 	if( pdByte )	*pdByte = dByteCnt;
 
-	//	自分のサイズいれとく
+	//	�����̃T�C�Y����Ƃ�
 	itLine->iDotCnt = dDotCnt;
 	itLine->iByteSz = dByteCnt;
 
@@ -474,16 +474,16 @@ INT DocLineParamGet( INT rdLine, PINT pdMozi, PINT pdByte )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	行数とドット値を受け取って、その場所の文字数を返す・キャレット位置ずれてたら直す
-	@param[in]	pNowDot	今のキャレット・文字区切りになるように位置を書換
-	@param[in]	rdLine	対象の行番号・絶対０インデックスか
-	@param[in]	round	０：四捨五入的な　正数：次の文字固定　負数：前の文字固定
-	@return		文字数
+	�s���ƃh�b�g�l���󂯎���āA���̏ꏊ�̕�������Ԃ��E�L�����b�g�ʒu����Ă��璼��
+	@param[in]	pNowDot	���̃L�����b�g�E������؂�ɂȂ�悤�Ɉʒu������
+	@param[in]	rdLine	�Ώۂ̍s�ԍ��E��΂O�C���f�b�N�X��
+	@param[in]	round	�O�F�l�̌ܓ��I�ȁ@�����F���̕����Œ�@�����F�O�̕����Œ�
+	@return		������
 */
 INT DocLetterPosGetAdjust( PINT pNowDot, INT rdLine, INT round )
 {
 	INT	i, iCount, iLines;	//	INT_PTR
-	INT	iLetter;	//	キャレットの左側の文字数
+	INT	iLetter;	//	�L�����b�g�̍����̕�����
 	INT	iMaxLine;
 	INT	dDotCnt = 0, dPrvCnt = 0, rdWidth = 0;
 
@@ -493,8 +493,8 @@ INT DocLetterPosGetAdjust( PINT pNowDot, INT rdLine, INT round )
 	try{
 #endif
 
-	//	もし範囲外なら、範囲内にいれておく
-	iMaxLine = DocNowFilePageLineCount(  );//DocPageParamGet( NULL, NULL );	//	行数のみ？
+	//	�����͈͊O�Ȃ�A�͈͓��ɂ���Ă���
+	iMaxLine = DocNowFilePageLineCount(  );//DocPageParamGet( NULL, NULL );	//	�s���̂݁H
 	if( iMaxLine <= rdLine )	rdLine = iMaxLine - 1;
 
 
@@ -503,10 +503,10 @@ INT DocLetterPosGetAdjust( PINT pNowDot, INT rdLine, INT round )
 
 	assert( pNowDot );
 
-	//	行のはみ出しと文字数確認
+	//	�s�̂͂ݏo���ƕ������m�F
 	iLines = DocLineParamGet( rdLine, &iCount, NULL );
 	if( 0 > iLines )	return 0;
-#pragma message ("行数確認だけならDocLineParamGetで再計算にヒットしてるのでは")
+#pragma message ("�s���m�F�����Ȃ�DocLineParamGet�ōČv�Z�Ƀq�b�g���Ă�̂ł�")
 
 	for( i = 0, iLetter = 0; iCount > i; i++, iLetter++ )
 	{
@@ -516,28 +516,28 @@ INT DocLetterPosGetAdjust( PINT pNowDot, INT rdLine, INT round )
 		rdWidth = itLine->vcLine.at( i ).rdWidth;
 
 		dDotCnt += rdWidth;
-	}	//	振り切るようなら末端
+	}	//	�U��؂�悤�Ȃ疖�[
 
-	if( dDotCnt != *pNowDot )	//	もしキャレット位置が文字境界じゃなかったら
+	if( dDotCnt != *pNowDot )	//	�����L�����b�g�ʒu���������E����Ȃ�������
 	{
-		if( 0 <  round )	//	絶対次の文字
+		if( 0 <  round )	//	��Ύ��̕���
 		{
 			*pNowDot = dDotCnt;
 		}
-		else if( 0 > round )	//	絶対前の文字
+		else if( 0 > round )	//	��ΑO�̕���
 		{
 			*pNowDot = dPrvCnt;
-			iLetter--;	//	一つ前なので
+			iLetter--;	//	��O�Ȃ̂�
 		}
-		else	//	近い方で
+		else	//	�߂�����
 		{
-			//	境界との距離を確認して、近い方に合わせる
+			//	���E�Ƃ̋������m�F���āA�߂����ɍ��킹��
 			if( (*pNowDot - dPrvCnt) < (dDotCnt - *pNowDot ) )
 			{
 				*pNowDot = dPrvCnt;
-				iLetter--;	//	一つ前なので
+				iLetter--;	//	��O�Ȃ̂�
 			}
-			else	//	次の文字の法が近い
+			else	//	���̕����̖@���߂�
 			{
 				*pNowDot = dDotCnt;
 			}
@@ -555,17 +555,17 @@ INT DocLetterPosGetAdjust( PINT pNowDot, INT rdLine, INT round )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	現在位置から１文字前後したときの位置を調べる・ファイルコア函数
-	@param[in]	nowDot		今のキャレットのドット位置
-	@param[in]	rdLine		対象の行番号・絶対０インデックスか
-	@param[in]	bDirect		移動方向　(-)先頭へ　(+)末尾へ
-	@param[out]	pdAbsDot	移動後の絶対ドット数を入れる・NULLでも可
-	@param[out]	pbJump		改行を超えたらTRUE、超えなかったらFALSE・NULLでも可
-	@return		ずれたドット数
+	���݈ʒu����P�����O�サ���Ƃ��̈ʒu�𒲂ׂ�E�t�@�C���R�A����
+	@param[in]	nowDot		���̃L�����b�g�̃h�b�g�ʒu
+	@param[in]	rdLine		�Ώۂ̍s�ԍ��E��΂O�C���f�b�N�X��
+	@param[in]	bDirect		�ړ������@(-)�擪�ց@(+)������
+	@param[out]	pdAbsDot	�ړ���̐�΃h�b�g��������ENULL�ł���
+	@param[out]	pbJump		���s�𒴂�����TRUE�A�����Ȃ�������FALSE�ENULL�ł���
+	@return		���ꂽ�h�b�g��
 */
 INT DocLetterShiftPos( INT nowDot, INT rdLine, INT bDirect, PINT pdAbsDot, PBOOLEAN pbJump )
 {
-	INT_PTR	iCount, iLetter, iLines;	//	キャレットの左側の文字数
+	INT_PTR	iCount, iLetter, iLines;	//	�L�����b�g�̍����̕�����
 	INT		dLtrDot = 0;//dDotCnt = 0;
 
 	LINE_ITR	itLine;
@@ -577,55 +577,55 @@ INT DocLetterShiftPos( INT nowDot, INT rdLine, INT bDirect, PINT pdAbsDot, PBOOL
 	{
 		if( pdAbsDot ){	*pdAbsDot = nowDot;	}
 		if( pbJump ){	*pbJump = FALSE;	}
-		return nowDot;	//	移動方向無しでは意味が無い
+		return nowDot;	//	�ړ����������ł͈Ӗ�������
 	}
 
 	itLine = gitFileIt->vcCont.at( gixFocusPage ).ltPage.begin();
 	std::advance( itLine, rdLine );
 
-	iCount = itLine->vcLine.size( );	//	この行の文字数確認して
+	iCount = itLine->vcLine.size( );	//	���̍s�̕������m�F����
 
-	//	文字数カウント
-	iLetter = DocLetterPosGetAdjust( &nowDot, rdLine, 0 );	//	今の文字位置を確認
+	//	�������J�E���g
+	iLetter = DocLetterPosGetAdjust( &nowDot, rdLine, 0 );	//	���̕����ʒu���m�F
 
-	//	左端で左へ移動、もしくは、右端で右へ移動ということは隣の行への移動になる
+	//	���[�ō��ֈړ��A�������́A�E�[�ŉE�ֈړ��Ƃ������Ƃׂ͗̍s�ւ̈ړ��ɂȂ�
 	if( ((0 == iLetter) && (0 > bDirect)) || ((iCount <= iLetter) && (0 < bDirect)) )
 	{
 		if((0 > bDirect) && (0 == rdLine))	return 0;
-		//	（左端かつ）先頭行で左へ移動するのなら、改行は発生しない
+		//	�i���[���j�擪�s�ō��ֈړ�����̂Ȃ�A���s�͔������Ȃ�
 
 		if( pbJump ){	*pbJump =  TRUE;	}
 
-		return 0;	//	範囲外なので０にしておく
+		return 0;	//	�͈͊O�Ȃ̂łO�ɂ��Ă���
 	}
 
-	if( 0 > bDirect )	//	左(先頭)へ移動
+	if( 0 > bDirect )	//	��(�擪)�ֈړ�
 	{
 		dLtrDot = itLine->vcLine.at( iLetter-1 ).rdWidth;
-		//	直前の文字の幅を確認
+		//	���O�̕����̕����m�F
 		nowDot -= dLtrDot;
 	}//	dDotCnt
 
-	if( 0 < bDirect )	//	右(末尾)へ移動
+	if( 0 < bDirect )	//	�E(����)�ֈړ�
 	{
 		dLtrDot = itLine->vcLine.at( iLetter ).rdWidth;
-		//	直後の文字の幅を確認
+		//	����̕����̕����m�F
 		nowDot += dLtrDot;
 	}//	dDotCnt
 
 	if( pdAbsDot )	*pdAbsDot = nowDot;//dDotCnt
 
-	return dLtrDot;	//	ドット数戻してＯＫ
+	return dLtrDot;	//	�h�b�g���߂��Ăn�j
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	文字列の行数と、一番長いドットと文字数を数える・ユニコード用
-	@param[in]	ptStr	数えたい文字列
-	@param[in]	cchSize	文字数・０ならこっちで調べる
-	@param[out]	pMaxDot	最大ドット幅
-	@param[out]	pMaxLtr	最大文字数
-	@return		行数
+	������̍s���ƁA��Ԓ����h�b�g�ƕ������𐔂���E���j�R�[�h�p
+	@param[in]	ptStr	��������������
+	@param[in]	cchSize	�������E�O�Ȃ炱�����Œ��ׂ�
+	@param[out]	pMaxDot	�ő�h�b�g��
+	@param[out]	pMaxLtr	�ő啶����
+	@return		�s��
 */
 INT DocStringInfoCount( LPCTSTR ptStr, UINT_PTR cchSize, PINT pMaxDot, PINT pMaxLtr )
 {
@@ -633,29 +633,29 @@ INT DocStringInfoCount( LPCTSTR ptStr, UINT_PTR cchSize, PINT pMaxDot, PINT pMax
 	UINT_PTR	d;
 	wstring	wsBuffer;
 
-	//	文字数指定がないならここで調べておく
+	//	�������w�肪�Ȃ��Ȃ炱���Œ��ׂĂ���
 	if(  0 == cchSize ){	StringCchLength( ptStr, STRSAFE_MAX_CCH, &cchSize );	}
 
 	wsBuffer.clear();
 	iDot = 0;	iLine = 0;	iMax = 0;	iMozi = 0;
 
-	for( d = 0, e = 0; cchSize >= d; d++ )	//	終端処理が必要
+	for( d = 0, e = 0; cchSize >= d; d++ )	//	�I�[�������K�v
 	{
 		if( cchSize <= d || 0x000D == ptStr[d] )
 		{
-			iLine++;	//	壱行
+			iLine++;	//	��s
 			iDot = ViewStringWidthGet( wsBuffer.c_str() );
-			if( iMax  < iDot ){	iMax  = iDot;	}	//	ドット長
-			if( iMozi < e ){	iMozi = e;		}	//	文字数
+			if( iMax  < iDot ){	iMax  = iDot;	}	//	�h�b�g��
+			if( iMozi < e ){	iMozi = e;		}	//	������
 
-			if( cchSize <= d )	break;	//	終わりならここまで
+			if( cchSize <= d )	break;	//	�I���Ȃ炱���܂�
 
-			d++;	//	次の行の為に
+			d++;	//	���̍s�ׂ̈�
 
 			e = 0;
 			wsBuffer.clear();
 		}
-		else	//	文字列を壱行ずつ確認していく
+		else	//	���������s���m�F���Ă���
 		{
 			wsBuffer.push_back( ptStr[d] );
 		}
@@ -669,10 +669,10 @@ INT DocStringInfoCount( LPCTSTR ptStr, UINT_PTR cchSize, PINT pMaxDot, PINT pMax
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	今のファイルの、指定した頁の情報を確保する
-	@param[in]	iTgtPage	欲しい頁番号・０インデックス
-	@param[in]	pstInfo		情報入れる構造体ポインタ
-	@return		BOOLEAN		ディレイしてたら非０
+	���̃t�@�C���́A�w�肵���ł̏����m�ۂ���
+	@param[in]	iTgtPage	�~�����Ŕԍ��E�O�C���f�b�N�X
+	@param[in]	pstInfo		�������\���̃|�C���^
+	@return		BOOLEAN		�f�B���C���Ă����O
 */
 BOOLEAN NowPageInfoGet( UINT iTgtPage, LPPAGEINFOS pstInfo )
 {
@@ -680,7 +680,7 @@ BOOLEAN NowPageInfoGet( UINT iTgtPage, LPPAGEINFOS pstInfo )
 	INT_PTR		iMozis;
 	UINT		dMasqus;
 
-	//	データやばかったら弾く
+	//	�f�[�^��΂�������e��
 	if( gitFileIt->vcCont.size(  ) <= iTgtPage )	return 0;
 
 	if( pstInfo )
@@ -719,16 +719,16 @@ BOOLEAN NowPageInfoGet( UINT iTgtPage, LPPAGEINFOS pstInfo )
 		}
 	}
 
-	//	この情報は常に返す
+	//	���̏��͏�ɕԂ�
 	return (gitFileIt->vcCont.at( iTgtPage ).ptRawData ? TRUE : FALSE);
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	指定ファイルの指定頁は読込ディレイしているか
-	@param[in]	itFile	指定ファイル
-	@param[in]	dPage	指定頁
-	@return	ディレイしてたら非０
+	�w��t�@�C���̎w��ł͓Ǎ��f�B���C���Ă��邩
+	@param[in]	itFile	�w��t�@�C��
+	@param[in]	dPage	�w���
+	@return	�f�B���C���Ă����O
 */
 BOOLEAN PageIsDelayed( FILES_ITR itFile, UINT dPage )
 {
@@ -737,8 +737,8 @@ BOOLEAN PageIsDelayed( FILES_ITR itFile, UINT dPage )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ONLINE構造体をクルヤーする
-	@param[in]	pstLine	クルヤーしたいやつのポインター
+	ONLINE�\���̂��N�����[����
+	@param[in]	pstLine	�N�����[��������̃|�C���^�[
 */
 VOID ZeroONELINE( LPONELINE pstLine )
 {

@@ -1,6 +1,6 @@
 /*! @file
-	@brief トレスモードのとき、２ペインの管理します。
-	このファイルは ViewTrace.cpp です。
+	@brief �g���X���[�h�̂Ƃ��A�Q�y�C���̊Ǘ����܂��B
+	���̃t�@�C���� ViewTrace.cpp �ł��B
 	@author	SikigamiHNQ
 	@date	2011/11/29
 */
@@ -17,7 +17,7 @@ If not, see <http://www.gnu.org/licenses/>.
 */
 //-------------------------------------------------------------------------------------------------
 
-//こっちは閲覧用・背景絵を表示するのはどっちでもいけるようにするのがいいかも
+//�������͉{���p�E�w�i�G��\������̂͂ǂ����ł�������悤�ɂ���̂���������
 
 #include "stdafx.h"
 #include "OrinrinEditor.h"
@@ -26,21 +26,21 @@ If not, see <http://www.gnu.org/licenses/>.
 #define VIEW_TRACE_CLASS	TEXT("TRACE_VIEW")
 //-------------------------------------------------------------------------------------------------
 
-static HINSTANCE	ghInst;		//!<	現在のインターフェイス
+static HINSTANCE	ghInst;		//!<	���݂̃C���^�[�t�F�C�X
 
-extern  HWND	ghPrntWnd;		//!<	メインウインドウハンドル
-extern  HWND	ghViewWnd;		//!<	編集ビューハンドル
+extern  HWND	ghPrntWnd;		//!<	���C���E�C���h�E�n���h��
+extern  HWND	ghViewWnd;		//!<	�ҏW�r���[�n���h��
 
-static  HWND	ghVwTrcWnd;		//!<	このウインドウ・トレスビューハンドル
+static  HWND	ghVwTrcWnd;		//!<	���̃E�C���h�E�E�g���X�r���[�n���h��
 
-//	画面サイズを確認して、移動によるスクロールの面倒みる
-extern INT		gdHideXdot;		//!<	左の隠れ部分
-extern INT		gdViewTopLine;	//!<	表示中の最上部行番号
-extern SIZE		gstViewArea;	//!<	表示領域のドットサイズ・ルーラー等の領域は無し
-extern INT		gdDispingLine;	//!<	見えてる行数・中途半端に見えてる末端は含まない
+//	��ʃT�C�Y���m�F���āA�ړ��ɂ��X�N���[���̖ʓ|�݂�
+extern INT		gdHideXdot;		//!<	���̉B�ꕔ��
+extern INT		gdViewTopLine;	//!<	�\�����̍ŏ㕔�s�ԍ�
+extern SIZE		gstViewArea;	//!<	�\���̈�̃h�b�g�T�C�Y�E���[���[���̗̈�͖���
+extern INT		gdDispingLine;	//!<	�����Ă�s���E���r���[�Ɍ����Ă閖�[�͊܂܂Ȃ�
 
-//	フォントは描画毎にデバイスコンテキストに割り付ける必要がある
-extern HFONT	ghAaFont;		//!<	AA用フォント
+//	�t�H���g�͕`�斈�Ƀf�o�C�X�R���e�L�X�g�Ɋ���t����K�v������
+extern HFONT	ghAaFont;		//!<	AA�p�t�H���g
 //-------------------------------------------------------------------------------------------------
 
 

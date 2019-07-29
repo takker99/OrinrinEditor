@@ -1,6 +1,6 @@
 /*! @file
-	@brief 縦書きの面倒みます
-	このファイルは VerticalScript.cpp です。
+	@brief �c�����̖ʓ|�݂܂�
+	���̃t�@�C���� VerticalScript.cpp �ł��B
 	@author	SikigamiHNQ
 	@date	2012/01/11
 */
@@ -22,24 +22,24 @@ If not, see <http://www.gnu.org/licenses/>.
 //-------------------------------------------------------------------------------------------------
 
 /*
-縦書き機能
-文字以外は透過
-右から、左から並べる切替
-行間調整
-句読点は右寄り
+�c�����@�\
+�����ȊO�͓���
+�E����A��������ׂ�ؑ�
+�s�Ԓ���
+��Ǔ_�͉E���
 
-文字以外の透過はどうするか
+�����ȊO�̓��߂͂ǂ����邩
 
-壱文字毎に幅をもっておく。句読点は特殊処理しないと見栄えがよろしくない
-入力された行毎に保持。文字数が行になる・表示の問題だけ
-文字毎にＸドット位置を計算してもっておく。
-確定したときは、各段毎に、パディング空白いれて行に変換してステルスレイヤする
+�땶�����ɕ��������Ă����B��Ǔ_�͓��ꏈ�����Ȃ��ƌ��h������낵���Ȃ�
+���͂��ꂽ�s���ɕێ��B���������s�ɂȂ�E�\���̖�肾��
+�������ɂw�h�b�g�ʒu���v�Z���Ă����Ă����B
+�m�肵���Ƃ��́A�e�i���ɁA�p�f�B���O�󔒂���čs�ɕϊ����ăX�e���X���C������
 
-プロシージャの処理共有できない？
+�v���V�[�W���̏������L�ł��Ȃ��H
 
-ツールバー
-確定・更新・透過・左から
-チェキボキスで終わったら閉じる
+�c�[���o�[
+�m��E�X�V�E���߁E������
+�`�F�L�{�L�X�ŏI����������
 */
 //-------------------------------------------------------------------------------------------------
 
@@ -49,10 +49,10 @@ If not, see <http://www.gnu.org/licenses/>.
 
 #define VT_PARAMHEI	25
 
-#define LEFT_PADD	15	//	左余裕・中心線にたいして 
+#define LEFT_PADD	15	//	���]�T�E���S���ɂ������� 
 
-#define IDEO_COMMA	TEXT('、')	//	11dot
-#define IDEO_FSTOP	TEXT('。')	//	11dot
+#define IDEO_COMMA	TEXT('�A')	//	11dot
+#define IDEO_FSTOP	TEXT('�B')	//	11dot
 
 #define VERTVIEW_CLASS	TEXT("VERTVIEW_CLASS")
 //-------------------------------------------------------------------------------------------------
@@ -70,29 +70,29 @@ static  TBBUTTON	gstVttbInfo[] = {
 
 typedef struct tagVERTITEM
 {
-	TCHAR	cch;	//!<	文字
-	INT		iWidth;	//!<	文字幅・中心になるように揃える
+	TCHAR	cch;	//!<	����
+	INT		iWidth;	//!<	�������E���S�ɂȂ�悤�ɑ�����
 
-	INT		iOffset;//!<	最左からの右オフセットドット・相対位置ではない
+	INT		iOffset;//!<	�ō�����̉E�I�t�Z�b�g�h�b�g�E���Έʒu�ł͂Ȃ�
 
-	INT		iRow;	//!<	縦にした時のＹ位置
-	INT		iColumn;//!<	縦にした時の文字列番号・改行に注意
+	INT		iRow;	//!<	�c�ɂ������̂x�ʒu
+	INT		iColumn;//!<	�c�ɂ������̕�����ԍ��E���s�ɒ���
 
 } VERTITEM, *LPVERTITEM;
 //-------------------------------------------------------------------------------------------------
 
-extern FILES_ITR	gitFileIt;		//!<	今見てるファイルの本体
-//#define gstFile	(*gitFileIt)		//!<	イテレータを構造体と見なす
+extern FILES_ITR	gitFileIt;		//!<	�����Ă�t�@�C���̖{��
+//#define gstFile	(*gitFileIt)		//!<	�C�e���[�^���\���̂ƌ��Ȃ�
 
-extern INT			gixFocusPage;	//	注目中のページ・０インデックス
+extern INT			gixFocusPage;	//	���ڒ��̃y�[�W�E�O�C���f�b�N�X
 
-extern HFONT		ghAaFont;		//	AA用フォント
+extern HFONT		ghAaFont;		//	AA�p�t�H���g
 
-extern  BYTE		gbAlpha;		//	透明度
+extern  BYTE		gbAlpha;		//	�����x
 
-extern  HWND		ghViewWnd;		//	編集ビューウインドウのハンドル
-extern INT			gdHideXdot;		//	左の隠れ部分
-extern INT			gdViewTopLine;	//	表示中の最上部行番号
+extern  HWND		ghViewWnd;		//	�ҏW�r���[�E�C���h�E�̃n���h��
+extern INT			gdHideXdot;		//	���̉B�ꕔ��
+extern INT			gdViewTopLine;	//	�\�����̍ŏ㕔�s�ԍ�
 
 static  HWND		ghVertToolBar;	//!<	
 static HIMAGELIST	ghVertImgLst;	//!<	
@@ -100,25 +100,25 @@ static HIMAGELIST	ghVertImgLst;	//!<
 static  ATOM		gVertAtom;		//!<	
 EXTERNED HWND		ghVertWnd;		//!<	
 
-static  HWND		ghTextWnd;		//!<	文字列入力枠
-static INT			gdToolBarHei;	//!<	ツールバー太さ
+static  HWND		ghTextWnd;		//!<	��������͘g
+static INT			gdToolBarHei;	//!<	�c�[���o�[����
 
 static  ATOM		gVertViewAtom;
-static  HWND		ghVertViewWnd;	//!<	表示スタティック
+static  HWND		ghVertViewWnd;	//!<	�\���X�^�e�B�b�N
 
-static POINT		gstViewOrigin;	//!<	ビューの左上ウインドウ位置・
-static POINT		gstOffset;		//!<	ビュー左上からの、ボックスの相対位置
-static POINT		gstFrmSz;		//!<	ウインドウエッジから描画領域までのオフセット
+static POINT		gstViewOrigin;	//!<	�r���[�̍���E�C���h�E�ʒu�E
+static POINT		gstOffset;		//!<	�r���[���ォ��́A�{�b�N�X�̑��Έʒu
+static POINT		gstFrmSz;		//!<	�E�C���h�E�G�b�W����`��̈�܂ł̃I�t�Z�b�g
 
-static INT			gdVertInterval;	//!<	行間隔ドット数・デフォを２２で
-static  UINT		gbLeftGo;		//!<	非０左から　０右から配置する
+static INT			gdVertInterval;	//!<	�s�Ԋu�h�b�g���E�f�t�H���Q�Q��
+static  UINT		gbLeftGo;		//!<	��O������@�O�E����z�u����
 
-static  UINT		gbSpTrans;		//!<	空白を　非０透過　０透過しない
+static  UINT		gbSpTrans;		//!<	�󔒂��@��O���߁@�O���߂��Ȃ�
 
-static LPTSTR		gptVtBuff;		//!<	テキスト枠から文字確保枠・可変
-static DWORD		gcchVtBuf;		//!<	確保枠の文字数・バイトじゃないぞ
+static LPTSTR		gptVtBuff;		//!<	�e�L�X�g�g���當���m�ۘg�E��
+static DWORD		gcchVtBuf;		//!<	�m�ۘg�̕������E�o�C�g����Ȃ���
 
-static BOOLEAN		gbQuickClose;	//!<	貼り付けたら直ぐ閉じる
+static BOOLEAN		gbQuickClose;	//!<	�\��t�����璼������
 
 static WNDPROC		gpfOrigVertEditProc;	//!<	
 
@@ -150,10 +150,10 @@ HRESULT	VertScriptInsert( HWND );	//!<
 
 
 /*!
-	ウインドウクラス登録とか・アプリ起動後すぐ呼ばれる
-	@param[in]	ptCurrent	基準ディレクトリ・使わない？
-	@param[in]	hInstance	インスタンスハンドル
-	@return		HRESULT	終了状態コード
+	�E�C���h�E�N���X�o�^�Ƃ��E�A�v���N���シ���Ă΂��
+	@param[in]	ptCurrent	��f�B���N�g���E�g��Ȃ��H
+	@param[in]	hInstance	�C���X�^���X�n���h��
+	@return		HRESULT	�I����ԃR�[�h
 */
 INT VertInitialise( LPTSTR ptCurrent, HINSTANCE hInstance )
 {
@@ -170,7 +170,7 @@ INT VertInitialise( LPTSTR ptCurrent, HINSTANCE hInstance )
 	}
 
 
-//縦書き制御窓
+//�c�������䑋
 	ZeroMemory( &wcex, sizeof(WNDCLASSEX) );
 	wcex.cbSize			= sizeof(WNDCLASSEX);
 	wcex.style			= CS_HREDRAW | CS_VREDRAW;
@@ -192,7 +192,7 @@ INT VertInitialise( LPTSTR ptCurrent, HINSTANCE hInstance )
 	ZeroMemory( &gstViewOrigin, sizeof(POINT) );
 
 
-//文字表示窓
+//�����\����
 	ZeroMemory( &wcex, sizeof(WNDCLASSEX) );
 	wcex.cbSize			= sizeof(WNDCLASSEX);
 	wcex.style			= CS_HREDRAW | CS_VREDRAW;
@@ -209,32 +209,32 @@ INT VertInitialise( LPTSTR ptCurrent, HINSTANCE hInstance )
 
 	gVertViewAtom = RegisterClassEx( &wcex );
 
-	//	適当に作っておく
+	//	�K���ɍ���Ă���
 	gptVtBuff = (LPTSTR)malloc( MAX_PATH * sizeof(TCHAR) );
 	ZeroMemory( gptVtBuff, MAX_PATH * sizeof(TCHAR) );
 	gcchVtBuf = MAX_PATH;
 
-	//	アイコン　確定・更新・左から・透過
+	//	�A�C�R���@�m��E�X�V�E������E����
 	ghVertImgLst = ImageList_Create( 16, 16, ILC_COLOR24 | ILC_MASK, 4, 1 );
 
-	hImg = LoadBitmap( hInstance, MAKEINTRESOURCE( IDBMP_MOZI_WRITE ) );	//	対象名前注意
+	hImg = LoadBitmap( hInstance, MAKEINTRESOURCE( IDBMP_MOZI_WRITE ) );	//	�Ώۖ��O����
 	hMsq = LoadBitmap( hInstance, MAKEINTRESOURCE( IDBMQ_PAGENAMECHANGE ) );
-	ImageList_Add( ghVertImgLst, hImg, hMsq );	//	確定
+	ImageList_Add( ghVertImgLst, hImg, hMsq );	//	�m��
 	DeleteBitmap( hImg );	DeleteBitmap( hMsq );
 
 	hImg = LoadBitmap( hInstance, MAKEINTRESOURCE( IDBMP_REFRESH ) );
 	hMsq = LoadBitmap( hInstance, MAKEINTRESOURCE( IDBMQ_REFRESH ) );
-	ImageList_Add( ghVertImgLst, hImg, hMsq );	//	更新
+	ImageList_Add( ghVertImgLst, hImg, hMsq );	//	�X�V
 	DeleteBitmap( hImg );	DeleteBitmap( hMsq );
 
 	hImg = LoadBitmap( hInstance, MAKEINTRESOURCE( IDBMP_VERT_LEFT ) );
 	hMsq = LoadBitmap( hInstance, MAKEINTRESOURCE( IDBMQ_VERT_LEFT ) );
-	ImageList_Add( ghVertImgLst, hImg, hMsq );	//	左から
+	ImageList_Add( ghVertImgLst, hImg, hMsq );	//	������
 	DeleteBitmap( hImg );	DeleteBitmap( hMsq );
 
 	hImg = LoadBitmap( hInstance, MAKEINTRESOURCE( IDBMP_VERT_TRANS ) );
 	hMsq = LoadBitmap( hInstance, MAKEINTRESOURCE( IDBMQ_VERT_TRANS ) );
-	ImageList_Add( ghVertImgLst, hImg, hMsq );	//	透過
+	ImageList_Add( ghVertImgLst, hImg, hMsq );	//	����
 	DeleteBitmap( hImg );	DeleteBitmap( hMsq );
 
 
@@ -243,9 +243,9 @@ INT VertInitialise( LPTSTR ptCurrent, HINSTANCE hInstance )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	縦書きスクリプトウインドウ作る
-	@param[in]	hInst	インスタンスハンドル
-	@param[in]	hPrWnd	メインのウインドウハンドル
+	�c�����X�N���v�g�E�C���h�E���
+	@param[in]	hInst	�C���X�^���X�n���h��
+	@param[in]	hPrWnd	���C���̃E�C���h�E�n���h��
 */
 HWND VertScripterCreate( HINSTANCE hInst, HWND hPrWnd )
 {
@@ -276,23 +276,23 @@ HWND VertScripterCreate( HINSTANCE hInst, HWND hPrWnd )
 
 	gbSpTrans = 0;
 
-	gbQuickClose = 1;	//	初期状態で直ぐ閉じる
+	gbQuickClose = 1;	//	������ԂŒ�������
 
-	//	本体ウインドウ
+	//	�{�̃E�C���h�E
 	ghVertWnd = CreateWindowEx( WS_EX_TOOLWINDOW | WS_EX_TOPMOST, VERTSCRIPT_CLASS,
-		TEXT("縦書き"), WS_POPUP | WS_CAPTION | WS_SYSMENU,
+		TEXT("�c����"), WS_POPUP | WS_CAPTION | WS_SYSMENU,
 		rect.right, rect.top, VT_WIDTH, VT_HEIGHT, NULL, NULL, hInst, NULL );
 
-	//	ツールバー
+	//	�c�[���o�[
 	ghVertToolBar = CreateWindowEx( WS_EX_CLIENTEDGE, TOOLBARCLASSNAME, TEXT("verttoolbar"), WS_CHILD | WS_VISIBLE | TBSTYLE_FLAT | TBSTYLE_LIST | TBSTYLE_TOOLTIPS, 0, 0, 0, 0, ghVertWnd, (HMENU)IDTB_VLINE_TOOLBAR, hInst, NULL );
 
-	if( 0 == gdToolBarHei )	//	数値未取得なら
+	if( 0 == gdToolBarHei )	//	���l���擾�Ȃ�
 	{
 		GetWindowRect( ghVertToolBar, &rect );
 		gdToolBarHei = rect.bottom - rect.top;
 	}
 
-	//	自動ツールチップスタイルを追加
+	//	�����c�[���`�b�v�X�^�C����ǉ�
 	SendMessage( ghVertToolBar, TB_SETEXTENDEDSTYLE, 0, TBSTYLE_EX_MIXEDBUTTONS );
 
 	SendMessage( ghVertToolBar, TB_SETIMAGELIST, 0, (LPARAM)ghVertImgLst );
@@ -300,38 +300,38 @@ HWND VertScripterCreate( HINSTANCE hInst, HWND hPrWnd )
 
 	SendMessage( ghVertToolBar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0 );
 
-	//	ツールチップ文字列を設定・ボタンテキストがツールチップになる
-	StringCchCopy( atBuffer, MAX_STRING, TEXT("文字列挿入") );	gstVttbInfo[0].iString = SendMessage( ghVertToolBar, TB_ADDSTRING, 0, (LPARAM)atBuffer );
-	StringCchCopy( atBuffer, MAX_STRING, TEXT("文字列更新") );	gstVttbInfo[2].iString = SendMessage( ghVertToolBar, TB_ADDSTRING, 0, (LPARAM)atBuffer );
-	StringCchCopy( atBuffer, MAX_STRING, TEXT("左から配置") );	gstVttbInfo[3].iString = SendMessage( ghVertToolBar, TB_ADDSTRING, 0, (LPARAM)atBuffer );
-	StringCchCopy( atBuffer, MAX_STRING, TEXT("空白を透過") );	gstVttbInfo[4].iString = SendMessage( ghVertToolBar, TB_ADDSTRING, 0, (LPARAM)atBuffer );
+	//	�c�[���`�b�v�������ݒ�E�{�^���e�L�X�g���c�[���`�b�v�ɂȂ�
+	StringCchCopy( atBuffer, MAX_STRING, TEXT("������}��") );	gstVttbInfo[0].iString = SendMessage( ghVertToolBar, TB_ADDSTRING, 0, (LPARAM)atBuffer );
+	StringCchCopy( atBuffer, MAX_STRING, TEXT("������X�V") );	gstVttbInfo[2].iString = SendMessage( ghVertToolBar, TB_ADDSTRING, 0, (LPARAM)atBuffer );
+	StringCchCopy( atBuffer, MAX_STRING, TEXT("������z�u") );	gstVttbInfo[3].iString = SendMessage( ghVertToolBar, TB_ADDSTRING, 0, (LPARAM)atBuffer );
+	StringCchCopy( atBuffer, MAX_STRING, TEXT("�󔒂𓧉�") );	gstVttbInfo[4].iString = SendMessage( ghVertToolBar, TB_ADDSTRING, 0, (LPARAM)atBuffer );
 
-	SendMessage( ghVertToolBar , TB_ADDBUTTONS, (WPARAM)TB_ITEMS, (LPARAM)&gstVttbInfo );	//	ツールバーにボタンを挿入
+	SendMessage( ghVertToolBar , TB_ADDBUTTONS, (WPARAM)TB_ITEMS, (LPARAM)&gstVttbInfo );	//	�c�[���o�[�Ƀ{�^����}��
 
-	SendMessage( ghVertToolBar , TB_AUTOSIZE, 0, 0 );	//	ボタンのサイズに合わせてツールバーをリサイズ
-	InvalidateRect( ghVertToolBar , NULL, TRUE );		//	クライアント全体を再描画する命令
+	SendMessage( ghVertToolBar , TB_AUTOSIZE, 0, 0 );	//	�{�^���̃T�C�Y�ɍ��킹�ăc�[���o�[�����T�C�Y
+	InvalidateRect( ghVertToolBar , NULL, TRUE );		//	�N���C�A���g�S�̂��ĕ`�悷�閽��
 
 	GetClientRect( ghVertWnd, &rect );
 
-	//	文字間STATIC
-	CreateWindowEx( 0, WC_STATIC, TEXT("行間"), WS_CHILD | WS_VISIBLE | SS_CENTERIMAGE | SS_RIGHT, 2, gdToolBarHei, 45, VT_PARAMHEI, ghVertWnd, (HMENU)IDS_VLINE_INTERVAL, hInst, NULL );
-	//	文字間EDIT
+	//	������STATIC
+	CreateWindowEx( 0, WC_STATIC, TEXT("�s��"), WS_CHILD | WS_VISIBLE | SS_CENTERIMAGE | SS_RIGHT, 2, gdToolBarHei, 45, VT_PARAMHEI, ghVertWnd, (HMENU)IDS_VLINE_INTERVAL, hInst, NULL );
+	//	������EDIT
 	gdVertInterval = 22;
 	CreateWindowEx( 0, WC_EDIT, TEXT("22"), WS_CHILD | WS_VISIBLE | WS_BORDER | ES_READONLY, 49, gdToolBarHei, 50, VT_PARAMHEI, ghVertWnd, (HMENU)IDE_VLINE_INTERVAL, hInst, NULL );
-	//	文字間SPIN
+	//	������SPIN
 	CreateWindowEx( 0, UPDOWN_CLASS, TEXT("intervalspin"), WS_CHILD | WS_VISIBLE | UDS_AUTOBUDDY, 99, gdToolBarHei, 10, VT_PARAMHEI, ghVertWnd, (HMENU)IDUD_VLINE_INTERVAL, hInst, NULL );
 
-	CreateWindowEx( 0, WC_BUTTON, TEXT("確定したら閉じる"), WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX, 120, gdToolBarHei, 180, VT_PARAMHEI, ghVertWnd, (HMENU)IDCB_VLINE_QUICKCLOSE, hInst, NULL );
+	CreateWindowEx( 0, WC_BUTTON, TEXT("�m�肵�������"), WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX, 120, gdToolBarHei, 180, VT_PARAMHEI, ghVertWnd, (HMENU)IDCB_VLINE_QUICKCLOSE, hInst, NULL );
 	CheckDlgButton( ghVertWnd, IDCB_VLINE_QUICKCLOSE, gbQuickClose ? BST_CHECKED : BST_UNCHECKED );
 
 	height = gdToolBarHei + VT_PARAMHEI;
 
-	//文字列入力枠
+	//��������͘g
 	ghTextWnd = CreateWindowEx( 0, WC_EDIT, TEXT(""), WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE,
 		0, height, rect.right, rect.bottom - height, ghVertWnd, (HMENU)IDE_VLINE_TEXT, hInst, NULL );
 	SetWindowFont( ghTextWnd, ghAaFont, TRUE );
 
-	//	サブクラス
+	//	�T�u�N���X
 	gpfOrigVertEditProc = SubclassWindow( ghTextWnd, gpfVertEditProc );
 
 
@@ -339,23 +339,23 @@ HWND VertScripterCreate( HINSTANCE hInst, HWND hPrWnd )
 	UpdateWindow( ghVertWnd );
 
 
-//表示・位置決め半透明フローティングウインドー
+//�\���E�ʒu���ߔ������t���[�e�B���O�E�C���h�[
 	ghVertViewWnd = CreateWindowEx( WS_EX_TOOLWINDOW | WS_EX_LAYERED, VERTVIEW_CLASS,
-		TEXT("配置"), WS_POPUP | WS_THICKFRAME | WS_CAPTION | WS_VISIBLE, 0, 0, 160, 120, NULL, NULL, hInst, NULL);
+		TEXT("�z�u"), WS_POPUP | WS_THICKFRAME | WS_CAPTION | WS_VISIBLE, 0, 0, 160, 120, NULL, NULL, hInst, NULL);
 	SetLayeredWindowAttributes( ghVertViewWnd, 0, gbAlpha, LWA_ALPHA );
-	//	透明度はレイヤボックスの設定を使う
+	//	�����x�̓��C���{�b�N�X�̐ݒ���g��
 
 	ZeroMemory( &gstFrmSz, sizeof(POINT) );
 	ClientToScreen( ghVertViewWnd, &gstFrmSz );
 
-	//	ウインドウ位置を確定させる
-	GetWindowRect( ghViewWnd, &vwRect );	//	編集窓
-	gstViewOrigin.x = vwRect.left;	//	ビューウインドウの位置記録
+	//	�E�C���h�E�ʒu���m�肳����
+	GetWindowRect( ghViewWnd, &vwRect );	//	�ҏW��
+	gstViewOrigin.x = vwRect.left;	//	�r���[�E�C���h�E�̈ʒu�L�^
 	gstViewOrigin.y = vwRect.top;
 	x = (vwRect.left + LINENUM_WID) - gstFrmSz.x;
 	y = (vwRect.top  + RULER_AREA)  - gstFrmSz.y;
 	TRACE( TEXT("VERT %d x %d"), x, y );
-	//	この時点で0dot,0lineの位置にクライヤント左上がアッー！
+	//	���̎��_��0dot,0line�̈ʒu�ɃN���C�����g���オ�A�b�[�I
 
 #ifdef _DEBUG
 	SetWindowPos( ghVertViewWnd, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_SHOWWINDOW );
@@ -372,12 +372,12 @@ HWND VertScripterCreate( HINSTANCE hInst, HWND hPrWnd )
 
 
 /*!
-	エディットボックスサブクラス
-	@param[in]	hWnd	ウインドウのハンドル
-	@param[in]	msg		ウインドウメッセージの識別番号
-	@param[in]	wParam	追加の情報１
-	@param[in]	lParam	追加の情報２
-	@return	処理した結果とか
+	�G�f�B�b�g�{�b�N�X�T�u�N���X
+	@param[in]	hWnd	�E�C���h�E�̃n���h��
+	@param[in]	msg		�E�C���h�E���b�Z�[�W�̎��ʔԍ�
+	@param[in]	wParam	�ǉ��̏��P
+	@param[in]	lParam	�ǉ��̏��Q
+	@return	�����������ʂƂ�
 */
 LRESULT CALLBACK gpfVertEditProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
@@ -391,12 +391,12 @@ LRESULT CALLBACK gpfVertEditProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 		default:	break;
 
 		case WM_COMMAND:
-			id         = LOWORD(wParam);	//	発生したコマンドの識別子
-			hWndCtl    = (HWND)lParam;		//	コマンドを発生させた子ウインドウのハンドル
-			codeNotify = HIWORD(wParam);	//	追加の通知メッセージ
+			id         = LOWORD(wParam);	//	���������R�}���h�̎��ʎq
+			hWndCtl    = (HWND)lParam;		//	�R�}���h�𔭐��������q�E�C���h�E�̃n���h��
+			codeNotify = HIWORD(wParam);	//	�ǉ��̒ʒm���b�Z�[�W
 			TRACE( TEXT("[%X]VertEdit COMMAND %d"), hWnd, id );
 			
-			switch( id )	//	キーボードショートカットをブッとばす
+			switch( id )	//	�L�[�{�[�h�V���[�g�J�b�g���u�b�Ƃ΂�
 			{
 				case IDM_PASTE:	SendMessage( hWnd, WM_PASTE, 0, 0 );	return 0;
 				case IDM_COPY:	SendMessage( hWnd, WM_COPY,  0, 0 );	return 0;
@@ -418,22 +418,22 @@ LRESULT CALLBACK gpfVertEditProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 
 
 /*!
-	ウインドウプロシージャ
-	@param[in]	hWnd	ウインドウハンドル
-	@param[in]	message	ウインドウメッセージの識別番号
-	@param[in]	wParam	追加の情報１
-	@param[in]	lParam	追加の情報２
-	@retval 0	メッセージ処理済み
-	@retval no0	ここでは処理せず次に回す
+	�E�C���h�E�v���V�[�W��
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@param[in]	message	�E�C���h�E���b�Z�[�W�̎��ʔԍ�
+	@param[in]	wParam	�ǉ��̏��P
+	@param[in]	lParam	�ǉ��̏��Q
+	@retval 0	���b�Z�[�W�����ς�
+	@retval no0	�����ł͏����������ɉ�
 */
 LRESULT CALLBACK VertProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
 	switch( message )
 	{
-		HANDLE_MSG( hWnd, WM_PAINT,   Vrt_OnPaint );	//	画面の更新とか
-		HANDLE_MSG( hWnd, WM_NOTIFY,  Vrt_OnNotify );	//	コモンコントロールの個別イベント
+		HANDLE_MSG( hWnd, WM_PAINT,   Vrt_OnPaint );	//	��ʂ̍X�V�Ƃ�
+		HANDLE_MSG( hWnd, WM_NOTIFY,  Vrt_OnNotify );	//	�R�����R���g���[���̌ʃC�x���g
 		HANDLE_MSG( hWnd, WM_COMMAND, Vrt_OnCommand );	
-		HANDLE_MSG( hWnd, WM_DESTROY, Vrt_OnDestroy );	//	終了時の処理
+		HANDLE_MSG( hWnd, WM_DESTROY, Vrt_OnDestroy );	//	�I�����̏���
 
 		default:	break;
 	}
@@ -444,12 +444,12 @@ LRESULT CALLBACK VertProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 
 
 /*!
-	COMMANDメッセージの受け取り。ボタン押されたとかで発生
-	@param[in]	hWnd		ウインドウハンドル
-	@param[in]	id			メッセージを発生させた子ウインドウの識別子	LOWORD(wParam)
-	@param[in]	hWndCtl		メッセージを発生させた子ウインドウのハンドル	lParam
-	@param[in]	codeNotify	通知メッセージ	HIWORD(wParam)
-	@return		なし
+	COMMAND���b�Z�[�W�̎󂯎��B�{�^�������ꂽ�Ƃ��Ŕ���
+	@param[in]	hWnd		�E�C���h�E�n���h��
+	@param[in]	id			���b�Z�[�W�𔭐��������q�E�C���h�E�̎��ʎq	LOWORD(wParam)
+	@param[in]	hWndCtl		���b�Z�[�W�𔭐��������q�E�C���h�E�̃n���h��	lParam
+	@param[in]	codeNotify	�ʒm���b�Z�[�W	HIWORD(wParam)
+	@return		�Ȃ�
 */
 VOID Vrt_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 {
@@ -457,31 +457,31 @@ VOID Vrt_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 
 	switch( id )
 	{
-		case  IDM_VLINE_DECIDE:	//	確定
+		case  IDM_VLINE_DECIDE:	//	�m��
 			VertScriptInsert( hWnd );
-			if( gbQuickClose  ){	DestroyWindow( hWnd );	}	//	直ぐ閉じる？
+			if( gbQuickClose  ){	DestroyWindow( hWnd );	}	//	��������H
 			break;
 
 		case  IDM_VLINE_REFRESH:	VertTextAssemble( hWnd );	break;
 
-		case  IDE_VLINE_TEXT:	//	文字入力枠・リヤルタイムでビューを書換
+		case  IDE_VLINE_TEXT:	//	�������͘g�E�������^�C���Ńr���[������
 			if( EN_UPDATE == codeNotify ){	VertTextAssemble( hWnd );	}
 			break;
 
-		case  IDCB_VLINE_LEFT_GO:	//	左から
+		case  IDCB_VLINE_LEFT_GO:	//	������
 			lRslt = SendMessage( ghVertToolBar, TB_ISBUTTONCHECKED, IDCB_VLINE_LEFT_GO, 0 );
-			if( lRslt ){	gbLeftGo = 1;	}	//	左から
-			else{	gbLeftGo = 0;	}	//	チェキ状態を確認して書き直す
+			if( lRslt ){	gbLeftGo = 1;	}	//	������
+			else{	gbLeftGo = 0;	}	//	�`�F�L��Ԃ��m�F���ď�������
 			VertTextAssemble( hWnd );
 			break;
 
-		case  IDM_VLINE_TRANSPARENT:	//	空白透過
+		case  IDM_VLINE_TRANSPARENT:	//	�󔒓���
 			lRslt = SendMessage( ghVertToolBar, TB_ISBUTTONCHECKED, IDM_VLINE_TRANSPARENT, 0 );
-			if( lRslt ){	gbSpTrans = 1;	}	//	透過する
-			else{	gbSpTrans = 0;	}	//	透過しない
+			if( lRslt ){	gbSpTrans = 1;	}	//	���߂���
+			else{	gbSpTrans = 0;	}	//	���߂��Ȃ�
 			break;
 
-		case  IDCB_VLINE_QUICKCLOSE:	//	直ぐ閉じる
+		case  IDCB_VLINE_QUICKCLOSE:	//	��������
 			gbQuickClose = IsDlgButtonChecked( hWnd, IDCB_VLINE_QUICKCLOSE ) ? TRUE : FALSE;
 			break;
 
@@ -497,8 +497,8 @@ VOID Vrt_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	PAINT。無効領域が出来たときに発生。背景の扱いに注意。背景を塗りつぶしてから、オブジェクトを描画
-	@param[in]	hWnd	親ウインドウのハンドル
+	PAINT�B�����̈悪�o�����Ƃ��ɔ����B�w�i�̈����ɒ��ӁB�w�i��h��Ԃ��Ă���A�I�u�W�F�N�g��`��
+	@param[in]	hWnd	�e�E�C���h�E�̃n���h��
 */
 VOID Vrt_OnPaint( HWND hWnd )
 {
@@ -514,9 +514,9 @@ VOID Vrt_OnPaint( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ウインドウを閉じるときに発生。デバイスコンテキストとか確保した画面構造のメモリとかも終了。
-	@param[in]	hWnd	親ウインドウのハンドル
-	@return		無し
+	�E�C���h�E�����Ƃ��ɔ����B�f�o�C�X�R���e�L�X�g�Ƃ��m�ۂ�����ʍ\���̃������Ƃ����I���B
+	@param[in]	hWnd	�e�E�C���h�E�̃n���h��
+	@return		����
 */
 VOID Vrt_OnDestroy( HWND hWnd )
 {
@@ -531,11 +531,11 @@ VOID Vrt_OnDestroy( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ノーティファイメッセージの処理
-	@param[in]	hWnd		親ウインドウのハンドル
-	@param[in]	idFrom		NOTIFYを発生させたコントロールのＩＤ
-	@param[in]	pstNmhdr	NOTIFYの詳細
-	@return		処理した内容とか
+	�m�[�e�B�t�@�C���b�Z�[�W�̏���
+	@param[in]	hWnd		�e�E�C���h�E�̃n���h��
+	@param[in]	idFrom		NOTIFY�𔭐��������R���g���[���̂h�c
+	@param[in]	pstNmhdr	NOTIFY�̏ڍ�
+	@return		�����������e�Ƃ�
 */
 LRESULT Vrt_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 {
@@ -547,27 +547,27 @@ LRESULT Vrt_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 
 		if( UDN_DELTAPOS == pstNmUpDown->hdr.code )
 		{
-			//	iDelta　上で−１、下で１
+			//	iDelta�@��Ł|�P�A���łP
 			TRACE( TEXT("UPDOWN %d"), pstNmUpDown->iDelta );
 			gdVertInterval -= (pstNmUpDown->iDelta);
 			SetDlgItemInt( hWnd, IDE_VLINE_INTERVAL, gdVertInterval, TRUE );
 			VertTextAssemble( hWnd );
-			InvalidateRect( ghVertViewWnd, NULL, TRUE );	//	リヤルタイム？
+			InvalidateRect( ghVertViewWnd, NULL, TRUE );	//	�������^�C���H
 		}
 	}
 
-	return 0;	//	何もないなら０を戻す
+	return 0;	//	�����Ȃ��Ȃ�O��߂�
 }
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	テキストボックスの内容をスクリプトする
+	�e�L�X�g�{�b�N�X�̓��e���X�N���v�g����
 */
 HRESULT VertTextAssemble( HWND hWnd )
 {
 	UINT_PTR	cchSz;
 	INT			ileng, i, iRow, iClm, iLine, iMaxRow;
-	INT			iMaxY, iMaxX, iViewXdot, iViewYdot, iYline, cx, cy;	//	配置窓のサイズ変更に使用する
+	INT			iMaxY, iMaxX, iViewXdot, iViewYdot, iYline, cx, cy;	//	�z�u���̃T�C�Y�ύX�Ɏg�p����
 	INT			iLnDot, iLnCnt, bkLine;
 	UINT_PTR	iMozis;
 	HWND		hWorkWnd;
@@ -580,11 +580,11 @@ HRESULT VertTextAssemble( HWND hWnd )
 
 	hWorkWnd = GetDlgItem( hWnd, IDE_VLINE_TEXT );
 
-	//	文字数確認してバッファ作成
+	//	�������m�F���ăo�b�t�@�쐬
 	ileng = Edit_GetTextLength( hWorkWnd );
 	cchSz = ileng + 2;
 
-	if( gcchVtBuf <  cchSz )	//	容量足りないなら拡張する
+	if( gcchVtBuf <  cchSz )	//	�e�ʑ���Ȃ��Ȃ�g������
 	{
 		ptScript = (LPTSTR)realloc( gptVtBuff, cchSz * sizeof(TCHAR) );
 		gptVtBuff = ptScript;
@@ -594,24 +594,24 @@ HRESULT VertTextAssemble( HWND hWnd )
 	ZeroMemory( gptVtBuff, gcchVtBuf * sizeof(TCHAR) );
 	Edit_GetText( hWorkWnd, gptVtBuff, cchSz );
 
-	//	先のデータ破壊
-	gvcVertItem.clear( );	//	動的メモリは無いので普通にクルヤーでおｋ
+	//	��̃f�[�^�j��
+	gvcVertItem.clear( );	//	���I�������͖����̂ŕ��ʂɃN�����[�ł���
 
-	//	中身無いならここで終わる
+	//	���g�����Ȃ炱���ŏI���
 	if( 0 >= ileng )	return S_FALSE;
 
-	//	壱文字ずつバラして取込
+	//	�땶�����o�����Ď捞
 	iRow  = 0;
 	iClm  = 0;
-	iLine = 1;	//	行数
-	iMaxRow = 0;	//	壱行の最大文字数
+	iLine = 1;	//	�s��
+	iMaxRow = 0;	//	��s�̍ő啶����
 	for( i = 0; ileng > i; i++ )
 	{
 		ZeroMemory( &stVtitm, sizeof(VERTITEM) );
 
-		if( TEXT('\r') ==  gptVtBuff[i] )	//	改行
+		if( TEXT('\r') ==  gptVtBuff[i] )	//	���s
 		{
-			//	最大文字数確認
+			//	�ő啶�����m�F
 			if( iMaxRow < iRow )	iMaxRow = iRow;
 
 			i++;
@@ -621,54 +621,54 @@ HRESULT VertTextAssemble( HWND hWnd )
 		}
 		else
 		{
-			stVtitm.cch      = gptVtBuff[i];	//	文字確保
-			stVtitm.iWidth   = ViewLetterWidthGet( stVtitm.cch );	//	文字幅
-			stVtitm.iOffset  = LEFT_PADD;	//	最左からの右オフセットドット
-			stVtitm.iRow     = iRow++;	//	縦にした時のＹ位置
-			stVtitm.iColumn  = iClm;	//	縦にした時の文字列番号・改行に注意
+			stVtitm.cch      = gptVtBuff[i];	//	�����m��
+			stVtitm.iWidth   = ViewLetterWidthGet( stVtitm.cch );	//	������
+			stVtitm.iOffset  = LEFT_PADD;	//	�ō�����̉E�I�t�Z�b�g�h�b�g
+			stVtitm.iRow     = iRow++;	//	�c�ɂ������̂x�ʒu
+			stVtitm.iColumn  = iClm;	//	�c�ɂ������̕�����ԍ��E���s�ɒ���
 
 			gvcVertItem.push_back( stVtitm );
 		}
 	}
-	//	最大文字数確認
+	//	�ő啶�����m�F
 	if( iMaxRow < iRow )	iMaxRow = iRow;
 
-	iMaxY = (iMaxRow+1) * LINE_HEIGHT;	//	縦・余裕入れとく
-	iMaxX  = LEFT_PADD + (gdVertInterval * iLine );	//	横幅余裕
+	iMaxY = (iMaxRow+1) * LINE_HEIGHT;	//	�c�E�]�T����Ƃ�
+	iMaxX  = LEFT_PADD + (gdVertInterval * iLine );	//	�����]�T
 
-	//	まず読み込んで内容を確認・位置調整はこの後
+	//	�܂��ǂݍ���œ��e���m�F�E�ʒu�����͂��̌�
 	if( gbLeftGo ){	iLnCnt = 0;	}
 	else{	iLnCnt = iClm;	}
-	//	右からか左からか
-	iLnDot = LEFT_PADD + (gdVertInterval * iLnCnt );	//	基準位置に注意・行は０インデックスか
+	//	�E���炩�����炩
+	iLnDot = LEFT_PADD + (gdVertInterval * iLnCnt );	//	��ʒu�ɒ��ӁE�s�͂O�C���f�b�N�X��
 	bkLine = 0;
 	iMozis = gvcVertItem.size( );
 
-	for( itVtitm = gvcVertItem.begin(); itVtitm != gvcVertItem.end(); itVtitm++ )	//	壱文字ずつ確認していく
+	for( itVtitm = gvcVertItem.begin(); itVtitm != gvcVertItem.end(); itVtitm++ )	//	�땶�����m�F���Ă���
 	{
-		if( bkLine != itVtitm->iColumn )	//	改行はいった
+		if( bkLine != itVtitm->iColumn )	//	���s�͂�����
 		{
 			if( gbLeftGo ){	iLnCnt++;	}
-			else{	iLnCnt--;	}	//	行を移る
+			else{	iLnCnt--;	}	//	�s���ڂ�
 			if( 0 > iLnCnt ){	iLnCnt =  0;	}
 
-			iLnDot = LEFT_PADD + (gdVertInterval * iLnCnt );	//	ドット位置修正
+			iLnDot = LEFT_PADD + (gdVertInterval * iLnCnt );	//	�h�b�g�ʒu�C��
 		}
 		bkLine = itVtitm->iColumn;
 
-		//	文字中心なので、幅の半分の位置が左開始位置
-		itVtitm->iOffset = iLnDot - ((itVtitm->iWidth+1) / 2);	//	四捨五入
-		//	句読点のバヤイは特別な位置にしておく
+		//	�������S�Ȃ̂ŁA���̔����̈ʒu�����J�n�ʒu
+		itVtitm->iOffset = iLnDot - ((itVtitm->iWidth+1) / 2);	//	�l�̌ܓ�
+		//	��Ǔ_�̃o���C�͓��ʂȈʒu�ɂ��Ă���
 		if( IDEO_COMMA == itVtitm->cch || IDEO_FSTOP == itVtitm->cch )
 		{
-			itVtitm->iOffset = iLnDot - 3;	//	固定値注意
+			itVtitm->iOffset = iLnDot - 3;	//	�Œ�l����
 		}
-		//	はみ出しに注意
+		//	�͂ݏo���ɒ���
 		if( 0 >  itVtitm->iOffset ){	itVtitm->iOffset = 0;	}
 	}
 
-	//配置窓大きさ調整
-	//	今の画面の行数とドット数確認
+	//�z�u���傫������
+	//	���̉�ʂ̍s���ƃh�b�g���m�F
 	iYline = ViewAreaSizeGet( &iViewXdot );
 	iViewYdot = iYline * LINE_HEIGHT;
 
@@ -679,14 +679,14 @@ HRESULT VertTextAssemble( HWND hWnd )
 	cx -= rect.right;
 	cy -= rect.bottom;
 
-	//	多分ウインドウサイズになるはず
+	//	�����E�C���h�E�T�C�Y�ɂȂ�͂�
 	cx += iMaxX;
 	cy += iMaxY;
 
-	//	やたらデカいなら自重
+	//	�₽��f�J���Ȃ玩�d
 	if( iViewXdot < cx ){	cx =  iViewXdot;	}
 	if( iViewYdot < cy ){	cy =  iViewYdot;	}
-	//	小さくても自重・最小サイズは適当
+	//	�������Ă����d�E�ŏ��T�C�Y�͓K��
 	if( 66 > cx ){	cx = 66;	}
 	if( 66 > cy ){	cy = 66;	}
 
@@ -704,20 +704,20 @@ HRESULT VertTextAssemble( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	配置窓のウインドウプロシージャ
-	@param[in]	hWnd	ウインドウハンドル
-	@param[in]	message	ウインドウメッセージの識別番号
-	@param[in]	wParam	追加の情報１
-	@param[in]	lParam	追加の情報２
-	@retval 0	メッセージ処理済み
-	@retval no0	ここでは処理せず次に回す
+	�z�u���̃E�C���h�E�v���V�[�W��
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@param[in]	message	�E�C���h�E���b�Z�[�W�̎��ʔԍ�
+	@param[in]	wParam	�ǉ��̏��P
+	@param[in]	lParam	�ǉ��̏��Q
+	@retval 0	���b�Z�[�W�����ς�
+	@retval no0	�����ł͏����������ɉ�
 */
 LRESULT CALLBACK VertViewProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
 	switch( message )
 	{
 		HANDLE_MSG( hWnd, WM_KEYDOWN,			Vvw_OnKey );
-		HANDLE_MSG( hWnd, WM_PAINT,				Vvw_OnPaint );		//	画面の更新とか
+		HANDLE_MSG( hWnd, WM_PAINT,				Vvw_OnPaint );		//	��ʂ̍X�V�Ƃ�
 		HANDLE_MSG( hWnd, WM_WINDOWPOSCHANGING,	Vvw_OnWindowPosChanging );
 		HANDLE_MSG( hWnd, WM_WINDOWPOSCHANGED,	Vvw_OnWindowPosChanged );
 
@@ -731,9 +731,9 @@ LRESULT CALLBACK VertViewProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	動かされているときに発生・マウスでウインドウドラッグ中とか
-	@param[in]	hWnd	ウインドウハンドル
-	@param[in]	pstPos	その瞬間のスクリーン座標
+	��������Ă���Ƃ��ɔ����E�}�E�X�ŃE�C���h�E�h���b�O���Ƃ�
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@param[in]	pstPos	���̏u�Ԃ̃X�N���[�����W
 */
 VOID Vvw_OnMoving( HWND hWnd, LPRECT pstPos )
 {
@@ -742,27 +742,27 @@ VOID Vvw_OnMoving( HWND hWnd, LPRECT pstPos )
 	BOOLEAN	bMinus = FALSE;
 	TCHAR	atBuffer[SUB_STRING];
 
-	//	フレーム窓の左上スクリーン座標
+	//	�t���[�����̍���X�N���[�����W
 	xLy = pstPos->left + gstFrmSz.x;
 	yLy = pstPos->top  + gstFrmSz.y;
 
-	//	ビューの左上テキストエリア位置
+	//	�r���[�̍���e�L�X�g�G���A�ʒu
 	xEt = (gstViewOrigin.x + LINENUM_WID);
 	yEt = (gstViewOrigin.y + RULER_AREA);
 //	TRACE( TEXT("%d x %d"), xEt, yEt );
 
-	//	オフセット量
-	xSb = xLy - xEt;	//	Ｘはそのままドット数
-	ySb = yLy - yEt;	//	Ｙもドットなので行数にしないといけない
+	//	�I�t�Z�b�g��
+	xSb = xLy - xEt;	//	�w�͂��̂܂܃h�b�g��
+	ySb = yLy - yEt;	//	�x���h�b�g�Ȃ̂ōs���ɂ��Ȃ��Ƃ����Ȃ�
 
-	if( 0 > ySb ){	ySb *= -1;	bMinus = TRUE;	}	//	マイナス補正
-	//	行数的なモノを求めるってばよ
+	if( 0 > ySb ){	ySb *= -1;	bMinus = TRUE;	}	//	�}�C�i�X�␳
+	//	�s���I�ȃ��m�����߂���Ă΂�
 	dLine = ySb / LINE_HEIGHT;
 	dRema = ySb % LINE_HEIGHT;
 	if( (LINE_HEIGHT/2) < dRema ){	dLine++;	}
 	if( bMinus ){	dLine *= -1;	}else{	dLine++;	}
 
-	//	20110704	ここでは、まだ位置はスクロールのズレが考慮されてない
+	//	20110704	�����ł́A�܂��ʒu�̓X�N���[���̃Y�����l������ĂȂ�
 	xSb   += gdHideXdot;
 	dLine += gdViewTopLine;
 
@@ -774,10 +774,10 @@ VOID Vvw_OnMoving( HWND hWnd, LPRECT pstPos )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ウィンドウのサイズ変更が完了する前に送られてくる
-	@param[in]	hWnd	ウインドウハンドル
-	@param[in]	pstWpos	新しい位置と大きさが入ってる
-	@return		このMessageを処理したら０
+	�E�B���h�E�̃T�C�Y�ύX����������O�ɑ����Ă���
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@param[in]	pstWpos	�V�����ʒu�Ƒ傫���������Ă�
+	@return		����Message������������O
 */
 BOOL Vvw_OnWindowPosChanging( HWND hWnd, LPWINDOWPOS pstWpos )
 {
@@ -785,14 +785,14 @@ BOOL Vvw_OnWindowPosChanging( HWND hWnd, LPWINDOWPOS pstWpos )
 	BOOLEAN	bMinus = FALSE;
 	RECT	vwRect;
 
-	//	移動がなかったときは何もしないでおｋ
+	//	�ړ����Ȃ������Ƃ��͉������Ȃ��ł���
 	if( SWP_NOMOVE & pstWpos->flags )	return TRUE;
 
-	clPosY = pstWpos->y + gstFrmSz.y;	//	表示位置のTOP
+	clPosY = pstWpos->y + gstFrmSz.y;	//	�\���ʒu��TOP
 
-	//	表示高さを壱行単位に合わせる
+	//	�\����������s�P�ʂɍ��킹��
 	GetWindowRect( ghViewWnd, &vwRect );
-	gstViewOrigin.x = vwRect.left;//位置記録・そうそう変わるものじゃない
+	gstViewOrigin.x = vwRect.left;//�ʒu�L�^�E���������ς����̂���Ȃ�
 	gstViewOrigin.y = vwRect.top;
 	vwTopY = (vwRect.top  + RULER_AREA);
 
@@ -814,9 +814,9 @@ BOOL Vvw_OnWindowPosChanging( HWND hWnd, LPWINDOWPOS pstWpos )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ウィンドウのサイズ変更が完了したら送られてくる
-	@param[in]	hWnd	ウインドウハンドル
-	@param[in]	pstWpos	新しい位置と大きさが入ってる
+	�E�B���h�E�̃T�C�Y�ύX�����������瑗���Ă���
+	@param[in]	hWnd	�E�C���h�E�n���h��
+	@param[in]	pstWpos	�V�����ʒu�Ƒ傫���������Ă�
 */
 VOID Vvw_OnWindowPosChanged( HWND hWnd, const LPWINDOWPOS pstWpos )
 {
@@ -824,11 +824,11 @@ VOID Vvw_OnWindowPosChanged( HWND hWnd, const LPWINDOWPOS pstWpos )
 
 	InvalidateRect( hWnd, NULL, TRUE );
 
-	//	移動がなかったときは何もしないでおｋ
+	//	�ړ����Ȃ������Ƃ��͉������Ȃ��ł���
 	if( SWP_NOMOVE & pstWpos->flags )	return;
 
 	GetWindowRect( ghViewWnd, &vwRect );
-	gstViewOrigin.x = vwRect.left;	//	位置記録
+	gstViewOrigin.x = vwRect.left;	//	�ʒu�L�^
 	gstViewOrigin.y = vwRect.top;
 
 	gstOffset.x = pstWpos->x - vwRect.left;
@@ -839,13 +839,13 @@ VOID Vvw_OnWindowPosChanged( HWND hWnd, const LPWINDOWPOS pstWpos )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	キーダウンが発生・キーボードで移動用
-	@param[in]	hWnd	ウインドウハンドル・ビューのとは限らないので注意セヨ
-	@param[in]	vk		押されたキーが仮想キーコードで来る
-	@param[in]	fDown	非０ダウン　０アップ
-	@param[in]	cRepeat	連続オサレ回数・取れてない？
-	@param[in]	flags	キーフラグいろいろ
-	@return		無し
+	�L�[�_�E���������E�L�[�{�[�h�ňړ��p
+	@param[in]	hWnd	�E�C���h�E�n���h���E�r���[�̂Ƃ͌���Ȃ��̂Œ��ӃZ��
+	@param[in]	vk		�����ꂽ�L�[�����z�L�[�R�[�h�ŗ���
+	@param[in]	fDown	��O�_�E���@�O�A�b�v
+	@param[in]	cRepeat	�A���I�T���񐔁E���ĂȂ��H
+	@param[in]	flags	�L�[�t���O���낢��
+	@return		����
 */
 VOID Vvw_OnKey( HWND hWnd, UINT vk, BOOL fDown, int cRepeat, UINT flags )
 {
@@ -857,10 +857,10 @@ VOID Vvw_OnKey( HWND hWnd, UINT vk, BOOL fDown, int cRepeat, UINT flags )
 	{
 		switch( vk )
 		{
-			case VK_RIGHT:	TRACE( TEXT("右") );	rect.left++;	break;
-			case VK_LEFT:	TRACE( TEXT("左") );	rect.left--;	break;
-			case VK_DOWN:	TRACE( TEXT("下") );	rect.top += LINE_HEIGHT;	break;
-			case  VK_UP:	TRACE( TEXT("上") );	rect.top -= LINE_HEIGHT;	break;
+			case VK_RIGHT:	TRACE( TEXT("�E") );	rect.left++;	break;
+			case VK_LEFT:	TRACE( TEXT("��") );	rect.left--;	break;
+			case VK_DOWN:	TRACE( TEXT("��") );	rect.top += LINE_HEIGHT;	break;
+			case  VK_UP:	TRACE( TEXT("��") );	rect.top -= LINE_HEIGHT;	break;
 			default:	return;
 		}
 	}
@@ -878,8 +878,8 @@ VOID Vvw_OnKey( HWND hWnd, UINT vk, BOOL fDown, int cRepeat, UINT flags )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	PAINT。無効領域が出来たときに発生。背景の扱いに注意。背景を塗りつぶしてから、オブジェクトを描画
-	@param[in]	hWnd	ウインドウハンドル
+	PAINT�B�����̈悪�o�����Ƃ��ɔ����B�w�i�̈����ɒ��ӁB�w�i��h��Ԃ��Ă���A�I�u�W�F�N�g��`��
+	@param[in]	hWnd	�E�C���h�E�n���h��
 */
 VOID Vvw_OnPaint( HWND hWnd )
 {
@@ -890,7 +890,7 @@ VOID Vvw_OnPaint( HWND hWnd )
 
 	VertViewDraw( hdc );
 
-	//リアルタイム更新するとフォーカスがおかしくなる？
+	//���A���^�C���X�V����ƃt�H�[�J�X�����������Ȃ�H
 
 	EndPaint( hWnd, &ps );
 
@@ -899,8 +899,8 @@ VOID Vvw_OnPaint( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	表示枠の描画処理
-	@param[in]	hDC	描画するデバイスコンテキスト
+	�\���g�̕`�揈��
+	@param[in]	hDC	�`�悷��f�o�C�X�R���e�L�X�g
 */
 VOID VertViewDraw( HDC hDC )
 {
@@ -911,14 +911,14 @@ VOID VertViewDraw( HDC hDC )
 
 	VTIM_ITR	itVtitm;
 
-	hFtOld = SelectFont( hDC, ghAaFont );	//	フォントをくっつける
+	hFtOld = SelectFont( hDC, ghAaFont );	//	�t�H���g����������
 	SetBkMode( hDC, TRANSPARENT );
 
 	iItems = gvcVertItem.size( );
 
 	atMozi[1] = 0;
 
-	for( itVtitm = gvcVertItem.begin(); itVtitm != gvcVertItem.end(); itVtitm++ )	//	壱文字ずつ確認していく
+	for( itVtitm = gvcVertItem.begin(); itVtitm != gvcVertItem.end(); itVtitm++ )	//	�땶�����m�F���Ă���
 	{
 		atMozi[0] = itVtitm->cch;
 		x = itVtitm->iOffset;
@@ -933,9 +933,9 @@ VOID VertViewDraw( HDC hDC )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	内容を書き込む
-	@param[in]	hWnd	ウインドウハンドル・あまり意味はない
-	@return		HRESULT	終了状態コード
+	���e����������
+	@param[in]	hWnd	�E�C���h�E�n���h���E���܂�Ӗ��͂Ȃ�
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT	VertScriptInsert( HWND hWnd )
 {
@@ -946,15 +946,15 @@ HRESULT	VertScriptInsert( HWND hWnd )
 	INT			iX, iY;
 	RECT		rect;
 
-	wstring		wsBuffer;	//	作った文字列を入れちゃう
+	wstring		wsBuffer;	//	��������������ꂿ�Ⴄ
 
 	VTIM_ITR	itVtitm;
 	VTIM_RITR	itRvsVtitm;
 
-//右からなら逆にたどる。左からなら正順。Rowを基準値にして、直前位置とのスキマは空白埋め
-//改行とか入れまくって一繋がりの文字列にして、ステルスレイヤで貼る。
+//�E����Ȃ�t�ɂ��ǂ�B������Ȃ琳���BRow����l�ɂ��āA���O�ʒu�Ƃ̃X�L�}�͋󔒖���
+//���s�Ƃ�����܂����Ĉ�q����̕�����ɂ��āA�X�e���X���C���œ\��B
 
-	//	縦横の大きさを求める
+	//	�c���̑傫�������߂�
 	iMaxRow = 0;	iMaxClm = 0;
 	for( itVtitm = gvcVertItem.begin(); itVtitm != gvcVertItem.end(); itVtitm++ )
 	{
@@ -964,70 +964,70 @@ HRESULT	VertScriptInsert( HWND hWnd )
 
 	ptText = NULL;
 	wsBuffer.clear();
-	for( iTgtRow = 0; iMaxRow >= iTgtRow; iTgtRow++ )	//	文字位置を上から順番に見ていく
+	for( iTgtRow = 0; iMaxRow >= iTgtRow; iTgtRow++ )	//	�����ʒu���ォ�珇�ԂɌ��Ă���
 	{
 		iRitDot = 0;
 
-		if( gbLeftGo )	//	左から
+		if( gbLeftGo )	//	������
 		{
 			for( itVtitm = gvcVertItem.begin(); itVtitm != gvcVertItem.end(); itVtitm++ )
 			{
-				if( iTgtRow == itVtitm->iRow )	//	注目ROWが一致したら
+				if( iTgtRow == itVtitm->iRow )	//	����ROW����v������
 				{
-					iNeedPadd = itVtitm->iOffset - iRitDot;	//	ここまでの右端からのドット数
-					if( 0 > iNeedPadd ){	iNeedPadd = 0;	}	//	重なった場合とかあり得る
+					iNeedPadd = itVtitm->iOffset - iRitDot;	//	�����܂ł̉E�[����̃h�b�g��
+					if( 0 > iNeedPadd ){	iNeedPadd = 0;	}	//	�d�Ȃ����ꍇ�Ƃ����蓾��
 
-					ptText = DocPaddingSpaceMake( iNeedPadd );	//	０ならNULLが返る
-					if( ptText )	//	埋め分を継ぎ足す
+					ptText = DocPaddingSpaceMake( iNeedPadd );	//	�O�Ȃ�NULL���Ԃ�
+					if( ptText )	//	���ߕ����p������
 					{
 						wsBuffer += wstring( ptText );
 						FREE( ptText );
 					}
-					wsBuffer += itVtitm->cch;	//	本命の文字を入れる
+					wsBuffer += itVtitm->cch;	//	�{���̕���������
 
-					iRitDot += iNeedPadd;	//	ここまでの埋め量と
-					iRitDot += itVtitm->iWidth;	//	使用幅を埋める
+					iRitDot += iNeedPadd;	//	�����܂ł̖��ߗʂ�
+					iRitDot += itVtitm->iWidth;	//	�g�p���𖄂߂�
 				}
 			}
 		}
 		else
 		{
-			//	右から
+			//	�E����
 			for( itRvsVtitm = gvcVertItem.rbegin(); itRvsVtitm != gvcVertItem.rend(); itRvsVtitm++ )
 			{
-				if( iTgtRow == itRvsVtitm->iRow )	//	注目ROWが一致したら
+				if( iTgtRow == itRvsVtitm->iRow )	//	����ROW����v������
 				{
-					iNeedPadd = itRvsVtitm->iOffset - iRitDot;	//	ここまでの右端からのドット数
-					if( 0 > iNeedPadd ){	iNeedPadd = 0;	}	//	重なった場合とかあり得る
+					iNeedPadd = itRvsVtitm->iOffset - iRitDot;	//	�����܂ł̉E�[����̃h�b�g��
+					if( 0 > iNeedPadd ){	iNeedPadd = 0;	}	//	�d�Ȃ����ꍇ�Ƃ����蓾��
 
-					ptText = DocPaddingSpaceMake( iNeedPadd );	//	０ならNULLが返る
-					if( ptText )	//	埋め分を継ぎ足す
+					ptText = DocPaddingSpaceMake( iNeedPadd );	//	�O�Ȃ�NULL���Ԃ�
+					if( ptText )	//	���ߕ����p������
 					{
 						wsBuffer += wstring( ptText );
 						FREE( ptText );
 					}
-					wsBuffer += itRvsVtitm->cch;	//	本命の文字を入れる
+					wsBuffer += itRvsVtitm->cch;	//	�{���̕���������
 
-					iRitDot += iNeedPadd;	//	ここまでの埋め量と
-					iRitDot += itRvsVtitm->iWidth;	//	使用幅を埋める
+					iRitDot += iNeedPadd;	//	�����܂ł̖��ߗʂ�
+					iRitDot += itRvsVtitm->iWidth;	//	�g�p���𖄂߂�
 				}
 			}
 		}
 
-		wsBuffer += wstring( CH_CRLFW );	//	壱行終わったら改行
+		wsBuffer += wstring( CH_CRLFW );	//	��s�I���������s
 	}
 
-	//	挿入処理には、レイヤボックスを非表示処理で使う
+	//	�}�������ɂ́A���C���{�b�N�X���\�������Ŏg��
 	hLyrWnd = LayerBoxVisibalise( GetModuleHandle(NULL), wsBuffer.c_str(), 0x10 );
-	//	レイヤの位置を変更
+	//	���C���̈ʒu��ύX
 	GetWindowRect( ghVertViewWnd, &rect );
 	LayerBoxPositionChange( hLyrWnd, (rect.left + gstFrmSz.x), (rect.top + gstFrmSz.y) );
-	//	設定によれば、空白を全部透過指定にする
+	//	�ݒ�ɂ��΁A�󔒂�S�����ߎw��ɂ���
 	if( gbSpTrans ){	LayerTransparentToggle( hLyrWnd, 1 );	}
-	//	上書きする
+	//	�㏑������
 	LayerContentsImportable( hLyrWnd, IDM_LYB_OVERRIDE, &iX, &iY, D_INVISI );
 	ViewPosResetCaret( iX, iY );	
-	//	終わったら閉じる
+	//	�I����������
 	DestroyWindow( hLyrWnd );
 
 	return S_OK;
@@ -1035,10 +1035,10 @@ HRESULT	VertScriptInsert( HWND hWnd )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	ビューが移動した
-	@param[in]	hWnd	本体ウインドウハンドル・あまり意味はない
-	@param[in]	state	窓状態・最小化なら違うコトする
-	@return		HRESULT	終了状態コード
+	�r���[���ړ�����
+	@param[in]	hWnd	�{�̃E�C���h�E�n���h���E���܂�Ӗ��͂Ȃ�
+	@param[in]	state	����ԁE�ŏ����Ȃ�Ⴄ�R�g����
+	@return		HRESULT	�I����ԃR�[�h
 */
 HRESULT VertMoveFromView( HWND hWnd, UINT state )
 {
@@ -1047,12 +1047,12 @@ HRESULT VertMoveFromView( HWND hWnd, UINT state )
 
 	if( !(ghVertViewWnd) )	return S_FALSE;
 
-	//	最小化時は非表示にするとか	SIZE_MINIMIZED
+	//	�ŏ������͔�\���ɂ���Ƃ�	SIZE_MINIMIZED
 
 	if( SIZE_MINIMIZED != state )
 	{
 		GetWindowRect( ghViewWnd, &vwRect );
-		gstViewOrigin.x = vwRect.left;//位置記録
+		gstViewOrigin.x = vwRect.left;//�ʒu�L�^
 		gstViewOrigin.y = vwRect.top;
 	}
 
