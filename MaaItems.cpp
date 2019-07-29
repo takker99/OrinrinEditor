@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief ＡＡ一覧の制御をします
 	このファイルは MaaItems.cpp です。
 	@author	SikigamiHNQ

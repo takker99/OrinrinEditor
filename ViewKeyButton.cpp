@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief キーボード入力やマウスクルックの面倒みる
 	このファイルは ViewKeyButton.cpp です。
 	@author	SikigamiHNQ

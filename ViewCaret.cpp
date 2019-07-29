@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief キャレットの管理をします
 	このファイルは ViewCaret.cpp です。
 	@author	SikigamiHNQ

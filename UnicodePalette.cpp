@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief ユニコード一覧のダイヤログの面倒見ます
 	このファイルは UnicodePalette.cpp です。
 	@author	SikigamiHNQ

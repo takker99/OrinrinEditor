@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief スプリットバーの処理します
 	このファイルは SplitBar.cpp です。
 	@author	SikigamiHNQ

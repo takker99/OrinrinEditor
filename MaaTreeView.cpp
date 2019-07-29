@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief ツリービューとお気に入り、タブの制御をします
 	このファイルは MaaTreeView.cpp です。
 	@author	SikigamiHNQ

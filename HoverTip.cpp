@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief 自作のツールチップの制御
 	このファイルは HoverTip.cpp です。
 	@author	SikigamiHNQ

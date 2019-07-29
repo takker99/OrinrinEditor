@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief 範囲選択の管理をします
 	このファイルは ViewSelect.cpp です。
 	@author	SikigamiHNQ

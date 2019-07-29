@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief 合成用のレイヤボックスのビュー側の操作です
 	このファイルは LayerBox.cpp です。
 	@author	SikigamiHNQ

@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief 小型ＭＡＡテンプレートの面倒見ます
 	このファイルは MiniTemplate.cpp です。
 	@author	SikigamiHNQ

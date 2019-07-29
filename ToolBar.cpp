@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief ツールバーを作ります
 	このファイルは ToolBar.cpp です。
 	@author	SikigamiHNQ

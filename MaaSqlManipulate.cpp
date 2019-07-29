@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief SQLiteの操作をします。
 	このファイルは MaaSqlManipulate.cpp です。
 	@author	SikigamiHNQ

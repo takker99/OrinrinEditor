@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief ファイルに保存・開くの面倒見ます
 	このファイルは DocFileCtrl.cpp です。
 	@author	SikigamiHNQ

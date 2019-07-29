@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief なんか調整とかそういうの
 	このファイルは DocAdjustant.cpp です。
 	@author	SikigamiHNQ

@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief ファイルのページ単位を管理します
 	このファイルは PageCtrl.cpp です。
 	@author	SikigamiHNQ

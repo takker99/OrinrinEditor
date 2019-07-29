@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief ブラシテンプレートの面倒見ます
 	このファイルは BrushTemplate.cpp です。
 	@author	SikigamiHNQ

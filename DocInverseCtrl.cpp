@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief 左右反転、上下反転します
 	このファイルは DocInverseCtrl.cpp です。
 	@author	SikigamiHNQ

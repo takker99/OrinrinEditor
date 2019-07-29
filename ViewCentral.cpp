@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief 編集ビューの管理とか描画します
 	このファイルは ViewCentral.cpp です。
 	@author	SikigamiHNQ

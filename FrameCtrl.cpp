@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief 枠の面倒見る
 	このファイルは FrameCtrl.cpp です。
 	@author	SikigamiHNQ
@@ -23,7 +23,7 @@ If not, see <http://www.gnu.org/licenses/>.
 
 /*
 複数行断片を使うには
-・区切りは¥ｎとし、読み書のタイミングで適当に変更する
+・区切りは\ｎとし、読み書のタイミングで適当に変更する
 ・各パーツの幅と高さを持っておく
 ・配置用ダミーレイヤボックスみたいなのが居る
 ・目標幅に合わせて、上パーツを並べる・右上は、上パーツの右側を削る計算がいるか？
@@ -34,7 +34,7 @@ If not, see <http://www.gnu.org/licenses/>.
 ＡＡ文字配置と似てるか？
 
 INIファイルは、文字列先頭の半角は無視するらしい？
-¥ｓ＝半角空白とする
+\ｓ＝半角空白とする
 */
 
 #define FRAMEINSERTBOX_CLASS	TEXT("FRAMEINSBOX_CLASS")
@@ -371,7 +371,7 @@ HRESULT InitFrameItem( UINT dMode, UINT dNumber, LPFRAMEINFO pstInfo )
 	//	所定のAPP名を作る
 	StringCchPrintf( atAppName, MIN_STRING, TEXT("Frame%u"), dNumber );
 
-//20120105	複数行を扱う、¥¥と¥ｎによる相互変換函数を用意
+//20120105	複数行を扱う、\\と\ｎによる相互変換函数を用意
 
 	if( dMode )	//	ロード
 	{
@@ -1655,9 +1655,9 @@ HRESULT DocFrameInsert( INT dMode, INT dStyle )
 //-------------------------------------------------------------------------------------------------
 
 /*!
-	複数行Frameの、¥¥・¥ｎ・¥ｓ＜＝＞¥・0x0D0A・半角空白の相互変換
+	複数行Frameの、\\・\ｎ・\ｓ＜＝＞\・0x0D0A・半角空白の相互変換
 	@param[in,out]	ptData	変換元バッファで、変換後文字列入れる。PARTS_CCHサイズであること
-	@param[in]		bMode	１：¥ｎを改行にする　０：改行を¥ｎにする
+	@param[in]		bMode	１：\ｎを改行にする　０：改行を\ｎにする
 */
 VOID FrameDataTranslate( LPTSTR ptData, UINT bMode )
 {
@@ -1672,7 +1672,7 @@ VOID FrameDataTranslate( LPTSTR ptData, UINT bMode )
 	{
 		if( 0x0000 == ptData[i] )	break;	//	多分意味はないけど安全対策
 
-		if( bMode  )	//	¥ｎを改行にする
+		if( bMode  )	//	\ｎを改行にする
 		{
 			if( 0x005C == ptData[i] )	//	エスケープシーケンス
 			{
@@ -1686,7 +1686,7 @@ VOID FrameDataTranslate( LPTSTR ptData, UINT bMode )
 				{
 					atBuffer[j] = 0x0020;
 				}
-				else	//	¥¥であった
+				else	//	\\であった
 				{
 					atBuffer[j] = ptData[i];
 				}
@@ -1696,9 +1696,9 @@ VOID FrameDataTranslate( LPTSTR ptData, UINT bMode )
 				atBuffer[j] = ptData[i];
 			}
 		}
-		else	//	改行を¥ｎにする
+		else	//	改行を\ｎにする
 		{
-			if( 0x005C == ptData[i] )	//	¥記号
+			if( 0x005C == ptData[i] )	//	\記号
 			{
 				atBuffer[j++] = 0x005C;
 				atBuffer[j] = 0x005C;	//	重ねる

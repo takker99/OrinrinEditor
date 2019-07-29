@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief ブラウザコンポーネント使ってPreviewをします
 	このファイルは DocPreview.cpp です。
 	@author	SikigamiHNQ

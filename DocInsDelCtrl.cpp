@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief 文字の追加削除系の面倒みます
 	このファイルは DocInsDelCtrl.cpp です。
 	@author	SikigamiHNQ

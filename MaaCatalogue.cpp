@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief MLTファイルを読んで、中身をメモリに展開します
 	このファイルは MaaCatalogue.cpp です。
 	@author	SikigamiHNQ

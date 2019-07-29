@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief ドラフトボードの管理します
 	このファイルは DraughtBoard.cpp です。
 	@author	SikigamiHNQ

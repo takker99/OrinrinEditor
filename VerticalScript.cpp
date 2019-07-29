@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief 縦書きの面倒みます
 	このファイルは VerticalScript.cpp です。
 	@author	SikigamiHNQ

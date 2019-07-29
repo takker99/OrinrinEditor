@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief ファイル検索や文字列検索の処理をします
 	このファイルは DocSearchCtrl.cpp です。
 	@author	SikigamiHNQ
@@ -75,7 +75,7 @@ static TCHAR	gatLastPtn[MAX_PATH];	//!<	最新の検索文字列を覚えてお�
 
 static TCHAR	atSetPattern[MAX_PATH];	//!<	検索開始した文字列・検索ボタン連打したら次々進むの判断に使う
 static INT		giSetRange;				//!<	検索開始したときの、検索範囲
-static BOOLEAN	gbSetModCrlf;			//!<	検索開始したときの、¥ｎ対応
+static BOOLEAN	gbSetModCrlf;			//!<	検索開始したときの、\ｎ対応
 
 //static INT		giCrLfCnt;				//!<	検索文字列中に改行がいくつあるか
 
@@ -302,7 +302,7 @@ HRESULT FindExecute( HWND hDlg )
 		Edit_GetText( GetDlgItem(hDlg,IDE_FIND_TEXT), atBuf, MAX_PATH );
 		if( !(atBuf[0]) )	return  E_ABORT;	//	空文字列なら何もしない
 
-		//	¥ｎを改行、¥¥を¥にするか
+		//	\ｎを改行、\\を\にするか
 		bModCrlf = IsDlgButtonChecked( hDlg, IDCB_MOD_CRLF_YEN );
 
 		//	検索範囲	０頁　１ファイル
@@ -345,7 +345,7 @@ HRESULT FindExecute( HWND hDlg )
 		for( d = 0, h = 0; MAX_PATH > d; d++, h++ )
 		{
 			atPattern[h] = atBuf[d];
-			if( 0x005C == atBuf[d] )	//	0x005Cは¥
+			if( 0x005C == atBuf[d] )	//	0x005Cは\
 			{
 				d++;
 				if( TEXT('n') ==  atBuf[d] )	//	改行指示である場合
@@ -440,7 +440,7 @@ UINT_PTR SearchPatternStruct( LPTSTR ptDest, UINT_PTR cchSize, LPTSTR ptSource, 
 		for( d = 0, h = 0; cchSize > d; d++, h++ )
 		{
 			ptDest[h] = ptSource[d];
-			if( 0x005C == ptSource[d] )	//	0x005Cは¥
+			if( 0x005C == ptSource[d] )	//	0x005Cは\
 			{
 				d++;
 				if( TEXT('n') ==  ptSource[d] )	//	改行指示である場合

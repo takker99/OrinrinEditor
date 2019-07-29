@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief 壱行テンプレートの面倒見ます
 	このファイルは LineTemplate.cpp です。
 	@author	SikigamiHNQ

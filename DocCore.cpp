@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief ドキュメントの内容の管理をします
 	このファイルは DocCore.cpp です。
 	@author	SikigamiHNQ
@@ -1087,8 +1087,8 @@ UINT DocImportSplitASD( LPSTR pcStr, INT cbSize, PAGELOAD pfPageLoad )
 			//	処理順番注意
 			if( (0x01 == pcCaret[d]) && (0x01 == pcCaret[d+1]) )	//	改行であるか
 			{
-				pcCaret[d]   = 0x0D;	//	¥ｒ
-				pcCaret[d+1] = 0x0A;	//	¥ｎ
+				pcCaret[d]   = 0x0D;	//	\ｒ
+				pcCaret[d+1] = 0x0A;	//	\ｎ
 				d++;	//	変換したので次に進めるのがよい
 			}
 

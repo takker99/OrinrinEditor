@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief アプリケーションのエントリ ポイントを定義します。
 	このファイルは OrinrinEditor.cpp です。
 	@author	SikigamiHNQ

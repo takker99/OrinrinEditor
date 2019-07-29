@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief 操作のログを作ります・アンドゥリドゥ用
 	このファイルは DocOperateLog.cpp です。
 	@author	SikigamiHNQ

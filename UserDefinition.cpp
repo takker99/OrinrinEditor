@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief ユーザ定義挿入の面倒見ます
 	このファイルは UserDefinition.cpp です。
 	@author	SikigamiHNQ

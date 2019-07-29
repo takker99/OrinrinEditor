@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief 選択範囲の面倒みます
 	このファイルは DocSelect.cpp です。
 	@author	SikigamiHNQ

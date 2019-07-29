@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief トレスモードのとき、２ペインの管理します。
 	このファイルは ViewTrace.cpp です。
 	@author	SikigamiHNQ

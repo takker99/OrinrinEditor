@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief MLTツリーとかの部分
 	このファイルは MaaTemplate.cpp です。
 	@author	SikigamiHNQ

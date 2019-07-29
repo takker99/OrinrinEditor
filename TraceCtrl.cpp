@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief トレス機能の面倒見ます・画像保存の面倒も見ます
 	このファイルは TraceCtrl.cpp です。
 	@author	SikigamiHNQ

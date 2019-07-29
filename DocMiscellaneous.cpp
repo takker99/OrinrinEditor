@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief その他色々な処理かもだ
 	このファイルは DocMiscellaneous.cpp です。
 	@author	SikigamiHNQ

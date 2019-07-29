@@ -1,4 +1,4 @@
-/*! @file
+﻿/*! @file
 	@brief 文字AAスクリプトの面倒みます
 	このファイルは MoziScript.cpp です。
 	@author	SikigamiHNQ
