@@ -46,8 +46,8 @@ static HFONT	ghLvFont, ghPanelFont;	//!<	表示に用いるフォント
 
 static TCHAR	gtSelMozi;	//!<	
 
-static  UINT	gSelRow;	//!<	
-static INT		gSelClm;	//!<	
+static  UINT_PTR	gSelRow;	//!<	
+static INT_PTR		gSelClm;	//!<	
 
 //	使用ログ・１６個保持
 #define UNIUSELOG_MAX	16
@@ -60,9 +60,9 @@ HRESULT UniUseLogging( HWND, TCHAR );
 INT_PTR	CALLBACK UniPaletteDlgProc( HWND, UINT, WPARAM, LPARAM );	//!<	
 
 INT_PTR	Uni_OnInitDialog( HWND , HWND, LPARAM );			//!<	
-INT_PTR	Uni_OnCommand( HWND , INT, HWND, UINT );			//!<	
+INT_PTR	Uni_OnCommand( HWND , INT_PTR, HWND, UINT_PTR );			//!<	
 INT_PTR	Uni_OnClose( HWND );								//!<	
-INT_PTR	Uni_OnNotify( HWND , INT, LPNMHDR );				//!<	
+INT_PTR	Uni_OnNotify( HWND , INT_PTR, LPNMHDR );				//!<	
 INT_PTR	Uni_OnDrawItem( HWND , CONST LPDRAWITEMSTRUCT );	//!<	
 
 LRESULT	CALLBACK gpfUniListProc( HWND, UINT, WPARAM, LPARAM );	//!<	
@@ -73,7 +73,7 @@ LRESULT	CALLBACK gpfUniListProc( HWND, UINT, WPARAM, LPARAM );	//!<
 	@param[in]	hWnd	ウインドウハンドル
 	@param[in]	bMode	非０作成　０破壊
 */
-HRESULT UniDlgInitialise( HWND hWnd, UINT dMode )
+HRESULT UniDlgInitialise( HWND hWnd, UINT_PTR dMode )
 {
 	ULONG	d;
 	TCHAR	tMozi;
@@ -236,7 +236,7 @@ INT_PTR CALLBACK UniPaletteDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPAR
 		default:	break;
 
 		case WM_INITDIALOG:	return Uni_OnInitDialog( hDlg, (HWND)(wParam), lParam );
-		case WM_COMMAND:	return Uni_OnCommand( hDlg, (INT)(LOWORD(wParam)), (HWND)(lParam), (UINT)HIWORD(wParam) );
+		case WM_COMMAND:	return Uni_OnCommand( hDlg, (INT)(LOWORD(wParam)), (HWND)(lParam), (UINT_PTR)HIWORD(wParam) );
 		case WM_CLOSE:		return Uni_OnClose( hDlg  );
 		case WM_NOTIFY:		return Uni_OnNotify( hDlg, (INT)(wParam), (LPNMHDR)(lParam) );
 		case WM_DRAWITEM:	return Uni_OnDrawItem( hDlg, (LPDRAWITEMSTRUCT)(lParam) );
@@ -255,8 +255,8 @@ INT_PTR CALLBACK UniPaletteDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPAR
 */
 INT_PTR Uni_OnInitDialog( HWND hDlg, HWND hWndFocus, LPARAM lParam )
 {
-	INT		iTopIdx;
-	UINT	i;
+	INT_PTR		iTopIdx;
+	UINT_PTR	i;
 	LOGFONT	stFont;
 	LVCOLUMN	stLvColm;
 	RECT		rect;
@@ -329,9 +329,9 @@ INT_PTR Uni_OnInitDialog( HWND hDlg, HWND hWndFocus, LPARAM lParam )
 	@param[in]	codeNotify	通知メッセージ	HIWORD(wParam)
 	@return		処理したかせんかったか
 */
-INT_PTR Uni_OnCommand( HWND hDlg, INT id, HWND hWndCtl, UINT codeNotify )
+INT_PTR Uni_OnCommand( HWND hDlg, INT_PTR id, HWND hWndCtl, UINT_PTR codeNotify )
 {
-	INT	dSel, tIdx, dPos;
+	INT_PTR	dSel, tIdx, dPos;
 	RECT	rect;
 	POINT	point;
 
@@ -400,7 +400,7 @@ INT_PTR Uni_OnCommand( HWND hDlg, INT id, HWND hWndCtl, UINT codeNotify )
 */
 INT_PTR Uni_OnClose( HWND hDlg )
 {
-	INT	iTopIdx;
+	INT_PTR	iTopIdx;
 
 	iTopIdx = ListView_GetTopIndex( ghUniLvWnd );
 	InitParamValue( INIT_SAVE, VL_UNILISTLAST, iTopIdx );
@@ -424,9 +424,9 @@ INT_PTR Uni_OnClose( HWND hDlg )
 	@param[in]	pstNmhdr	NOTIFYの詳細
 	@return		処理したかせんかったか
 */
-INT_PTR Uni_OnNotify( HWND hDlg, INT idFrom, LPNMHDR pstNmhdr )
+INT_PTR Uni_OnNotify( HWND hDlg, INT_PTR idFrom, LPNMHDR pstNmhdr )
 {
-	INT		iItem, iSubItem, i;//, tIdx;
+	INT_PTR		iItem, iSubItem, i;//, tIdx;
 	DWORD	iNumber;
 	TCHAR	ch[2], atBuff[MIN_STRING];
 	RECT	rect;
@@ -527,7 +527,7 @@ INT_PTR Uni_OnNotify( HWND hDlg, INT idFrom, LPNMHDR pstNmhdr )
 		if( CDDS_PREPAINT == pstCustomDraw->nmcd.dwDrawStage || 
 			CDDS_ITEMPREPAINT == pstCustomDraw->nmcd.dwDrawStage )
 		{
-			SetWindowLong( hDlg, DWL_MSGRESULT, (long)CDRF_NOTIFYSUBITEMDRAW );
+			SetWindowLong( hDlg, DWLP_MSGRESULT, (long)CDRF_NOTIFYSUBITEMDRAW );
 			return TRUE;
 		}
 
@@ -542,13 +542,13 @@ INT_PTR Uni_OnNotify( HWND hDlg, INT idFrom, LPNMHDR pstNmhdr )
 			{
 				pstCustomDraw->clrTextBk = GetSysColor( COLOR_HIGHLIGHT );
 				pstCustomDraw->clrText   = GetSysColor( COLOR_HIGHLIGHTTEXT );
-				SetWindowLong( hDlg, DWL_MSGRESULT, (long)CDRF_NEWFONT);
+				SetWindowLong( hDlg, DWLP_MSGRESULT, (long)CDRF_NEWFONT);
 			}
 			else
 			{
 				pstCustomDraw->clrTextBk = GetSysColor( COLOR_WINDOW );
 				pstCustomDraw->clrText   = GetSysColor( COLOR_WINDOWTEXT );
-				SetWindowLong( hDlg, DWL_MSGRESULT, (long)CDRF_NEWFONT);
+				SetWindowLong( hDlg, DWLP_MSGRESULT, (long)CDRF_NEWFONT);
 			}
 			return TRUE;
 		}
@@ -576,7 +576,7 @@ WM_NOTIFYメッセージ内でNM_CUSTOMDRAWを判別します。
 ・HDC    hdc         コントロールのデバイスコンテキストハンドルを表します。
 ・RECT   rc          描画されようとしている領域のRECT構造体を表します。
 ・DWORD  dwItemSpec  アイテム番号を表します。
-・UINT   uItemState  現在のアイテムの状態を表します。
+・UINT_PTR   uItemState  現在のアイテムの状態を表します。
 ・LPARAM lItemlParam アプリケーション定義のデータを表します。
 
 HWND             hList;
@@ -657,7 +657,7 @@ INT_PTR Uni_OnDrawItem( HWND hDlg, CONST LPDRAWITEMSTRUCT pstDrawItem )
 */
 LRESULT CALLBACK gpfUniListProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-	INT	tIdx;
+	INT_PTR	tIdx;
 	TCHAR	atBuffer[MIN_STRING];
 
 	switch( msg )

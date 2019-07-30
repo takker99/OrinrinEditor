@@ -65,12 +65,12 @@ static TCHAR	gatBkUpDir[MAX_PATH];	//!<	MLT書き換えた時のバックアッ�
 DWORD	AacInflateMlt( LPSTR, DWORD );
 DWORD	AacInflateAst( LPSTR, DWORD );
 
-UINT	AacTitleCheck( LPAAMATRIX );
+UINT_PTR	AacTitleCheck( LPAAMATRIX );
 
-LRESULT	CALLBACK AacFavInflate( UINT, UINT, UINT, LPCVOID );
+LRESULT	CALLBACK AacFavInflate( UINT_PTR, UINT_PTR, UINT_PTR, LPCVOID );
 
 #ifdef MAA_IADD_PLUS
-UINT	AacItemBackUpCreate( LPVOID );
+UINT_PTR	AacItemBackUpCreate( LPVOID );
 HRESULT	AacItemOutput( HWND );
 #endif
 //-------------------------------------------------------------------------------------------------
@@ -153,9 +153,9 @@ DWORD AacInflateAst( LPSTR pcTotal, DWORD cbTotal )
 	LPSTR	pcStart;	//	セパレータの直前
 	LPSTR	pcEnd;
 	//LPSTR	pcCheck;
-	UINT	iNumber;	//	通し番号カウント
+	UINT_PTR	iNumber;	//	通し番号カウント
 
-	UINT	cbItem;
+	UINT_PTR	cbItem;
 	BOOLEAN	bLast;
 //	CHAR	acName[MAX_STRING];
 
@@ -302,13 +302,13 @@ DWORD AacInflateMlt( LPSTR pcTotal, DWORD cbTotal )
 /*!
 	見出しになり得るTangoを探す
 	@param[in]	pstItem	チェックするターゲット内容
-	@return		UINT	非０見出しあった　０なかった
+	@return		UINT_PTR	非０見出しあった　０なかった
 */
-UINT AacTitleCheck( LPAAMATRIX pstItem )
+UINT_PTR AacTitleCheck( LPAAMATRIX pstItem )
 {
 	LPSTR	pcCaret, pcEnd, pcOpen;
 	LPSTR	pcLine;
-	UINT	cbSize, d;
+	UINT_PTR	cbSize, d;
 
 	if( 4 > pstItem->cbItem )	return 0;	//	小さすぎたら何も無い
 
@@ -400,7 +400,7 @@ UINT AacTitleCheck( LPAAMATRIX pstItem )
 /*!
 	確保してるアイテム数を返す
 */
-INT_PTR AacItemCount( UINT reserve )
+INT_PTR AacItemCount( UINT_PTR reserve )
 {
 	return gvcArts.size();
 }
@@ -414,7 +414,7 @@ INT_PTR AacItemCount( UINT reserve )
 	@param[out]	pstArea	ドットｘライン
 	@return	HBITMAP	AAの内容のビットマップを返す。已にあるならそのまま、アイテムないならNULL
 */
-HBITMAP AacArtImageGet( HWND hWnd, INT iNumber, LPSIZE pstSize, LPSIZE pstArea )
+HBITMAP AacArtImageGet( HWND hWnd, INT_PTR iNumber, LPSIZE pstSize, LPSIZE pstArea )
 {
 	INT_PTR		iItems, i;
 	MAAM_ITR	itArts;
@@ -487,9 +487,9 @@ LPSTR AacAsciiArtGet( DWORD iNumber )
 	@param[out]	pBytes	バイト数返す（Editorのみ）
 	@return		最大ドット数
 */
-INT AacArtSizeGet( DWORD iNumber, PINT piLine, PINT pBytes )
+INT_PTR AacArtSizeGet( DWORD iNumber, PINT_PTR piLine, PINT_PTR pBytes )
 {
-	INT	iDot, cx, cy, iByte = 0;
+	INT_PTR	iDot, cx, cy, iByte = 0;
 	size_t	items;
 	LPSTR	pcConts;
 	LPTSTR	ptString;
@@ -588,9 +588,9 @@ DWORD AacAssembleSql( HWND hWnd, LPCTSTR ptBlockName )
 	@param[in]	dummy	未使用
 	@param[in]	fake	未使用
 	@param[in]	pcConts	AA本体
-	@return		UINT	確保した個数
+	@return		UINT_PTR	確保した個数
 */
-LRESULT CALLBACK AacFavInflate( UINT dLength, UINT dummy, UINT fake, LPCVOID pcConts )
+LRESULT CALLBACK AacFavInflate( UINT_PTR dLength, UINT_PTR dummy, UINT_PTR fake, LPCVOID pcConts )
 {
 	UINT_PTR	iNumber;	//	通し番号
 	AAMATRIX	stAAbuf;	//	一つのAAの保持・ベクターに入れる
@@ -626,7 +626,7 @@ typedef struct tagITEMADDINFO
 {
 	LPTSTR	ptContent;			//!<	本文内容
 	TCHAR	atSep[MAX_STRING];	//!<	セパレータ内容
-	INT		bType;				//!<	非０MLT　０AST
+	INT_PTR		bType;				//!<	非０MLT　０AST
 
 } ITEMADDINFO, *LPITEMADDINFO;
 //--------------------------------------
@@ -647,7 +647,7 @@ INT_PTR CALLBACK AaItemAddDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARA
 	static LPTSTR	ptBuffer;
 	UINT_PTR	cchSize;
 	TCHAR	atName[MAX_PATH];
-	INT		id;
+	INT_PTR		id;
 	RECT	rect;
 
 	switch( message )
@@ -742,7 +742,7 @@ INT_PTR CALLBACK AaItemAddDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARA
 */
 HRESULT AacItemDelete( HWND hWnd, LONG iNumber )
 {
-	UINT		curSel;
+	UINT_PTR		curSel;
 	MAAM_ITR	itMaaItem;
 
 	if( 0 > iNumber )	return E_OUTOFMEMORY;
@@ -776,7 +776,7 @@ HRESULT AacItemInsert( HWND hWnd, LONG iNumber )
 {
 	UINT_PTR	cbSize;
 	LPSTR		pcName;
-	INT			curSel;
+	INT_PTR			curSel;
 	AAMATRIX	stAAbuf;	//	一つのAAの保持・ベクターに入れる
 	ITEMADDINFO	stIaInfo;
 
@@ -824,7 +824,7 @@ HRESULT AacItemInsert( HWND hWnd, LONG iNumber )
 /*!
 	変更結果を保存する前に、バックアップとっておく
 */
-UINT AacItemBackUpCreate( LPVOID pVoid )
+UINT_PTR AacItemBackUpCreate( LPVOID pVoid )
 {
 	TCHAR	atOutFile[MAX_PATH], atFileName[MAX_PATH];
 

@@ -34,7 +34,7 @@ If not, see <http://www.gnu.org/licenses/>.
 CONST CHAR	cacDetectTable[] = { ("SELECT name FROM sqlite_master WHERE type='table'") };
 
 //	バージョンテーブル
-CONST CHAR	cacVersionTable[]  = { ("CREATE TABLE BuildVer ( id INTEGER PRIMARY KEY, number INTEGER NOT NULL, vertext TEXT NOT NULL)") };
+CONST CHAR	cacVersionTable[]  = { ("CREATE TABLE BuildVer ( id INT_PTREGER PRIMARY KEY, number INTEGER NOT NULL, vertext TEXT NOT NULL)") };
 CONST CHAR	cacVerStrInsFmt[]  = { ("INSERT INTO BuildVer ( number, vertext ) VALUES ( %d, '%s' )") };
 CONST CHAR	cacVersionNumGet[] = { ("SELECT number FROM BuildVer WHERE id == 1") };
 CONST CHAR	cacVersionUpdate[] = { ("UPDATE BuildVer SET number = %d, vertext = '%s' WHERE id == 1") };
@@ -46,8 +46,8 @@ static sqlite3	*gpTreeCache;	//	ツリー編集のオンメモリキャッシュ
 
 //-------------------------------------------------------------------------------------------------
 
-HRESULT	SqlFavUpdate( UINT );	//!<	
-HRESULT	SqlFavInsert( LPTSTR, DWORD, LPSTR, UINT );	//!<	
+HRESULT	SqlFavUpdate( UINT_PTR );	//!<	
+HRESULT	SqlFavInsert( LPTSTR, DWORD, LPSTR, UINT_PTR );	//!<	
 //-------------------------------------------------------------------------------------------------
 
 //	WORK_LOG_OUT
@@ -95,7 +95,7 @@ HRESULT String_Cch_Copy( LPTSTR ptDest, size_t cchSize, LPCTSTR ptSrc )
 */
 HRESULT SqlDatabaseOpenClose( BYTE mode, LPCTSTR ptDbase )
 {
-	INT		rslt;
+	INT_PTR		rslt;
 	TCHAR	atDbPath[MAX_PATH];
 
 	if( M_CREATE == mode )
@@ -138,10 +138,10 @@ HRESULT SqlDatabaseOpenClose( BYTE mode, LPCTSTR ptDbase )
 	@param[in]	pdMax		非ＮＵＬＬなら、最大値いれちゃう
 	@return		登録されている個数
 */
-UINT SqlFavCount( LPCTSTR ptFdrName, PUINT pdMax )
+UINT_PTR SqlFavCount( LPCTSTR ptFdrName, PUINT_PTR pdMax )
 {
 	TCHAR	atQuery[MAX_STRING];
-	UINT	rslt, iCount, iMax;
+	UINT_PTR	rslt, iCount, iMax;
 	sqlite3_stmt*	statement;
 
 	if( ptFdrName )
@@ -194,11 +194,11 @@ UINT SqlFavCount( LPCTSTR ptFdrName, PUINT pdMax )
 	@param[in]	rdLength	バイト数
 	@return		HRESULT	終了状態コード
 */
-HRESULT SqlFavUpload( LPTSTR ptBaseName, DWORD dHash, LPSTR pcConts, UINT rdLength )
+HRESULT SqlFavUpload( LPTSTR ptBaseName, DWORD dHash, LPSTR pcConts, UINT_PTR rdLength )
 {
 	CONST CHAR	acArtSelect[] = { ("SELECT id, folder FROM ArtList WHERE hash == ?") };
-	INT		rslt;
-	UINT	index, cntID, d;
+	INT_PTR		rslt;
+	UINT_PTR	index, cntID, d;
 	//LPCTSTR	ptFolder;
 	TCHAR	atFolder[MAX_PATH];
 	BOOLEAN	bIsExist;
@@ -253,13 +253,13 @@ HRESULT SqlFavUpload( LPTSTR ptBaseName, DWORD dHash, LPSTR pcConts, UINT rdLeng
 	@param[in]	index	使ったAAのID番号
 	@return		HRESULT	終了状態コード
 */
-HRESULT SqlFavUpdate( UINT index )
+HRESULT SqlFavUpdate( UINT_PTR index )
 {
 	CONST CHAR	acArtSelCount[] = { ("SELECT count FROM ArtList WHERE id == %u") };
 	CONST CHAR	acArtUpdate[] = { ("UPDATE ArtList SET count = %u, lastuse = %f WHERE id == %u") };
 
 	CHAR	acQuery[MAX_STRING];
-	UINT	iCount, rslt;
+	UINT_PTR	iCount, rslt;
 	DOUBLE	ddJulius;
 	sqlite3_stmt	*statement;
 
@@ -300,11 +300,11 @@ HRESULT SqlFavUpdate( UINT index )
 	@param[in]	rdLength	バイト数
 	@return		HRESULT	終了状態コード
 */
-HRESULT SqlFavInsert( LPTSTR ptBaseName, DWORD dHash, LPSTR pcConts, UINT rdLength )
+HRESULT SqlFavInsert( LPTSTR ptBaseName, DWORD dHash, LPSTR pcConts, UINT_PTR rdLength )
 {
 	CONST CHAR	acArtInsert[] = { ("INSERT INTO ArtList ( count, folder, lastuse, hash, conts ) VALUES ( ?, ?, ?, ?, ? )") };
 
-	INT		rslt;
+	INT_PTR		rslt;
 	CHAR	acText[MAX_PATH];
 	DOUBLE	ddJulius;
 	sqlite3_stmt	*statement;
@@ -345,7 +345,7 @@ HRESULT SqlFavFolderEnum( BUFFERBACK pfFolderNameSet )
 {
 	CONST CHAR	acQuery[] = { ("SELECT DISTINCT folder FROM ArtList") };
 
-	INT		rslt, count, i;
+	INT_PTR		rslt, count, i;
 	sqlite3_stmt	*statement;
 
 
@@ -383,7 +383,7 @@ HRESULT SqlFavFolderEnum( BUFFERBACK pfFolderNameSet )
 HRESULT SqlFavArtEnum( LPCTSTR ptFdrName, BUFFERBACK pfInflate )
 {
 	TCHAR	atQuery[MAX_STRING];
-	UINT	rslt, iCount, i, szCont;
+	UINT_PTR	rslt, iCount, i, szCont;
 	sqlite3_stmt*	statement;
 
 	if( ptFdrName )
@@ -427,7 +427,7 @@ HRESULT SqlFavArtEnum( LPCTSTR ptFdrName, BUFFERBACK pfInflate )
 HRESULT SqlFavDelete( LPTSTR ptBaseName, DWORD dHash )
 {
 	CONST CHAR	acArtDelete[] = { ("DELETE FROM ArtList WHERE hash == ?") };
-	INT		rslt;
+	INT_PTR		rslt;
 	sqlite3_stmt	*statement;
 
 	rslt = sqlite3_prepare( gpDataBase, acArtDelete, -1, &statement, NULL );
@@ -449,7 +449,7 @@ HRESULT SqlFavDelete( LPTSTR ptBaseName, DWORD dHash )
 HRESULT SqlFavFolderDelete( LPTSTR ptBaseName )
 {
 	CONST CHAR	acFolderDelete[] = { ("DELETE FROM ArtList WHERE folder == ?") };
-	INT		rslt;
+	INT_PTR		rslt;
 	sqlite3_stmt	*statement;
 
 	rslt = sqlite3_prepare( gpDataBase, acFolderDelete, -1, &statement, NULL );
@@ -475,7 +475,7 @@ HRESULT SqlFavFolderDelete( LPTSTR ptBaseName )
 */
 HRESULT SqlTreeOpenClose( BYTE mode, LPCTSTR ptDbName )
 {
-	INT		rslt;
+	INT_PTR		rslt;
 	TCHAR	atDbPath[MAX_PATH];
 
 	if( M_CREATE == mode )
@@ -556,13 +556,13 @@ HRESULT SqlTreeTableCreate( LPTSTR ptProfName )
 	SYSTEMTIME	stSysTime;
 
 	BYTE	yMode = FALSE;	//	Tableあったとかなかったとか
-	INT		rslt;
+	INT_PTR		rslt;
 
-	UINT	dVersion;
+	UINT_PTR	dVersion;
 	CHAR	acQuery[MAX_PATH];
 
 #ifdef _DEBUG
-	INT		i;
+	INT_PTR		i;
 #endif
 	sqlite3_stmt	*statement;
 
@@ -707,10 +707,10 @@ HRESULT SqlTreeTableCreate( LPTSTR ptProfName )
 	@param[out]	pdMax	非ＮＵＬＬなら、最大値いれちゃう
 	@return		登録されている個数
 */
-UINT SqlTreeCount( UINT bType, PUINT pdMax )
+UINT_PTR SqlTreeCount( UINT_PTR bType, PUINT_PTR pdMax )
 {
 	CHAR	acQuery[MAX_STRING];
-	UINT	rslt, iCount, iMax;
+	UINT_PTR	rslt, iCount, iMax;
 	sqlite3_stmt*	statement;
 
 	sqlite3	*pDB;
@@ -769,7 +769,7 @@ HRESULT SqlTreeProfUpdate( LPCTSTR ptProfName, LPCTSTR ptRootPath )
 	CONST  TCHAR	catUpdateRoot[] = { TEXT("UPDATE Profiles SET rootpath = '%s' WHERE id == 1") };
 
 	TCHAR	atText[MAX_PATH];
-	INT		rslt;
+	INT_PTR		rslt;
 	sqlite3_stmt	*statement;
 
 	//	トランザクションのON/OFFは必要に応じて外でヤル
@@ -806,14 +806,14 @@ HRESULT SqlTreeProfUpdate( LPCTSTR ptProfName, LPCTSTR ptRootPath )
 	@param[in]	szRoot		ルートダディの文字数
 	@return	HRESULT	終了状態コード
 */
-HRESULT SqlTreeProfSelect( LPTSTR ptProfName, UINT szName, LPTSTR ptRootPath, UINT szRoot )
+HRESULT SqlTreeProfSelect( LPTSTR ptProfName, UINT_PTR szName, LPTSTR ptRootPath, UINT_PTR szRoot )
 {
 	CONST CHAR	cacSelectQuery[] = { ("SELECT * FROM Profiles WHERE id == 1") };
 
 	//LPTSTR	ptBuf;
 	TCHAR	atName[MAX_STRING], atRoot[MAX_PATH];
-	INT		index;
-	INT		rslt;
+	INT_PTR		index;
+	INT_PTR		rslt;
 	sqlite3_stmt	*statement;
 
 	ZeroMemory( atName, sizeof(atName) );
@@ -851,15 +851,15 @@ HRESULT SqlTreeProfSelect( LPTSTR ptProfName, UINT szName, LPTSTR ptRootPath, UI
 	@param[in]	dType	ディレクトリかファイルか
 	@param[in]	dPrnt	親ツリーノードのSQL的ＩＤ番号
 	@param[in]	ptName	ノードの名称
-	@return	UINT	いま登録したID番号
+	@return	UINT_PTR	いま登録したID番号
 */
-UINT SqlTreeNodeInsert( UINT uqID, UINT dType, UINT dPrnt, LPTSTR ptName )
+UINT_PTR SqlTreeNodeInsert( UINT_PTR uqID, UINT_PTR dType, UINT_PTR dPrnt, LPTSTR ptName )
 {
 	CONST CHAR	acTreeNodeInsert[] = { ("INSERT INTO TreeNode ( id, type, parentid, nodename ) VALUES ( ?, ?, ?, ? )") };
 	CONST CHAR	acAddNumCheck[] = { ("SELECT LAST_INSERT_ROWID( ) FROM TreeNode") };
 
 	INT		rslt;
-	UINT	iRast = 0;
+	UINT_PTR	iRast = 0;
 	sqlite3_stmt	*statement;
 	
 
@@ -899,15 +899,15 @@ UINT SqlTreeNodeInsert( UINT uqID, UINT dType, UINT dPrnt, LPTSTR ptName )
 	エキストラファイルのデータをドピュッ
 	@param[in]	dType	１ディレクトリか０ファイルか・とりあえず無視
 	@param[in]	ptName	ノードの名称
-	@return	UINT	いま登録したID番号
+	@return	UINT_PTR	いま登録したID番号
 */
-UINT SqlTreeNodeExtraInsert( UINT dType, LPCTSTR ptName )
+UINT_PTR SqlTreeNodeExtraInsert( UINT_PTR dType, LPCTSTR ptName )
 {
 	CONST CHAR	acTreeNodeExIns[] = { ("INSERT INTO TreeNode ( type, parentid, nodename ) VALUES ( ?, ?, ? )") };
 	CONST CHAR	acAddNumCheck[] = { ("SELECT LAST_INSERT_ROWID( ) FROM TreeNode") };
 
-	INT		rslt;
-	UINT	iRast = 0;
+	INT_PTR		rslt;
+	UINT_PTR	iRast = 0;
 	sqlite3_stmt	*statement;
 
 	if( !(gpDataBase) ){	TRACE( TEXT("NoDatabase") );	return 0;	}
@@ -943,13 +943,13 @@ UINT SqlTreeNodeExtraInsert( UINT dType, LPCTSTR ptName )
 /*!
 	ＩＤ指定して削除
 	@param[in]	delID	このＩＤのデータを削除する
-	@return	UINT	特にない
+	@return	UINT_PTR	特にない
 */
-UINT SqlTreeNodeExtraDelete( UINT delID )
+UINT_PTR SqlTreeNodeExtraDelete( UINT_PTR delID )
 {
 	CONST CHAR	cacDelete[] = { ("DELETE FROM TreeNode WHERE id == ?") };
 
-	INT		rslt;
+	INT_PTR		rslt;
 	sqlite3_stmt	*statement;
 
 	if( !(gpDataBase) ){	TRACE( TEXT("NoDatabase") );	return 0;	}
@@ -974,14 +974,14 @@ UINT SqlTreeNodeExtraDelete( UINT delID )
 	@param[in]	seekID	１以上の場合、このIDのを探す。こっち優先
 	@param[in]	tgtID	この番号を超えて最初にヒットしたやつを返す・seekIDが０の場合
 	@param[out]	ptName	ノードのパスいれるバッファ・MAX_PATHであること
-	@return	UINT	引っ張ったやつのＩＤ・無かったら０
+	@return	UINT_PTR	引っ張ったやつのＩＤ・無かったら０
 */
-UINT SqlTreeNodeExtraSelect( UINT seekID, UINT tgtID, LPTSTR ptName )
+UINT_PTR SqlTreeNodeExtraSelect( UINT_PTR seekID, UINT_PTR tgtID, LPTSTR ptName )
 {
 	//LPCTSTR	ptBuffer;
 	CHAR	acQuery[MAX_STRING];
-	INT		rslt;
-	UINT	id = 0;
+	INT_PTR		rslt;
+	UINT_PTR	id = 0;
 	sqlite3_stmt*	statement;
 
 	if( !(gpDataBase) ){	TRACE( TEXT("NoDatabase") );	return 0;	}
@@ -1009,14 +1009,14 @@ UINT SqlTreeNodeExtraSelect( UINT seekID, UINT tgtID, LPTSTR ptName )
 /*!
 	ファイル名指定して、同じのがあるかどうか
 	@param[out]	ptName	ノードのパスいれるバッファ・MAX_PATHであること
-	@return	UINT	ヒットしたやつのＩＤ・無かったら０
+	@return	UINT_PTR	ヒットしたやつのＩＤ・無かったら０
 */
-UINT SqlTreeNodeExtraIsFileExist( LPCTSTR ptName ) 
+UINT_PTR SqlTreeNodeExtraIsFileExist( LPCTSTR ptName ) 
 {
 	CONST CHAR	cacNameSearch[] = { ("SELECT id FROM TreeNode WHERE nodename == ?") };
 
-	INT		rslt;
-	UINT	id = 0;
+	INT_PTR		rslt;
+	UINT_PTR	id = 0;
 	sqlite3_stmt*	statement;
 
 	rslt = sqlite3_prepare( gpDataBase, cacNameSearch, -1, &statement, NULL );
@@ -1047,12 +1047,12 @@ UINT SqlTreeNodeExtraIsFileExist( LPCTSTR ptName )
 	@param[in]	dProfID		リストアップするプロフＩＤ
 	@param[in]	pfDataing	データを入れる函数ポインタ
 */
-HRESULT SqlTreeNodeEnum( UINT dProfID, BUFFERBACK pfDataing )
+HRESULT SqlTreeNodeEnum( UINT_PTR dProfID, BUFFERBACK pfDataing )
 {
 	CONST CHAR	acQuery[] = { ("SELECT * FROM TreeNode ORDER BY id ASC") };
-	INT		rslt;
-	UINT	i, cnt;
-	UINT	id, type, prnt;
+	INT_PTR		rslt;
+	UINT_PTR	i, cnt;
+	UINT_PTR	id, type, prnt;
 	TCHAR	atName[MAX_PATH];
 	sqlite3_stmt*	statement;
 
@@ -1090,13 +1090,13 @@ HRESULT SqlTreeNodeEnum( UINT dProfID, BUFFERBACK pfDataing )
 /*!
 	指定の名前のディレクトリはルートにあるので？
 	@param[out]	ptDirName	ノードの名称
-	@return	UINT			０無かった　１〜ヒットしたＩＤ
+	@return	UINT_PTR			０無かった　１〜ヒットしたＩＤ
 */
-UINT SqlTreeNodeRootSearch( LPTSTR ptDirName )
+UINT_PTR SqlTreeNodeRootSearch( LPTSTR ptDirName )
 {
 	TCHAR	atQuery[BIG_STRING];
-	INT		rslt;
-	UINT	id = 0;
+	INT_PTR		rslt;
+	UINT_PTR	id = 0;
 	sqlite3_stmt*	statement;
 
 
@@ -1127,13 +1127,13 @@ UINT SqlTreeNodeRootSearch( LPTSTR ptDirName )
 	@param[out]	pPrntID	親ツリーノードのSQL的ＩＤ番号
 	@param[out]	ptName	ノードの名称
 	@param[in]	bStyle	0x01通常　0x00ツリーキャッシュ　／　0x10ＩＤ一致　0x00ＩＤ超えた
-	@return	UINT	引っ張ったやつのＩＤ・無かったら０
+	@return	UINT_PTR	引っ張ったやつのＩＤ・無かったら０
 */
-UINT SqlTreeNodePickUpID( UINT tgtID, PUINT pType, PUINT pPrntID, LPTSTR ptName, UINT bStyle ) 
+UINT_PTR SqlTreeNodePickUpID( UINT_PTR tgtID, PUINT_PTR pType, PUINT_PTR pPrntID, LPTSTR ptName, UINT_PTR bStyle ) 
 {
 	CHAR	acQuery[MAX_STRING];
-	INT		rslt;
-	UINT	id = 0;
+	INT_PTR		rslt;
+	UINT_PTR	id = 0;
 	sqlite3_stmt*	statement;
 
 	sqlite3	*pDB;
@@ -1170,13 +1170,13 @@ UINT SqlTreeNodePickUpID( UINT tgtID, PUINT pType, PUINT pPrntID, LPTSTR ptName,
 	@param[in]	tgtID	この番号を超えて最初にヒットしたやつを返す
 	@param[out]	pType	ディレクトリ(FILE_ATTRIBUTE_DIRECTORY)かファイルか(FILE_ATTRIBUTE_NORMAL)
 	@param[out]	ptName	ノードの名称
-	@return	UINT	引っ張ったやつのＩＤ・無かったら０
+	@return	UINT_PTR	引っ張ったやつのＩＤ・無かったら０
 */
-UINT SqlChildNodePickUpID( UINT dPrntID, UINT tgtID, PUINT pType, LPTSTR ptName )
+UINT_PTR SqlChildNodePickUpID( UINT_PTR dPrntID, UINT_PTR tgtID, PUINT_PTR pType, LPTSTR ptName )
 {
 	CHAR	acQuery[MAX_PATH];
-	INT		rslt;
-	UINT	id = 0, dummy;
+	INT_PTR		rslt;
+	UINT_PTR	id = 0, dummy;
 	sqlite3_stmt*	statement;
 
 	StringCchPrintfA( acQuery, MAX_PATH, ("SELECT * FROM TreeNode WHERE parentid == %u AND id > %u ORDER BY id ASC"), dPrntID, tgtID );
@@ -1204,10 +1204,10 @@ UINT SqlChildNodePickUpID( UINT dPrntID, UINT tgtID, PUINT pType, LPTSTR ptName 
 	@param[in]	bStyle	非０データベース本体　０プロフ構築用キャッシュ
 	@return	HRESULT	終了状態コード
 */
-HRESULT SqlTreeNodeAllDelete( UINT bStyle )
+HRESULT SqlTreeNodeAllDelete( UINT_PTR bStyle )
 {
 	CONST CHAR	acTreeDelete[] = { ("DELETE FROM TreeNode") };
-	INT		rslt;
+	INT_PTR		rslt;
 	sqlite3_stmt	*statement;
 
 	sqlite3	*pDB;
@@ -1232,11 +1232,11 @@ HRESULT SqlTreeNodeAllDelete( UINT bStyle )
 	@param[in]	dStart	検索開始ＩＤ・このＩＤの次の値から検索開始
 	@return	ヒットしたＩＤ・無かったら０
 */
-UINT SqlTreeFileSearch( LPTSTR ptName, UINT dStart )
+UINT_PTR SqlTreeFileSearch( LPTSTR ptName, UINT_PTR dStart )
 {
 	TCHAR	atReqest[SUB_STRING];
-	INT		rslt;
-	UINT	dxID;
+	INT_PTR		rslt;
+	UINT_PTR	dxID;
 	sqlite3_stmt*	statement;
 
 	if( !(gpDataBase) ){	return 0;	}
@@ -1266,10 +1266,10 @@ UINT SqlTreeFileSearch( LPTSTR ptName, UINT dStart )
 	@param[in]	dPrntID	特定の親ＩＤ
 	@return	ヒットしたＩＤ・無かったら０
 */
-UINT SqlTreeFileGetOnParent( LPTSTR ptName, UINT dPrntID )
+UINT_PTR SqlTreeFileGetOnParent( LPTSTR ptName, UINT_PTR dPrntID )
 {
-	INT		rslt;
-	UINT	dxID;
+	INT_PTR		rslt;
+	UINT_PTR	dxID;
 	sqlite3_stmt*	statement;
 
 	if( !(gpDataBase) ){	return 0;	}
@@ -1298,11 +1298,11 @@ UINT SqlTreeFileGetOnParent( LPTSTR ptName, UINT dPrntID )
 /*!
 	ツリーキャッシュ用オンメモリＤＢ
 */
-HRESULT SqlTreeCacheOpenClose( UINT bMode )
+HRESULT SqlTreeCacheOpenClose( UINT_PTR bMode )
 {
 	//	ツリー情報
 	CONST CHAR	cacTreeNodeTable[] = { ("CREATE TABLE TreeNode ( id INTEGER PRIMARY KEY, type INTEGER NOT NULL, parentid INTEGER NOT NULL, nodename TEXT NOT NULL )") };
-	INT		rslt;
+	INT_PTR		rslt;
 	sqlite3_stmt	*statement;
 
 	if( bMode )
@@ -1335,10 +1335,10 @@ HRESULT SqlTreeCacheOpenClose( UINT bMode )
 	ツリーCacheから、IDを元に削除
 	@return	HRESULT	終了状態コード
 */
-HRESULT SqlTreeCacheDelID( INT tgtID )
+HRESULT SqlTreeCacheDelID( INT_PTR tgtID )
 {
 	CONST CHAR	acTreeDel[] = { ("DELETE FROM TreeNode WHERE id == ? OR parentid == ?") };
-	INT		rslt;
+	INT_PTR		rslt;
 	sqlite3_stmt	*statement;
 
 	//	パレントＩＤが該当するヤツも削除か
@@ -1362,15 +1362,15 @@ HRESULT SqlTreeCacheDelID( INT tgtID )
 	@param[in]	dType	ディレクトリかファイルか
 	@param[in]	dPrnt	親ツリーノードのSQL的ＩＤ番号
 	@param[in]	ptName	ノードの名称
-	@return	UINT	いま登録したID番号
+	@return	UINT_PTR	いま登録したID番号
 */
-UINT SqlTreeCacheInsert( UINT dType, UINT dPrnt, LPTSTR ptName )
+UINT_PTR SqlTreeCacheInsert( UINT_PTR dType, UINT_PTR dPrnt, LPTSTR ptName )
 {
 	CONST CHAR	acTreeNodeInsert[] = { ("INSERT INTO TreeNode ( type, parentid, nodename ) VALUES ( ?, ?, ? )") };
 	CONST CHAR	acAddNumCheck[] = { ("SELECT LAST_INSERT_ROWID( ) FROM TreeNode") };
 
-	INT		rslt;
-	UINT	iRast = 0;
+	INT_PTR		rslt;
+	UINT_PTR	iRast = 0;
 	sqlite3_stmt	*statement;
 
 
@@ -1411,15 +1411,15 @@ UINT SqlTreeCacheInsert( UINT dType, UINT dPrnt, LPTSTR ptName )
 	@param[in]	ptFilePath	ファイルパス・空なら使用から開いた
 	@param[in]	ptBaseName	ルート直下のディレクトリ名
 	@param[in]	ptDispName	タブの表示名
-	@return	UINT	いま登録したID番号・余り意味はない
+	@return	UINT_PTR	いま登録したID番号・余り意味はない
 */
-UINT SqlMultiTabInsert( LPCTSTR ptFilePath, LPCTSTR ptBaseName, LPCTSTR ptDispName )
+UINT_PTR SqlMultiTabInsert( LPCTSTR ptFilePath, LPCTSTR ptBaseName, LPCTSTR ptDispName )
 {
 	CONST CHAR	acMultitabInsert[] = { ("INSERT INTO MultiTab ( filepath, basename, dispname ) VALUES ( ?, ?, ? )") };
 	CONST CHAR	acAddNumCheck[] = { ("SELECT LAST_INSERT_ROWID( ) FROM MultiTab") };
 
-	INT		rslt;
-	UINT	iRast = 0;
+	INT_PTR		rslt;
+	UINT_PTR	iRast = 0;
 	sqlite3_stmt	*statement;
 
 	if( !(gpDataBase) ){	return 0;	}
@@ -1457,13 +1457,13 @@ UINT SqlMultiTabInsert( LPCTSTR ptFilePath, LPCTSTR ptBaseName, LPCTSTR ptDispNa
 	@param[out]	ptFilePath	ファイルパスバッファ・MAX_PATHであること
 	@param[out]	ptBaseName	ルート直下のディレクトリ名バッファ・MAX_PATHであること
 	@param[in]	ptDispName	タブの表示名・MAX_PATHであること
-	@return	UINT	引っ張ったヤツのID番号・ヒットしなかったら０
+	@return	UINT_PTR	引っ張ったヤツのID番号・ヒットしなかったら０
 */
-UINT SqlMultiTabSelect( INT id, LPTSTR ptFilePath, LPTSTR ptBaseName, LPTSTR ptDispName )
+UINT_PTR SqlMultiTabSelect( INT_PTR id, LPTSTR ptFilePath, LPTSTR ptBaseName, LPTSTR ptDispName )
 {
 	CHAR	acQuery[MAX_STRING];
-	INT		rslt;
-	UINT	index = 0;
+	INT_PTR		rslt;
+	UINT_PTR	index = 0;
 	sqlite3_stmt*	statement;
 
 
@@ -1496,7 +1496,7 @@ UINT SqlMultiTabSelect( INT id, LPTSTR ptFilePath, LPTSTR ptBaseName, LPTSTR ptD
 */
 HRESULT SqlMultiTabDelete( VOID )
 {
-	INT		rslt;
+	INT_PTR		rslt;
 	sqlite3_stmt	*statement;
 
 	if( !(gpDataBase) ){	return 0;	}

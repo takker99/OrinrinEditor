@@ -24,17 +24,17 @@ If not, see <http://www.gnu.org/licenses/>.
 
 typedef struct tagVIEWORDER
 {
-	UINT	index;
-	UINT	dHeight;
-	UINT	dUpper;
-	UINT	dDownr;
+	UINT_PTR	index;
+	UINT_PTR	dHeight;
+	UINT_PTR	dUpper;
+	UINT_PTR	dDownr;
 
 } VIEWORDER, *LPVIEWORDER;
 
 
 typedef struct tagAATITLE
 {
-	UINT	number;
+	UINT_PTR	number;
 	TCHAR	atTitle[MAX_STRING];
 
 } AATITLE, *LPAATITLE;
@@ -75,8 +75,8 @@ static WNDPROC	gpfOrgAaTitleCbxProc;	//!<
 
 static LPTSTR	gptTipBuffer;		//!<	
 
-static INT		gixTopItem;			//!<	一覧の最上位
-static INT		gixMaxItem;			//!<	アイテム個数
+static INT_PTR		gixTopItem;			//!<	一覧の最上位
+static INT_PTR		gixMaxItem;			//!<	アイテム個数
 
 static  LONG	gixNowSel;			//!<	マウスカーソルがあるところのインデックス
 #ifdef USE_HOVERTIP
@@ -104,7 +104,7 @@ static BOOLEAN	gbMaaRetFocus;		//!<	項目を選択したら編集窓にフォ�
 TCHAR	gatFindText[MAX_STRING];	//!<	検索用文字列の保存
 #endif
 
-extern  UINT	gbAAtipView;		//!<	非０で、ＡＡツールチップ表示
+extern  UINT_PTR	gbAAtipView;		//!<	非０で、ＡＡツールチップ表示
 
 extern  HWND	ghSplitaWnd;		//!<	スプリットバーハンドル
 
@@ -113,18 +113,18 @@ static vector<AATITLE>		gvcAaTitle;		//!<
 //-------------------------------------------------------------------------------------------------
 
 #ifdef MAA_TOOLTIP
-LRESULT	Aai_OnNotify( HWND , INT, LPNMHDR );			//!<	
+LRESULT	Aai_OnNotify( HWND , INT_PTR, LPNMHDR );			//!<	
 #endif
-VOID	Aai_OnMouseMove( HWND, INT, INT, UINT );		//!<	
-VOID	Aai_OnLButtonUp( HWND, INT, INT, UINT );		//!<	
-VOID	Aai_OnMButtonUp( HWND, INT, INT, UINT );		//!<	
-VOID	Aai_OnContextMenu( HWND, HWND, UINT, UINT );	//!<	
+VOID	Aai_OnMouseMove( HWND, INT_PTR, INT_PTR, UINT_PTR );		//!<	
+VOID	Aai_OnLButtonUp( HWND, INT_PTR, INT_PTR, UINT_PTR );		//!<	
+VOID	Aai_OnMButtonUp( HWND, INT_PTR, INT_PTR, UINT_PTR );		//!<	
+VOID	Aai_OnContextMenu( HWND, HWND, UINT_PTR, UINT_PTR );	//!<	
 VOID	Aai_OnDropFiles( HWND , HDROP );				//!<	
 
-HRESULT	AaItemsFavDelete( LPSTR, UINT );	//!<	
+HRESULT	AaItemsFavDelete( LPSTR, UINT_PTR );	//!<	
 
 #ifdef MAA_TEXT_FIND
-UINT	AacItemFindOnePage( HWND, LPTSTR, INT );	//!<	
+UINT_PTR	AacItemFindOnePage( HWND, LPTSTR, INT_PTR );	//!<	
 #endif
 
 LRESULT	CALLBACK gpfAaItemsProc( HWND, UINT, WPARAM, LPARAM );		//!<	
@@ -149,7 +149,7 @@ LPTSTR	CALLBACK AaItemsHoverTipInfo( LPVOID  );	//!<
 HRESULT AaItemsInitialise( HWND hWnd, HINSTANCE hInst, LPRECT ptRect )
 {
 #ifdef MAA_TOOLTIP
-	INT		ttSize;
+	INT_PTR		ttSize;
 	TTTOOLINFO	stToolInfo;
 #endif
 	SCROLLINFO	stScrollInfo;
@@ -294,7 +294,8 @@ VOID AaTitleClear( VOID )
 	@param[in]	pcTitle	入れ込む文字列
 	@return	継ぎ足したあとの項目数
 */
-INT AaTitleAddString( UINT number, LPSTR pcTitle )
+
+INT_PTR AaTitleAddString( UINT_PTR number, LPSTR pcTitle )
 {
 	AATITLE	stTitle;
 	LPTSTR	ptTitle;
@@ -320,9 +321,9 @@ INT AaTitleAddString( UINT number, LPSTR pcTitle )
 	@param[in]	hWnd		親ウインドウハンドル
 	@param[in]	codeNotify	通知メッセージ
 */
-VOID AaTitleSelect( HWND hWnd, UINT codeNotify )
+VOID AaTitleSelect( HWND hWnd, UINT_PTR codeNotify )
 {
-	INT	iSel;
+	INT_PTR	iSel;
 	INT_PTR	iItems;
 
 //	TRACE( TEXT("COMBOX[%u]"), codeNotify );
@@ -354,7 +355,7 @@ VOID AaTitleSelect( HWND hWnd, UINT codeNotify )
 */
 VOID AaItemsResize( HWND hWnd, LPRECT ptRect )
 {
-	INT		dWidth, dLeft;
+	INT_PTR		dWidth, dLeft;
 	RECT	sptRect, rect;
 #ifdef MAA_TOOLTIP
 	TTTOOLINFO	stToolInfo;
@@ -451,7 +452,7 @@ VOID AaItemsDrawItem( HWND hWnd, CONST DRAWITEMSTRUCT *pstDrawItem )
 
 	VIEWORDER	stVwrder;
 
-	INT		rdNextItem;
+	INT_PTR		rdNextItem;
 	LONG	rdDrawPxTop, rdBottom;	//	描画の最上位、描画領域の高さＭＡＸ
 	LONG	rdHeight, rdWidth;	//	アイテムの高さ・描画領域の幅
 
@@ -543,7 +544,7 @@ VOID AaItemsDrawItem( HWND hWnd, CONST DRAWITEMSTRUCT *pstDrawItem )
 VOID AaItemsMeasureItem( HWND hWnd, LPMEASUREITEMSTRUCT pstMeasureItem )
 {
 	HDC		hDC;
-	INT		rdLength, rdHeight;
+	INT_PTR		rdLength, rdHeight;
 	LPSTR	pcConts;
 	RECT	stRect;
 
@@ -579,7 +580,7 @@ VOID AaItemsMeasureItem( HWND hWnd, LPMEASUREITEMSTRUCT pstMeasureItem )
 	@param[in]	flags	キーフラグいろいろ
 	@return		無し
 */
-VOID Aai_OnKey( HWND hWnd, UINT vk, BOOL fDown, INT cRepeat, UINT flags )
+VOID Aai_OnKey( HWND hWnd, UINT_PTR vk, BOOL fDown, INT_PTR cRepeat, UINT_PTR flags )
 {
 	TRACE( TEXT("KEY[%u][%u]"), vk, cRepeat );
 
@@ -620,14 +621,14 @@ VOID Aai_OnKey( HWND hWnd, UINT vk, BOOL fDown, INT cRepeat, UINT flags )
 	@param[in]	keyFlags	押されてる他のボタン
 	@return		なし
 */
-VOID Aai_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
+VOID Aai_OnMouseMove( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
 	TCHAR		atBuffer[MAX_STRING];
 	UINT_PTR	i, max;
 	LONG		iItem = -1, bottom;
 	BOOLEAN		bReDraw = FALSE;
 
-	INT		iDot = 0, iLine = 0, iByte = 0;
+	INT_PTR		iDot = 0, iLine = 0, iByte = 0;
 
 	//	そのときマウスカーソル下にあるアイテムを選択しておく
 
@@ -697,7 +698,7 @@ VOID Aai_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
 	@param[in]	keyFlags		押されてる他のボタン
 	@return		なし
 */
-VOID Aai_OnLButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
+VOID Aai_OnLButtonUp( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
 	AaItemsDoSelect( hWnd, MAA_DEFAULT, TRUE );
 
@@ -716,7 +717,7 @@ VOID Aai_OnLButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
 	@param[in]	keyFlags		押されてる他のボタン
 	@return		なし
 */
-VOID Aai_OnMButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
+VOID Aai_OnMButtonUp( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
 	AaItemsDoSelect( hWnd, MAA_SUBDEFAULT, TRUE );
 
@@ -735,9 +736,9 @@ VOID Aai_OnMButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
 	@param[in]	pos		つまみの位置
 	@return		処理した内容とか
 */
-VOID Aai_OnVScroll( HWND hWnd, HWND hwndCtl, UINT code, INT pos )
+VOID Aai_OnVScroll( HWND hWnd, HWND hwndCtl, UINT_PTR code, INT_PTR pos )
 {
-	INT	maePos;
+	INT_PTR	maePos;
 	SCROLLINFO	stScrollInfo;
 
 	if( ghScrollWnd != hwndCtl )	return;
@@ -806,7 +807,7 @@ VOID Aai_OnVScroll( HWND hWnd, HWND hwndCtl, UINT code, INT pos )
 	@param[in]	pstNmhdr	NOTIFYの詳細
 	@return		処理した内容とか
 */
-LRESULT Aai_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
+LRESULT Aai_OnNotify( HWND hWnd, INT_PTR idFrom, LPNMHDR pstNmhdr )
 {
 	UINT_PTR		rdLength;
 	LPSTR			pcConts = NULL;
@@ -854,14 +855,14 @@ LRESULT Aai_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 	@param[in]	yPos		マウスカーソルのスクリーンＹ座標
 	@return		なし
 */
-VOID Aai_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
+VOID Aai_OnContextMenu( HWND hWnd, HWND hWndContext, UINT_PTR xPos, UINT_PTR yPos )
 {
 	HMENU	hMenu, hSubMenu;
-	UINT	dRslt;
-	INT		dOpen;	//	全ツリーとお気にリスト開いてるの
+	UINT_PTR	dRslt;
+	INT_PTR		dOpen;	//	全ツリーとお気にリスト開いてるの
 	LPSTR	pcConts = NULL;
 	UINT_PTR	rdLength;
-	INT		sx, sy;
+	INT_PTR		sx, sy;
 
 	dOpen = TabMultipleNowSel(  );	//	開いてるので処理かえる
 	//	ACT_ALLTREE	ACT_FAVLIST
@@ -989,7 +990,7 @@ VOID Aai_OnDropFiles( HWND hWnd, HDROP hDrop )
 	@param[in]	type		０(ACT_ALLTREE)：ファイル展開　１(ACT_FAVLIST)：SQL展開　２：副タブより
 	@return		HRESULT		終了状態コード
 */
-HRESULT AaItemsDoShow( HWND hWnd, LPTSTR ptFileName, UINT type )
+HRESULT AaItemsDoShow( HWND hWnd, LPTSTR ptFileName, UINT_PTR type )
 {
 	SCROLLINFO	stScrollInfo;
 
@@ -1041,7 +1042,7 @@ HRESULT AaItemsDoShow( HWND hWnd, LPTSTR ptFileName, UINT type )
 	@param[in]	rdLength	バイト数
 	@return		HRESULT		終了状態コード
 */
-HRESULT AaItemsFavUpload( LPSTR pcConts, UINT rdLength )
+HRESULT AaItemsFavUpload( LPSTR pcConts, UINT_PTR rdLength )
 {
 	LPTSTR	ptBaseName;
 	DWORD	dHash;
@@ -1067,7 +1068,7 @@ HRESULT AaItemsFavUpload( LPSTR pcConts, UINT rdLength )
 	@param[in]	rdLength	バイト数
 	@return		HRESULT		終了状態コード
 */
-HRESULT AaItemsFavDelete( LPSTR pcConts, UINT rdLength )
+HRESULT AaItemsFavDelete( LPSTR pcConts, UINT_PTR rdLength )
 {
 	LPTSTR	ptBaseName;
 	DWORD	dHash;
@@ -1138,9 +1139,9 @@ HRESULT MaaBackColourChoose( HWND hWnd )
 	@param[in]	zDelta	回転量・正なら上方向、腐なら下方向へのスクロールと見なす
 	@return		非０自分だった　０関係ないね
 */
-UINT AaItemsIsUnderCursor( HWND hWnd, HWND hChdWnd, INT zDelta )
+UINT_PTR AaItemsIsUnderCursor( HWND hWnd, HWND hChdWnd, INT_PTR zDelta )
 {
-	UINT	dCode;
+	UINT_PTR	dCode;
 
 	if( ghItemsWnd != hChdWnd )	return 0;
 
@@ -1159,12 +1160,12 @@ UINT AaItemsIsUnderCursor( HWND hWnd, HWND hChdWnd, INT zDelta )
 	@param[in]	hWnd	多分AA一覧のウインドウハンドル
 	@param[in]	dMode	使用モードもしくはデフォで
 	@param[in]	dDirct	非０マウス直下ので　０表示トップので
-	@return		UINT	非０ＡＡとった　０ＡＡ無かった
+	@return		UINT_PTR	非０ＡＡとった　０ＡＡ無かった
 */
-UINT AaItemsDoSelect( HWND hWnd, UINT dMode, UINT dDirct )
+UINT_PTR AaItemsDoSelect( HWND hWnd, UINT_PTR dMode, UINT_PTR dDirct )
 {
 	LPSTR		pcConts = NULL;
-	UINT		uRslt;
+	UINT_PTR		uRslt;
 	UINT_PTR	rdLength;
 
 	//	該当するインデックスAAを引っ張ってくる
@@ -1197,7 +1198,7 @@ UINT AaItemsDoSelect( HWND hWnd, UINT dMode, UINT dDirct )
 	@param[in]	bView	非０表示　０表示しない
 	@return		HRESULT	終了状態コード
 */
-HRESULT AaItemsTipSizeChange( INT ttSize, UINT bView )
+HRESULT AaItemsTipSizeChange( INT_PTR ttSize, UINT_PTR bView )
 {
 #ifdef MAA_TOOLTIP
 	LOGFONT	stFont;
@@ -1261,11 +1262,11 @@ LPTSTR CALLBACK AaItemsHoverTipInfo( LPVOID pVoid )
 	@param[in]	bMode	非０ボタンによる検索開始　０前の条件で次の頁から検索開始
 	@return		HRESULT	終了状態コード
 */
-HRESULT AacFindTextEntry( HWND hWnd, UINT bMode )
+HRESULT AacFindTextEntry( HWND hWnd, UINT_PTR bMode )
 {
 	TCHAR	atString[MAX_STRING];
-	UINT	isNowPage, dRslt;
-	INT		iPage, i;
+	UINT_PTR	isNowPage, dRslt;
+	INT_PTR		iPage, i;
 
 	TRACE( TEXT("MAA：検索始め") );
 	//	Ｆ３なら、今の頁から。既存の文字列で
@@ -1342,14 +1343,14 @@ HRESULT AacFindTextEntry( HWND hWnd, UINT bMode )
 	@param[in]	hWnd		ウインドウハンドル
 	@param[in]	ptFindText	検索したい文字列
 	@param[in]	iTargetPage	検索頁
-	@return	UINT	非０その頁に文字列があった　０なかった
+	@return	UINT_PTR	非０その頁に文字列があった　０なかった
 */
-UINT AacItemFindOnePage( HWND hWnd, LPTSTR ptFindText, INT iTargetPage )
+UINT_PTR AacItemFindOnePage( HWND hWnd, LPTSTR ptFindText, INT_PTR iTargetPage )
 {
 	LPSTR	pcItem;
 	LPTSTR	ptTarget, ptFindPos;
-	INT		iMoziPos;
-	UINT	dFound = FALSE;
+	INT_PTR		iMoziPos;
+	UINT_PTR	dFound = FALSE;
 
 	//	中身もってくる
 	pcItem = AacAsciiArtGet( iTargetPage );
@@ -1380,7 +1381,7 @@ typedef struct tagITEMADDINFO
 {
 	LPTSTR	ptContent;			//!<	本文内容
 	TCHAR	atSep[MAX_PATH];	//!<	セパレータ内容
-	INT		bType;				//!<	非０MLT　０AST
+	INT_PTR		bType;				//!<	非０MLT　０AST
 
 } ITEMADDINFO, *LPITEMADDINFO;
 //--------------------------------------
@@ -1462,13 +1463,13 @@ HRESULT AacItemAdding( HWND hWnd, LPTSTR ptFile )
 	@retval 0	メッセージは処理していない
 	@retval no0	なんか処理された
 */
-INT_PTR CALLBACK AaItemAddDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
+INT_PTR CALLBACK AaItemAddDlgProc( HWND hDlg, UINT_PTR message, WPARAM wParam, LPARAM lParam )
 {
 	static LPITEMADDINFO	pstIaInfo;
 	static LPTSTR	ptBuffer;
 	UINT_PTR	cchSize;
 	TCHAR	atName[MAX_PATH];
-	INT		id;
+	INT_PTR		id;
 	RECT	rect;
 
 	switch( message )

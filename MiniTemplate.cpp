@@ -31,7 +31,7 @@ If not, see <http://www.gnu.org/licenses/>.
 
 extern HFONT	ghAaFont;		//	AA用フォント
 
-extern INT		gbTmpltDock;	//	テンプレのドッキング
+extern INT_PTR		gbTmpltDock;	//	テンプレのドッキング
 extern BOOLEAN	gbDockTmplView;	//	くっついてるテンプレは見えているか
 
 extern  HWND	ghMainSplitWnd;	//	メインのスプリットバーハンドル
@@ -54,19 +54,19 @@ static  vector<AAMATRIX>	gvcMmaaTmpls;	//!<	テンプレの保持
 
 
 LRESULT	CALLBACK MmaaTmpleProc( HWND, UINT, WPARAM, LPARAM );
-VOID	Mma_OnCommand( HWND, INT, HWND, UINT );
-VOID	Mma_OnSize( HWND, UINT, INT, INT );
-LRESULT	Mma_OnNotify( HWND, INT, LPNMHDR );
-VOID	Mma_OnContextMenu( HWND, HWND, UINT, UINT );
+VOID	Mma_OnCommand( HWND, INT_PTR, HWND, UINT_PTR );
+VOID	Mma_OnSize( HWND, UINT_PTR, INT_PTR, INT_PTR );
+LRESULT	Mma_OnNotify( HWND, INT_PTR, LPNMHDR );
+VOID	Mma_OnContextMenu( HWND, HWND, UINT_PTR, UINT_PTR );
 
-UINT	CALLBACK MmaaTmpleItemData( LPTSTR, LPCTSTR, INT );
+UINT_PTR	CALLBACK MmaaTmpleItemData( LPTSTR, LPCTSTR, INT_PTR );
 
-UINT	MmaaTmpleItemListOn( UINT );
+UINT_PTR	MmaaTmpleItemListOn( UINT_PTR );
 HRESULT	MmaaTmpleItemReload( HWND );
 
 LRESULT	CALLBACK gpfMmaaTitleProc( HWND, UINT, WPARAM, LPARAM );
-LRESULT	CALLBACK gpfMmaaItemProc(  HWND, UINT, WPARAM, LPARAM );
-LRESULT	Mlv_OnNotify( HWND, INT, LPNMHDR );
+LRESULT	CALLBACK gpfMmaaItemProc(  HWND, UINT_PTR, WPARAM, LPARAM );
+LRESULT	Mlv_OnNotify( HWND, INT_PTR, LPNMHDR );
 //-------------------------------------------------------------------------------------------------
 
 
@@ -85,7 +85,7 @@ HWND BrushTmpleInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame
 	UINT_PTR	dItems, i;
 	TCHAR		atBuffer[MAX_STRING];
 
-	INT		spPos;
+	INT_PTR		spPos;
 
 
 	WNDCLASSEX	wcex;
@@ -288,10 +288,10 @@ LRESULT CALLBACK MmaaTmpleProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 	@param[in]	codeNotify	通知メッセージ	HIWORD(wParam)
 	@return		なし
 */
-VOID Btp_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
+VOID Btp_OnCommand( HWND hWnd, INT_PTR id, HWND hWndCtl, UINT_PTR codeNotify )
 {
-	INT			rslt;
-	UINT		dClm;
+	INT_PTR			rslt;
+	UINT_PTR		dClm;
 	LRESULT		lRslt;
 	LONG_PTR	rdExStyle;
 	TCHAR		atItem[SUB_STRING];
@@ -371,10 +371,10 @@ VOID Btp_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 	@param[in]	cx		変更されたクライヤント幅
 	@param[in]	cy		変更されたクライヤント高さ
 */
-VOID Btp_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
+VOID Btp_OnSize( HWND hWnd, UINT_PTR state, INT_PTR cx, INT_PTR cy )
 {
 	LONG	width;
-	UINT	i;
+	UINT_PTR	i;
 	RECT	cbxRect, tbrRect, rect;
 
 	if( !(ghBrTlBarWnd) )	return;
@@ -408,10 +408,10 @@ VOID Btp_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 	@param[in]	pstNmhdr	NOTIFYの詳細
 	@return		処理した内容とか
 */
-LRESULT Btp_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
+LRESULT Btp_OnNotify( HWND hWnd, INT_PTR idFrom, LPNMHDR pstNmhdr )
 {
 	HWND	hLvWnd;
-	INT		iPos, iItem, nmCode, iSubItem;
+	INT_PTR		iPos, iItem, nmCode, iSubItem;
 	INT_PTR	items;
 	TCHAR	atItem[SUB_STRING];
 	LPNMLISTVIEW	pstLv;

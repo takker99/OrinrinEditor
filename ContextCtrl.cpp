@@ -26,7 +26,7 @@ If not, see <http://www.gnu.org/licenses/>.
 typedef struct tagCONTEXTITEM
 {
 	TCHAR	atString[MIN_STRING];		//!<	表示する文字列
-	UINT	dCommandoID;				//!<	コマンドＩＤ・0でセパレータ
+	UINT_PTR	dCommandoID;				//!<	コマンドＩＤ・0でセパレータ
 
 } CONTEXTITEM, *LPCONTEXTITEM;
 //-------------------------------------------------------------------------------------------------
@@ -199,7 +199,7 @@ CONST static CONTEXTITEM	gstContextItem[] =
 
 //初期設定
 #define DEF_ITEMS	32
-const static UINT	gadDefItem[] =
+const static UINT_PTR	gadDefItem[] =
 {
 	IDM_CUT,				//	切り取り
 	IDM_COPY,				//	Unicodeコピー
@@ -274,10 +274,10 @@ VOID	CntxDlgItemSpinDown( HWND );
 
 
 INT_PTR	CALLBACK AccelKeyDlgProc( HWND, UINT, WPARAM, LPARAM );
-INT_PTR	AccelKeyNotify( HWND, INT, LPNMHDR, list<ACCEL> * );
+INT_PTR	AccelKeyNotify( HWND, INT_PTR, LPNMHDR, list<ACCEL> * );
 
 HRESULT	AccelKeyBindExistCheck( HWND, LPACCEL, list<ACCEL> * );
-HRESULT	AccelKeyBindListMod( HWND, INT, LPACCEL, list<ACCEL> * );
+HRESULT	AccelKeyBindListMod( HWND, INT_PTR, LPACCEL, list<ACCEL> * );
 HRESULT	AccelKeySettingReset( HWND, list<ACCEL> * );
 HRESULT	AccelKeyListOutput( HWND );
 HRESULT	AccelKeyBindString( LPACCEL, LPTSTR, UINT_PTR );
@@ -297,8 +297,8 @@ HRESULT	AccelKeyTableSave( list<ACCEL> * );
 */
 HRESULT CntxEditInitialise( LPTSTR ptCurrent, HINSTANCE hInstance )
 {
-	UINT	dCount, cid;
-	UINT	ams, ims;
+	UINT_PTR	dCount, cid;
+	UINT_PTR	ams, ims;
 	TCHAR	atKeyName[MIN_STRING];
 
 
@@ -378,7 +378,7 @@ HMENU CntxMenuGet( VOID )
 */
 VOID CntxEditBuild( VOID )
 {
-	UINT	d, e, num;
+	UINT_PTR	d, e, num;
 	TCHAR	atItem[MAX_STRING], atKey[MIN_STRING], atBuffer[SUB_STRING];
 	CTXI_VITR	itMnItm;
 
@@ -518,9 +518,9 @@ HRESULT CntxEditDlgOpen( HWND hWnd )
 */
 INT_PTR CALLBACK CntxEditDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
-	INT		id;
+	INT_PTR		id;
 	HWND	hWndCtl;
-	UINT	codeNotify;
+	UINT_PTR	codeNotify;
 
 	CTXI_VITR	itMnItm;
 
@@ -603,7 +603,7 @@ VOID CntxDlgLvInit( HWND hDlg )
 VOID CntxDlgAllListUp( HWND hDlg )
 {
 	HWND	hLvWnd;
-	UINT	d;
+	UINT_PTR	d;
 	LVITEM	stLvi;
 	TCHAR	atItem[SUB_STRING];
 
@@ -641,7 +641,7 @@ VOID CntxDlgAllListUp( HWND hDlg )
 VOID CntxDlgBuildListUp( HWND hDlg )
 {
 	HWND	hLvWnd;
-	UINT	d;
+	UINT_PTR	d;
 	LVITEM	stLvi;
 	TCHAR	atItem[SUB_STRING];
 
@@ -691,7 +691,7 @@ VOID CntxDlgBuildListUp( HWND hDlg )
 VOID CntxDlgItemAdd( HWND hDlg )
 {
 	HWND	hListWnd, hBuildWnd;
-	INT		iSel, iIns, iCount;
+	INT_PTR		iSel, iIns, iCount;
 	CTXI_LITR	itMnItm;
 
 	hListWnd  = GetDlgItem( hDlg, IDLV_MENU_ALLITEM );
@@ -730,7 +730,7 @@ VOID CntxDlgItemAdd( HWND hDlg )
 VOID CntxDlgItemDel( HWND hDlg )
 {
 	HWND	hListWnd, hBuildWnd;
-	INT		iSel;
+	INT_PTR		iSel;
 	CTXI_LITR	itMnItm;
 
 	hListWnd  = GetDlgItem( hDlg, IDLV_MENU_ALLITEM );
@@ -757,7 +757,7 @@ VOID CntxDlgItemDel( HWND hDlg )
 VOID CntxDlgItemSpinUp( HWND hDlg )
 {
 	HWND	hBuildWnd;
-	INT		iSel;
+	INT_PTR		iSel;
 	CTXI_LITR	itTgtItm, itSwpItm;
 	CONTEXTITEM	stItem;
 
@@ -792,7 +792,7 @@ VOID CntxDlgItemSpinUp( HWND hDlg )
 VOID CntxDlgItemSpinDown( HWND hDlg )
 {
 	HWND	hBuildWnd;
-	INT		iSel, iCount;
+	INT_PTR		iSel, iCount;
 	CTXI_LITR	itTgtItm, itSwpItm;
 	CONTEXTITEM	stItem;
 
@@ -842,7 +842,7 @@ HRESULT AccelKeyDlgOpen( HWND hWnd )
 	INT_PTR	iRslt;
 
 	LPACCEL	pstAccel;
-	INT	iEntry;
+	INT_PTR	iEntry;
 
 	iRslt = DialogBoxParam( ghInst, MAKEINTRESOURCE(IDD_ACCEL_KEY_DLG), hWnd, AccelKeyDlgProc, 0 );
 	if( IDOK == iRslt )
@@ -874,7 +874,7 @@ INT_PTR CALLBACK AccelKeyDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM
 {
 	static list<ACCEL>	cltAccel;
 
-	INT		iAccEntry;
+	INT_PTR		iAccEntry;
 	LPACCEL	pstAccel;
 
 	static  HWND	hHokyWnd;
@@ -883,12 +883,12 @@ INT_PTR CALLBACK AccelKeyDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM
 	ACCEL	stAcce;
 //	TCHAR	atBuffer[SUB_STRING];
 
-	INT		i;
-	INT		iItem;
+	INT_PTR		i;
+	INT_PTR		iItem;
 
-	INT		id;
+	INT_PTR		id;
 	HWND	hWndCtl;
-	UINT	codeNotify;
+	UINT_PTR	codeNotify;
 
 //ホットキーCONTROLは、スペースが使えない
 
@@ -983,7 +983,7 @@ INT_PTR CALLBACK AccelKeyDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM
 	@retval 0	メッセージは処理していない
 	@retval no0	なんか処理された
 */
-INT_PTR AccelKeyNotify( HWND hDlg, INT idFrom, LPNMHDR pstNmhdr, list<ACCEL> *pltAccel )
+INT_PTR AccelKeyNotify( HWND hDlg, INT_PTR idFrom, LPNMHDR pstNmhdr, list<ACCEL> *pltAccel )
 {
 	LPNMLISTVIEW	pstLv;
 	LVITEM			stLvi;
@@ -1035,10 +1035,10 @@ INT_PTR AccelKeyNotify( HWND hDlg, INT idFrom, LPNMHDR pstNmhdr, list<ACCEL> *pl
 	@param[out]	piEntry	確保したエントリ数を戻す
 	@return		確保したテーブル構造体のポインター・freeに注意
 */
-LPACCEL AccelKeyTableLoadAlloc( LPINT piEntry )
+LPACCEL AccelKeyTableLoadAlloc( PINT_PTR piEntry )
 {
-	UINT	dCount, dValue;
-	UINT	i, aim = 0;
+	UINT_PTR	dCount, dValue;
+	UINT_PTR	i, aim = 0;
 	TCHAR	atKeyName[MIN_STRING];
 	LPACCEL	pstAccel = NULL;
 
@@ -1220,10 +1220,10 @@ HRESULT AccelKeyBindString( LPACCEL pstAccel, LPTSTR ptBuffer, UINT_PTR cchSize 
 	@param[in]	iEntry		テーブルのデータ数
 	@return		HRESULT		終了状態コード
 */
-HRESULT AccelKeyTextBuild( LPTSTR ptText, UINT_PTR cchSize, DWORD dCommand, CONST LPACCEL pstAccel, INT iEntry )
+HRESULT AccelKeyTextBuild( LPTSTR ptText, UINT_PTR cchSize, DWORD dCommand, CONST LPACCEL pstAccel, INT_PTR iEntry )
 {
 	TCHAR	atKeystr[SUB_STRING];
-	INT		i;
+	INT_PTR		i;
 
 	for( i = 0; iEntry > i; i++ )
 	{
@@ -1402,7 +1402,7 @@ HRESULT AccelKeySettingReset( HWND hDlg, list<ACCEL> *pltAccel )
 	HWND	hLvWnd;
 	HACCEL	hAccel;	//	
 	LPACCEL	pstAccel = NULL;
-	INT		iItems, i;
+	INT_PTR		iItems, i;
 
 	//	元々のテーブルを確保
 	hAccel = LoadAccelerators( ghInst, MAKEINTRESOURCE(IDC_ORINRINEDITOR) );
@@ -1448,12 +1448,12 @@ HRESULT AccelKeyListOutput( HWND hDlg )
 
 	OPENFILENAME	stSaveFile;
 
-	INT		i, iAccEntry;
-	INT		j;
+	INT_PTR		i, iAccEntry;
+	INT_PTR		j;
 	LPACCEL	pstAccel;
 
 	UINT_PTR	cchSz;
-	INT		cbSize;
+	INT_PTR		cbSize;
 
 
 	TCHAR	atFilePath[MAX_PATH], atFileName[MAX_STRING];
@@ -1543,7 +1543,7 @@ HRESULT AccelKeyListOutput( HWND hDlg )
 */
 HRESULT AccelKeyBindExistCheck( HWND hDlg, LPACCEL pstAccel, list<ACCEL> *pltAccel )
 {
-	INT	i;
+	INT_PTR	i;
 	//BYTE	fVirt;
 	WORD	dCommand;
 	list<ACCEL>::iterator	itAccel;
@@ -1588,7 +1588,7 @@ HRESULT AccelKeyBindExistCheck( HWND hDlg, LPACCEL pstAccel, list<ACCEL> *pltAcc
 	@param[in]	*pltAccel	既存のやつの一覧
 	@return		HRESULT		終了状態コード
 */
-HRESULT AccelKeyBindListMod( HWND hDlg, INT iItem, LPACCEL pstAccel, list<ACCEL> *pltAccel )
+HRESULT AccelKeyBindListMod( HWND hDlg, INT_PTR iItem, LPACCEL pstAccel, list<ACCEL> *pltAccel )
 {
 	HWND	hLvWnd = GetDlgItem( hDlg, IDLV_FUNCKEY_LIST );
 	HWND	hHkcWnd = GetDlgItem( hDlg, IDHKC_FUNCKEY_INPUT );
@@ -1662,12 +1662,12 @@ HRESULT AccelKeyBindListMod( HWND hDlg, INT iItem, LPACCEL pstAccel, list<ACCEL>
 	@param[in]	iEntry		テーブルのエントリ数
 	@return		HRESULT		終了状態コード
 */
-HRESULT AccelKeyMenuRewrite( HWND hWnd, LPACCEL pstAccel, CONST INT iEntry )
+HRESULT AccelKeyMenuRewrite( HWND hWnd, LPACCEL pstAccel, CONST INT_PTR iEntry )
 {
 	HMENU		hMenu;
 	WORD		dCmd;
-	INT			i, j, iRslt;
-	UINT		mRslt;
+	INT_PTR			i, j, iRslt;
+	UINT_PTR		mRslt;
 	UINT_PTR	d, cchSz;
 	BOOLEAN		bModify;
 	TCHAR		atBuffer[MAX_STRING], atBind[SUB_STRING];

@@ -63,12 +63,12 @@ IDM_MAA_IADD_OPEN
 //!	副タブの内容保持
 typedef struct tagMULTIPLEMAA
 {
-	INT		dTabNum;				//!<	タブの番号・２インデックス
+	INT_PTR		dTabNum;				//!<	タブの番号・２インデックス
 	TCHAR	atFilePath[MAX_PATH];	//!<	ファイルパス・空なら使用から開いた
 	TCHAR	atBaseName[MAX_PATH];	//!<	使用リストに入れる時のグループ名
 	TCHAR	atDispName[MAX_PATH];	//!<	タブ表示用名称
 
-	UINT	dLastTop;				//!<	見てたAAの番号
+	UINT_PTR	dLastTop;				//!<	見てたAAの番号
 
 } MULTIPLEMAA, *LPMULTIPLEMAA;
 
@@ -92,12 +92,12 @@ static HTREEITEM	ghTreeRoot;		//!<	ツリーのルートアイテム
 static TCHAR		gatAARoot[MAX_PATH];	//!<	ＡＡディレクトリのカレント
 static TCHAR		gatBaseName[MAX_PATH];	//!<	使用リストに入れる時のグループ名
 
-static INT			gixUseTab;		//!<	今開いてるの・０ツリー　１お気に入り　２〜複数ファイル
+static INT_PTR			gixUseTab;		//!<	今開いてるの・０ツリー　１お気に入り　２〜複数ファイル
 //	タブ番号であることに注意・複数ファイルリストの割当番号ではない
 
 #ifdef HUKUTAB_DRAGMOVE
 static POINT		gstMouseDown;		//!<	マウスボタンが押された位置
-static INT			giDragSel;			//!<	動かそうとしたタブの番号
+static INT_PTR			giDragSel;			//!<	動かそうとしたタブの番号
 static BOOLEAN		gbTabDraging;		//!<	タブをドラッグしてる
 #endif
 
@@ -113,37 +113,37 @@ typedef  list<MULTIPLEMAA>::iterator	MLTT_ITR;	//!<	副タブリストのイテ�
 HRESULT	TreeItemFromSqlII( HTREEITEM  );			//!<	ディレクトリとファイルをＳＱＬからツリービューに展開
 
 #ifdef EXTRA_NODE_STYLE
-UINT	TreeNodeExtraAdding( LPCTSTR  );			//!<	エキストラファイルを追加する
-HRESULT	TreeExtraItemFromSql( HTREEITEM, UINT );	//!<	エキストラファイルをＳＱＬからツリービューに展開
+UINT_PTR	TreeNodeExtraAdding( LPCTSTR  );			//!<	エキストラファイルを追加する
+HRESULT	TreeExtraItemFromSql( HTREEITEM, UINT_PTR );	//!<	エキストラファイルをＳＱＬからツリービューに展開
 #endif
 
-VOID	Mtv_OnMButtonUp( HWND, INT, INT, UINT );	//!<	ツリービューでマウスの中バラァンがうｐされた時の処理
+VOID	Mtv_OnMButtonUp( HWND, INT_PTR, INT_PTR, UINT_PTR );	//!<	ツリービューでマウスの中バラァンがうｐされた時の処理
 VOID	Mtv_OnDropFiles( HWND , HDROP );			//!<	ツリービューにドラッグンドロップされたときの処理
 
 HRESULT	TabMultipleRestore( HWND  );				//!<	複数ファイルをINIから読み込んで再展開する
-INT		TabMultipleSelect( HWND, INT, UINT );		//!<	副タブから選択した場合
+INT_PTR		TabMultipleSelect( HWND, INT_PTR, UINT_PTR );		//!<	副タブから選択した場合
 //INT	TabMultipleOpen( HWND , HTREEITEM );		//
-HRESULT	TabMultipleDelete( HWND, CONST INT );		//!<	指定のタブを閉じる
-INT		TabMultipleAppend( HWND );					//!<	タブを増やす
+HRESULT	TabMultipleDelete( HWND, CONST INT_PTR );		//!<	指定のタブを閉じる
+INT_PTR		TabMultipleAppend( HWND );					//!<	タブを増やす
 
-HRESULT	TabMultipleNameChange( HWND , INT );		//!<	タブ名前変更ダイヤログ開く
+HRESULT	TabMultipleNameChange( HWND , INT_PTR );		//!<	タブ名前変更ダイヤログ開く
 
 HRESULT	TabLineMultiSingleToggle( HWND );			//!<	タブの多段表示・一行表示を切り替える
 
-UINT	TabMultipleIsFavTab( INT, LPTSTR, UINT_PTR );	//!<	副タブはお気にリストのであるか
+UINT_PTR	TabMultipleIsFavTab( INT_PTR, LPTSTR, UINT_PTR );	//!<	副タブはお気にリストのであるか
 
 LRESULT	CALLBACK gpfFavListProc(  HWND , UINT, WPARAM, LPARAM );	//!<	使用リストのサブクラスプロシージャ
 LRESULT	CALLBACK gpfTreeViewProc( HWND , UINT, WPARAM, LPARAM );	//!<	ツリービューのサブクラスプロシージャ
 LRESULT	CALLBACK gpfTabMultiProc( HWND , UINT, WPARAM, LPARAM );	//!<	タブのサブクラスプロシージャ
 
-VOID	Mtb_OnMButtonUp( HWND, INT, INT, UINT );	//!<	
+VOID	Mtb_OnMButtonUp( HWND, INT_PTR, INT_PTR, UINT_PTR );	//!<	
 
-VOID	Mtb_OnLButtonDblclk( HWND, BOOL, INT, INT, UINT );	//!<	
+VOID	Mtb_OnLButtonDblclk( HWND, BOOL, INT_PTR, INT_PTR, UINT_PTR );	//!<	
 
 #ifdef HUKUTAB_DRAGMOVE
-VOID	TabMultipleOnLButtonDown( HWND, INT, INT, UINT );	//!<	
-VOID	TabMultipleOnMouseMove(   HWND, INT, INT, UINT );	//!<	
-VOID	TabMultipleOnLButtonUp(   HWND, INT, INT, UINT );	//!<	
+VOID	TabMultipleOnLButtonDown( HWND, INT_PTR, INT_PTR, UINT_PTR );	//!<	
+VOID	TabMultipleOnMouseMove(   HWND, INT_PTR, INT_PTR, UINT_PTR );	//!<	
+VOID	TabMultipleOnLButtonUp(   HWND, INT_PTR, INT_PTR, UINT_PTR );	//!<	
 #endif
 //-------------------------------------------------------------------------------------------------
 
@@ -269,7 +269,7 @@ HRESULT TreeInitialise( HWND hWnd, HINSTANCE hInst, LPRECT ptRect )
 */
 LRESULT CALLBACK gpfFavListProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-	UINT	ulRslt;
+	UINT_PTR	ulRslt;
 
 	switch( msg )
 	{
@@ -280,7 +280,7 @@ LRESULT CALLBACK gpfFavListProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 		HANDLE_MSG( hWnd, WM_KEYUP,   Aai_OnKey );			//	
 
 		case WM_MOUSEWHEEL:
-			ulRslt = Maa_OnMouseWheel( hWnd, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam), (int)(short)HIWORD(wParam), (UINT)(short)LOWORD(wParam) );
+			ulRslt = Maa_OnMouseWheel( hWnd, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam), (int)(short)HIWORD(wParam), (UINT_PTR)(short)LOWORD(wParam) );
 			if( ulRslt )	return 0;
 			break;
 
@@ -302,7 +302,7 @@ LRESULT CALLBACK gpfFavListProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 */
 LRESULT CALLBACK gpfTreeViewProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-	UINT	ulRslt;
+	UINT_PTR	ulRslt;
 
 	switch( msg )
 	{
@@ -316,7 +316,7 @@ LRESULT CALLBACK gpfTreeViewProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 		HANDLE_MSG( hWnd, WM_DROPFILES, Mtv_OnDropFiles );	//	ドラグンドロップの受付
 
 		case WM_MOUSEWHEEL:
-			ulRslt = Maa_OnMouseWheel( hWnd, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam), (int)(short)HIWORD(wParam), (UINT)(short)LOWORD(wParam) );
+			ulRslt = Maa_OnMouseWheel( hWnd, (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam), (int)(short)HIWORD(wParam), (UINT_PTR)(short)LOWORD(wParam) );
 			if( ulRslt )	return 0;
 			break;
 
@@ -335,9 +335,9 @@ LRESULT CALLBACK gpfTreeViewProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 	@param[in]	y		クルックされたクライヤントＹ位置
 	@param[in]	flags	
 */
-VOID Mtv_OnMButtonUp( HWND hWnd, INT x, INT y, UINT flags )
+VOID Mtv_OnMButtonUp( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR flags )
 {
-	INT	iRslt;
+	INT_PTR	iRslt;
 	HTREEITEM	hTreeItem;
 	TVHITTESTINFO	stTvItemInfo;
 
@@ -415,9 +415,9 @@ LRESULT	CALLBACK gpfTabMultiProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 		HANDLE_MSG( hWnd, WM_LBUTTONDBLCLK, Mtb_OnLButtonDblclk );
 
 #ifdef HUKUTAB_DRAGMOVE
-		case WM_LBUTTONDOWN:	TabMultipleOnLButtonDown( hWnd, (INT)(SHORT)LOWORD(lParam), (INT)(SHORT)HIWORD(lParam), (UINT)(wParam) );	break;	//	
-		case WM_MOUSEMOVE:		TabMultipleOnMouseMove(   hWnd, (INT)(SHORT)LOWORD(lParam), (INT)(SHORT)HIWORD(lParam), (UINT)(wParam) );	break;	//	
-		case WM_LBUTTONUP:		TabMultipleOnLButtonUp(   hWnd, (INT)(SHORT)LOWORD(lParam), (INT)(SHORT)HIWORD(lParam), (UINT)(wParam) );	break;	//	
+		case WM_LBUTTONDOWN:	TabMultipleOnLButtonDown( hWnd, (INT)(SHORT)LOWORD(lParam), (INT)(SHORT)HIWORD(lParam), (UINT_PTR)(wParam) );	break;	//	
+		case WM_MOUSEMOVE:		TabMultipleOnMouseMove(   hWnd, (INT)(SHORT)LOWORD(lParam), (INT)(SHORT)HIWORD(lParam), (UINT_PTR)(wParam) );	break;	//	
+		case WM_LBUTTONUP:		TabMultipleOnLButtonUp(   hWnd, (INT)(SHORT)LOWORD(lParam), (INT)(SHORT)HIWORD(lParam), (UINT_PTR)(wParam) );	break;	//	
 #endif
 
 		default:	break;
@@ -435,9 +435,9 @@ LRESULT	CALLBACK gpfTabMultiProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 	@param[in]	y				発生したクライヤントＹ座標値
 	@param[in]	keyFlags		他に押されてるキーについて
 */
-VOID Mtb_OnLButtonDblclk( HWND hWnd, BOOL fDoubleClick, INT x, INT y, UINT keyFlags )
+VOID Mtb_OnLButtonDblclk( HWND hWnd, BOOL fDoubleClick, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
-	INT	curSel;
+	INT_PTR	curSel;
 	//TCHITTESTINFO	stTcHitInfo;
 
 	//stTcHitInfo.pt.x = x;
@@ -465,9 +465,9 @@ VOID Mtb_OnLButtonDblclk( HWND hWnd, BOOL fDoubleClick, INT x, INT y, UINT keyFl
 	@param[in]	y			発生したクライヤントＹ座標値
 	@param[in]	keyFlags	他に押されてるキーについて
 */
-VOID Mtb_OnMButtonUp( HWND hWnd, INT x, INT y, UINT flags )
+VOID Mtb_OnMButtonUp( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR flags )
 {
-	INT	curSel;
+	INT_PTR	curSel;
 	TCHITTESTINFO	stTcHitInfo;
 
 	stTcHitInfo.pt.x = x;
@@ -494,7 +494,7 @@ VOID Mtb_OnMButtonUp( HWND hWnd, INT x, INT y, UINT flags )
 	@param[in]	y			発生したクライヤントＹ座標値
 	@param[in]	keyFlags	他に押されてるキーについて
 */
-VOID TabMultipleOnLButtonDown( HWND hWnd, INT x, INT y, UINT keyFlags )
+VOID TabMultipleOnLButtonDown( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
 	TCHITTESTINFO	stTcHitInfo;
 
@@ -520,9 +520,9 @@ VOID TabMultipleOnLButtonDown( HWND hWnd, INT x, INT y, UINT keyFlags )
 	@param[in]	y			発生したクライヤントＹ座標値
 	@param[in]	keyFlags	他に押されてるキーについて
 */
-VOID TabMultipleOnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
+VOID TabMultipleOnMouseMove( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
-	INT	mx, my, rx, ry;
+	INT_PTR	mx, my, rx, ry;
 
 	//	タブ　０ツリー、１使用のときは何もしない
 	if( 1 >= giDragSel )	return;
@@ -558,9 +558,9 @@ VOID TabMultipleOnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
 	@param[in]	y				発生したクライヤントＹ座標値
 	@param[in]	keyFlags		他に押されてるキーについて
 */
-VOID TabMultipleOnLButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
+VOID TabMultipleOnLButtonUp( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
-	INT	iDragSel;
+	INT_PTR	iDragSel;
 	POINT	point;
 	TCHITTESTINFO	stTcHitInfo;
 
@@ -590,11 +590,11 @@ VOID TabMultipleOnLButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
 	@param[in]	cRepeat	キーリピート回数・効いてない？
 	@return		無し
 */
-VOID Maa_OnChar( HWND hWnd, TCHAR ch, INT cRepeat )
+VOID Maa_OnChar( HWND hWnd, TCHAR ch, INT_PTR cRepeat )
 {
 	BOOLEAN	bShift;
 	NMHDR	stNmHdr;
-	INT		iTabs, iTarget;
+	INT_PTR		iTabs, iTarget;
 
 	bShift = (0x8000 & GetKeyState(VK_SHIFT)) ? TRUE : FALSE;
 
@@ -641,11 +641,11 @@ VOID Maa_OnChar( HWND hWnd, TCHAR ch, INT cRepeat )
 	@param[in]	yPos		スクリーンＹ座業
 	@return		無し
 */
-VOID Maa_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
+VOID Maa_OnContextMenu( HWND hWnd, HWND hWndContext, UINT_PTR xPos, UINT_PTR yPos )
 {
 	HMENU	hMenu, hSubMenu;
-	UINT	dRslt;
-	INT		curSel, iRslt;
+	UINT_PTR	dRslt;
+	INT_PTR		curSel, iRslt;
 	TCHAR	atText[MAX_PATH], atName[MAX_PATH];
 	LPARAM	lPrm;
 	DWORD	dwStyles;
@@ -985,9 +985,9 @@ HRESULT TreeConstruct( HWND hWnd, LPCTSTR ptCurrent, BOOLEAN bSubTabReb )
 	@param[in]	hNode	対象のツリーノード
 	@param[out]	ptPath	フルパス入れるバッファ・MAX_PATHであること
 */
-UINT TreeNodePathGet( HTREEITEM hNode, LPTSTR ptPath )
+UINT_PTR TreeNodePathGet( HTREEITEM hNode, LPTSTR ptPath )
 {
-	UINT	i;
+	UINT_PTR	i;
 	TCHAR	atName[MAX_PATH], atPath[MAX_PATH];
 	HTREEITEM	hParent;
 
@@ -1034,9 +1034,9 @@ UINT TreeNodePathGet( HTREEITEM hNode, LPTSTR ptPath )
 	@param[out]	ptPath	対象ファイルのフルパス
 	@return	追加したファイルのSqlID・登録出来なかったら０
 */
-UINT TreeNodeExtraAdding( LPCTSTR ptPath )
+UINT_PTR TreeNodeExtraAdding( LPCTSTR ptPath )
 {
-	UINT	id;
+	UINT_PTR	id;
 	LPARAM	lParam;
 	HTREEITEM	hTreeRoot, hChildItem, hNextItem, hBuffItem;
 
@@ -1097,11 +1097,11 @@ UINT TreeNodeExtraAdding( LPCTSTR ptPath )
 	@param[in]	dFinID		このＩＤ以降のアイテムをツリーに追加する。通常０、追加時に注意セヨ
 	@return	HRESULT	終了状態コード
 */
-HRESULT TreeExtraItemFromSql( HTREEITEM hTreeParent, UINT dFinID )
+HRESULT TreeExtraItemFromSql( HTREEITEM hTreeParent, UINT_PTR dFinID )
 {
 	TCHAR	atPath[MAX_PATH], atNodeName[MAX_PATH];
-	UINT	tgtID;
-	INT		iFileType;
+	UINT_PTR	tgtID;
+	INT_PTR		iFileType;
 
 	HTREEITEM	hNewParent;
 	TVINSERTSTRUCT	stTreeIns;
@@ -1152,8 +1152,8 @@ HRESULT TreeExtraItemFromSql( HTREEITEM hTreeParent, UINT dFinID )
 HRESULT TreeItemFromSqlII( HTREEITEM hTreeParent )
 {
 	TCHAR	atPath[MAX_PATH], atCurrent[MAX_PATH], atNodeName[MAX_PATH];
-	UINT	dPrntID, tgtID, type;
-	INT		iFileType;
+	UINT_PTR	dPrntID, tgtID, type;
+	INT_PTR		iFileType;
 
 	HTREEITEM	hNewParent, hLastDir = TVI_FIRST;
 	TVINSERTSTRUCT	stTreeIns;
@@ -1239,11 +1239,11 @@ HRESULT TreeItemFromSqlII( HTREEITEM hTreeParent )
 /*!
 	ツリーノードハンドルを渡して、該当するSqlIDを引っ張る・再帰
 */
-INT MaaSearchTreeID( HTREEITEM hItem )
+INT_PTR MaaSearchTreeID( HTREEITEM hItem )
 {
 	TCHAR	atName[MAX_PATH];
 	HTREEITEM	hPrntItem;
-	UINT	dPrntID, ownID;
+	UINT_PTR	dPrntID, ownID;
 
 	TreeItemInfoGet( hItem, atName, MAX_PATH );	//	ノードの名前とって
 
@@ -1265,9 +1265,9 @@ INT MaaSearchTreeID( HTREEITEM hItem )
 	@param[in]	dOwnID	検索したいノードのSqlID
 	@return		ヒットしたツリーノードハンドル・もしくはNULL
 */
-HTREEITEM MaaSearchTreeItem( INT dOwnID )
+HTREEITEM MaaSearchTreeItem( INT_PTR dOwnID )
 {
-	UINT	dType, dPrntID;
+	UINT_PTR	dType, dPrntID;
 	TCHAR	atFileName[MAX_PATH], atCmprName[MAX_PATH];
 	HTREEITEM	hPrntItem, hChildItem, hNextItem;
 
@@ -1322,7 +1322,7 @@ HTREEITEM MaaSearchTreeItem( INT dOwnID )
 	@param[in]	tgtID	対象のSqlID
 	@return		ヒットしたツリーノードハンドル・もしくはNULL
 */
-HTREEITEM MaaSelectIDfile( HWND hDlg, INT tgtID )
+HTREEITEM MaaSelectIDfile( HWND hDlg, INT_PTR tgtID )
 {
 	HTREEITEM	hTgtItem;
 
@@ -1375,7 +1375,7 @@ LPARAM TreeItemInfoGet( HTREEITEM hTrItem, LPTSTR ptName, size_t cchName )
 */
 LRESULT TreeNotify( HWND hWnd, LPNMTREEVIEW pstNmTrView )
 {
-	INT		nmCode;
+	INT_PTR		nmCode;
 
 #ifdef EXTRA_NODE_STYLE
 	LPARAM	lParam;
@@ -1466,16 +1466,16 @@ LRESULT TreeNotify( HWND hWnd, LPNMTREEVIEW pstNmTrView )
 	@param[in]	dMode		０主タブで開く　１副タブ追加　２編集ビューで開く　３アイテム追加　４ノード削除
 	@return		非０処理した　０してない
 */
-INT TreeSelItemProc( HWND hWnd, HTREEITEM hSelItem, UINT dMode )
+INT_PTR TreeSelItemProc( HWND hWnd, HTREEITEM hSelItem, UINT_PTR dMode )
 {
-	UINT	i;
+	UINT_PTR	i;
 	TCHAR	atName[MAX_PATH], atPath[MAX_PATH], atBaseName[MAX_PATH];
 	LPARAM	lParam;
 	HTREEITEM	hParentItem;
 	MULTIPLEMAA	stMulti;
 
 #ifdef EXTRA_NODE_STYLE
-	UINT	id = 0;
+	UINT_PTR	id = 0;
 #endif
 
 	//	右クリ・ツリー選択から合流
@@ -1665,8 +1665,8 @@ VOID TabBarResize( HWND hWnd, LPRECT pstRect )
 */
 LRESULT TabBarNotify( HWND hWnd, LPNMHDR pstNmhdr )
 {
-	INT		nmCode;
-	INT		curSel;
+	INT_PTR		nmCode;
+	INT_PTR		curSel;
 
 	NMTREEVIEW	stNmTrView;
 
@@ -1726,7 +1726,7 @@ LRESULT TabBarNotify( HWND hWnd, LPNMHDR pstNmhdr )
 	@param[in]	cchSize	バッファの文字数
 	@return	非０お気にである　０違う
 */
-UINT TabMultipleIsFavTab( INT tabSel, LPTSTR ptBase, UINT_PTR cchSize )
+UINT_PTR TabMultipleIsFavTab( INT_PTR tabSel, LPTSTR ptBase, UINT_PTR cchSize )
 {
 	MLTT_ITR	itNulti;
 
@@ -1753,7 +1753,7 @@ UINT TabMultipleIsFavTab( INT tabSel, LPTSTR ptBase, UINT_PTR cchSize )
 	@param[in]	dMode	０タブ選択した　１編集ビューで開く
 	@return	非０MLT開いた　０なかった
 */
-INT TabMultipleSelect( HWND hWnd, INT tabSel, UINT dMode )
+INT_PTR TabMultipleSelect( HWND hWnd, INT_PTR tabSel, UINT_PTR dMode )
 {
 	MLTT_ITR	itNulti;
 	TCHAR	atName[MAX_PATH];
@@ -1810,9 +1810,9 @@ INT TabMultipleSelect( HWND hWnd, INT tabSel, UINT dMode )
 /*!
 	表示した天辺位置を記憶する
 	@param[in]	dTop	新しい位置・−１なら、記憶されている位置を返す
-	@return	INT	呼出なら該当する値
+	@return	INT_PTR	呼出なら該当する値
 */
-INT TabMultipleTopMemory( INT dTop )
+INT_PTR TabMultipleTopMemory( INT_PTR dTop )
 {
 	MLTT_ITR	itNulti;
 
@@ -1868,7 +1868,7 @@ HRESULT TabMultipleStore( HWND hWnd )
 */
 HRESULT TabMultipleRestore( HWND hWnd )
 {
-	INT	iCount, i;
+	INT_PTR	iCount, i;
 	MULTIPLEMAA	stMulti;
 
 	TabMultipleDeleteAll( hWnd );
@@ -1898,7 +1898,7 @@ HRESULT TabMultipleRestore( HWND hWnd )
 HRESULT TabMultipleDropAdd( HWND hWnd, LPCTSTR ptFile )
 {
 	MULTIPLEMAA		stMulti;
-	INT		iTabNum;
+	INT_PTR		iTabNum;
 
 
 	ZeroMemory( &stMulti, sizeof(MULTIPLEMAA) );
@@ -1920,9 +1920,9 @@ HRESULT TabMultipleDropAdd( HWND hWnd, LPCTSTR ptFile )
 /*!
 	タブを増やす・保持リストにファイル名ぶち込んだら直ちに呼ぶべし
 	@param[in]	hWnd	親ウインドウのハンドル
-	@return	INT	開いたタブの番号
+	@return	INT_PTR	開いたタブの番号
 */
-INT TabMultipleAppend( HWND hWnd )
+INT_PTR TabMultipleAppend( HWND hWnd )
 {
 	TCHAR	atName[MAX_PATH];
 	LONG	tCount;
@@ -1968,9 +1968,9 @@ INT TabMultipleAppend( HWND hWnd )
 
 /*!
 	開いてるヤツの番号を返す。主タブ・使用・副タブ
-	@return	INT	開いてる奴の番号
+	@return	INT_PTR	開いてる奴の番号
 */
-INT TabMultipleNowSel( VOID )
+INT_PTR TabMultipleNowSel( VOID )
 {
 	return gixUseTab;	//	ACT_ALLTREE	ACT_FAVLIST
 }
@@ -1983,7 +1983,7 @@ INT TabMultipleNowSel( VOID )
 */
 HRESULT TabMultipleDeleteAll( HWND hWnd )
 {
-	INT	ttlSel, i;
+	INT_PTR	ttlSel, i;
 	NMHDR	stNmHdr;
 
 	ttlSel = TabCtrl_GetItemCount( ghTabWnd );
@@ -2011,9 +2011,9 @@ HRESULT TabMultipleDeleteAll( HWND hWnd )
 	@param[in]	tabSel	タブ番号
 	@return		HRESULT	終了状態コード
 */
-HRESULT TabMultipleDelete( HWND hWnd, CONST INT tabSel )
+HRESULT TabMultipleDelete( HWND hWnd, CONST INT_PTR tabSel )
 {
-	INT	nowSel, i;
+	INT_PTR	nowSel, i;
 	NMHDR	stNmHdr;
 	MLTT_ITR	itNulti;
 
@@ -2065,7 +2065,7 @@ HRESULT TabMultipleDelete( HWND hWnd, CONST INT tabSel )
 */
 HRESULT TabMultipleSelDelete( HWND hWnd )
 {
-	INT		curSel;
+	INT_PTR		curSel;
 
 	curSel = TabCtrl_GetCurSel( ghTabWnd );
 
@@ -2107,9 +2107,9 @@ HRESULT TabMultipleCtrlFromFind( HWND hWnd )
 	@param[in]	ptFdrName	文字列
 	@return		処理した内容とか
 */
-LRESULT CALLBACK FavListFolderNameBack( UINT dNumber, UINT dummy, UINT fake, LPCVOID ptFdrName )
+LRESULT CALLBACK FavListFolderNameBack( UINT_PTR dNumber, UINT_PTR dummy, UINT_PTR fake, LPCVOID ptFdrName )
 {
-	INT	iOrder;
+	INT_PTR	iOrder;
 
 	iOrder = ListBox_AddString( ghFavLtWnd, (LPCTSTR)ptFdrName );
 
@@ -2123,10 +2123,10 @@ LRESULT CALLBACK FavListFolderNameBack( UINT dNumber, UINT dummy, UINT fake, LPC
 	@param[in]	iCode	発生したイベント
 	@return		HRESULT	終了状態コード
 */
-HRESULT FavListSelected( HWND hWnd, UINT iCode )
+HRESULT FavListSelected( HWND hWnd, UINT_PTR iCode )
 {
 	TCHAR	atFdrName[MAX_PATH];
-	INT	selIndex;
+	INT_PTR	selIndex;
 
 	if( LBN_SELCHANGE == iCode )
 	{
@@ -2172,7 +2172,7 @@ HRESULT FavContsRedrawRequest( HWND hWnd )
 	@param[in]	fwKeys	押されてるキー
 	@return		非０自分だった　０関係ないね
 */
-UINT TreeFavIsUnderCursor( HWND hWnd, HWND hChdWnd, INT xPos, INT yPos, INT zDelta, UINT fwKeys )
+UINT_PTR TreeFavIsUnderCursor( HWND hWnd, HWND hChdWnd, INT_PTR xPos, INT_PTR yPos, INT_PTR zDelta, UINT_PTR fwKeys )
 {
 	if( ghTreeWnd == hChdWnd )
 	{
@@ -2246,7 +2246,7 @@ INT_PTR CALLBACK TabMultipleRenameDlgProc( HWND hDlg, UINT message, WPARAM wPara
 	@param[in]	iTabSel	選択したタブ番号
 	@return		HRESULT	終了状態コード
 */
-HRESULT TabMultipleNameChange( HWND hWnd, INT iTabSel )
+HRESULT TabMultipleNameChange( HWND hWnd, INT_PTR iTabSel )
 {
 	INT_PTR	iRslt;
 	TCHAR	atName[MAX_PATH];
@@ -2287,7 +2287,7 @@ HRESULT TabMultipleNameChange( HWND hWnd, INT iTabSel )
 */
 HRESULT TabLineMultiSingleToggle( HWND hWnd )
 {
-	 INT	doSingle;
+	INT_PTR	doSingle;
 	DWORD	dWndwStyle;
 
 	dWndwStyle = GetWindowStyle( ghTabWnd );

@@ -39,15 +39,15 @@ extern HWND		ghPrntWnd;		//!<	親ウインドウハンドル
 extern HWND		ghViewWnd;		//!<	描画ウインドウのハンドル
 
 
-extern INT		gdDocXdot;		//!<	キャレットのＸドット・ドキュメント位置
-extern INT		gdDocLine;		//!<	キャレットのＹ行数・ドキュメント位置
-extern INT		gdDocMozi;		//!<	キャレットの左側の文字数
+extern INT_PTR		gdDocXdot;		//!<	キャレットのＸドット・ドキュメント位置
+extern INT_PTR		gdDocLine;		//!<	キャレットのＹ行数・ドキュメント位置
+extern INT_PTR		gdDocMozi;		//!<	キャレットの左側の文字数
 
 //	画面サイズを確認して、移動によるスクロールの面倒みる
-extern INT		gdHideXdot;		//!<	左の隠れ部分
-extern INT		gdViewTopLine;	//!<	表示中の最上部行番号
+extern INT_PTR		gdHideXdot;		//!<	左の隠れ部分
+extern INT_PTR		gdViewTopLine;	//!<	表示中の最上部行番号
 extern SIZE		gstViewArea;	//!<	表示領域のサイズ・ルーラー等の領域は無し
-extern INT		gdDispingLine;	//!<	見えてる行数・中途半端に見えてる末端は含まない
+extern INT_PTR		gdDispingLine;	//!<	見えてる行数・中途半端に見えてる末端は含まない
 
 
 static HBITMAP	ghbmpCaret;		//!<	キャレット用のビットマップ
@@ -58,7 +58,7 @@ static BOOLEAN	gbCaretShow;	//!<	キャレット表示してるか？
 
 HRESULT	ImeInputBoxPosSet( VOID );
 
-HRESULT	ViewCaretFrameOutCheck( INT, INT, UINT );
+HRESULT	ViewCaretFrameOutCheck( INT_PTR, INT_PTR, UINT_PTR );
 //-------------------------------------------------------------------------------------------------
 
 
@@ -194,7 +194,7 @@ HRESULT ViewCaretReColour( COLORREF crtColour )
 	@param[in]	yLine	描画する行数
 	@return		非０枠内である　０はみ出してる
 */
-BOOLEAN ViewPosResetCaret( INT xDot, INT yLine )
+BOOLEAN ViewPosResetCaret(INT_PTR xDot, INT_PTR yLine )
 {
 	if( 0 > xDot )	xDot  = 0;
 	if( 0 > yLine )	yLine = 0;
@@ -214,9 +214,9 @@ BOOLEAN ViewPosResetCaret( INT xDot, INT yLine )
 	@param[in]	bOnScr	画面からはみ出すようならスクロールさせるか？
 	@return		非０枠内である　０はみ出してる
 */
-BOOLEAN ViewDrawCaret( INT rdXdot, INT rdLine, BOOLEAN bOnScr )
+BOOLEAN ViewDrawCaret( INT_PTR rdXdot, INT_PTR rdLine, BOOLEAN bOnScr )
 {
-	INT		dX, dY, loop;
+	INT_PTR		dX, dY, loop;
 	BOOLEAN	bRslt, fRslt, cRslt;
 	POINT	stCaret;
 
@@ -288,11 +288,11 @@ BOOLEAN ViewDrawCaret( INT rdXdot, INT rdLine, BOOLEAN bOnScr )
 	@param[in]	dummy	とくにない？
 	@return		HRESULT	終了状態コード
 */
-HRESULT ViewCaretFrameOutCheck( INT dDotX, INT dDotY, UINT dummy )
+HRESULT ViewCaretFrameOutCheck( INT_PTR dDotX, INT_PTR dDotY, UINT_PTR dummy )
 {
 	BOOLEAN	bRedraw = FALSE;
-	INT	opX, opY;
-	INT	bkWid;
+	INT_PTR	opX, opY;
+	INT_PTR	bkWid;
 
 	//	左へはみ出し
 	if( gdHideXdot > dDotX )	//	隠れ位置よりさらに左へいったら
@@ -374,9 +374,9 @@ HRESULT ImeInputBoxPosSet( VOID )
 	今のキャレット位置をゲッツする
 	@param[in]	pXdot	キャレットのＸドット
 	@param[in]	pYline	キャレットのＹ行数
-	@return	INT	キャレットの左側の文字数
+	@return	INT_PTR	キャレットの左側の文字数
 */
-INT ViewCaretPosGet( PINT pXdot, PINT pYline )
+INT_PTR ViewCaretPosGet( PINT_PTR pXdot, PINT_PTR pYline )
 {
 	if( pXdot ){	*pXdot  = gdDocXdot;	}
 	if( pYline ){	*pYline = gdDocLine;	}

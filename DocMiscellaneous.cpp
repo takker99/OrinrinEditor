@@ -23,9 +23,9 @@ If not, see <http://www.gnu.org/licenses/>.
 
 //extern list<ONEFILE>	gltMultiFiles;	//	複数ファイル保持
 extern FILES_ITR	gitFileIt;		//	今見てるファイルの本体
-extern INT			gixFocusPage;	//	注目中のページ・とりあえず０・０インデックス
+extern INT_PTR			gixFocusPage;	//	注目中のページ・とりあえず０・０インデックス
 
-extern  UINT		gbCrLfCode;		//	改行コード：０したらば・非０ＹＹ 
+extern  UINT_PTR		gbCrLfCode;		//	改行コード：０したらば・非０ＹＹ 
 //-------------------------------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ extern  UINT		gbCrLfCode;		//	改行コード：０したらば・非０ＹＹ
 	@param[in]	iPage	チェックしたい頁番号
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocStatisticsPage( FILES_ITR itFile, INT iPage )
+HRESULT DocStatisticsPage( FILES_ITR itFile, INT_PTR iPage )
 {
 
 	//	使用文字一覧とか・SQLで文字データベース作ればいい
@@ -54,7 +54,7 @@ HRESULT DocStatisticsPage( FILES_ITR itFile, INT iPage )
 	@param[in]	iLine	チェックしたい行番号
 	@return	BOOLEAN		非０範囲外エラー　０問題無し
 */
-BOOLEAN DocRangeIsError( FILES_ITR itFile, INT iPage, INT iLine )
+BOOLEAN DocRangeIsError( FILES_ITR itFile, INT_PTR iPage, INT_PTR iLine )
 {
 	INT_PTR	iSize;
 
@@ -75,7 +75,7 @@ BOOLEAN DocRangeIsError( FILES_ITR itFile, INT iPage, INT iLine )
 	@param[in]	rdLine	対象の行番号・絶対０インデックスか
 	@return	BOOLEAN		非０警告あり　０無し
 */
-BOOLEAN DocBadSpaceIsExist( INT rdLine )
+BOOLEAN DocBadSpaceIsExist( INT_PTR rdLine )
 {
 	LINE_ITR	itLine;
 
@@ -93,9 +93,9 @@ BOOLEAN DocBadSpaceIsExist( INT rdLine )
 /*!
 	連続する半角スペース、先頭半角空白が有るかどうかチェキ・ファイルコア函数？
 	@param[in]	rdLine	対象の行番号・絶対０インデックスか
-	@return	UINT		非０警告あり　０無し
+	@return	UINT_PTR		非０警告あり　０無し
 */
-UINT DocBadSpaceCheck( INT rdLine )
+UINT_PTR DocBadSpaceCheck( INT_PTR rdLine )
 {
 	UINT_PTR	iCount, iRslt;
 	BOOLEAN		bWarn;
@@ -225,12 +225,12 @@ UINT_PTR DocNowFilePageLineCount( VOID )
 	@param[out]	ptRaw	生データ
 	@param[out]	piMozi	文字数入れるバッファへのポインタ
 	@param[out]	piByte	バイト数入れるバッファへのポインタ
-	@return	UINT	行数
+	@return	UINT_PTR	行数
 */
-UINT DocRawDataParamGet( LPCTSTR ptRaw, PINT piMozi, PINT piByte )
+UINT_PTR DocRawDataParamGet( LPCTSTR ptRaw, INT_PTR *piMozi, INT_PTR *piByte )
 {
 	UINT_PTR	cchSize, d;
-	INT			iMozis, iLines, iBytes, iBy;
+	INT_PTR		iMozis, iLines, iBytes, iBy;
 	//LETTER	stLetter;
 
 	StringCchLength( ptRaw, STRSAFE_MAX_CCH, &cchSize );
@@ -272,12 +272,12 @@ UINT DocRawDataParamGet( LPCTSTR ptRaw, PINT piMozi, PINT piByte )
 	現在のページの総行数と文字数とバイト数を返す・ついでにバイト情報とか更新・ファイルコア函数
 	@param[out]	piMozi	文字数入れるバッファへのポインタ・NULLでも可
 	@param[out]	piByte	バイト数入れるバッファへのポインタ・NULLでも可
-	@return	UINT	行数
+	@return	UINT_PTR	行数
 */
-UINT DocPageParamGet( PINT piMozi, PINT piByte )
+UINT_PTR DocPageParamGet( PINT_PTR piMozi, PINT_PTR piByte )
 {
 	INT_PTR	iLines, i, dMozis = 0;
-	INT		dBytes = 0;
+	INT_PTR	dBytes = 0;
 
 	LINE_ITR	itLine;
 
@@ -325,12 +325,12 @@ UINT DocPageParamGet( PINT piMozi, PINT piByte )
 	@param[in]	dPage	頁指定・負数なら現在の頁
 	@param[out]	pMozi	文字数を入れるバッファへのポインタ・NULL可
 	@param[out]	pByte	バイト数入れるバッファへのポインタ・NULL可
-	@return	UINT	行数
+	@return	UINT_PTR	行数
 */
-UINT DocPageByteCount( FILES_ITR itFile, INT dPage, PINT pMozi, PINT pByte )
+UINT_PTR DocPageByteCount( FILES_ITR itFile, INT_PTR dPage, PINT_PTR pMozi, PINT_PTR pByte )
 {
-	INT		iBytes, iMozis, i, iLnBy, iDots;
-	UINT	dLines;
+	INT_PTR		iBytes, iMozis, i, iLnBy, iDots;
+	UINT_PTR	dLines;
 	LINE_ITR	itLine, endLine;
 	LETR_ITR	itMozi, endMozi;
 
@@ -393,11 +393,11 @@ UINT DocPageByteCount( FILES_ITR itFile, INT dPage, PINT pMozi, PINT pByte )
 	指定範囲の最も長いＸドット数を返す
 	@param[in]	dTop	開始行・含む・−１で最初から
 	@param[in]	dBottom	終了行・含む・−１で最後まで
-	@return	INT		ドット数
+	@return	INT_PTR		ドット数
 */
-INT DocPageMaxDotGet( INT dTop, INT dBottom )
+INT_PTR DocPageMaxDotGet( INT_PTR dTop, INT_PTR dBottom )
 {
-	INT		maxDot = 0, thisDot, i;
+	INT_PTR		maxDot = 0, thisDot, i;
 	UINT_PTR	iLines;
 
 	LINE_ITR	itLine;
@@ -425,12 +425,12 @@ INT DocPageMaxDotGet( INT dTop, INT dBottom )
 	@param[in]	rdLine	対象の行番号・絶対０インデックスか
 	@param[in]	pdMozi	文字数・NULLでもOK
 	@param[in]	pdByte	バイト数・NULLでもOK
-	@return	INT		ドット数・負：異常発生
+	@return	INT_PTR		ドット数・負：異常発生
 */
-INT DocLineParamGet( INT rdLine, PINT pdMozi, PINT pdByte )
+INT_PTR DocLineParamGet( INT_PTR rdLine, PINT_PTR pdMozi, PINT_PTR pdByte )
 {
 	INT_PTR	iCount, i, iLines;
-	INT		dDotCnt, dByteCnt;
+	INT_PTR		dDotCnt, dByteCnt;
 
 #ifdef DO_TRY_CATCH
 	try{
@@ -480,12 +480,12 @@ INT DocLineParamGet( INT rdLine, PINT pdMozi, PINT pdByte )
 	@param[in]	round	０：四捨五入的な　正数：次の文字固定　負数：前の文字固定
 	@return		文字数
 */
-INT DocLetterPosGetAdjust( PINT pNowDot, INT rdLine, INT round )
+INT_PTR DocLetterPosGetAdjust( PINT_PTR pNowDot, INT_PTR rdLine, INT_PTR round )
 {
-	INT	i, iCount, iLines;	//	INT_PTR
-	INT	iLetter;	//	キャレットの左側の文字数
-	INT	iMaxLine;
-	INT	dDotCnt = 0, dPrvCnt = 0, rdWidth = 0;
+	INT_PTR	i, iCount, iLines;	//	INT_PTR
+	INT_PTR	iLetter;	//	キャレットの左側の文字数
+	INT_PTR	iMaxLine;
+	INT_PTR	dDotCnt = 0, dPrvCnt = 0, rdWidth = 0;
 
 	LINE_ITR	itLine;
 
@@ -563,10 +563,10 @@ INT DocLetterPosGetAdjust( PINT pNowDot, INT rdLine, INT round )
 	@param[out]	pbJump		改行を超えたらTRUE、超えなかったらFALSE・NULLでも可
 	@return		ずれたドット数
 */
-INT DocLetterShiftPos( INT nowDot, INT rdLine, INT bDirect, PINT pdAbsDot, PBOOLEAN pbJump )
+INT_PTR DocLetterShiftPos(INT_PTR nowDot, INT_PTR rdLine, INT_PTR bDirect, PINT_PTR pdAbsDot, PBOOLEAN pbJump )
 {
 	INT_PTR	iCount, iLetter, iLines;	//	キャレットの左側の文字数
-	INT		dLtrDot = 0;//dDotCnt = 0;
+	INT_PTR		dLtrDot = 0;//dDotCnt = 0;
 
 	LINE_ITR	itLine;
 
@@ -627,9 +627,9 @@ INT DocLetterShiftPos( INT nowDot, INT rdLine, INT bDirect, PINT pdAbsDot, PBOOL
 	@param[out]	pMaxLtr	最大文字数
 	@return		行数
 */
-INT DocStringInfoCount( LPCTSTR ptStr, UINT_PTR cchSize, PINT pMaxDot, PINT pMaxLtr )
+INT_PTR DocStringInfoCount( LPCTSTR ptStr, UINT_PTR cchSize, PINT_PTR pMaxDot, PINT_PTR pMaxLtr )
 {
-	INT	iDot, iLine, iMax, iMozi, e;
+	INT_PTR	iDot, iLine, iMax, iMozi, e;
 	UINT_PTR	d;
 	wstring	wsBuffer;
 
@@ -674,11 +674,11 @@ INT DocStringInfoCount( LPCTSTR ptStr, UINT_PTR cchSize, PINT pMaxDot, PINT pMax
 	@param[in]	pstInfo		情報入れる構造体ポインタ
 	@return		BOOLEAN		ディレイしてたら非０
 */
-BOOLEAN NowPageInfoGet( UINT iTgtPage, LPPAGEINFOS pstInfo )
+BOOLEAN NowPageInfoGet( UINT_PTR iTgtPage, LPPAGEINFOS pstInfo )
 {
 	LINE_ITR	itLine;
 	INT_PTR		iMozis;
-	UINT		dMasqus;
+	UINT_PTR		dMasqus;
 
 	//	データやばかったら弾く
 	if( gitFileIt->vcCont.size(  ) <= iTgtPage )	return 0;
@@ -730,7 +730,7 @@ BOOLEAN NowPageInfoGet( UINT iTgtPage, LPPAGEINFOS pstInfo )
 	@param[in]	dPage	指定頁
 	@return	ディレイしてたら非０
 */
-BOOLEAN PageIsDelayed( FILES_ITR itFile, UINT dPage )
+BOOLEAN PageIsDelayed( FILES_ITR itFile, UINT_PTR dPage )
 {
 	return (itFile->vcCont.at( dPage ).ptRawData ? TRUE : FALSE);
 }

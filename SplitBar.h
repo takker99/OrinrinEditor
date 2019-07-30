@@ -30,6 +30,6 @@ If not, see <http://www.gnu.org/licenses/>.
 //-------------------------------------------------------------------------------------------------
 
 ATOM	SplitBarClass( HINSTANCE );
-HWND	SplitBarCreate( HINSTANCE, HWND, INT, INT, INT );
+HWND	SplitBarCreate( HINSTANCE, HWND, INT_PTR, INT_PTR, INT_PTR);
 VOID	SplitBarPosGet( HWND, LPRECT );
 LONG	SplitBarResize( HWND, LPRECT );

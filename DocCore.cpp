@@ -59,21 +59,21 @@ static LPARAM	gdNextNumber;		//!<	開いたファイルの通し番号・常に�
 
 EXTERNED FILES_ITR	gitFileIt;		//!<	今見てるファイルの本体
 
-EXTERNED INT		gixFocusPage;	//!<	注目中のページ・とりあえず０・０インデックス
+EXTERNED INT_PTR		gixFocusPage;	//!<	注目中のページ・とりあえず０・０インデックス
 
-EXTERNED INT		gixDropPage;	//!<	投下ホット番号
+EXTERNED INT_PTR		gixDropPage;	//!<	投下ホット番号
 
-extern  UINT		gbUniRadixHex;	//	ユニコード数値参照が１６進数であるか
-extern  UINT		gbCrLfCode;		//	改行コード：０したらば・非０ＹＹ 
+extern  UINT_PTR		gbUniRadixHex;	//	ユニコード数値参照が１６進数であるか
+extern  UINT_PTR		gbCrLfCode;		//	改行コード：０したらば・非０ＹＹ 
 //-------------------------------------------------------------------------------------------------
 
-UINT	CALLBACK DocPageLoad( LPTSTR, LPCTSTR, INT );
+UINT_PTR	CALLBACK DocPageLoad( LPTSTR, LPCTSTR, INT_PTR );
 //-------------------------------------------------------------------------------------------------
 
 /*!
 	なんか初期化
 */
-HRESULT DocInitialise( UINT dMode )
+HRESULT DocInitialise( UINT_PTR dMode )
 {
 	FILES_ITR	itFile;
 	PAGE_ITR	itPage;
@@ -103,7 +103,7 @@ HRESULT DocInitialise( UINT dMode )
 	@param[in]	dMode	非０変更した　０保存したから変更はなかったことに
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocModifyContent( UINT dMode )
+HRESULT DocModifyContent( UINT_PTR dMode )
 {
 	if( dMode )
 	{
@@ -183,7 +183,7 @@ LPARAM DocMultiFileCreate( LPTSTR ptDmyName )
 */
 HRESULT DocActivateEmptyCreate( LPTSTR ptFile )
 {
-	INT	iNewPage;
+	INT_PTR	iNewPage;
 
 	DocMultiFileCreate( ptFile );	//	新しいファイル置き場の準備・ここで返り血は要らない
 	iNewPage = DocPageCreate( -1 );	//	ページ作っておく
@@ -201,7 +201,7 @@ HRESULT DocActivateEmptyCreate( LPTSTR ptFile )
 	@param[in]	dMode	非０変更した　０変更はなかったことに
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocMultiFileModify( UINT dMode )
+HRESULT DocMultiFileModify( UINT_PTR dMode )
 {
 	TCHAR	atFile[MAX_PATH];	//!<	ファイル名
 
@@ -303,7 +303,7 @@ HRESULT DocMultiFileCloseAll( VOID )
 */
 LPARAM DocMultiFileClose( HWND hWnd, LPARAM uqNumber )
 {
-	INT			iRslt;
+	INT_PTR			iRslt;
 	UINT_PTR	i, iPage, iLine;
 	UINT_PTR	iCount;
 	LPARAM	dNowNum, dPrevi;
@@ -388,10 +388,10 @@ LPARAM DocMultiFileClose( HWND hWnd, LPARAM uqNumber )
 	@param[in]	ptIniPath	INIファイルのパス
 	@return		HRESULT	終了状態コード
 */
-INT DocMultiFileFetch( INT iTgt, LPTSTR ptFile, LPTSTR ptIniPath )
+INT_PTR DocMultiFileFetch( INT_PTR iTgt, LPTSTR ptFile, LPTSTR ptIniPath )
 {
 	TCHAR	atKeyName[MIN_STRING];
-	INT		iCount;
+	INT_PTR		iCount;
 
 	assert( ptIniPath );
 
@@ -419,7 +419,7 @@ INT DocMultiFileFetch( INT iTgt, LPTSTR ptFile, LPTSTR ptIniPath )
 HRESULT DocMultiFileStore( LPTSTR ptIniPath )
 {
 	TCHAR	atKeyName[MIN_STRING], atBuff[MIN_STRING];
-	UINT	i;
+	UINT_PTR	i;
 	FILES_ITR	itNow;
 
 	assert( ptIniPath );
@@ -453,9 +453,9 @@ HRESULT DocMultiFileStore( LPTSTR ptIniPath )
 	@param[in]	tabNum	名前を知りたいヤツのタブ番号
 	@return		LPTSTR	名前バッファのポインター・無効ならNULLを返す
 */
-LPTSTR DocMultiFileNameGet( INT tabNum )
+LPTSTR DocMultiFileNameGet( INT_PTR tabNum )
 {
-	INT	i;
+	INT_PTR	i;
 	FILES_ITR	itNow;
 
 	//	ヒットするまでサーチ
@@ -477,7 +477,7 @@ LPTSTR DocMultiFileNameGet( INT tabNum )
 	@param[in]		dMode	非０ロード　０セーブ
 	@param[in,out]	pstPos	Caret位置、ドット、行数
 */
-VOID DocCaretPosMemory( UINT dMode, LPPOINT pstPos )
+VOID DocCaretPosMemory( UINT_PTR dMode, LPPOINT pstPos )
 {
 	if( dMode )	//	ロード
 	{
@@ -529,9 +529,9 @@ HRESULT DocOpenFromNull( HWND hWnd )
 	@param[in]	dMode	非０閉じるメッセージあり　０変更無かったら素通り
 	@return	１閉じておｋ　０ダメ
 */
-INT DocFileCloseCheck( HWND hWnd, UINT dMode )
+INT_PTR DocFileCloseCheck( HWND hWnd, UINT_PTR dMode )
 {
-	INT		rslt, ret = 0;
+	INT_PTR		rslt, ret = 0;
 
 	TCHAR	atMessage[BIG_STRING];
 	BOOLEAN	bMod = FALSE;
@@ -570,12 +570,12 @@ INT DocFileCloseCheck( HWND hWnd, UINT dMode )
 	@param[in]	cchSize	その文字列の文字数
 	@return	０なにもしない　１分割モード　２読込中止
 */
-UINT DocFileHugeCheck( LPTSTR ptStr, UINT_PTR cchSize )
+UINT_PTR DocFileHugeCheck( LPTSTR ptStr, UINT_PTR cchSize )
 {
 	LPTSTR		ptBuff;
 //	UINT_PTR	d;
 	UINT_PTR	dCount;
-	UINT		dRslt;
+	UINT_PTR		dRslt;
 
 	//	ＡＳＴなら何もする必要は無い
 	if( 0 == StrCmpN( AST_SEPARATERW , ptStr, 4 ) ){	return 0;	}
@@ -708,7 +708,7 @@ LPARAM DocFileInflate( LPTSTR ptFileName )
 	DWORD	readed;
 
 	LPVOID	pBuffer;	//	文字列バッファ用ポインター
-	INT		iByteSize;
+	INT_PTR		iByteSize;
 
 	LPTSTR	ptString;
 	LPSTR	pcText;
@@ -717,7 +717,7 @@ LPARAM DocFileInflate( LPTSTR ptFileName )
 	LPARAM	dNumber;
 
 #ifdef BIG_TEXT_SEPARATE	//	頁区切りのないTXTかどうかを確認する
-	UINT	dSepRslt;
+	UINT_PTR	dSepRslt;
 	LPTSTR	ptSepBuff;
 #endif
 
@@ -834,9 +834,9 @@ LPARAM DocFileInflate( LPTSTR ptFileName )
 	@param[in]	ptName	項目の名前・無い時はNULL
 	@param[in]	ptCont	項目の内容
 	@param[in]	cchSize	内容の文字数
-	@return		UINT	特に意味なし
+	@return		UINT_PTR	特に意味なし
 */
-UINT CALLBACK DocPageLoad( LPTSTR ptName, LPCTSTR ptCont, INT cchSize )
+UINT_PTR CALLBACK DocPageLoad( LPTSTR ptName, LPCTSTR ptCont, INT_PTR cchSize )
 {
 	gixFocusPage = DocPageCreate(  -1 );	//	頁を作成
 	PageListInsert( gixFocusPage  );	//	ページリストビューに追加
@@ -863,14 +863,14 @@ UINT CALLBACK DocPageLoad( LPTSTR ptName, LPCTSTR ptCont, INT cchSize )
 	ＭＬＴもしくはＴＸＴの頁数を調べる
 	@param[in]	ptStr	分解対象文字列へのポインター
 	@param[in]	cchSize	その文字列の文字数
-	@return		UINT	頁数
+	@return		UINT_PTR	頁数
 */
-UINT DocPreloadMLT( LPTSTR ptString, INT cchSize )
+UINT_PTR DocPreloadMLT( LPTSTR ptString, INT_PTR cchSize )
 {
 	LPTSTR	ptCaret;	//	読込開始・現在位置
 	LPTSTR	ptEnd;		//	ページの末端位置・セパレータの直前
-	INT		iLines, iDots, iMozis;
-	UINT	dPage;
+	INT_PTR		iLines, iDots, iMozis;
+	UINT_PTR	dPage;
 	UINT_PTR	cchItem;
 	BOOLEAN	bLast = FALSE;
 
@@ -911,18 +911,18 @@ UINT DocPreloadMLT( LPTSTR ptString, INT cchSize )
 	@param[in]	ptStr		分解対象文字列へのポインター
 	@param[in]	cchSize		その文字列の文字数
 	@param[in]	pfPageLoad	内容を入れるコールバック函数のアレ
-	@return		UINT		作成した頁数
+	@return		UINT_PTR		作成した頁数
 */
-UINT DocStringSplitMLT( LPTSTR ptStr, INT cchSize, PAGELOAD pfPageLoad )
+UINT_PTR DocStringSplitMLT( LPTSTR ptStr, INT_PTR cchSize, PAGELOAD pfPageLoad )
 {
 	LPTSTR	ptCaret;	//	読込開始・現在位置
 	LPTSTR	ptEnd;		//	ページの末端位置・セパレータの直前
-	UINT	iNumber;	//	通し番号カウント
+	UINT_PTR	iNumber;	//	通し番号カウント
 #ifdef FILE_PRELOAD
-	UINT	dPage;		
+	UINT_PTR	dPage;		
 #endif
-	UINT	cchItem;
-//	INT		dmyX = 0, dmyY = 0;
+	UINT_PTR	cchItem;
+//	INT_PTR		dmyX = 0, dmyY = 0;
 	BOOLEAN	bLast = FALSE;
 
 	ptCaret = ptStr;	//	まずは最初から
@@ -968,15 +968,15 @@ UINT DocStringSplitMLT( LPTSTR ptStr, INT cchSize, PAGELOAD pfPageLoad )
 	@param[in]	ptStr		分解対象文字列へのポインター
 	@param[in]	cchSize		その文字列の文字数
 	@param[in]	pfPageLoad	内容を入れるコールバック函数のアレ
-	@return		UINT		作成した頁数
+	@return		UINT_PTR		作成した頁数
 */
-UINT DocStringSplitAST( LPTSTR ptStr, INT cchSize, PAGELOAD pfPageLoad )
+UINT_PTR DocStringSplitAST( LPTSTR ptStr, INT_PTR cchSize, PAGELOAD pfPageLoad )
 {
 	LPTSTR	ptCaret;	//	読込開始・現在位置
 	LPTSTR	ptStart;	//	セパレータの直前
 	LPTSTR	ptEnd;
-	UINT	iNumber;	//	通し番号カウント
-	UINT	cchItem;
+	UINT_PTR	iNumber;	//	通し番号カウント
+	UINT_PTR	cchItem;
 	BOOLEAN	bLast;
 	TCHAR	atName[MAX_PATH];
 
@@ -1033,17 +1033,17 @@ UINT DocStringSplitAST( LPTSTR ptStr, INT cchSize, PAGELOAD pfPageLoad )
 	@param[in]	pcStr		分解対象SJIS文字列へのポインター
 	@param[in]	cbSize		その文字列の文字数
 	@param[in]	pfPageLoad	内容を入れるコールバック函数のアレ
-	@return		UINT		作成した頁数
+	@return		UINT_PTR		作成した頁数
 */
-UINT DocImportSplitASD( LPSTR pcStr, INT cbSize, PAGELOAD pfPageLoad )
+UINT_PTR DocImportSplitASD( LPSTR pcStr, INT_PTR cbSize, PAGELOAD pfPageLoad )
 {
 //ASDなら、SJISのままで0x01,0x01、0x02,0x02を対応する必要がある
 //0x01,0x01が改行、0x02,0x02が説明の区切り、アイテム区切りが改行
 
 	LPSTR	pcCaret;	//	読込開始・現在位置
 	LPSTR	pcEnd, pcDesc;
-	UINT	iNumber;	//	通し番号カウント
-	UINT	cbItem, d;
+	UINT_PTR	iNumber;	//	通し番号カウント
+	UINT_PTR	cbItem, d;
 	BOOLEAN	bLast;
 
 	LPTSTR		ptName, ptCont;
@@ -1139,13 +1139,13 @@ HRESULT DocPageNameSet( LPTSTR ptName )
 /*!
 	ページ追加処理・ファイルコア函数
 	@param[in]	iAdding	この指定ページの次に追加・-1で末端に追加
-	@return	INT	新規作成したページ番号
+	@return	INT_PTR	新規作成したページ番号
 */
-INT DocPageCreate( INT iAdding )
+INT_PTR DocPageCreate( INT_PTR iAdding )
 {
 	INT_PTR		iTotal, iNext;
 	UINT_PTR	iAddPage = 0;
-	INT		i;
+	INT_PTR		i;
 
 	ONELINE	stLine;
 	ONEPAGE	stPage;
@@ -1214,9 +1214,9 @@ INT DocPageCreate( INT iAdding )
 	@param[in]	iBack	−１無視　０〜削除したあと移動する頁指定
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocPageDelete( INT iPage, INT iBack )
+HRESULT DocPageDelete( INT_PTR iPage, INT_PTR iBack )
 {
-	INT	i, iNew;
+	INT_PTR	i, iNew;
 	PAGE_ITR	itPage;
 
 	if( 1 >= DocNowFilePageCount( ) )	return E_ACCESSDENIED;
@@ -1268,9 +1268,9 @@ HRESULT DocPageDelete( INT iPage, INT iBack )
 	@param[in]	iPage	そのファイルの頁・じっしつ意味ない
 	@return		非０ロードした　０ロード済であった
 */
-UINT DocDelayPageLoad( FILES_ITR itFile, INT iPage )
+UINT_PTR DocDelayPageLoad( FILES_ITR itFile, INT_PTR iPage )
 {
-	INT	dmyX = 0, dmyY = 0;
+	INT_PTR	dmyX = 0, dmyY = 0;
 	UINT_PTR	cchSize;
 
 
@@ -1316,9 +1316,9 @@ UINT DocDelayPageLoad( FILES_ITR itFile, INT iPage )
 	@param[in]	dPageNum	変更したい頁番号
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocPageChange( INT dPageNum )
+HRESULT DocPageChange( INT_PTR dPageNum )
 {
-	INT	iPrePage;
+	INT_PTR	iPrePage;
 
 	//	今の表示内容破棄とかいろいろある
 #ifdef DO_TRY_CATCH
@@ -1353,10 +1353,10 @@ HRESULT DocPageChange( INT dPageNum )
 	@param[in]	bMode	非０ステータスバー表示・０ステータスバー無視
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocPageInfoRenew( INT dPage, UINT bMode )
+HRESULT DocPageInfoRenew( INT_PTR dPage, UINT_PTR bMode )
 {
 	UINT_PTR	dLines;
-	UINT		dBytes;
+	UINT_PTR		dBytes;
 //	TCHAR		atBuff[SUB_STRING];
 
 	if( 0 > dPage ){	dPage = gixFocusPage;	}
@@ -1394,9 +1394,9 @@ HRESULT DocPageInfoRenew( INT dPage, UINT bMode )
 	@param[out]	pdFlag		文字列について・普通のとか連続空白とか・NULL不可
 	@return					文字列の使用ドット数
 */
-INT DocLineDataGetAlloc( INT rdLine, INT iStart, LPLETTER *pstTexts, PINT pchLen, PUINT pdFlag )
+INT_PTR DocLineDataGetAlloc( INT_PTR rdLine, INT_PTR iStart, LPLETTER *pstTexts, PINT_PTR pchLen, PUINT_PTR pdFlag )
 {
-	INT		iSize, i = 0, j, dotCnt;
+	INT_PTR		iSize, i = 0, j, dotCnt;
 	INT_PTR	iCount, iLines;
 
 	//	始点と終点を使えるようにする	//	−１なら末端
@@ -1466,7 +1466,7 @@ INT DocLineDataGetAlloc( INT rdLine, INT iStart, LPLETTER *pstTexts, PINT pchLen
 	@param[out]	*pText	確保した領域を返す・ワイド文字かマルチ文字になる・NULLだと必要バイト数を返すのみ
 	@return				確保したバイト数・NULLターミネータも含む
 */
-INT DocPageGetAlloc( UINT bStyle, LPVOID *pText )
+INT_PTR DocPageGetAlloc( UINT_PTR bStyle, LPVOID *pText )
 {
 	return DocPageTextGetAlloc( gitFileIt, gixFocusPage, bStyle, pText, FALSE );
 }
@@ -1481,7 +1481,7 @@ INT DocPageGetAlloc( UINT bStyle, LPVOID *pText )
 	@param[in]	bCrLf	末端に改行付けるか
 	@return				確保したバイト数・NULLターミネータ含む
 */
-INT DocPageTextGetAlloc( FILES_ITR itFile, INT dPage, UINT bStyle, LPVOID *pText, BOOLEAN bCrLf )
+INT_PTR DocPageTextGetAlloc( FILES_ITR itFile, INT_PTR dPage, UINT_PTR bStyle, LPVOID *pText, BOOLEAN bCrLf )
 {
 	UINT_PTR	iLines, iLetters, j, iSize;
 	UINT_PTR	i;
@@ -1601,7 +1601,7 @@ INT DocPageTextGetAlloc( FILES_ITR itFile, INT dPage, UINT bStyle, LPVOID *pText
 	@param[out]	pText	確保した領域を返す・ワイド文字かマルチ文字になる・NULLだと必要バイト数を返すのみ
 	@return		確保したバイト数・NULLターミネータ含む
 */
-INT DocLineTextGetAlloc( FILES_ITR itFile, INT dPage, UINT bStyle, UINT dTarget, LPVOID *pText )
+INT_PTR DocLineTextGetAlloc( FILES_ITR itFile, INT_PTR dPage, UINT_PTR bStyle, UINT_PTR dTarget, LPVOID *pText )
 {
 	UINT_PTR	dLines;
 	UINT_PTR	dLetters, j, iSize;
@@ -1661,7 +1661,7 @@ INT DocLineTextGetAlloc( FILES_ITR itFile, INT dPage, UINT bStyle, UINT dTarget,
 	@param[out]	*pText	確保した領域を返す・ワイド文字かマルチ文字になる・NULLだと必要バイト数を返すのみ
 	@return				確保したバイト数・NULLターミネータも含む
 */
-INT DocPageTextAllGetAlloc( UINT bStyle, LPVOID *pText )
+INT_PTR DocPageTextAllGetAlloc( UINT_PTR bStyle, LPVOID *pText )
 {
 	//	SJISの場合は、ユニコード文字は&#dddd;で確保される
 
@@ -1778,7 +1778,7 @@ INT DocPageTextAllGetAlloc( UINT bStyle, LPVOID *pText )
 	@param[out]	pdBytes	確保したバイト数返す・NULLターミネータも含む
 	@return				確保した領域・SJIS文字列である
 */
-LPSTR DocPageTextPreviewAlloc( INT iPage, PINT pdBytes )
+LPSTR DocPageTextPreviewAlloc( INT_PTR iPage, PINT_PTR pdBytes )
 {
 	//	SJISの場合は、ユニコード文字は&#dddd;で確保される
 
@@ -1923,10 +1923,10 @@ HRESULT UnicodeRadixExchange( LPVOID pVoid )
 	@param[in]	iNow	今の行
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocPageDivide( HWND hWnd, HINSTANCE hInst, INT iNow )
+HRESULT DocPageDivide( HWND hWnd, HINSTANCE hInst, INT_PTR iNow )
 {
-	INT	iDivLine = iNow + 1;
-	INT	iLines, mRslt, iNewPage;
+	INT_PTR	iDivLine = iNow + 1;
+	INT_PTR	iLines, mRslt, iNewPage;
 //	INT_PTR	iTotal, iNext;
 	ONELINE	stLine;
 	LINE_ITR	itLine, itEnd;
@@ -1987,7 +1987,7 @@ HRESULT DocThreadDropCopy( VOID )
 {
 	CHAR	acBuf[260];
 	TCHAR	atTitle[64], atInfo[256];
-	INT	cbSize, maxPage;//, dFocusBuf;
+	INT_PTR	cbSize, maxPage;//, dFocusBuf;
 	LPVOID	pcString = NULL;
 
 //	dFocusBuf = gixFocusPage;	//	現在頁を一旦待避させて
@@ -2031,7 +2031,7 @@ HRESULT DocThreadDropCopy( VOID )
 HRESULT DocSelText2PageName( VOID )
 {
 
-	INT	cbSize;
+	INT_PTR	cbSize;
 	LPVOID	pString = NULL;
 	LPTSTR	ptText;
 	UINT_PTR	cchSize, d;

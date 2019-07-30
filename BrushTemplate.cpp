@@ -36,7 +36,7 @@ static  TBBUTTON	gstBrTBInfo[] = {
 
 extern HFONT	ghAaFont;		//	AA用フォント
 
-extern INT		gbTmpltDock;	//	テンプレのドッキング
+extern INT_PTR		gbTmpltDock;	//	テンプレのドッキング
 extern BOOLEAN	gbDockTmplView;	//	くっついてるテンプレは見えているか
 
 //extern  HWND	ghMainSplitWnd;	//	メインのスプリットバーハンドル
@@ -44,7 +44,7 @@ extern  LONG	grdSplitPos;	//	スプリットバーの、左側の、画面右か
 
 static HIMAGELIST	ghBrushImgLst;
 
-static  UINT	gbBrushMode;	//!<	非零ブラシモード
+static  UINT_PTR	gbBrushMode;	//!<	非零ブラシモード
 
 static  ATOM	gBrTmplAtom;	//!<	
 static  HWND	ghBrTmplWnd;	//!<	ブラシパレット本体ウインドウ
@@ -55,12 +55,12 @@ static  HWND	ghBrLvTipWnd;	//!<	Brushリストツールチップ
 
 static  HWND	ghMainWnd;		//!<	編集ビューのある本体ウインドウ
 
-static  UINT	gNowGroup;		//!<	カテゴリ
+static  UINT_PTR	gNowGroup;		//!<	カテゴリ
 
 static WNDPROC	gpfOrigBrushCtgryProc;	//!<	
 static WNDPROC	gpfOrigBrushItemProc;	//!<	
 
-static  UINT	gBrhClmCnt;	//!<	表示カラム数
+static  UINT_PTR	gBrhClmCnt;	//!<	表示カラム数
 
 static WNDPROC	gpfOrigTBProc;	//!<	
 
@@ -68,20 +68,20 @@ static vector<AATEMPLATE>	gvcBrTmpls;	//!<	テンプレの保持
 //-------------------------------------------------------------------------------------------------
 
 
-LRESULT	CALLBACK BrushTmpleProc( HWND, UINT, WPARAM, LPARAM );
-VOID	Btp_OnCommand( HWND, INT, HWND, UINT );
-VOID	Btp_OnSize( HWND, UINT, INT, INT );
-LRESULT	Btp_OnNotify( HWND, INT, LPNMHDR );
-VOID	Btp_OnContextMenu( HWND, HWND, UINT, UINT );
+LRESULT CALLBACK BrushTmpleProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+VOID	Btp_OnCommand( HWND, INT_PTR, HWND, UINT_PTR );
+VOID	Btp_OnSize( HWND, UINT_PTR, INT_PTR, INT_PTR );
+LRESULT	Btp_OnNotify( HWND, INT_PTR, LPNMHDR );
+VOID	Btp_OnContextMenu( HWND, HWND, UINT_PTR, UINT_PTR );
 
-UINT	CALLBACK BrushTmpleItemData( LPTSTR, LPCTSTR, INT );
+UINT_PTR	CALLBACK BrushTmpleItemData( LPTSTR, LPCTSTR, INT_PTR );
 
-UINT	BrushTmpleItemListOn( UINT );
+UINT_PTR	BrushTmpleItemListOn( UINT_PTR );
 HRESULT	BrushTmpleItemReload( HWND );
 
 LRESULT	CALLBACK gpfBrushCtgryProc( HWND, UINT, WPARAM, LPARAM );
 LRESULT	CALLBACK gpfBrushItemProc(  HWND, UINT, WPARAM, LPARAM );
-LRESULT	Blv_OnNotify( HWND, INT, LPNMHDR );
+LRESULT	Blv_OnNotify( HWND, INT_PTR, LPNMHDR );
 
 static LRESULT	CALLBACK gpfToolbarProc( HWND, UINT, WPARAM, LPARAM );
 //-------------------------------------------------------------------------------------------------
@@ -103,7 +103,7 @@ HWND BrushTmpleInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame
 	TCHAR		atBuffer[MAX_STRING];
 
 	HBITMAP	hImg, hMsq;
-	INT		spPos;
+	INT_PTR		spPos;
 
 
 	WNDCLASSEX	wcex;
@@ -423,10 +423,10 @@ LRESULT CALLBACK BrushTmpleProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 	@param[in]	codeNotify	通知メッセージ	HIWORD(wParam)
 	@return		なし
 */
-VOID Btp_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
+VOID Btp_OnCommand( HWND hWnd, INT_PTR id, HWND hWndCtl, UINT_PTR codeNotify )
 {
-	INT			rslt;
-	UINT		dClm;
+	INT_PTR			rslt;
+	UINT_PTR		dClm;
 	LRESULT		lRslt;
 	LONG_PTR	rdExStyle;
 	TCHAR		atItem[SUB_STRING];
@@ -523,10 +523,10 @@ VOID Btp_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 	@param[in]	cx		変更されたクライヤント幅
 	@param[in]	cy		変更されたクライヤント高さ
 */
-VOID Btp_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
+VOID Btp_OnSize( HWND hWnd, UINT_PTR state, INT_PTR cx, INT_PTR cy )
 {
 	LONG	width;
-	UINT	i;
+	UINT_PTR	i;
 	RECT	cbxRect, tbrRect, rect;
 
 	if( !(ghBrTlBarWnd) )	return;
@@ -560,10 +560,10 @@ VOID Btp_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 	@param[in]	pstNmhdr	NOTIFYの詳細
 	@return		処理した内容とか
 */
-LRESULT Btp_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
+LRESULT Btp_OnNotify( HWND hWnd, INT_PTR idFrom, LPNMHDR pstNmhdr )
 {
 	HWND	hLvWnd;
-	INT		iPos, iItem, nmCode, iSubItem;
+	INT_PTR		iPos, iItem, nmCode, iSubItem;
 	INT_PTR	items;
 	TCHAR	atItem[SUB_STRING];
 	LPNMLISTVIEW	pstLv;
@@ -624,10 +624,10 @@ LRESULT Btp_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 	@param[in]	yPos		スクリーンＹ座業
 	@return		無し
 */
-VOID Btp_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
+VOID Btp_OnContextMenu( HWND hWnd, HWND hWndContext, UINT_PTR xPos, UINT_PTR yPos )
 {
 	HMENU	hMenu, hSubMenu;
-	UINT	dRslt;
+	UINT_PTR	dRslt;
 	LONG_PTR	rdExStyle;
 
 	POINT	stPoint;
@@ -659,7 +659,7 @@ VOID Btp_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 	@param[in]	cchSize	どっちかの内容の文字数
 	@return		特に意味はない
 */
-UINT CALLBACK BrushTmpleItemData( LPTSTR ptName, LPCTSTR ptLine, INT cchSize )
+UINT_PTR CALLBACK BrushTmpleItemData( LPTSTR ptName, LPCTSTR ptLine, INT_PTR cchSize )
 {
 //	両方NULLだったら、本体に追加処理をすれ
 	static AATEMPLATE	cstItem;
@@ -686,11 +686,11 @@ UINT CALLBACK BrushTmpleItemData( LPTSTR ptName, LPCTSTR ptLine, INT cchSize )
 /*!
 	アイテムをリストに展開
 	@param[in]	listNum	展開したいセット番号・０インデックス
-	@return	UINT	アイテムの個数
+	@return	UINT_PTR	アイテムの個数
 */
-UINT BrushTmpleItemListOn( UINT listNum )
+UINT_PTR BrushTmpleItemListOn( UINT_PTR listNum )
 {
-	INT			width;
+	INT_PTR			width;
 	UINT_PTR	i, items;
 	TCHAR		atItem[SUB_STRING];
 	LVITEM		stLvi;
@@ -774,7 +774,7 @@ HRESULT BrushTmpleItemReload( HWND hWnd )
 */
 LRESULT CALLBACK gpfBrushCtgryProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-	INT	id;
+	INT_PTR	id;
 
 	switch( msg )
 	{
@@ -811,7 +811,7 @@ LRESULT CALLBACK gpfBrushCtgryProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM l
 */
 LRESULT CALLBACK gpfBrushItemProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-	INT	id;
+	INT_PTR	id;
 
 	switch( msg )
 	{
@@ -844,10 +844,10 @@ LRESULT CALLBACK gpfBrushItemProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 	@param[in]	pstNmhdr	NOTIFYの詳細
 	@return		処理した内容とか
 */
-LRESULT Blv_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
+LRESULT Blv_OnNotify( HWND hWnd, INT_PTR idFrom, LPNMHDR pstNmhdr )
 {
 	HWND	hLvWnd;
-	INT		iPos, iItem, nmCode, iSubItem, iDot;
+	INT_PTR		iPos, iItem, nmCode, iSubItem, iDot;
 	INT_PTR	items;
 	TCHAR	atItem[SUB_STRING];
 	LVHITTESTINFO	stHitTestInfo;

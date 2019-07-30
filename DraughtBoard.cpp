@@ -64,7 +64,7 @@ static  HWND	ghDrghtTipWnd;	//!<	ツールチップ
 static LPTSTR	gptTipBuffer;	//!<	チップ内容
 #endif
 
-extern  UINT	gbAAtipView;	//	非０で、ＡＡツールチップ表示
+extern  UINT_PTR	gbAAtipView;	//	非０で、ＡＡツールチップ表示
 
 static  HWND	ghPtWnd;
 
@@ -72,8 +72,8 @@ static  ATOM	gDraughtAtom;	//!<	ウインドウクラスアトム
 static  HWND	ghDraughtWnd;	//!<	このウインドウハンドル
 
 
-EXTERNED UINT	gdClickDrt;		//!<	アイテムを左クルックしたときの基本動作・０通常挿入　１矩形挿入　２レイヤボックス開く　３UNIクリップ　４SJISクリップ
-EXTERNED UINT	gdSubClickDrt;	//!<	アイテムを中クルックしたときの基本動作・０通常挿入　１矩形挿入　２レイヤボックス開く　３UNIクリップ　４SJISクリップ
+EXTERNED UINT_PTR	gdClickDrt;		//!<	アイテムを左クルックしたときの基本動作・０通常挿入　１矩形挿入　２レイヤボックス開く　３UNIクリップ　４SJISクリップ
+EXTERNED UINT_PTR	gdSubClickDrt;	//!<	アイテムを中クルックしたときの基本動作・０通常挿入　１矩形挿入　２レイヤボックス開く　３UNIクリップ　４SJISクリップ
 //クルッペボードへコピるモードはコピーモードスワップに従う
 
 static HDC		ghNonItemDC;	//!<	アイテム無しの絵
@@ -82,15 +82,15 @@ static HPEN		ghLinePen;
 
 static HFONT	ghAreaFont;		//!<	サイズ表示用
 
-static INT		giItemSel;		//!<	マウスカーソル下にある枠番号
-static INT		giTarget;		//!<	クルックしたアイテム番号・−１で無し
+static INT_PTR		giItemSel;		//!<	マウスカーソル下にある枠番号
+static INT_PTR		giTarget;		//!<	クルックしたアイテム番号・−１で無し
 
-static  UINT	gbThumb;		//!<	サムネ状態であるか
+static  UINT_PTR	gbThumb;		//!<	サムネ状態であるか
 static  LONG	gdVwTop;		//!<	表示されてる一番左上の行番号０インデックス
 static  HWND	ghScrBarWnd;	//!<	サムネ用スクロールバァー
 
-static INT		giItemWidth;	//!<	アイテムの幅
-static INT		giItemHeight;	//!<	アイテムの高さ
+static INT_PTR		giItemWidth;	//!<	アイテムの幅
+static INT_PTR		giItemHeight;	//!<	アイテムの高さ
 
 //static POINT	gstMainLsPt;	//!<	メインから開いた場合の最終位置
 static POINT	gstViewLsPt;	//!<	ＭＡＡから開いた場合の最終位置
@@ -99,28 +99,28 @@ static POINT	gstViewLsPt;	//!<	ＭＡＡから開いた場合の最終位置
 static vector<AAMATRIX>	gvcDrtItems;	//!<	
 //-------------------------------------------------------------------------------------------------
 
-INT		DraughtTargetItemSet( LPPOINT );				//!<	
-DOUBLE	DraughtAspectKeeping( LPSIZE, UINT );			//!<	
-INT		DraughtItemDelete( CONST INT  );				//!<	
-HRESULT	DraughtItemUse( HWND, INT );					//!<	
+INT_PTR		DraughtTargetItemSet( LPPOINT );				//!<	
+DOUBLE	DraughtAspectKeeping( LPSIZE, UINT_PTR );			//!<	
+INT_PTR		DraughtItemDelete( CONST INT_PTR  );				//!<	
+HRESULT	DraughtItemUse( HWND, INT_PTR );					//!<	
 HRESULT	DraughtItemExport( HWND, LPTSTR );				//!<	
-VOID	DraughtButtonUp( HWND, INT, INT, UINT, UINT );	//!<	
-HRESULT	DraughtFrameResize( HWND, INT, INT );
+VOID	DraughtButtonUp( HWND, INT_PTR, INT_PTR, UINT_PTR, UINT_PTR );	//!<	
+HRESULT	DraughtFrameResize( HWND, INT_PTR, INT_PTR );
 
 LRESULT CALLBACK DraughtProc( HWND, UINT, WPARAM, LPARAM );
-VOID	Drt_OnCommand( HWND , INT, HWND, UINT );		//!<	
+VOID	Drt_OnCommand( HWND , INT_PTR, HWND, UINT_PTR );		//!<	
 VOID	Drt_OnPaint( HWND );							//!<	
-//VOID	Drt_OnSize( HWND , UINT, INT, INT );			//!<	
-VOID	Drt_OnMouseMove( HWND, INT, INT, UINT );		//!<	
-VOID	Drt_OnLButtonUp( HWND, INT, INT, UINT );		//!<	
-VOID	Drt_OnMButtonUp( HWND, INT, INT, UINT );		//!<	
-VOID	Drt_OnContextMenu( HWND, HWND, UINT, UINT );	//!<	
+//VOID	Drt_OnSize( HWND , UINT_PTR, INT_PTR, INT_PTR );			//!<	
+VOID	Drt_OnMouseMove( HWND, INT_PTR, INT_PTR, UINT_PTR );		//!<	
+VOID	Drt_OnLButtonUp( HWND, INT_PTR, INT_PTR, UINT_PTR );		//!<	
+VOID	Drt_OnMButtonUp( HWND, INT_PTR, INT_PTR, UINT_PTR );		//!<	
+VOID	Drt_OnContextMenu( HWND, HWND, UINT_PTR, UINT_PTR );	//!<	
 VOID	Drt_OnDestroy( HWND );							//!<	
 VOID	Drt_OnKillFocus( HWND, HWND );					//!<	
-VOID	Drt_OnVScroll( HWND , HWND, UINT, INT );		//!<	
-VOID	Drt_OnMouseWheel( HWND, INT, INT, INT, UINT );	//!<	
+VOID	Drt_OnVScroll( HWND , HWND, UINT_PTR, INT_PTR );		//!<	
+VOID	Drt_OnMouseWheel( HWND, INT_PTR, INT_PTR, INT_PTR, UINT_PTR );	//!<	
 #ifdef MAA_TOOLTIP
-LRESULT	Drt_OnNotify( HWND , INT, LPNMHDR );			//!<	
+LRESULT	Drt_OnNotify( HWND , INT_PTR, LPNMHDR );			//!<	
 #endif
 
 #ifdef USE_HOVERTIP
@@ -212,13 +212,13 @@ HRESULT DraughtInitialise( HINSTANCE hInstance, HWND hPtWnd )
 	@param[in]	bThumb		非０MAAのサムネ表示として呼ばれた
 	@return	作ったウインドウのハンドル
 */
-HWND DraughtWindowCreate( HINSTANCE hInstance, HWND hPtWnd, UINT bThumb )
+HWND DraughtWindowCreate( HINSTANCE hInstance, HWND hPtWnd, UINT_PTR bThumb )
 {
 	INT_PTR	iItems;
-	INT		iRslt, iScWid = 0, iScHei;
+	INT_PTR		iRslt, iScWid = 0, iScHei;
 	HDC		hdc;
 
-	INT		iBrdrWid = 0;
+	INT_PTR		iBrdrWid = 0;
 	TCHAR	atCaption[SUB_STRING];
 
 	RECT	wdRect, rect;
@@ -226,8 +226,8 @@ HWND DraughtWindowCreate( HINSTANCE hInstance, HWND hPtWnd, UINT bThumb )
 	TTTOOLINFO	stToolInfo;
 #endif
 
-	INT		iCapHei, iXfrm, iYfrm;
-	INT		iLines, iStep = 0;
+	INT_PTR		iCapHei, iXfrm, iYfrm;
+	INT_PTR		iLines, iStep = 0;
 	LONG	rigOffs = 0;
 	SCROLLINFO	stScrollInfo;
 
@@ -375,11 +375,11 @@ HWND DraughtWindowCreate( HINSTANCE hInstance, HWND hPtWnd, UINT bThumb )
 	@param[in]	iHeight	新しいアイテム高さ
 	@return	HRESULT	終了状態コード
 */
-HRESULT DraughtFrameResize( HWND hWnd, INT iWidth, INT iHeight )
+HRESULT DraughtFrameResize( HWND hWnd, INT_PTR iWidth, INT_PTR iHeight )
 {
-	INT		iBrdrWid = 0;
-	INT		iScWid = 0, iScHei;
-	INT		iCapHei, iXfrm, iYfrm;
+	INT_PTR		iBrdrWid = 0;
+	INT_PTR		iScWid = 0, iScHei;
+	INT_PTR		iCapHei, iXfrm, iYfrm;
 	LONG	rigOffs = 0;
 	RECT	rect;
 
@@ -483,7 +483,7 @@ LRESULT CALLBACK DraughtProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 	@param[in]	codeNotify	通知メッセージ	HIWORD(wParam)
 	@return		なし
 */
-VOID Drt_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
+VOID Drt_OnCommand( HWND hWnd, INT_PTR id, HWND hWndCtl, UINT_PTR codeNotify )
 {
 	
 	switch( id )
@@ -527,7 +527,7 @@ VOID Drt_OnPaint( HWND hWnd )
 	HDC			hdc, hAaDC;
 	HBITMAP		hOldBmp, hBmp;
 	HFONT		hOldFnt;
-	UINT		x = 0, y = 0;
+	UINT_PTR		x = 0, y = 0;
 	INT_PTR		iItems;
 	UINT_PTR	cchLen;
 	TCHAR		atArea[MIN_STRING];
@@ -669,9 +669,9 @@ VOID Drt_OnKillFocus( HWND hWnd, HWND hwndNewFocus )
 	@param[in]	pstNmhdr	NOTIFYの詳細
 	@return		処理した内容とか
 */
-LRESULT Drt_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
+LRESULT Drt_OnNotify( HWND hWnd, INT_PTR idFrom, LPNMHDR pstNmhdr )
 {
-	INT		iTarget, iOffset, i;
+	INT_PTR		iTarget, iOffset, i;
 	INT_PTR	iItems;
 	LPSTR	pcConts = NULL;
 	POINT	stMosPos;
@@ -739,9 +739,9 @@ LRESULT Drt_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 	@param[in]	keyFlags	押されてる他のボタン
 	@return		なし
 */
-VOID Drt_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
+VOID Drt_OnMouseMove( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
-	INT		iTarget;
+	INT_PTR		iTarget;
 	POINT	point;
 	BOOLEAN		bReDraw = FALSE;
 
@@ -768,7 +768,7 @@ VOID Drt_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
 	@param[in]	y			発生したＹ座標値
 	@param[in]	keyFlags	他に押されてるキーについて
 */
-VOID Drt_OnMButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
+VOID Drt_OnMButtonUp( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
 	TRACE( TEXT("MUP %d x %d"), x , y );	//	クライヤント座標
 
@@ -785,7 +785,7 @@ VOID Drt_OnMButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
 	@param[in]	y			発生したＹ座標値
 	@param[in]	keyFlags	他に押されてるキーについて
 */
-VOID Drt_OnLButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
+VOID Drt_OnLButtonUp( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
 	TRACE( TEXT("LUP %d x %d"), x , y );	//	クライヤント座標
 
@@ -803,11 +803,11 @@ VOID Drt_OnLButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
 	@param[in]	keyFlags	他に押されてるキーについて
 	@param[in]	message		うｐされたボタンタイプ	WM_LBUTTONUP	WM_MBUTTONUP
 */
-VOID DraughtButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags, UINT message )
+VOID DraughtButtonUp( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR keyFlags, UINT_PTR message )
 {
 	POINT	stPos;
-	INT		id;
-	UINT	dMode, dSubMode, dStyle;
+	INT_PTR		id;
+	UINT_PTR	dMode, dSubMode, dStyle;
 
 	stPos.x = x;
 	stPos.y = y;
@@ -867,10 +867,10 @@ VOID DraughtButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags, UINT message )
 	@param[in]	yPos		スクリーンＹ座業
 	@return		無し
 */
-VOID Drt_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
+VOID Drt_OnContextMenu( HWND hWnd, HWND hWndContext, UINT_PTR xPos, UINT_PTR yPos )
 {
 	HMENU	hMenu, hSubMenu;
-	UINT	dRslt;
+	UINT_PTR	dRslt;
 
 	POINT	stPoint, stPos;
 
@@ -942,9 +942,9 @@ VOID Drt_OnDestroy( HWND hWnd )
 	@param[in]	zDelta	回転量・１２０単位・WHEEL_DELTA
 	@param[in]	fwKeys	他に押されていたキー
 */
-VOID Drt_OnMouseWheel( HWND hWnd, INT xPos, INT yPos, INT zDelta, UINT fwKeys )
+VOID Drt_OnMouseWheel( HWND hWnd, INT_PTR xPos, INT_PTR yPos, INT_PTR zDelta, UINT_PTR fwKeys )
 {
-	UINT	dCode;
+	UINT_PTR	dCode;
 
 //	HWND	hChdWnd;
 //	POINT	stPoint;
@@ -970,9 +970,9 @@ VOID Drt_OnMouseWheel( HWND hWnd, INT xPos, INT yPos, INT zDelta, UINT fwKeys )
 	@param[in]	pos		つまみの位置
 	@return		無し
 */
-VOID Drt_OnVScroll( HWND hWnd, HWND hwndCtl, UINT code, INT pos )
+VOID Drt_OnVScroll( HWND hWnd, HWND hwndCtl, UINT_PTR code, INT_PTR pos )
 {
-	INT	maePos;
+	INT_PTR	maePos;
 	SCROLLINFO	stScrollInfo;
 
 //	if( ghScrBarWnd != hwndCtl )	return;
@@ -1043,7 +1043,7 @@ VOID Drt_OnVScroll( HWND hWnd, HWND hwndCtl, UINT code, INT pos )
 */
 LPTSTR CALLBACK DraughtHoverTipInfo( LPVOID pVoid )
 {
-	INT		iTarget, iOffset, i;
+	INT_PTR		iTarget, iOffset, i;
 	INT_PTR	iItems;
 	LPSTR	pcConts = NULL;
 	LPTSTR	ptBuffer = NULL;
@@ -1095,15 +1095,15 @@ LPTSTR CALLBACK DraughtHoverTipInfo( LPVOID pVoid )
 	@param[in]	hWnd	ウインドウハンドル
 	@param[in]	bSqSel	矩形であるかどうか
 */
-UINT DraughtItemAddFromSelect( HWND hWnd, UINT bSqSel )
+UINT_PTR DraughtItemAddFromSelect( HWND hWnd, UINT_PTR bSqSel )
 {
 	LPTSTR	ptString = NULL;
-	UINT	cchSize, cbSize;
+	CCH_SIZE	cchSize, cbSize;
 	LPPOINT	pstPos = NULL;
 
 	UINT_PTR	i, j, iTexts;
 	LONG	dMin = 0;
-	INT		insDot, yLine, iLines = 0, dOffset;
+	INT_PTR		insDot, yLine, iLines = 0, dOffset;
 	LPTSTR	ptSpace = NULL;
 
 	LPSTR	pcArts;
@@ -1192,7 +1192,7 @@ UINT DraughtItemAddFromSelect( HWND hWnd, UINT bSqSel )
 	@param[in]	pcArts	ＡＡテキストSJIS
 	@return		追加後のアイテム総数
 */
-UINT DraughtItemAdding( HWND hWnd, LPSTR pcArts )
+UINT_PTR DraughtItemAdding( HWND hWnd, LPSTR pcArts )
 {
 	UINT_PTR	cbSize;
 	AAMATRIX	stItem;
@@ -1229,11 +1229,11 @@ UINT DraughtItemAdding( HWND hWnd, LPSTR pcArts )
 	@param[in]		hWnd	ウインドウハンドル
 	@param[in,out]	pstItem	イメージ作りたいAAのデータとか
 */
-UINT DraughtAaImageing( HWND hWnd, LPAAMATRIX pstItem )
+UINT_PTR DraughtAaImageing( HWND hWnd, LPAAMATRIX pstItem )
 {
 	UINT_PTR	cchSize;
 	LPTSTR		ptTextaa;
-	INT		iRslt, iYdot, iXdot, iLine;
+	INT_PTR		iRslt, iYdot, iXdot, iLine;
 	HDC		hdc, hMemDC;
 	HBITMAP	hOldBmp;
 	RECT	rect;
@@ -1290,12 +1290,12 @@ UINT DraughtAaImageing( HWND hWnd, LPAAMATRIX pstItem )
 	@param[in]	id		動作モードＩＤ
 	@return		HRESULT	終了状態コード
 */
-HRESULT DraughtItemUse( HWND hWnd, INT id )
+HRESULT DraughtItemUse( HWND hWnd, INT_PTR id )
 {
 	LPSTR		pcAaItem;
 	INT_PTR		iItems, i, iOffset, iTarget;
 	UINT_PTR	cbSize;
-	UINT		dMode;
+	UINT_PTR		dMode;
 	MAAM_ITR	itItem;
 
 	if( gbThumb )	//	サムネモード
@@ -1366,10 +1366,11 @@ HRESULT DraughtItemUse( HWND hWnd, INT id )
 	@param[in]	iTarget	対象の通し番号・マイナスなら全削除
 	@return	非０削除した　０削除できんかった
 */
-INT DraughtItemDelete( CONST INT iTarget )
+
+INT_PTR DraughtItemDelete( CONST INT_PTR iTarget )
 {
 	INT_PTR	iItems, i;
-	INT		delCnt;
+	INT_PTR		delCnt;
 	MAAM_ITR	itItem;
 
 	iItems = gvcDrtItems.size( );	//	現在個数
@@ -1403,9 +1404,10 @@ INT DraughtItemDelete( CONST INT iTarget )
 	@param[in]	pstPos	クライヤント座標が入った構造体ポインター
 	@return		左上から、→に通し番号０インデックス　無効で−１
 */
-INT DraughtTargetItemSet( LPPOINT pstPos )
+
+INT_PTR DraughtTargetItemSet( LPPOINT pstPos )
 {
-	INT	ix, iy, number;
+	INT_PTR	ix, iy, number;
 
 	ix = pstPos->x / giItemWidth;
 	iy = pstPos->y / giItemHeight;
@@ -1424,10 +1426,10 @@ INT DraughtTargetItemSet( LPPOINT pstPos )
 	@param[in]		bOrgRem	非０サムネサイズより小さいならオリジナルサイズ
 	@return	DOUBLE	ZOOM率
 */
-DOUBLE DraughtAspectKeeping( LPSIZE pstSize, UINT bOrgRem )
+DOUBLE DraughtAspectKeeping( LPSIZE pstSize, UINT_PTR bOrgRem )
 {
-	INT	iOrgWid, iOrgHei;
-	INT	iZomWid, iZomHei;
+	INT_PTR	iOrgWid, iOrgHei;
+	INT_PTR	iZomWid, iZomHei;
 	DOUBLE	ddPercent, ddBuff;
 
 	iOrgWid = pstSize->cx;

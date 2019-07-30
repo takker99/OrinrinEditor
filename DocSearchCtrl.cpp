@@ -53,9 +53,9 @@ F3ジャンプの記録、頁移動したら、その頁に合わせる
 //typedef struct tagFINDPOSITION
 //{
 //	LPARAM	dUnique;	//!<	ファイル通し番号・１インデックス
-//	INT		iPage;		//!<	属してる頁
-//	INT		iLine;		//!<	該当行
-//	INT		iCaret;		//!<	行内での文字位置
+//	INT_PTR		iPage;		//!<	属してる頁
+//	INT_PTR		iLine;		//!<	該当行
+//	INT_PTR		iCaret;		//!<	行内での文字位置
 //
 //} FINDPOSITION, *LPFINDPOSITION;
 
@@ -66,7 +66,7 @@ extern list<ONEFILE>	gltMultiFiles;	//	複数ファイル保持
 
 extern FILES_ITR	gitFileIt;			//		今見てるファイルの本体
 
-extern INT		gixFocusPage;			//		注目中のページ・とりあえず０・０インデックス
+extern INT_PTR		gixFocusPage;			//		注目中のページ・とりあえず０・０インデックス
 
 EXTERNED HWND	ghFindDlg;				//!<	検索ダイヤログのハンドル
 
@@ -74,13 +74,13 @@ EXTERNED HWND	ghFindDlg;				//!<	検索ダイヤログのハンドル
 static TCHAR	gatLastPtn[MAX_PATH];	//!<	最新の検索文字列を覚えておく
 
 static TCHAR	atSetPattern[MAX_PATH];	//!<	検索開始した文字列・検索ボタン連打したら次々進むの判断に使う
-static INT		giSetRange;				//!<	検索開始したときの、検索範囲
+static INT_PTR		giSetRange;				//!<	検索開始したときの、検索範囲
 static BOOLEAN	gbSetModCrlf;			//!<	検索開始したときの、\ｎ対応
 
-//static INT		giCrLfCnt;				//!<	検索文字列中に改行がいくつあるか
+//static INT_PTR		giCrLfCnt;				//!<	検索文字列中に改行がいくつあるか
 
-static  UINT	gdNextStart;			//!<	今回の検索終端位置＝次の検索開始位置
-static   INT	giSearchPage;			//!<	検索してるページ。ページ渡り検索用
+static  UINT_PTR	gdNextStart;			//!<	今回の検索終端位置＝次の検索開始位置
+static   INT_PTR	giSearchPage;			//!<	検索してるページ。ページ渡り検索用
 
 //static FINDPOSITION	gstFindPos;			//!<	検索ジャンプ位置
 
@@ -90,16 +90,16 @@ static   INT	giSearchPage;			//!<	検索してるページ。ページ渡り検�
 
 INT_PTR		CALLBACK FindStrDlgProc( HWND, UINT, WPARAM, LPARAM );	//!<	
 HRESULT		FindExecute( HWND );									//!<	
-INT_PTR		FindPageSearch( LPTSTR, INT, FILES_ITR );				//!<	
+INT_PTR		FindPageSearch( LPTSTR, INT_PTR, FILES_ITR );				//!<	
 
 UINT_PTR	SearchPatternStruct( LPTSTR, UINT_PTR, LPTSTR, BOOLEAN );
 
 #ifdef SEARCH_HIGHLIGHT
-INT		FindPageHighlightOff( INT , FILES_ITR );				//!<	
-HRESULT	FindPageHighlightSet( INT, INT, INT, FILES_ITR );		//!<	
-HRESULT	FindLineHighlightOff( UINT , LINE_ITR );				//!<	
+INT_PTR		FindPageHighlightOff( INT_PTR , FILES_ITR );				//!<	
+HRESULT	FindPageHighlightSet( INT_PTR, INT_PTR, INT_PTR, FILES_ITR );		//!<	
+HRESULT	FindLineHighlightOff( UINT_PTR , LINE_ITR );				//!<	
 #endif
-HRESULT		FindPageSelectSet( INT, INT, INT, FILES_ITR );			//!<	
+HRESULT		FindPageSelectSet( INT_PTR, INT_PTR, INT_PTR, FILES_ITR );			//!<	
 
 //-------------------------------------------------------------------------------------------------
 
@@ -137,7 +137,6 @@ HRESULT FindDialogueOpen( HINSTANCE hInst, HWND hWnd )
 	return S_OK;
 }
 //-------------------------------------------------------------------------------------------------
-
 /*!
 	検索ダイヤログのプロシージャ
 	@param[in]	hDlg	ダイヤログハンドル
@@ -150,7 +149,7 @@ HRESULT FindDialogueOpen( HINSTANCE hInst, HWND hWnd )
 INT_PTR CALLBACK FindStrDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
 	HWND	hWorkWnd;
-	UINT	id;
+	UINT_PTR	id;
 //	HWND	hWndChild;
 
 
@@ -224,10 +223,10 @@ INT_PTR CALLBACK FindStrDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 /*!
 	アクセラレータで直接検索指定
 */
-HRESULT FindDirectly( HINSTANCE hInst, HWND hWnd, INT dCommand )
+HRESULT FindDirectly( HINSTANCE hInst, HWND hWnd, INT_PTR dCommand )
 {
 	 BOOLEAN	bOnCrLf = FALSE;
-	 INT		cbSize;
+	 INT_PTR		cbSize;
 	UINT_PTR	cchSize, d;
 	LPTSTR		ptText;
 
@@ -284,11 +283,11 @@ HRESULT FindDirectly( HINSTANCE hInst, HWND hWnd, INT dCommand )
 HRESULT FindExecute( HWND hDlg )
 {
 //	HWND	hWorkWnd;
-//	UINT		dStartPage;
+//	UINT_PTR		dStartPage;
 	UINT_PTR	cchSzPtn;
 	 INT_PTR	iPage;
 	 INT_PTR	iFindTop;
-	 INT		dRange;	//	検索範囲　０頁　１ファイル 　キャンセル＞２全開きファイル
+	 INT_PTR		dRange;	//	検索範囲　０頁　１ファイル 　キャンセル＞２全開きファイル
 	 BOOLEAN	bModCrlf;
 
 //	 BOOLEAN	bSequenSearch = FALSE;	//	連続サーチ中であるか
@@ -472,9 +471,9 @@ UINT_PTR SearchPatternStruct( LPTSTR ptDest, UINT_PTR cchSize, LPTSTR ptSource, 
 	@param[in]	itFile		ファイルイテレータ
 	@return	未ヒットなら−１、ヒットなら、先頭からの文字数・改行は２文字扱い
 */
-INT_PTR FindPageSearch( LPTSTR ptPattern, INT iTgtPage, FILES_ITR itFile )
+INT_PTR FindPageSearch( LPTSTR ptPattern, INT_PTR iTgtPage, FILES_ITR itFile )
 {
-	 INT		dCch;//, dLeng;
+	 INT_PTR		dCch;//, dLeng;
 	 INT_PTR	iRslt;
 	 INT_PTR	dBytes;
 	UINT_PTR	cchSize, cchSzPtn;
@@ -553,12 +552,12 @@ INT_PTR FindPageSearch( LPTSTR ptPattern, INT iTgtPage, FILES_ITR itFile )
 	@param[in]	itFile	ファイルイテレータ
 	@return		HRESULT	終了状態コード
 */
-HRESULT FindPageSelectSet( INT iOffset, INT iRange, INT iPage, FILES_ITR itFile )
+HRESULT FindPageSelectSet( INT_PTR iOffset, INT_PTR iRange, INT_PTR iPage, FILES_ITR itFile )
 {
 	UINT_PTR	ln, iLetters;//, iLines;
 	 INT_PTR	dMozis;
-	 INT		iTotal, iDot, iLnTop, iSlide, mz, iNext, iWid = 0;
-	 INT		iEndTotal, iEndOffset;
+	 INT_PTR		iTotal, iDot, iLnTop, iSlide, mz, iNext, iWid = 0;
+	 INT_PTR		iEndTotal, iEndOffset;
 //	RECT		inRect;
 
 	LINE_ITR	itLine, itLnEnd;
@@ -670,11 +669,11 @@ HRESULT FindPageSelectSet( INT iOffset, INT iRange, INT iPage, FILES_ITR itFile 
 	@param[in]	itFile	ファイルイテレータ
 	@return		HRESULT	終了状態コード
 */
-HRESULT FindPageHighlightSet( INT iOffset, INT iRange, INT iPage, FILES_ITR itFile )
+HRESULT FindPageHighlightSet( INT_PTR iOffset, INT_PTR iRange, INT_PTR iPage, FILES_ITR itFile )
 {
 	UINT_PTR	ln, iLetters;//, iLines;
 	INT_PTR		dMozis;
-	INT			iTotal, iDot, iLnTop, iSlide, mz, iNext, iWid = 0;
+	INT_PTR			iTotal, iDot, iLnTop, iSlide, mz, iNext, iWid = 0;
 	RECT		inRect;
 
 	LINE_ITR	itLine, itLnEnd;
@@ -793,11 +792,11 @@ HRESULT FindHighlightOff( VOID )
 	@param[in]	itFile	ファイルイテレータ
 	@return		特にない
 */
-INT FindPageHighlightOff( INT iPage, FILES_ITR itFile )
+INT_PTR FindPageHighlightOff( INT_PTR iPage, FILES_ITR itFile )
 {
 	UINT_PTR	ln;//, iLines, iLetters, mz;
-//	UINT		dStyle;
-//	INT			iDot, iWid;
+//	UINT_PTR		dStyle;
+//	INT_PTR			iDot, iWid;
 //	RECT		inRect;
 
 	LINE_ITR	itLine, itLnEnd;
@@ -827,11 +826,11 @@ INT FindPageHighlightOff( INT iPage, FILES_ITR itFile )
 	@param[in]	itFile	行イテレータ
 	@return	HRESULT	終了状態コード
 */
-HRESULT FindLineHighlightOff( UINT iLine, LINE_ITR itLine )
+HRESULT FindLineHighlightOff( UINT_PTR iLine, LINE_ITR itLine )
 {
 	UINT_PTR	iLetters, mz;//, iLines, ln;
-	UINT		dStyle;
-	INT			iDot, iWid;
+	UINT_PTR		dStyle;
+	INT_PTR			iDot, iWid;
 	RECT		inRect;
 
 
@@ -878,11 +877,11 @@ HRESULT FindLineHighlightOff( UINT iLine, LINE_ITR itLine )
 	@param[in]	pxDot	カーソルドット位置・処理したら戻す
 	@param[in]	pyLine	カーソル行・処理したら戻す
 	@param[in]	pMozi	キャレットの左側の文字数・処理したら戻す
-	@return		INT		負：エラー　０：ヒット無し　１〜：ヒットした
+	@return		INT_PTR		負：エラー　０：ヒット無し　１〜：ヒットした
 */
-INT FindStringJump( UINT dMode, PINT pXdot, PINT pYline, PINT pMozi )
+INT_PTR FindStringJump( UINT_PTR dMode, PINT_PTR pXdot, PINT_PTR pYline, PINT_PTR pMozi )
 {
-	INT			iXdot, iYline, iMozi;
+	INT_PTR			iXdot, iYline, iMozi;
 	BOOLEAN		bStart, bBegin;
 	INT_PTR		dTotalPage, dTotalLine;
 	PAGE_ITR	itPage;	//	頁を順に見ていく
@@ -975,7 +974,7 @@ HRESULT FindNowPageReSearch( VOID )
 	@param[in]	iTgtPage	対象頁番号
 	@return	HRESULT	終了状態コード
 */
-HRESULT FindDelayPageReSearch( INT iTgtPage )
+HRESULT FindDelayPageReSearch( INT_PTR iTgtPage )
 {
 
 	//	全体検索でないか、検索文字列が空なら無視してよろし
@@ -997,7 +996,7 @@ HRESULT FindDelayPageReSearch( INT iTgtPage )
 	@param[in]	iTgtLine	対象行番号
 	@return	HRESULT	終了状態コード
 */
-HRESULT FindTextModifyLine( INT iTgtLine )
+HRESULT FindTextModifyLine( INT_PTR iTgtLine )
 {
 //該当行と改行が及ぶ範囲の行のみ、いったんチェック外して、該当範囲の行だけチェキ
 //コピペされた場合は？　挿入削除処理が行われてからチェックするなら、影響半亥注意

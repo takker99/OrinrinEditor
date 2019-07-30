@@ -73,7 +73,7 @@ static  ATOM	gTipAtom;	//!<	ウインドウクラスアトム
 static  HWND	ghTipWnd;	//!<	ホバーチップのウインドウハンドル
 static HFONT	ghTipFont;	//!<	ツールチップ用
 
-static  UINT	gdMoveVol;	//!<	移動量カウント
+static  UINT_PTR	gdMoveVol;	//!<	移動量カウント
 
 static LPTSTR	gptContent;	//!<	表示内容
 static RECT		gstContSize;//!<	表示大きさ
@@ -84,12 +84,12 @@ VOID	HoverTipClose( HWND );	//!<
 
 LRESULT	CALLBACK HoverTipProc( HWND, UINT, WPARAM, LPARAM );	//!<	
 VOID	Htp_OnPaint( HWND );						//!<	
-VOID	htp_OnTimer( HWND, UINT );					//!<	
+VOID	htp_OnTimer( HWND, UINT_PTR );					//!<	
 VOID	Htp_OnKillFocus( HWND, HWND );				//!<	
-VOID	Htp_OnLButtonUp( HWND, INT, INT, UINT );	//!<	
-VOID	Htp_OnMButtonUp( HWND, INT, INT, UINT );	//!<	
-VOID	Htp_OnRButtonUp( HWND, INT, INT, UINT );	//!<	
-VOID	Htp_OnMouseMove( HWND, INT, INT, UINT );	//!<	
+VOID	Htp_OnLButtonUp( HWND, INT_PTR, INT_PTR, UINT_PTR );	//!<	
+VOID	Htp_OnMButtonUp( HWND, INT_PTR, INT_PTR, UINT_PTR );	//!<	
+VOID	Htp_OnRButtonUp( HWND, INT_PTR, INT_PTR, UINT_PTR );	//!<	
+VOID	Htp_OnMouseMove( HWND, INT_PTR, INT_PTR, UINT_PTR );	//!<	
 //-------------------------------------------------------------------------------------------------
 
 /*!
@@ -102,7 +102,7 @@ HRESULT HoverTipInitialise( HINSTANCE hInstance, HWND hPtWnd )
 {
 	LOGFONT	stFont;
 	WNDCLASSEX	wcex;
-	INT	ttSize;
+	INT_PTR	ttSize;
 
 	if( hInstance )
 	{
@@ -179,7 +179,7 @@ HRESULT HoverTipResist( HWND hTgtWnd )
 	@param[in]	ttSize	文字サイズ・１２か１６しかない
 	@return		HRESULT	終了状態コード
 */
-HRESULT HoverTipSizeChange( INT ttSize )
+HRESULT HoverTipSizeChange( INT_PTR ttSize )
 {
 	LOGFONT	stFont;
 
@@ -206,8 +206,8 @@ HRESULT HoverTipSizeChange( INT ttSize )
 */
 LRESULT HoverTipOnMouseHover( HWND hEvWnd, WPARAM wParam, LPARAM lParam, HOVERTIPDISP pfInfoGet )
 {
-	INT		x, y;
-	UINT	keyFlags;
+	INT_PTR		x, y;
+	UINT_PTR	keyFlags;
 	LPTSTR	ptText;
 
 	HDC		hdc;
@@ -215,13 +215,13 @@ LRESULT HoverTipOnMouseHover( HWND hEvWnd, WPARAM wParam, LPARAM lParam, HOVERTI
 
 	RECT	deskRect;
 	POINT	point;
-	INT		xSub, ySub;
+	INT_PTR		xSub, ySub;
 
 //	HOVERTIPINFO	stTipInfo;
 
 	TRACE( TEXT("MOUSE HOVER RISING") );
 
-	keyFlags = (UINT)wParam;
+	keyFlags = (UINT_PTR)wParam;
 	//	Indicates whether various virtual keys are down.
 	//	This parameter can be one or more of the following values.
 	//	Value		Meaning
@@ -393,7 +393,7 @@ VOID Htp_OnPaint( HWND hWnd )
 	@param[in]	hWnd	ウインドウハンドル
 	@param[in]	id		タイマＩＤ
 */
-VOID htp_OnTimer( HWND hWnd, UINT id )
+VOID htp_OnTimer( HWND hWnd, UINT_PTR id )
 {
 	//	関係ない場合・先ずありえないハズだが
 	if( HOVER_TMID != id )	return;
@@ -424,7 +424,7 @@ VOID Htp_OnKillFocus( HWND hWnd, HWND hwndNewFocus )
 	@param[in]	y			発生したＹ座標値
 	@param[in]	keyFlags	他に押されてるキーについて
 */
-VOID Htp_OnLButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
+VOID Htp_OnLButtonUp( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
 	TRACE( TEXT("HTP LUP %d x %d"), x , y );	//	クライヤント座標
 
@@ -441,7 +441,7 @@ VOID Htp_OnLButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
 	@param[in]	y			発生したＹ座標値
 	@param[in]	keyFlags	他に押されてるキーについて
 */
-VOID Htp_OnMButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
+VOID Htp_OnMButtonUp( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
 	TRACE( TEXT("HTP MUP %d x %d"), x , y );	//	クライヤント座標
 
@@ -458,7 +458,7 @@ VOID Htp_OnMButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
 	@param[in]	y			発生したＹ座標値
 	@param[in]	keyFlags	他に押されてるキーについて
 */
-VOID Htp_OnRButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
+VOID Htp_OnRButtonUp( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
 	TRACE( TEXT("HTP RUP %d x %d"), x , y );	//	クライヤント座標
 
@@ -476,7 +476,7 @@ VOID Htp_OnRButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
 	@param[in]	keyFlags	押されてる他のボタン
 	@return		なし
 */
-VOID Htp_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
+VOID Htp_OnMouseMove( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
 	gdMoveVol++;
 	if( HOVER_MOVE < gdMoveVol )

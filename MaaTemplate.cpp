@@ -57,7 +57,7 @@ static  HWND	ghStsBarWnd;	//!<	ステータスバーハンドル
 
 EXTERNED HWND	ghSplitaWnd;	//!<	スプリットバーハンドル
 
-EXTERNED UINT	gbAAtipView;	//!<	非０で、ＡＡツールチップ表示
+EXTERNED UINT_PTR	gbAAtipView;	//!<	非０で、ＡＡツールチップ表示
 
 EXTERNED HWND	ghMaaFindDlg;	//!<	MAA検索ダイヤログハンドル
 
@@ -68,31 +68,31 @@ static TCHAR	gatTemplatePath[MAX_PATH];	//!<	MLTルートディレクトリ
 static list<OPENHIST>	gltProfHist;	//!<	プロフ開いた履歴・
 EXTERNED HMENU	ghProfHisMenu;			//!<	履歴表示する部分・動的に内容作成せないかん
 
-static CONST INT	giStbRoom[] = { 150 , 350 , -1 };
+static CONST INT_PTR	giStbRoom[] = { 150 , 350 , -1 };
 //-------------------------------------------------------------------------------------------------
 
 LRESULT	CALLBACK MaaTmpltWndProc( HWND, UINT, WPARAM, LPARAM );	//!<	
 BOOLEAN	Maa_OnCreate( HWND, LPCREATESTRUCT );			//!<	WM_CREATE の処理・固定Editとかつくる
 VOID	Maa_OnPaint( HWND );							//!<	WM_PAINT の処理・枠線描画とか
 VOID	Maa_OnDestroy( HWND );							//!<	WM_DESTROY の処理・BRUSHとかのオブジェクトの破壊を忘れないように
-LRESULT	Maa_OnNotify( HWND , INT, LPNMHDR );			//!<	
+LRESULT	Maa_OnNotify( HWND , INT_PTR, LPNMHDR );			//!<	
 VOID	Maa_OnDrawItem( HWND, CONST DRAWITEMSTRUCT * );	//!<	
 VOID	Maa_OnMeasureItem( HWND, MEASUREITEMSTRUCT * );	//!<	
 
 #ifndef _ORRVW	//	エディタのみ
-VOID	Maa_OnActivate( HWND, UINT, HWND, BOOL );		//!<	
-VOID	Maa_OnShowWindow( HWND, BOOL, UINT );	//!<	
+VOID	Maa_OnActivate( HWND, UINT_PTR, HWND, BOOL );		//!<	
+VOID	Maa_OnShowWindow( HWND, BOOL, UINT_PTR );	//!<	
 #endif
 
 
 #define TREEPROF_AUTOCHECK
 
 INT_PTR	CALLBACK TreeProfileDlgProc( HWND, UINT, WPARAM, LPARAM );	//!<	
-HRESULT	TreeProfListUp( HWND, HWND, LPTSTR, HTREEITEM, UINT, INT );	//!<	
-UINT	TreeLoadNodeProc( HWND, HWND, HTREEITEM, UINT );			//!<	
-VOID	TreeProfCheckState( HWND, HTREEITEM, UINT );				//!<	
+HRESULT	TreeProfListUp( HWND, HWND, LPTSTR, HTREEITEM, UINT_PTR, INT_PTR );	//!<	
+UINT_PTR	TreeLoadNodeProc( HWND, HWND, HTREEITEM, UINT_PTR );			//!<	
+VOID	TreeProfCheckState( HWND, HTREEITEM, UINT_PTR );				//!<	
 #ifdef TREEPROF_AUTOCHECK
-UINT	TreeProfCheckExistent( HWND, LPTSTR, HWND, HTREEITEM, UINT );	//!<	
+UINT_PTR	TreeProfCheckExistent( HWND, LPTSTR, HWND, HTREEITEM, UINT_PTR );	//!<	
 #endif
 
 //-------------------------------------------------------------------------------------------------
@@ -111,10 +111,10 @@ HWND MaaTmpltInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame )
 #ifndef _ORRVW
 	RECT	sbRect;
 #endif
-	INT		bMode = 0;
+	INT_PTR		bMode = 0;
 
 #ifdef _ORRVW
-	INT	bTopMost;
+	INT_PTR	bTopMost;
 #endif
 
 	WIN32_FIND_DATA	stFindData;
@@ -266,7 +266,7 @@ HRESULT MaaTmpltPositionReset( HWND hMainWnd )
 	@param[in]	bSet	非０Toggle処理　０状態確認
 	@return	非０見えてる　０消えてる
 */
-BOOLEAN MaaViewToggle( UINT bSet )
+BOOLEAN MaaViewToggle( UINT_PTR bSet )
 {
 	BOOL	bStyle;
 
@@ -299,9 +299,9 @@ BOOLEAN MaaViewToggle( UINT bSet )
 */
 LRESULT CALLBACK MaaTmpltWndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
-	UINT	uRslt;
+	UINT_PTR	uRslt;
 #ifdef MAA_TEXT_FIND
-	INT		itemID;
+	INT_PTR		itemID;
 	HDC		hdc;
 	HWND	hWndChild;
 #endif
@@ -344,7 +344,7 @@ LRESULT CALLBACK MaaTmpltWndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 			break;
 #endif
 		case WM_MOUSEWHEEL:	//	返り値が必要な場合を考慮
-			uRslt = Maa_OnMouseWheel( hWnd, (INT)(SHORT)LOWORD(lParam), (INT)(SHORT)HIWORD(lParam), (INT)(SHORT)HIWORD(wParam), (UINT)(SHORT)LOWORD(wParam) );
+			uRslt = Maa_OnMouseWheel( hWnd, (INT)(SHORT)LOWORD(lParam), (INT)(SHORT)HIWORD(lParam), (INT)(SHORT)HIWORD(wParam), (UINT_PTR)(SHORT)LOWORD(wParam) );
 			break;
 
 		default:	break;
@@ -362,9 +362,9 @@ LRESULT CALLBACK MaaTmpltWndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 	@param[in]	fShow	非０表示状態にされた　０非表示状態にされた
 	@param[in]	status	０ShowWindow函数で操作された　非０その他の理由
 */
-VOID Maa_OnShowWindow( HWND hWnd, BOOL fShow, UINT status )
+VOID Maa_OnShowWindow( HWND hWnd, BOOL fShow, UINT_PTR status )
 {
-	INT	rslt;
+	INT_PTR	rslt;
 /*
 SW_OTHERUNZOOM	 4	The window is being uncovered because a maximize window was restored or minimized.
 SW_OTHERZOOM	 2	The window is being covered by another window that has been maximized.
@@ -394,7 +394,7 @@ SW_PARENTOPENING 3	The window's owner window is being restored.
 	@param[in]	hWndActDeact	あくちぶ又は非あくちぶになるやつ・NULLでも可
 	@param[in]	fMinimized		最小化ならNULL
 */
-VOID Maa_OnActivate( HWND hWnd, UINT state, HWND hWndActDeact, BOOL fMinimized )
+VOID Maa_OnActivate( HWND hWnd, UINT_PTR state, HWND hWndActDeact, BOOL fMinimized )
 {
 //	LONG_PTR	rdExStyle;
 //	HWND		hWorkWnd;
@@ -428,8 +428,8 @@ BOOLEAN Maa_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 	HINSTANCE lcInst = lpCreateStruct->hInstance;	//	受け取った初期化情報から、インスタンスハンドルをひっぱる
 	RECT	rect, sbRect, tbRect;
 
-	INT	iTfTop;
-	INT	spPos;
+	INT_PTR	iTfTop;
+	INT_PTR	spPos;
 
 
 	GetClientRect( hWnd, &rect );
@@ -480,7 +480,7 @@ BOOLEAN Maa_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 	@param[in]	codeNotify	通知メッセージ	HIWORD(wParam)
 	@return		なし
 */
-VOID Maa_OnCommand( HWND hWnd, INT id, HWND hwndCtl, UINT codeNotify )
+VOID Maa_OnCommand( HWND hWnd, INT_PTR id, HWND hwndCtl, UINT_PTR codeNotify )
 {
 	LONG_PTR	rdExStyle;
 
@@ -659,10 +659,10 @@ VOID Maa_OnDestroy( HWND hWnd )
 	@param[in]	cx		クライヤントＸ幅
 	@param[in]	cy		クライヤントＹ高さ
 */
-VOID Maa_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
+VOID Maa_OnSize( HWND hWnd, UINT_PTR state, INT_PTR cx, INT_PTR cy )
 {
 	RECT	rect, sbRect, tbRect;
-	INT	iTfTop;
+	INT_PTR	iTfTop;
 
 	GetClientRect( hWnd, &rect );
 
@@ -705,7 +705,7 @@ VOID Maa_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 	@param[in]	pstNmhdr	NOTIFYの詳細
 	@return		処理した内容とか
 */
-LRESULT Maa_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
+LRESULT Maa_OnNotify( HWND hWnd, INT_PTR idFrom, LPNMHDR pstNmhdr )
 {
 	//	ツリービューのやつ
 	if( IDTV_ITEMTREE == idFrom ){	TreeNotify( hWnd , (LPNMTREEVIEW)pstNmhdr );	}
@@ -760,7 +760,7 @@ VOID Maa_OnMeasureItem( HWND hWnd, MEASUREITEMSTRUCT *pstMeasureItem )
 	@param[in]	fwKeys	押されてるキー
 	@return		非０フォーカスと真下が違う　０同じ
 */
-UINT Maa_OnMouseWheel( HWND hWnd, INT xPos, INT yPos, INT zDelta, UINT fwKeys )
+UINT_PTR Maa_OnMouseWheel( HWND hWnd, INT_PTR xPos, INT_PTR yPos, INT_PTR zDelta, UINT_PTR fwKeys )
 {
 	HWND	hChdWnd;
 	POINT	stPoint;
@@ -785,7 +785,7 @@ UINT Maa_OnMouseWheel( HWND hWnd, INT xPos, INT yPos, INT zDelta, UINT fwKeys )
 	@param[in]	room	描画する枠０インデックス
 	@param[in]	ptMsg	描画する文字列
 */
-VOID StatusBarMsgSet( UINT room, LPTSTR ptMsg )
+VOID StatusBarMsgSet( UINT_PTR room, LPTSTR ptMsg )
 {
 
 	SendMessage( ghStsBarWnd, SB_SETTEXT, room, (LPARAM)ptMsg );
@@ -800,13 +800,13 @@ VOID StatusBarMsgSet( UINT room, LPTSTR ptMsg )
 	プロッファイルを作ってMLTディレクトリも指定したり直ぐ開いたり
 	@param[in]	hWnd	ウインドウハンドル・どこのだろう？
 	@param[in]	ptProf	開くプロッファイル名
-	@return		UINT	正：ＳＱＬから構築　０ファイルから構築セヨ　負：エラー
+	@return		INT_PTR	正：ＳＱＬから構築　０ファイルから構築セヨ　負：エラー
 */
-INT TreeProfileMake( HWND hWnd, LPTSTR ptProf )
+INT_PTR TreeProfileMake( HWND hWnd, LPTSTR ptProf )
 {
 	OPENFILENAME	stOpenFile;
 	BOOLEAN	bOpened;
-	UINT	iCount;
+	UINT_PTR	iCount;
 	TCHAR	atFilePath[MAX_PATH], atFileName[MAX_STRING], atBuffer[MAX_PATH];
 	TCHAR	atFolder[MAX_PATH];
 	INT_PTR	iRslt;
@@ -897,9 +897,9 @@ INT TreeProfileMake( HWND hWnd, LPTSTR ptProf )
 /*!
 	別Profile開いたり作ったり
 */
-INT TreeProfileOpen( HWND hWnd )
+INT_PTR TreeProfileOpen( HWND hWnd )
 {
-	INT	iRslt;
+	INT_PTR	iRslt;
 
 	iRslt = TreeProfileMake( hWnd, NULL );
 	if( 0 > iRslt ){	return 0;	}	//	内容変更なので、負ならナニもしない。
@@ -917,7 +917,7 @@ INT TreeProfileOpen( HWND hWnd )
 	現在のプロファイルの内容を編集する
 	@param[in]	hWnd	ハンドル
 */
-INT TreeProfileRebuild( HWND hWnd )
+INT_PTR TreeProfileRebuild( HWND hWnd )
 {
 	TCHAR	atFolder[MAX_PATH];
 	INT_PTR	iRslt;
@@ -961,11 +961,11 @@ INT_PTR CALLBACK TreeProfileDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPA
 
 	HWND	hWorkWnd;
 	TCHAR	atTgtDir[MAX_PATH];
-	INT		id;
+	INT_PTR		id;
 
 	DWORD	mPos;
-	UINT	bCheck, count;
-	INT		idFrom;
+	UINT_PTR	bCheck, count;
+	INT_PTR		idFrom;
 	LPNMHDR	pstNmhdr;
 
 	LPNMTREEVIEW	pstNmTrVw;
@@ -1123,7 +1123,7 @@ INT_PTR CALLBACK TreeProfileDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPA
 						}
 					}
 
-					SetWindowLong( hDlg, DWL_MSGRESULT, 0 );
+					SetWindowLong( hDlg, DWLP_MSGRESULT, 0 );
 					return (INT_PTR)TRUE;
 				}
 
@@ -1142,7 +1142,7 @@ INT_PTR CALLBACK TreeProfileDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPA
 VOID TreeProfProgressUp( HWND hDlg )
 {
 	HWND	hProgWnd;
-	UINT	pos;
+	UINT_PTR	pos;
 
 	hProgWnd = GetDlgItem( hDlg, IDPB_PRTREE_PROGRESS );
 
@@ -1166,9 +1166,9 @@ VOID TreeProfProgressUp( HWND hDlg )
 	@param[in]	sqlID	親ノードのsqlID・ルートは０
 	@return	チェックした回数
 */
-UINT TreeProfCheckExistent( HWND hDlg, LPTSTR ptTgDir, HWND hTvWnd, HTREEITEM hNode, UINT sqlID )
+UINT_PTR TreeProfCheckExistent( HWND hDlg, LPTSTR ptTgDir, HWND hTvWnd, HTREEITEM hNode, UINT_PTR sqlID )
 {
-	UINT		checked = 0, tgtID;
+	UINT_PTR		checked = 0, tgtID;
 	TCHAR		atProfRoot[MAX_PATH];
 	TCHAR		atName[MAX_PATH];
 	HTREEITEM	hItem, hRoot;
@@ -1232,7 +1232,7 @@ UINT TreeProfCheckExistent( HWND hDlg, LPTSTR ptTgDir, HWND hTvWnd, HTREEITEM hN
 	@param[in]	hNode	確認するノード
 	@param[in]	bCheck	ON/OFFのセット
 */
-VOID TreeProfCheckState( HWND hTvWnd, HTREEITEM hNode, UINT bCheck )
+VOID TreeProfCheckState( HWND hTvWnd, HTREEITEM hNode, UINT_PTR bCheck )
 {
 	HTREEITEM	hItem;
 
@@ -1267,12 +1267,12 @@ VOID TreeProfCheckState( HWND hTvWnd, HTREEITEM hNode, UINT bCheck )
 	@param[in]	fCheck	１全チャックする　０ＳＱＬに既存ならチェキ　−１チョックしない
 	@return		HRESULT	終了状態コード
 */
-HRESULT TreeProfListUp( HWND hDlg, HWND hTvWnd, LPTSTR ptRoot, HTREEITEM hTreePr, UINT dPrntID, INT fCheck )
+HRESULT TreeProfListUp( HWND hDlg, HWND hTvWnd, LPTSTR ptRoot, HTREEITEM hTreePr, UINT_PTR dPrntID, INT_PTR fCheck )
 {
 	HANDLE	hFind;
 	TCHAR	atPath[MAX_PATH], atNewTop[MAX_PATH], atTarget[MAX_PATH];
 	BOOL	bRslt;
-	UINT	dPnID = 0;
+	UINT_PTR	dPnID = 0;
 
 	WIN32_FIND_DATA	stFindData;
 
@@ -1361,8 +1361,8 @@ HRESULT TreeLoadDirCheck( HWND hDlg, HWND hTvWnd )
 {
 	TCHAR	atTgtDir[MAX_PATH];
 	HTREEITEM	hTreeRoot, hItem;
-	UINT	dCacheMax, dCacheCnt, m, count;
-	UINT	dType, dPrnt, index, logoa;
+	UINT_PTR	dCacheMax, dCacheCnt, m, count;
+	UINT_PTR	dType, dPrnt, index, logoa;
 	TCHAR	atName[MAX_PATH];
 	HWND	hWorkWnd;
 
@@ -1424,11 +1424,11 @@ HRESULT TreeLoadDirCheck( HWND hDlg, HWND hTvWnd )
 	@param[in]	hNode	チェキる基点ノード
 	@param[in]	bFixe	非０実際に操作　０Check状況の確認
 */
-UINT TreeLoadNodeProc( HWND hDlg, HWND hTvWnd, HTREEITEM hNode, UINT bFixe )
+UINT_PTR TreeLoadNodeProc( HWND hDlg, HWND hTvWnd, HTREEITEM hNode, UINT_PTR bFixe )
 {
 	TCHAR		atName[MAX_PATH];
-	INT			param;
-	UINT		dRslt, dType, dPrID, count = 0;
+	INT_PTR			param;
+	UINT_PTR		dRslt, dType, dPrID, count = 0;
 	HTREEITEM	hItem;
 	TVITEM		stItem;
 
@@ -1484,7 +1484,7 @@ UINT TreeLoadNodeProc( HWND hDlg, HWND hTvWnd, HTREEITEM hNode, UINT bFixe )
 */
 LPTSTR PathSplitFirstPath( LPTSTR ptSource, LPTSTR ptSplits )
 {
-	UINT	d;
+	UINT_PTR	d;
 
 	if( !(ptSource) )	return NULL;
 	if( NULL ==  ptSource[0] )	return NULL;
@@ -1508,7 +1508,7 @@ LPTSTR PathSplitFirstPath( LPTSTR ptSource, LPTSTR ptSplits )
 */
 LPTSTR StringLineGet( LPCTSTR ptSource, LPCTSTR *ptNextLn )
 {
-	UINT		t = 0;
+	UINT_PTR		t = 0;
 	UINT_PTR	len;
 	wstring		wStr;
 	LPTSTR		ptDest;
@@ -1547,9 +1547,9 @@ LPTSTR StringLineGet( LPCTSTR ptSource, LPCTSTR *ptNextLn )
 */
 HRESULT MaaFindExecute( HWND hDlg )
 {
-	UINT	dCnt, dMax, d;
-	UINT	dItem, dType, dPrntID, dOwnID;
-	UINT	dDmyType, dDmyID;
+	UINT_PTR	dCnt, dMax, d;
+	UINT_PTR	dItem, dType, dPrntID, dOwnID;
+	UINT_PTR	dDmyType, dDmyID;
 	TCHAR	atPattern[MAX_PATH];
 	TCHAR	atFileName[MAX_PATH], atPrntName[MAX_PATH];
 	HWND	hLvWnd, hEdWnd;
@@ -1615,10 +1615,10 @@ HRESULT MaaFindExecute( HWND hDlg )
 	@param[in]	pstNmhdr	NOTIFYの詳細
 	@return		処理した内容とか
 */
-INT_PTR MaaFindOnNotify( HWND hDlg, INT idFrom, LPNMHDR pstNmhdr )
+INT_PTR MaaFindOnNotify( HWND hDlg, INT_PTR idFrom, LPNMHDR pstNmhdr )
 {
 	HWND	hLvWnd;
-	INT		iItem, nmCode;
+	INT_PTR		iItem, nmCode;
 	LPNMLISTVIEW	pstNmLv;
 	LVITEM			stLvi;
 	HTREEITEM		hTgtItem;
@@ -1675,7 +1675,7 @@ INT_PTR MaaFindOnNotify( HWND hDlg, INT idFrom, LPNMHDR pstNmhdr )
 INT_PTR CALLBACK TreeMaaFindDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
 	HWND	hWorkWnd;
-	UINT	id;
+	UINT_PTR	id;
 //	HWND	hWndChild;
 	LVCOLUMN	stLvColm;
 
@@ -1763,7 +1763,7 @@ HRESULT TreeMaaFileFind( HWND hWnd )
 HRESULT OpenProfileInitialise( HWND hWnd )
 {
 	TCHAR	atString[MAX_PATH+10];
-	UINT	d;
+	UINT_PTR	d;
 	UINT_PTR	dItems;
 	OPENHIST	stProfHist;
 	OPHIS_ITR	itHist;
@@ -1836,7 +1836,7 @@ HRESULT OpenProfileInitialise( HWND hWnd )
 	@param[in]	id		履歴指定メッセージ・メニューＩＤである
 	@return	HRESULT	終了状態コード
 */
-HRESULT OpenProfileLoad( HWND hWnd, INT id )
+HRESULT OpenProfileLoad( HWND hWnd, INT_PTR id )
 {
 	UINT_PTR	dNumber, dItems;
 	TCHAR		atFilePath[MAX_PATH];

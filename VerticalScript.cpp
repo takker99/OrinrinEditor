@@ -71,12 +71,12 @@ static  TBBUTTON	gstVttbInfo[] = {
 typedef struct tagVERTITEM
 {
 	TCHAR	cch;	//!<	文字
-	INT		iWidth;	//!<	文字幅・中心になるように揃える
+	INT_PTR		iWidth;	//!<	文字幅・中心になるように揃える
 
-	INT		iOffset;//!<	最左からの右オフセットドット・相対位置ではない
+	INT_PTR		iOffset;//!<	最左からの右オフセットドット・相対位置ではない
 
-	INT		iRow;	//!<	縦にした時のＹ位置
-	INT		iColumn;//!<	縦にした時の文字列番号・改行に注意
+	INT_PTR		iRow;	//!<	縦にした時のＹ位置
+	INT_PTR		iColumn;//!<	縦にした時の文字列番号・改行に注意
 
 } VERTITEM, *LPVERTITEM;
 //-------------------------------------------------------------------------------------------------
@@ -84,15 +84,15 @@ typedef struct tagVERTITEM
 extern FILES_ITR	gitFileIt;		//!<	今見てるファイルの本体
 //#define gstFile	(*gitFileIt)		//!<	イテレータを構造体と見なす
 
-extern INT			gixFocusPage;	//	注目中のページ・０インデックス
+extern INT_PTR			gixFocusPage;	//	注目中のページ・０インデックス
 
 extern HFONT		ghAaFont;		//	AA用フォント
 
 extern  BYTE		gbAlpha;		//	透明度
 
 extern  HWND		ghViewWnd;		//	編集ビューウインドウのハンドル
-extern INT			gdHideXdot;		//	左の隠れ部分
-extern INT			gdViewTopLine;	//	表示中の最上部行番号
+extern INT_PTR			gdHideXdot;		//	左の隠れ部分
+extern INT_PTR			gdViewTopLine;	//	表示中の最上部行番号
 
 static  HWND		ghVertToolBar;	//!<	
 static HIMAGELIST	ghVertImgLst;	//!<	
@@ -101,7 +101,7 @@ static  ATOM		gVertAtom;		//!<
 EXTERNED HWND		ghVertWnd;		//!<	
 
 static  HWND		ghTextWnd;		//!<	文字列入力枠
-static INT			gdToolBarHei;	//!<	ツールバー太さ
+static INT_PTR			gdToolBarHei;	//!<	ツールバー太さ
 
 static  ATOM		gVertViewAtom;
 static  HWND		ghVertViewWnd;	//!<	表示スタティック
@@ -110,10 +110,10 @@ static POINT		gstViewOrigin;	//!<	ビューの左上ウインドウ位置・
 static POINT		gstOffset;		//!<	ビュー左上からの、ボックスの相対位置
 static POINT		gstFrmSz;		//!<	ウインドウエッジから描画領域までのオフセット
 
-static INT			gdVertInterval;	//!<	行間隔ドット数・デフォを２２で
-static  UINT		gbLeftGo;		//!<	非０左から　０右から配置する
+static INT_PTR			gdVertInterval;	//!<	行間隔ドット数・デフォを２２で
+static  UINT_PTR		gbLeftGo;		//!<	非０左から　０右から配置する
 
-static  UINT		gbSpTrans;		//!<	空白を　非０透過　０透過しない
+static  UINT_PTR		gbSpTrans;		//!<	空白を　非０透過　０透過しない
 
 static LPTSTR		gptVtBuff;		//!<	テキスト枠から文字確保枠・可変
 static DWORD		gcchVtBuf;		//!<	確保枠の文字数・バイトじゃないぞ
@@ -131,13 +131,13 @@ typedef vector<VERTITEM>::reverse_iterator	VTIM_RITR;
 static LRESULT	CALLBACK gpfVertEditProc( HWND , UINT, WPARAM, LPARAM );	//!<	
 
 LRESULT	CALLBACK VertProc( HWND, UINT, WPARAM, LPARAM );	//!<	
-VOID	Vrt_OnCommand( HWND , INT, HWND, UINT );	//!<	
+VOID	Vrt_OnCommand( HWND , INT_PTR, HWND, UINT_PTR );	//!<	
 VOID	Vrt_OnPaint( HWND );	//!<	
 VOID	Vrt_OnDestroy( HWND );	//!<	
-LRESULT	Vrt_OnNotify( HWND , INT, LPNMHDR );	//!<	
+LRESULT	Vrt_OnNotify( HWND , INT_PTR, LPNMHDR );	//!<	
 
 LRESULT	CALLBACK VertViewProc( HWND, UINT, WPARAM, LPARAM );	//!<	
-VOID	Vvw_OnKey( HWND, UINT, BOOL, INT, UINT );			//!<	
+VOID	Vvw_OnKey( HWND, UINT_PTR, BOOL, INT_PTR, UINT_PTR );			//!<	
 VOID	Vvw_OnPaint( HWND );								//!<	
 VOID	Vvw_OnMoving( HWND, LPRECT );						//!<	
 BOOL	Vvw_OnWindowPosChanging( HWND, LPWINDOWPOS );		//!<	
@@ -155,7 +155,7 @@ HRESULT	VertScriptInsert( HWND );	//!<
 	@param[in]	hInstance	インスタンスハンドル
 	@return		HRESULT	終了状態コード
 */
-INT VertInitialise( LPTSTR ptCurrent, HINSTANCE hInstance )
+INT_PTR VertInitialise( LPTSTR ptCurrent, HINSTANCE hInstance )
 {
 	WNDCLASSEX	wcex;
 	HBITMAP		hImg, hMsq;
@@ -251,7 +251,7 @@ HWND VertScripterCreate( HINSTANCE hInst, HWND hPrWnd )
 {
 	LONG	x, y;
 	HWND	hDktpWnd;
-	UINT	height;
+	UINT_PTR	height;
 	TCHAR	atBuffer[MAX_STRING];
 	RECT	rect, vwRect, dtRect;
 
@@ -381,10 +381,10 @@ HWND VertScripterCreate( HINSTANCE hInst, HWND hPrWnd )
 */
 LRESULT CALLBACK gpfVertEditProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-	INT		len;
-	INT		id;
+	INT_PTR		len;
+	INT_PTR		id;
 	HWND	hWndCtl;
-	UINT	codeNotify;
+	UINT_PTR	codeNotify;
 
 	switch( msg )
 	{
@@ -451,7 +451,7 @@ LRESULT CALLBACK VertProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 	@param[in]	codeNotify	通知メッセージ	HIWORD(wParam)
 	@return		なし
 */
-VOID Vrt_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
+VOID Vrt_OnCommand( HWND hWnd, INT_PTR id, HWND hWndCtl, UINT_PTR codeNotify )
 {
 	LRESULT	lRslt;
 
@@ -537,7 +537,7 @@ VOID Vrt_OnDestroy( HWND hWnd )
 	@param[in]	pstNmhdr	NOTIFYの詳細
 	@return		処理した内容とか
 */
-LRESULT Vrt_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
+LRESULT Vrt_OnNotify( HWND hWnd, INT_PTR idFrom, LPNMHDR pstNmhdr )
 {
 	LPNMUPDOWN	pstNmUpDown;
 
@@ -566,9 +566,9 @@ LRESULT Vrt_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 HRESULT VertTextAssemble( HWND hWnd )
 {
 	UINT_PTR	cchSz;
-	INT			ileng, i, iRow, iClm, iLine, iMaxRow;
-	INT			iMaxY, iMaxX, iViewXdot, iViewYdot, iYline, cx, cy;	//	配置窓のサイズ変更に使用する
-	INT			iLnDot, iLnCnt, bkLine;
+	INT_PTR			ileng, i, iRow, iClm, iLine, iMaxRow;
+	INT_PTR			iMaxY, iMaxX, iViewXdot, iViewYdot, iYline, cx, cy;	//	配置窓のサイズ変更に使用する
+	INT_PTR			iLnDot, iLnCnt, bkLine;
 	UINT_PTR	iMozis;
 	HWND		hWorkWnd;
 	LPTSTR		ptScript;
@@ -781,7 +781,7 @@ VOID Vvw_OnMoving( HWND hWnd, LPRECT pstPos )
 */
 BOOL Vvw_OnWindowPosChanging( HWND hWnd, LPWINDOWPOS pstWpos )
 {
-	INT		clPosY, vwTopY, dSabun, dRem;
+	INT_PTR		clPosY, vwTopY, dSabun, dRem;
 	BOOLEAN	bMinus = FALSE;
 	RECT	vwRect;
 
@@ -847,7 +847,7 @@ VOID Vvw_OnWindowPosChanged( HWND hWnd, const LPWINDOWPOS pstWpos )
 	@param[in]	flags	キーフラグいろいろ
 	@return		無し
 */
-VOID Vvw_OnKey( HWND hWnd, UINT vk, BOOL fDown, int cRepeat, UINT flags )
+VOID Vvw_OnKey( HWND hWnd, UINT_PTR vk, BOOL fDown, INT_PTR cRepeat, UINT_PTR flags )
 {
 	RECT	rect;
 
@@ -905,7 +905,7 @@ VOID Vvw_OnPaint( HWND hWnd )
 VOID VertViewDraw( HDC hDC )
 {
 	INT_PTR	iItems;
-	INT		x, y;
+	INT_PTR		x, y;
 	TCHAR	atMozi[2];
 	HFONT	hFtOld;
 
@@ -940,10 +940,10 @@ VOID VertViewDraw( HDC hDC )
 HRESULT	VertScriptInsert( HWND hWnd )
 {
 	LPTSTR		ptText;
-	INT			iTgtRow, iMaxRow, iMaxClm;
-	INT			iRitDot, iNeedPadd;
+	INT_PTR			iTgtRow, iMaxRow, iMaxClm;
+	INT_PTR			iRitDot, iNeedPadd;
 	HWND		hLyrWnd;
-	INT			iX, iY;
+	INT_PTR			iX, iY;
 	RECT		rect;
 
 	wstring		wsBuffer;	//	作った文字列を入れちゃう
@@ -1040,7 +1040,7 @@ HRESULT	VertScriptInsert( HWND hWnd )
 	@param[in]	state	窓状態・最小化なら違うコトする
 	@return		HRESULT	終了状態コード
 */
-HRESULT VertMoveFromView( HWND hWnd, UINT state )
+HRESULT VertMoveFromView( HWND hWnd, UINT_PTR state )
 {
 	RECT	vwRect = {0,0,0,0};
 	POINT	lyPoint;

@@ -153,9 +153,9 @@ static CONST GUID gcstGUID = { 0x66D3E881, 0x972B, 0x458B, { 0x93, 0x5E, 0x9E, 0
 
 #if defined(_DEBUG) || defined(WORK_LOG_OUT)
 	#define TRACE(str,...)	OutputDebugStringPlus( GetLastError(), _CRT_WIDE(__FILE__), __LINE__, _CRT_WIDE(__FUNCTION__), str, __VA_ARGS__ )
-	VOID	OutputDebugStringPlus( DWORD, LPTSTR, INT, LPTSTR, LPTSTR, ... );	//!<	
+	VOID	OutputDebugStringPlus( DWORD, LPTSTR, INT_PTR, LPTSTR, LPTSTR, ... );	//!<	
 	//#define TRACE(str,...)	OutputDebugStringPlus( GetLastError(), __FILE__, __LINE__, __FUNCTION__, str, __VA_ARGS__ )
-	//VOID	OutputDebugStringPlus( DWORD, LPSTR, INT, LPSTR, LPTSTR, ... );	//!<	
+	//VOID	OutputDebugStringPlus( DWORD, LPSTR, INT_PTR, LPSTR, LPTSTR, ... );	//!<	
 #else
 	#define TRACE(x,...)
 #endif
@@ -172,7 +172,7 @@ static CONST GUID gcstGUID = { 0x66D3E881, 0x972B, 0x458B, { 0x93, 0x5E, 0x9E, 0
 #ifdef DO_TRY_CATCH
 #define ETC_MSG(str,ret)	ExceptionMessage( str, __FUNCTION__, __LINE__, ret )
 
-LRESULT	ExceptionMessage( LPCSTR, LPCSTR, UINT, LPARAM );
+LRESULT	ExceptionMessage( LPCSTR, LPCSTR, UINT_PTR, LPARAM );
 #endif
 
 #define FREE(pp)	{if(pp){free(pp);pp=NULL;}}
@@ -427,3 +427,4 @@ LRESULT	ExceptionMessage( LPCSTR, LPCSTR, UINT, LPARAM );
 #define	VK_Y	0x59
 #define	VK_Z	0x5A
 //-------------------------------------------------------------------------------------------------
+using CCH_SIZE = UINT_PTR;

@@ -91,7 +91,7 @@ HRESULT	TraceMoziColourChoice( HWND );
 
 HRESULT	TraceRedrawIamge( VOID );
 
-INT_PTR	TraceOnScroll( HWND, HWND, UINT, INT );
+INT_PTR	TraceOnScroll( HWND, HWND, UINT_PTR, INT_PTR );
 //-------------------------------------------------------------------------------------------------
 
 /*!
@@ -99,7 +99,7 @@ INT_PTR	TraceOnScroll( HWND, HWND, UINT, INT );
 	@param[in]	hWnd	ウインドウハンドル
 	@param[in]	bMode	非０作成　０破壊
 */
-INT TraceInitialise( HWND hWnd, UINT bMode )
+INT_PTR TraceInitialise( HWND hWnd, UINT_PTR bMode )
 {
 	if( bMode )
 	{
@@ -230,7 +230,7 @@ HRESULT TraceDialogueOpen( HINSTANCE hInst, HWND hWnd )
 INT_PTR CALLBACK TraceCtrlDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
 	HWND	hWorkWnd;
-	UINT	id;
+	UINT_PTR	id;
 	HDC		hdc;
 	HWND	hWndChild;
 	RECT	rect;
@@ -352,7 +352,7 @@ INT_PTR CALLBACK TraceCtrlDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARA
 
 		case WM_VSCROLL:
 		case WM_HSCROLL:
-			return TraceOnScroll( hDlg, (HWND)(lParam), (UINT)(LOWORD(wParam)), (INT)(SHORT)HIWORD(wParam) );
+			return TraceOnScroll( hDlg, (HWND)(lParam), (UINT_PTR)(LOWORD(wParam)), (INT)(SHORT)HIWORD(wParam) );
 
 
 		case WM_COMMAND:
@@ -468,8 +468,8 @@ UINT_PTR CALLBACK ImageOpenDlgHookProc( HWND hDlg, UINT message, WPARAM wParam, 
 
 	HWND	hWndCtl, hWndChild, hWnd;
 	HDC		hDC;
-	INT		idCtrl, id, cx, cy;
-	UINT	codeNotify, state;
+	INT_PTR		idCtrl, id, cx, cy;
+	UINT_PTR	codeNotify, state;
 	TCHAR	atFile[MAX_PATH], atSpec[MAX_PATH];
 	CHAR	acName[MAX_PATH];
 	LPOFNOTIFY	pstOfNty;
@@ -524,7 +524,7 @@ UINT_PTR CALLBACK ImageOpenDlgHookProc( HWND hDlg, UINT message, WPARAM wParam, 
 
 
 		case WM_SIZE:
-			state = (UINT)(wParam);
+			state = (UINT_PTR)(wParam);
 			cx = (INT)(SHORT)LOWORD(lParam);
 			cy = (INT)(SHORT)HIWORD(lParam);
 			hWnd = GetParent(hDlg);
@@ -701,7 +701,7 @@ HRESULT TraceMoziColourChoice( HWND hDlg )
 	@param[in]	pos		スクロールボックス（つまみ）の位置
 	@return		無し
 */
-INT_PTR TraceOnScroll( HWND hDlg, HWND hWndCtl, UINT code, INT pos )
+INT_PTR TraceOnScroll( HWND hDlg, HWND hWndCtl, UINT_PTR code, INT_PTR pos )
 {
 /*
 #define TB_LINEUP               0
@@ -729,8 +729,8 @@ INT_PTR TraceOnScroll( HWND hDlg, HWND hWndCtl, UINT code, INT pos )
 
 	static BOOLEAN	bThumPos = FALSE;
 	TCHAR	atBuffer[SUB_STRING];
-	UINT	ctlID;
-	INT		dDigi, dSyou;
+	UINT_PTR	ctlID;
+	INT_PTR		dDigi, dSyou;
 
 
 	ctlID = GetDlgCtrlID( hWndCtl );
@@ -974,7 +974,7 @@ HRESULT TraceImgViewTglExt( VOID )
 	@retval	非０	トレス中
 	@retval	０		トレスモードになっていない
 */
-UINT TraceMoziColourGet( LPCOLORREF pColour )
+UINT_PTR TraceMoziColourGet( LPCOLORREF pColour )
 {
 	if( !(ghTraceDlg) || !(pColour) ){	return FALSE;	}
 
@@ -994,7 +994,7 @@ UINT TraceMoziColourGet( LPCOLORREF pColour )
 	@retval	非０		画像イメージあった
 	@retval	０			画像は開かれていない
 */
-UINT TraceImageAppear( HDC hdc, INT iScrlX, INT iScrlY )
+UINT_PTR TraceImageAppear( HDC hdc, INT_PTR iScrlX, INT_PTR iScrlY )
 {
 	POINT	stBegin;
 	SIZE	stStretch, stReverse;
@@ -1042,7 +1042,7 @@ UINT TraceImageAppear( HDC hdc, INT iScrlX, INT iScrlY )
 	@param[in]	iType	ファイルタイプ指定　１：ＢＭＰ　２：ＪＰＧ　３：ＰＮＧ
 	@return		HRESULT	終了状態コード
 */
-HRESULT ImageFileSaveDC( HDC hDC, LPTSTR ptName, INT iType )
+HRESULT ImageFileSaveDC( HDC hDC, LPTSTR ptName, INT_PTR iType )
 {
 	HDIB	hDIB;
 	BOOL	bRslt;

@@ -615,7 +615,7 @@ static  HBRUSH		ghStsRedBrush;	//!<	ステータスバー用紅ブラシ
 
 static HANDLE		ghMutex;		//!<	多重起動防止用Mutex
 
-static INT			giResizeWide;	//!<	ウインドウサイズ変更したとき、変更前との差分・使ってない
+static INT_PTR			giResizeWide;	//!<	ウインドウサイズ変更したとき、変更前との差分・使ってない
 
 #ifdef WORK_LOG_OUT
 static HANDLE		ghLogFlie;		//!<	ログ出力
@@ -632,21 +632,21 @@ EXTERNED BOOLEAN	gbDockTmplView;	//!<	くっついてるテンプレは見えて
 EXTERNED HWND		ghMainSplitWnd;	//!<	メインのスプリットバーハンドル
 EXTERNED LONG		grdSplitPos;	//!<	スプリットバーの、左側の、画面右からのオフセット
 
-EXTERNED UINT		gbUniPad;		//!<	パディングにユニコードをつかって、ドットを見せないようにする
-EXTERNED UINT		gbUniRadixHex;	//!<	ユニコード数値参照が１６進数であるか
+EXTERNED UINT_PTR		gbUniPad;		//!<	パディングにユニコードをつかって、ドットを見せないようにする
+EXTERNED UINT_PTR		gbUniRadixHex;	//!<	ユニコード数値参照が１６進数であるか
 
-static   UINT		gdBUInterval;	//!<	バックアップ感覚・デフォ３分くらい？
-EXTERNED UINT		gbAutoBUmsg;	//!<	自動バックアップメッセージ出すか？
-EXTERNED UINT		gbCrLfCode;		//!<	改行コード：０したらば・非０ＹＹ 
+static   UINT_PTR		gdBUInterval;	//!<	バックアップ感覚・デフォ３分くらい？
+EXTERNED UINT_PTR		gbAutoBUmsg;	//!<	自動バックアップメッセージ出すか？
+EXTERNED UINT_PTR		gbCrLfCode;		//!<	改行コード：０したらば・非０ＹＹ 
 
-EXTERNED UINT		gbSaveMsgOn;	//!<	保存メッセージ出すか？
+EXTERNED UINT_PTR		gbSaveMsgOn;	//!<	保存メッセージ出すか？
 
-EXTERNED UINT		gdPageByteMax;	//!<	壱レスの最大バイト数
+EXTERNED UINT_PTR		gdPageByteMax;	//!<	壱レスの最大バイト数
 
 static TCHAR		gatExePath[MAX_PATH];	//!<	実行ファイルの位置
 static TCHAR		gatIniPath[MAX_PATH];	//!<	ＩＮＩファイルの位置
 
-EXTERNED INT		gbTmpltDock;	//!<	テンプレのドッキング
+EXTERNED INT_PTR		gbTmpltDock;	//!<	テンプレのドッキング
 
 static list<OPENHIST>	gltOpenHist;	//!<	ファイル開いた履歴・
 EXTERNED HMENU		ghHistyMenu;		//!<	履歴表示する部分・動的に内容作成せないかん
@@ -665,18 +665,18 @@ extern  HWND		ghMoziWnd;		//	文字ＡＡ変換ダイヤログのハンドル
 
 extern  HWND		ghMaaFindDlg;	//	MAA検索ダイヤログハンドル
 
-extern  UINT		 gdClickDrt;	//	ドラフトボードクルックスタイル
-extern  UINT		gdSubClickDrt;	//
+extern  UINT_PTR		 gdClickDrt;	//	ドラフトボードクルックスタイル
+extern  UINT_PTR		gdSubClickDrt;	//
 
 extern  HWND		ghViewWnd;		//	ビュー
 
-extern  UINT		 gdGridXpos;	//	グリッド線のＸ間隔
-extern  UINT		 gdGridYpos;	//	グリッド線のＹ間隔
-extern  UINT		gdRightRuler;	//	右線の位置ドット
-extern  UINT		gdUnderRuler;	//	下線の位置行数
+extern  UINT_PTR		 gdGridXpos;	//	グリッド線のＸ間隔
+extern  UINT_PTR		 gdGridYpos;	//	グリッド線のＹ間隔
+extern  UINT_PTR		gdRightRuler;	//	右線の位置ドット
+extern  UINT_PTR		gdUnderRuler;	//	下線の位置行数
 
 #ifdef SPMOZI_ENCODE
-extern  UINT		gbSpMoziEnc;	//!<	機種依存文字を数値参照コピーする
+extern  UINT_PTR		gbSpMoziEnc;	//!<	機種依存文字を数値参照コピーする
 #endif
 //-------------------------------------------------------------------------------------------------
 
@@ -692,21 +692,21 @@ plugin::PLUGIN_FILE_LIST	gPluginList;
 
 //	ステータスバーの区切り
 #define SB_ITEMS	8
-CONST INT	gadStsBarSize[] = { 50, 200, 350, 500, 700, 800, 900, -1 };
+CONST INT_PTR	gadStsBarSize[] = { 50, 200, 350, 500, 700, 800, 900, -1 };
 //-------------------------------------------------------------------------------------------------
 
-VOID	Cls_OnActivate( HWND, UINT, HWND, BOOL );		//!<	
+VOID	Cls_OnActivate( HWND, UINT_PTR, HWND, BOOL );		//!<	
 BOOLEAN	Cls_OnCreate( HWND, LPCREATESTRUCT );			//!<	本体の WM_CREATE の処理・固定Editとかつくる
-VOID	Cls_OnCommand( HWND , INT, HWND, UINT );		//!<	本体の WM_COMMAND の処理
+VOID	Cls_OnCommand( HWND , INT_PTR, HWND, UINT_PTR );		//!<	本体の WM_COMMAND の処理
 VOID	Cls_OnPaint( HWND );							//!<	本体の WM_PAINT の処理・枠線描画とか
-VOID	Cls_OnSize( HWND , UINT, INT, INT );			//!<	
-VOID	Cls_OnMove( HWND, INT, INT );					//!<	
+VOID	Cls_OnSize( HWND , UINT_PTR, INT_PTR, INT_PTR );			//!<	
+VOID	Cls_OnMove( HWND, INT_PTR, INT_PTR );					//!<	
 VOID	Cls_OnDestroy( HWND );							//!<	本体の WM_DESTROY の処理・BRUSHとかのオブジェクトの破壊を忘れないように
-LRESULT	Cls_OnNotify( HWND , INT, LPNMHDR );			//!<	
-VOID	Cls_OnTimer( HWND, UINT );						//!<	
+LRESULT	Cls_OnNotify( HWND , INT_PTR, LPNMHDR );			//!<	
+VOID	Cls_OnTimer( HWND, UINT_PTR );						//!<	
 VOID	Cls_OnDropFiles( HWND , HDROP );				//!<	
-VOID	Cls_OnContextMenu(HWND,HWND,UINT,UINT );		//!<	
-VOID	Cls_OnHotKey(HWND, INT, UINT, UINT );			//!<	
+VOID	Cls_OnContextMenu(HWND,HWND,UINT_PTR,UINT_PTR );		//!<	
+VOID	Cls_OnHotKey(HWND, INT_PTR, UINT_PTR, UINT_PTR );			//!<	
 VOID	Cls_OnDrawItem( HWND, CONST DRAWITEMSTRUCT * );	//!<	
 
 BOOL	Cls_OnWindowPosChanging( HWND, LPWINDOWPOS );	//!<	
@@ -718,12 +718,12 @@ void	Cls_OnCopyData( HWND, HWND, PCOPYDATASTRUCT );	//!<
 INT_PTR	CALLBACK OptionDlgProc( HWND, UINT, WPARAM, LPARAM );	//!<	
 
 LRESULT	CALLBACK gpfFileTabProc( HWND, UINT, WPARAM, LPARAM );	//!<	複数ファイルタブのサブクラスプロシージャ
-VOID	Ftb_OnMButtonUp( HWND, INT, INT, UINT );	//!<	
+VOID	Ftb_OnMButtonUp( HWND, INT_PTR, INT_PTR, UINT_PTR );	//!<	
 
 HRESULT	ViewingFontNameLoad( VOID );	//!<	
 
 #ifdef USE_NOTIFYICON
-VOID	TaskTrayIconEvent( HWND, UINT, UINT );	//!<	
+VOID	TaskTrayIconEvent( HWND, UINT_PTR, UINT_PTR );	//!<	
 #endif
 //-------------------------------------------------------------------------------------------------
 
@@ -736,22 +736,22 @@ VOID	TaskTrayIconEvent( HWND, UINT, UINT );	//!<
 	@param[in]	nCmdShow		起動時の表示状態が入ってる。表示とかそういうの
 	@retval FALSE	途中終了
 */
-INT APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow )
+int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow )
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
-	INT		msRslt;
+	INT_PTR		msRslt;
 	MSG		msg;
 
 	INT		iArgc;
 	TCHAR	atArgv[MAX_PATH];
 	LPTSTR	*pptArgs;
 
-	INT		iCode, dMultiEna;
+	INT_PTR		iCode, dMultiEna;
 
 	LPACCEL	pstAccel;
-	INT	iEntry;
+	INT_PTR	iEntry;
 
 #ifdef WORK_LOG_OUT
 	SYSTEMTIME	stTime;
@@ -1056,11 +1056,11 @@ ATOM InitWndwClass( HINSTANCE hInstance )
 	@param[in]	nCmdShow	起動時の表示状態
 	@param[in]	ptArgv		コマンドラインで渡されたファイル名・無ければ０クルヤ状態・NULLではない
 */
-BOOL InitInstance( HINSTANCE hInstance, INT nCmdShow, LPTSTR ptArgv )
+BOOL InitInstance( HINSTANCE hInstance, INT_PTR nCmdShow, LPTSTR ptArgv )
 {
 	HWND	hWnd;
 	RECT	rect, wnRect;
-	INT		isMaxim = 0, sptBuf = PLIST_DOCK;
+	INT_PTR		isMaxim = 0, sptBuf = PLIST_DOCK;
 //	DWORD	dwStyle;
 
 	HMENU	hSubMenu;
@@ -1240,9 +1240,9 @@ BOOL InitInstance( HINSTANCE hInstance, INT nCmdShow, LPTSTR ptArgv )
 	@param[out]	piEntry	確保したエントリ数を戻す
 	@return		確保したテーブル構造体のポインター・freeに注意
 */
-LPACCEL AccelKeyTableGetAlloc( LPINT piEntry )
+LPACCEL AccelKeyTableGetAlloc( PINT_PTR piEntry )
 {
-	INT	iItems;
+	INT_PTR	iItems;
 	LPACCEL	pstAccel = NULL;
 
 	if( !(piEntry) )	return NULL;
@@ -1269,7 +1269,7 @@ LPACCEL AccelKeyTableGetAlloc( LPINT piEntry )
 	@param[in]	iEntry		テーブルのエントリ数
 	@return	アクセラハンドル
 */
-HACCEL AccelKeyTableCreate( LPACCEL pstAccel, INT iEntry )
+HACCEL AccelKeyTableCreate( LPACCEL pstAccel, INT_PTR iEntry )
 {
 	HACCEL	hAccel;
 	
@@ -1325,7 +1325,7 @@ HRESULT AppTitleChange( LPTSTR ptText )
 	@param[in]	bMode	非０トレスモード開始　０終わり
 	@return		HRESULT	終了状態コード
 */
-HRESULT AppTitleTrace( UINT bMode )
+HRESULT AppTitleTrace( UINT_PTR bMode )
 {
 	static	TCHAR	atOrig[MAX_PATH];
 	TCHAR	atBuff[MAX_PATH];
@@ -1437,7 +1437,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 #ifdef USE_NOTIFYICON
 		//	タスクトレイのアイコンでエベンツ発生
 		case WMP_TRAYNOTIFYICON:
-			TaskTrayIconEvent( hWnd, (UINT)wParam, (UINT)lParam );
+			TaskTrayIconEvent( hWnd, (UINT_PTR)wParam, (UINT_PTR)lParam );
 			return 0;
 #endif
 
@@ -1466,7 +1466,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 	@param[in]	hWndActDeact	あくちぶ又は非あくちぶになるやつ・NULLでも可
 	@param[in]	fMinimized		最小化ならNULL
 */
-VOID Cls_OnActivate( HWND hWnd, UINT state, HWND hWndActDeact, BOOL fMinimized )
+VOID Cls_OnActivate( HWND hWnd, UINT_PTR state, HWND hWndActDeact, BOOL fMinimized )
 {
 	LONG_PTR	rdExStyle;
 	HWND		hWorkWnd;
@@ -1601,7 +1601,7 @@ BOOLEAN Cls_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 	ghStsRedBrush = CreateSolidBrush( 0xFF );
 
 	ghStsBarWnd = CreateStatusWindow( WS_CHILD | WS_VISIBLE | CCS_BOTTOM | SBARS_SIZEGRIP, TEXT(""), hWnd, IDSB_VIEW_STATUS_BAR );
-	SendMessage( ghStsBarWnd, SB_SETPARTS, (WPARAM)SB_ITEMS, (LPARAM)(LPINT)gadStsBarSize );
+	SendMessage( ghStsBarWnd, SB_SETPARTS, (WPARAM)SB_ITEMS, (LPARAM)(PINT_PTR)gadStsBarSize );
 
 	StatusBar_SetText( ghStsBarWnd, 1 , TEXT("") );
 
@@ -1619,10 +1619,10 @@ BOOLEAN Cls_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 	@param[in]	codeNotify	通知メッセージ	HIWORD(wParam)
 	@return		なし
 */
-VOID Cls_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
+VOID Cls_OnCommand( HWND hWnd, INT_PTR id, HWND hWndCtl, UINT_PTR codeNotify )
 {
 #ifdef NDEBUG
-	 INT	iRslt;
+	 INT_PTR	iRslt;
 #endif
 	//	キーボードショートカットは、そのときACTIVEなウインドウに行く
 
@@ -1670,7 +1670,7 @@ VOID Cls_OnPaint( HWND hWnd )
 	@param[in]	id		タイマＩＤ
 	@return		無し
 */
-VOID Cls_OnTimer( HWND hWnd, UINT id )
+VOID Cls_OnTimer( HWND hWnd, UINT_PTR id )
 {
 	if( IDT_BACKUP_TIMER != id )	return;
 	//	タイマ増えたら注意
@@ -1715,9 +1715,9 @@ BOOL Cls_OnWindowPosChanging( HWND hWnd, LPWINDOWPOS pstWpos )
 	@param[in]	cy		クライヤントＹサイズ
 	@return		無し
 */
-VOID Cls_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
+VOID Cls_OnSize( HWND hWnd, UINT_PTR state, INT_PTR cx, INT_PTR cy )
 {
-	static  UINT	ccState;
+	static  UINT_PTR	ccState;
 
 	RECT	rect;
 
@@ -1801,7 +1801,7 @@ VOID Cls_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 	@param[in]	y		
 	@return		無し
 */
-VOID Cls_OnMove( HWND hWnd, INT x, INT y )
+VOID Cls_OnMove( HWND hWnd, INT_PTR x, INT_PTR y )
 {
 	DWORD	dwStyle;
 
@@ -1949,12 +1949,12 @@ VOID Cls_OnDestroy( HWND hWnd )
 	@param[in]	yPos		スクリーンＹ座業
 	@return		無し
 */
-VOID Cls_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
+VOID Cls_OnContextMenu( HWND hWnd, HWND hWndContext, UINT_PTR xPos, UINT_PTR yPos )
 {
 	HMENU	hMenu, hSubMenu;
-	UINT	dRslt;
-	INT		curSel;
-	INT		iCount;
+	UINT_PTR	dRslt;
+	INT_PTR		curSel;
+	INT_PTR		iCount;
 	POINT	stPost;
 	TCHITTESTINFO	stTcHitInfo;
 
@@ -1962,7 +1962,7 @@ VOID Cls_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 
 	TCITEM	stTcItem;
 	TCHAR	atText[MAX_PATH];
-	UINT	cchSize;
+	CCH_SIZE	cchSize;
 
 	stPost.x = (SHORT)xPos;	//	画面座標はマイナスもありうる
 	stPost.y = (SHORT)yPos;
@@ -2030,9 +2030,9 @@ VOID Cls_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 	@param[in]	pstNmhdr	NOTIFYの詳細
 	@return		処理した内容とか
 */
-LRESULT Cls_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
+LRESULT Cls_OnNotify( HWND hWnd, INT_PTR idFrom, LPNMHDR pstNmhdr )
 {
-	INT	curSel;
+	INT_PTR	curSel;
 	TCHAR	atText[MAX_PATH];
 	TCITEM	stTcItem;
 	LPNMTTDISPINFO	pstDispInfo;
@@ -2164,7 +2164,7 @@ VOID Cls_OnDropFiles( HWND hWnd, HDROP hDrop )
 	@param[in]	vk			押されている一般キー
 	@return		無し
 */
-VOID Cls_OnHotKey(HWND hWnd, INT idHotKey, UINT fuModifiers, UINT vk )
+VOID Cls_OnHotKey(HWND hWnd, INT_PTR idHotKey, UINT_PTR fuModifiers, UINT_PTR vk )
 {
 	if( VK_D == vk )
 	{
@@ -2184,7 +2184,7 @@ VOID Cls_OnHotKey(HWND hWnd, INT idHotKey, UINT fuModifiers, UINT vk )
 */
 VOID Cls_OnDrawItem( HWND hWnd, CONST DRAWITEMSTRUCT *pstDrawItem )
 {
-	UINT	dBytes;
+	UINT_PTR	dBytes;
 	TCHAR	atBuff[SUB_STRING];
 	RECT	rect;
 
@@ -2214,7 +2214,7 @@ VOID Cls_OnDrawItem( HWND hWnd, CONST DRAWITEMSTRUCT *pstDrawItem )
 	@param[in]	ptText	入れる文字列
 	@return		HRESULT	終了状態コード
 */
-HRESULT MainStatusBarSetText( INT room, LPCTSTR ptText )
+HRESULT MainStatusBarSetText( INT_PTR room, LPCTSTR ptText )
 {
 	StatusBar_SetText( ghStsBarWnd, room , ptText );
 
@@ -2227,7 +2227,7 @@ HRESULT MainStatusBarSetText( INT room, LPCTSTR ptText )
 	@param[in]	dByte	バイト数
 	@return		HRESULT	終了状態コード
 */
-HRESULT MainSttBarSetByteCount( UINT dByte )
+HRESULT MainSttBarSetByteCount( UINT_PTR dByte )
 {
 	SendMessage( ghStsBarWnd, SB_SETTEXT, (WPARAM)(SB_BYTECNT | SBT_OWNERDRAW), (LPARAM)dByte );
 
@@ -2244,7 +2244,7 @@ HRESULT MainSttBarSetByteCount( UINT dByte )
 	@param[in]	bCheck	非０チェック・０はずす
 	@return		HRESULT	終了状態コード
 */
-HRESULT MenuItemCheckOnOff( UINT itemID, UINT bCheck )
+HRESULT MenuItemCheckOnOff( UINT_PTR itemID, UINT_PTR bCheck )
 {
 	CheckMenuItem( ghMenu, itemID, bCheck ? MF_CHECKED : MF_UNCHECKED );
 
@@ -2275,7 +2275,7 @@ HRESULT BrushModeToggle( VOID )
 	メインウインドウのクライヤント領域を求める
 	@param[out]	pstRect	領域いれる構造体ポインター
 */
-UINT AppClientAreaCalc( LPRECT pstRect )
+UINT_PTR AppClientAreaCalc( LPRECT pstRect )
 {
 	RECT	rect, sbRect, tbRect;
 	RECT	ftRect;
@@ -2312,10 +2312,10 @@ UINT AppClientAreaCalc( LPRECT pstRect )
 	@param[in]	pstInfo	ロードセーブの内容保存
 	@return		比０ロードＯＫ　０なかった
 */
-INT InitTraceValue( UINT dMode, LPTRACEPARAM pstInfo )
+INT_PTR InitTraceValue( UINT_PTR dMode, LPTRACEPARAM pstInfo )
 {
 	TCHAR	atBuff[MIN_STRING];
-	INT	iBuff = 0;
+	INT_PTR	iBuff = 0;
 
 	if( dMode )	//	ロード
 	{
@@ -2378,7 +2378,7 @@ INT InitTraceValue( UINT dMode, LPTRACEPARAM pstInfo )
 	@param[in]	nColour	ロード：デフォ値　セーブ：値
 	@return	COLORREF	ロード：値　セーブ：０
 */
-COLORREF InitColourValue( UINT dMode, UINT dStyle, COLORREF nColour )
+COLORREF InitColourValue( UINT_PTR dMode, UINT_PTR dStyle, COLORREF nColour )
 {
 	TCHAR	atKeyName[MIN_STRING], atBuff[MIN_STRING];
 	LPTSTR	ptEnd;
@@ -2416,11 +2416,11 @@ COLORREF InitColourValue( UINT dMode, UINT dStyle, COLORREF nColour )
 	@param[in,out]	pstInfo	データを出したり入れたりする構造体配列へのポインター
 	@return	HRESULT	終了状態コード
 */
-HRESULT InitToolBarLayout( UINT dMode, INT items, LPREBARLAYOUTINFO pstInfo )
+HRESULT InitToolBarLayout( UINT_PTR dMode, INT_PTR items, LPREBARLAYOUTINFO pstInfo )
 {
 	TCHAR	atKeyName[MIN_STRING], atBuff[MIN_STRING];
-	UINT	dValue;
-	INT	i;
+	UINT_PTR	dValue;
+	INT_PTR	i;
 
 
 	if( dMode )	//	ロード
@@ -2470,12 +2470,12 @@ HRESULT InitToolBarLayout( UINT dMode, INT items, LPREBARLAYOUTINFO pstInfo )
 	@param[in]	dMode	非０ロード　０セーブ
 	@param[in]	dStyle	パラメータの種類
 	@param[in]	nValue	ロード：デフォ値　セーブ：値
-	@return		INT	ロード：値　セーブ：０
+	@return		INT_PTR	ロード：値　セーブ：０
 */
-INT InitParamValue( UINT dMode, UINT dStyle, INT nValue )
+INT_PTR InitParamValue( UINT_PTR dMode, UINT_PTR dStyle, INT_PTR nValue )
 {
 	TCHAR	atKeyName[MIN_STRING], atBuff[MIN_STRING];
-	INT	iBuff = 0;
+	INT_PTR	iBuff = 0;
 
 	switch( dStyle )	//	INIT_LOAD
 	{
@@ -2559,7 +2559,7 @@ INT InitParamValue( UINT dMode, UINT dStyle, INT nValue )
 	@param[in,out]	ptStr	ロード：デフォルト文字列　セーブ：保存する文字列　MAX_PATHであること
 	@return			HRESULT	終了状態コード
 */
-HRESULT InitParamString( UINT dMode, UINT dStyle, LPTSTR ptStr )
+HRESULT InitParamString( UINT_PTR dMode, UINT_PTR dStyle, LPTSTR ptStr )
 {
 	TCHAR	atKeyName[MIN_STRING], atDefault[MAX_PATH];
 
@@ -2595,12 +2595,12 @@ HRESULT InitParamString( UINT dMode, UINT dStyle, LPTSTR ptStr )
 	@param[in]	dMode	非０ロード　０セーブ
 	@param[in]	dStyle	２頁一覧　３壱行　３ブラシ　４複数行
 	@param[in]	nValue	ロード：デフォ値　セーブ：値
-	@return		INT	ロード：値　セーブ：０
+	@return		INT_PTR	ロード：値　セーブ：０
 */
-INT InitWindowTopMost( UINT dMode, UINT dStyle, INT nValue )
+INT_PTR InitWindowTopMost( UINT_PTR dMode, UINT_PTR dStyle, INT_PTR nValue )
 {
 	TCHAR	atAppName[MIN_STRING], atBuff[MIN_STRING];
-	INT	iBuff = 0;
+	INT_PTR	iBuff = 0;
 
 	switch( dStyle )
 	{
@@ -2634,7 +2634,7 @@ INT InitWindowTopMost( UINT dMode, UINT dStyle, INT nValue )
 	@param[in]	pstRect	ロード結果を入れるか、セーブ内容を入れる
 	@return		HRESULT	終了状態コード
 */
-HRESULT InitWindowPos( UINT dMode, UINT dStyle, LPRECT pstRect )
+HRESULT InitWindowPos( UINT_PTR dMode, UINT_PTR dStyle, LPRECT pstRect )
 {
 	TCHAR	atAppName[MIN_STRING], atBuff[MIN_STRING];
 
@@ -2686,7 +2686,7 @@ HRESULT InitWindowPos( UINT dMode, UINT dStyle, LPRECT pstRect )
 	@param[out]	ptFile	フルパス・MAX_PATHであること
 	@return	HRESULT	終了状態コード
 */
-HRESULT InitLastOpen( UINT dMode, LPTSTR ptFile )
+HRESULT InitLastOpen( UINT_PTR dMode, LPTSTR ptFile )
 {
 	if(  !(ptFile) )	return E_INVALIDARG;
 	if( dMode ){	GetPrivateProfileString( TEXT("History"), TEXT("LastOpen"), TEXT(""), ptFile, MAX_PATH, gatIniPath );	}
@@ -2703,9 +2703,9 @@ HRESULT InitLastOpen( UINT dMode, LPTSTR ptFile )
 	@param[in]	iDir	ジャンプ方向・＋１か−１で・０は不可
 	@return	HRESULT	終了状態コード
 */
-HRESULT WindowFocusChange( INT nowWnd, INT iDir )
+HRESULT WindowFocusChange( INT_PTR nowWnd, INT_PTR iDir )
 {
-	INT	nextWnd;
+	INT_PTR	nextWnd;
 
 	if( gbTmpltDock )	//	くっついたら二つだけ
 	{
@@ -2741,7 +2741,7 @@ HRESULT WindowFocusChange( INT nowWnd, INT iDir )
 	@param[in,out]	ptFile	ロード：中身を入れる　セーブ：保存する文字列　MAX_PATHであること・NULLなら内容消去
 	@return			HRESULT	終了状態コード
 */
-HRESULT InitProfHistory( UINT dMode, UINT dNumber, LPTSTR ptFile )
+HRESULT InitProfHistory( UINT_PTR dMode, UINT_PTR dNumber, LPTSTR ptFile )
 {
 	TCHAR	atKeyName[MIN_STRING], atDefault[MAX_PATH];
 
@@ -2825,7 +2825,7 @@ HRESULT OpenHistoryInitialise( HWND hWnd )
 {
 	HMENU	hSubMenu;
 	TCHAR	atKeyName[MIN_STRING], atString[MAX_PATH+10];
-	UINT	d;
+	UINT_PTR	d;
 	UINT_PTR	dItems;
 	OPENHIST	stOpenHist;
 	OPHIS_ITR	itHist;
@@ -2901,7 +2901,7 @@ HRESULT OpenHistoryInitialise( HWND hWnd )
 	@param[in]	id		履歴指定メッセージ・メニューＩＤである
 	@return	HRESULT	終了状態コード
 */
-HRESULT OpenHistoryLoad( HWND hWnd, INT id )
+HRESULT OpenHistoryLoad( HWND hWnd, INT_PTR id )
 {
 	UINT_PTR	dNumber, dItems;
 	LPARAM		lUnique;
@@ -2990,7 +2990,7 @@ HRESULT OpenHistoryLogging( HWND hWnd, LPTSTR ptFile )
 */
 HRESULT OptionDialogueOpen( VOID )
 {
-	UINT	bURHbuff, bABUIbuff;
+	UINT_PTR	bURHbuff, bABUIbuff;
 	TCHAR	atFontName[LF_FACESIZE];	//	フォント名変更に備える
 	//	項目増えたら、構造体にしちゃう
 
@@ -3073,10 +3073,10 @@ VOID OptionExtMlt2HtmlPath( HWND hDlg )
 */
 INT_PTR CALLBACK OptionDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
-	static  UINT	cdGrXp, cdGrYp, cdRtRr, cdUdRr;
+	static  UINT_PTR	cdGrXp, cdGrYp, cdRtRr, cdUdRr;
 
-	UINT	id;
-	INT		dValue, iBuff;
+	UINT_PTR	id;
+	INT_PTR		dValue, iBuff;
 	TCHAR	atBuff[SUB_STRING];
 	TCHAR	atPath[MAX_PATH];
 
@@ -3434,7 +3434,7 @@ INT_PTR CALLBACK OptionDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 /*!
 	ユニコード空白の使用・不使用
 */
-UINT UnicodeUseToggle( LPVOID pVoid )
+UINT_PTR UnicodeUseToggle( LPVOID pVoid )
 {
 	gbUniPad =  !(gbUniPad);	//	トグル
 	InitParamValue( INIT_SAVE, VL_USE_UNICODE, gbUniPad );
@@ -3524,9 +3524,9 @@ LRESULT	CALLBACK gpfFileTabProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 	@param[in]	y			発生したクライヤントＹ座標値
 	@param[in]	keyFlags	他に押されてるキーについて
 */
-VOID Ftb_OnMButtonUp( HWND hWnd, INT x, INT y, UINT flags )
+VOID Ftb_OnMButtonUp( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR flags )
 {
-	INT	curSel;
+	INT_PTR	curSel;
 	TCHITTESTINFO	stTcHitInfo;
 
 	stTcHitInfo.pt.x = x;
@@ -3585,7 +3585,7 @@ HRESULT MultiFileTabFirst( LPTSTR ptName )
 */
 HRESULT MultiFileTabAppend( LPARAM dNumber, LPTSTR ptName )
 {
-	INT		iCount;
+	INT_PTR		iCount;
 	TCHAR	atName[MAX_PATH];
 	TCITEM		stTcItem;
 
@@ -3620,11 +3620,11 @@ HRESULT MultiFileTabAppend( LPARAM dNumber, LPTSTR ptName )
 /*!
 	指定の通し番号をもったタブをさがしてタブインデックスを返す
 	@param[in]	dNumber	通し番号
-	@return		INT		タブインデックス・該当なかったら−１
+	@return		INT_PTR		タブインデックス・該当なかったら−１
 */
-INT MultiFileTabSearch( LPARAM dNumber )
+INT_PTR MultiFileTabSearch( LPARAM dNumber )
 {
-	INT		iCount, i;
+	INT_PTR		iCount, i;
 	TCITEM	stTcItem;
 
 	iCount = TabCtrl_GetItemCount( ghFileTabWnd );
@@ -3650,7 +3650,7 @@ INT MultiFileTabSearch( LPARAM dNumber )
 */
 HRESULT MultiFileTabSelect( LPARAM dNumber )
 {
-	INT	iRslt;
+	INT_PTR	iRslt;
 
 	iRslt = MultiFileTabSearch( dNumber );	//	指定の通し番号をもったタブをさがす
 
@@ -3669,9 +3669,9 @@ HRESULT MultiFileTabSelect( LPARAM dNumber )
 	@param[in]	xDir	正数：右へ　負数：左へ　０なにもしない
 	@return		HRESULT	終了状態コード
 */
-HRESULT MultiFileTabSlide( INT xDir )
+HRESULT MultiFileTabSlide( INT_PTR xDir )
 {
-	INT		curSel, iCount, iTarget;
+	INT_PTR		curSel, iCount, iTarget;
 	LPARAM	dSele;
 	TCITEM	stTcItem;
 
@@ -3719,7 +3719,7 @@ HRESULT MultiFileTabSlide( INT xDir )
 */
 HRESULT MultiFileTabRename( LPARAM dNumber, LPTSTR ptName )
 {
-	INT	iRslt;
+	INT_PTR	iRslt;
 	TCHAR	atName[MAX_PATH];
 	TCITEM		stTcItem;
 
@@ -3743,9 +3743,9 @@ HRESULT MultiFileTabRename( LPARAM dNumber, LPTSTR ptName )
 	@param[in]	dMode	非０ロード　０セーブ
 	@param[in]	iTgt	読み出す番号・０インデックス・負数ならファイル数のみ確保
 	@param[out]	ptFile	フルパス・MAX_PATHであること
-	@return		INT	セーブ：０　ロード：記録数
+	@return		INT_PTR	セーブ：０　ロード：記録数
 */
-INT InitMultiFileTabOpen( UINT dMode, INT iTgt, LPTSTR ptFile )
+INT_PTR InitMultiFileTabOpen( UINT_PTR dMode, INT_PTR iTgt, LPTSTR ptFile )
 {
 	if( dMode )	//	よびだし
 	{
@@ -3765,9 +3765,9 @@ INT InitMultiFileTabOpen( UINT dMode, INT iTgt, LPTSTR ptFile )
 	@param[in]	iSelTab	閉じたいタブ番号・デフォ動作なら−１
 	@return		HRESULT	終了状態コード
 */
-HRESULT MultiFileTabClose( INT iSelTab )
+HRESULT MultiFileTabClose( INT_PTR iSelTab )
 {
-	INT	curSel, nowSel;
+	INT_PTR	curSel, nowSel;
 	LPARAM	dSele;
 	TCITEM	stTcItem;
 
@@ -3830,10 +3830,10 @@ HRESULT ViewingFontGet( LPLOGFONT pstLogFont )
 	@param[in]	dStyle	メッセージタイプ・１巨大ファイル問合せ　２改行無しエラー
 	@return	０なにもしない　１分割モード　２読込中止
 */
-UINT DocHugeFileTreatment( UINT dStyle )
+UINT_PTR DocHugeFileTreatment( UINT_PTR dStyle )
 {
-	 INT	iRslt = IDNO;
-	UINT	dMode;
+	 INT_PTR	iRslt = IDNO;
+	UINT_PTR	dMode;
 	BOOL	bVisible;
 
 	bVisible = IsWindowVisible( ghMainWnd );
@@ -3874,7 +3874,7 @@ UINT DocHugeFileTreatment( UINT dStyle )
 	@param[in]	message	マウス、キーボードの操作のWMmessage
 	@return 特になし
 */
-VOID TaskTrayIconEvent( HWND hWnd, UINT uID, UINT message )
+VOID TaskTrayIconEvent( HWND hWnd, UINT_PTR uID, UINT_PTR message )
 {
 
 
@@ -3916,12 +3916,12 @@ HRESULT NotifyBalloonExist( LPTSTR ptInfo, LPTSTR ptTitle, DWORD dIconTy )
 /*!
 	ドッキングしてる壱行ブラシテンプレを表示/非表示
 */
-HRESULT DockingTmplViewToggle( UINT bMode )
+HRESULT DockingTmplViewToggle( UINT_PTR bMode )
 {
 	HWND	hDockWnd;
 	RECT	clntRect, tabRect, pageRect, sbRect;
 	RECT	rect;
-	INT		iHeight, curSel;
+	INT_PTR		iHeight, curSel;
 
 	hDockWnd = DockingTabGet( );
 	//	分離状態ならタブは無い
@@ -3973,13 +3973,13 @@ HRESULT DockingTmplViewToggle( UINT bMode )
 //-------------------------------------------------------------------------------------------------
 
 #if defined(_DEBUG) || defined(WORK_LOG_OUT)
-VOID OutputDebugStringPlus( DWORD rixError, LPTSTR ptFile, INT rdLine, LPTSTR ptFunc, LPTSTR ptFormat, ... )
-//VOID OutputDebugStringPlus( DWORD rixError, LPSTR pcFile, INT rdLine, LPSTR pcFunc, LPTSTR ptFormat, ... )
+VOID OutputDebugStringPlus( DWORD rixError, LPTSTR ptFile, INT_PTR rdLine, LPTSTR ptFunc, LPTSTR ptFormat, ... )
+//VOID OutputDebugStringPlus( DWORD rixError, LPSTR pcFile, INT_PTR rdLine, LPSTR pcFunc, LPTSTR ptFormat, ... )
 {
 	va_list	argp;
 	TCHAR	atBuf[MAX_PATH], atOut[MAX_PATH], atFiFu[MAX_PATH], atErrMsg[MAX_PATH];
 //	CHAR	acFile[MAX_PATH], acFiFu[MAX_PATH];
-//	UINT	length;
+//	UINT_PTR	length;
 #ifdef WORK_LOG_OUT
 	UINT_PTR	cchLen;
 	DWORD	wrote;
@@ -3991,7 +3991,7 @@ VOID OutputDebugStringPlus( DWORD rixError, LPTSTR ptFile, INT rdLine, LPTSTR pt
 //	PathStripPathA( acFile );
 
 //	StringCchPrintfA( acFiFu, MAX_PATH, ("%s %d %s"), acFile, rdLine, pcFunc );
-//	length = (UINT)strlen( acFiFu );
+//	length = (UINT_PTR)strlen( acFiFu );
 
 //	ZeroMemory( atFiFu, sizeof(atFiFu) );
 //	MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, acFiFu, length, atFiFu, MAX_PATH );

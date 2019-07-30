@@ -106,12 +106,12 @@ static HINSTANCE	ghInst;			//!<	現在のインターフェイス
 static  HWND	ghToolWnd;			//!<	ツールバー
 static HIMAGELIST ghPrevwImgLst;	//!<	ツールバーアイコンのイメージリスト
 
-static INT		giViewMode;			//!<	表示状態：０〜単体頁　−１全頁
+static INT_PTR		giViewMode;			//!<	表示状態：０〜単体頁　−１全頁
 
 extern  HWND	ghPrntWnd;				//	親ウインドウハンドル
 extern list<ONEFILE>	gltMultiFiles;	//	複数ファイル保持
 extern FILES_ITR	gitFileIt;			//	今見てるファイルの本体
-extern INT		gixFocusPage;			//	注目中のページ・とりあえず０・０インデックス
+extern INT_PTR		gixFocusPage;			//	注目中のページ・とりあえず０・０インデックス
 //-------------------------------------------------------------------------------------------------
 
 #define TB_ITEMS	1
@@ -135,14 +135,14 @@ static LPSTR	gpcHtmlFtr;
 
 
 LRESULT	CALLBACK PreviewWndProc( HWND, UINT, WPARAM, LPARAM );	//!<	
-VOID	Pvw_OnCommand( HWND , INT, HWND, UINT );	//!<	WM_COMMAND の処理
-VOID	Pvw_OnSize( HWND , UINT, INT, INT );		//!<	
+VOID	Pvw_OnCommand( HWND , INT_PTR, HWND, UINT_PTR );	//!<	WM_COMMAND の処理
+VOID	Pvw_OnSize( HWND , UINT_PTR, INT_PTR, INT_PTR );		//!<	
 VOID	Pvw_OnPaint( HWND );						//!<	WM_PAINT の処理・枠線描画とか
 VOID	Pvw_OnDestroy( HWND );						//!<	WM_DESTROY の処理・BRUSHとかのオブジェクトの破壊を忘れないように
 
 HRESULT	PreviewHeaderGet( VOID );	//!<	
 
-HRESULT	PreviewPageWrite( INT );	//!<	
+HRESULT	PreviewPageWrite( INT_PTR );	//!<	
 //-------------------------------------------------------------------------------------------------
 
 /*!
@@ -221,7 +221,7 @@ HRESULT PreviewHeaderGet( VOID )
 	HANDLE	hFile;
 	DWORD	readed;
 
-	INT		iByteSize;
+	INT_PTR		iByteSize;
 	LPSTR	pcText, pcNext;
 
 
@@ -263,11 +263,11 @@ HRESULT PreviewHeaderGet( VOID )
 	@param[in]	bForeg		非０なら再プレビューのときにフォアグランドにする・０ならしない・プレビュー開いてないなら何もしない
 	@return	HRESULT	終了状態コード
 */
-HRESULT PreviewVisibalise( INT iNowPage, BOOLEAN bForeg )
+HRESULT PreviewVisibalise( INT_PTR iNowPage, BOOLEAN bForeg )
 {
 	HWND	hWnd;
 	TCHAR	atBuffer[MAX_STRING];
-//	UINT	iIndex;
+//	UINT_PTR	iIndex;
 	RECT	rect;
 	RECT	tbRect;
 
@@ -457,7 +457,7 @@ LRESULT CALLBACK PreviewWndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 	@param[in]	codeNotify	通知メッセージ	HIWORD(wParam)
 	@return		なし
 */
-VOID Pvw_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
+VOID Pvw_OnCommand( HWND hWnd, INT_PTR id, HWND hWndCtl, UINT_PTR codeNotify )
 {
 	LRESULT	lRslt;
 
@@ -484,7 +484,7 @@ VOID Pvw_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 	@param[in]	cx		変更されたクライヤント幅
 	@param[in]	cy		変更されたクライヤント高さ
 */
-VOID Pvw_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
+VOID Pvw_OnSize( HWND hWnd, UINT_PTR state, INT_PTR cx, INT_PTR cy )
 {
 	HWND	hWorkWnd;
 	RECT	tbRect, rect;
@@ -560,7 +560,7 @@ VOID Pvw_OnDestroy( HWND hWnd )
 	頁を表示する
 	@param[in]	iViewPage	頁番号・−１なら全頁
 */
-HRESULT PreviewPageWrite( INT iViewPage )
+HRESULT PreviewPageWrite( INT_PTR iViewPage )
 {
 	HRESULT	hRslt;
 
@@ -568,7 +568,7 @@ HRESULT PreviewPageWrite( INT iViewPage )
 	SAFEARRAY	*sfArray;
 
 	UINT_PTR	szSize;
-	INT		szCont, bstrLen;
+	INT_PTR		szCont, bstrLen;
 	INT_PTR	iPage, i;
 	LPSTR	pcContent;
 

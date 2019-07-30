@@ -31,26 +31,26 @@ If not, see <http://www.gnu.org/licenses/>.
 
 extern list<ONEFILE>	gltMultiFiles;	//!<	複数ファイル保持
 extern FILES_ITR	gitFileIt;			//!<	今見てるファイルの本体
-extern INT		gixFocusPage;			//!<	注目中のページ・とりあえず０・０インデックス
+extern INT_PTR		gixFocusPage;			//!<	注目中のページ・とりあえず０・０インデックス
 
-extern  UINT	gbAutoBUmsg;			//		自動バックアップメッセージ出すか？
+extern  UINT_PTR	gbAutoBUmsg;			//		自動バックアップメッセージ出すか？
 
-extern  UINT	gbSaveMsgOn;			//		保存メッセージ出すか？
+extern  UINT_PTR	gbSaveMsgOn;			//		保存メッセージ出すか？
 
 static TCHAR	gatBackUpDirty[MAX_PATH];
 
 //-------------------------------------------------------------------------------------------------
 
-INT	DocAstSeparatorGetAlloc( FILES_ITR, INT, UINT, LPVOID * );
+INT_PTR	DocAstSeparatorGetAlloc( FILES_ITR, INT_PTR, UINT_PTR, LPVOID * );
 
-INT	DocUnicode2UTF8( LPVOID * );
+INT_PTR	DocUnicode2UTF8( LPVOID * );
 //-------------------------------------------------------------------------------------------------
 
 
 /*!
 	該当するファイルは開き済か
 	@param[in]	ptFile	確認したいファイル名
-	@return	UINT	負：無し　１以上：ヒットしたやつのUNIQUE番号
+	@return	UINT_PTR	負：無し　１以上：ヒットしたやつのUNIQUE番号
 */
 LPARAM DocOpendFileCheck( LPTSTR ptFile )
 {
@@ -182,12 +182,12 @@ HRESULT DocFileBackup( HWND hWnd )
 	TCHAR	atExBuf[10];
 
 	LPVOID	pBuffer;	//	文字列バッファ用ポインター
-	INT		iByteSize, iNullTmt, iCrLf;
+	INT_PTR		iByteSize, iNullTmt, iCrLf;
 
 	LPVOID	pbSplit;
-	UINT	cbSplSz = 0; //  WriteFileするときの書くバイト数
+	UINT_PTR	cbSplSz = 0; //  WriteFileするときの書くバイト数
 
-	INT		isAST, isMLT, idExten;
+	INT_PTR		isAST, isMLT, idExten;
 
 	UINT_PTR	iPages, i;	//	頁数
 
@@ -322,7 +322,7 @@ HRESULT DocFileBackup( HWND hWnd )
 	@param[in]	bStyle	上書きかリネームか・フォーマット選択はダイヤログでやる
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocFileSave( HWND hWnd, UINT bStyle )
+HRESULT DocFileSave( HWND hWnd, UINT_PTR bStyle )
 {
 #ifdef _DEBUG
 	std::chrono::system_clock::time_point  start, end; // 型は auto で可
@@ -349,12 +349,12 @@ HRESULT DocFileSave( HWND hWnd, UINT bStyle )
 	TCHAR	atExBuf[10];
 
 	LPVOID	pBuffer;	//	文字列バッファ用ポインター
-	INT		iByteSize, iNullTmt, iCrLf;
+	INT_PTR		iByteSize, iNullTmt, iCrLf;
 
 	LPVOID	pbSplit;
-	UINT	cbSplSz;
+	UINT_PTR	cbSplSz;
 
-	INT		isAST, isMLT, idExten, mbRslt;
+	INT_PTR		isAST, isMLT, idExten, mbRslt;
 	BOOLEAN	bExtChg =FALSE, bLastChg = FALSE;
 	BOOLEAN	bForceMLT = FALSE;
 	BOOLEAN	bNoName = FALSE;
@@ -636,12 +636,12 @@ HRESULT DocFileSave( HWND hWnd, UINT bStyle )
 /*!
 	ユニコード文字列を受け取って、ＵＴＦ８のアドレスを確保してもどす。
 	@param[in,out]	pText	動的ユニコード文字列受取・動的ＵＴＦ８文字列入れる。メモリの扱い注意
-	@return	INT	確保したバイト数・NULLターミネータ含む
+	@return	INT_PTR	確保したバイト数・NULLターミネータ含む
 */
-INT DocUnicode2UTF8( LPVOID *pText )
+INT_PTR DocUnicode2UTF8( LPVOID *pText )
 {
 	UINT_PTR	cchSz;	//	ユニコード用
-	INT	cbSize, rslt;	//	UTF8用
+	INT_PTR	cbSize, rslt;	//	UTF8用
 	LPVOID		pUtf8;	//	確保
 
 	StringCchLength( (LPTSTR)(*pText), STRSAFE_MAX_CCH, &cchSz );
@@ -670,9 +670,9 @@ INT DocUnicode2UTF8( LPVOID *pText )
 	@param[out]	pText	確保した領域を返す・ワイド文字かマルチ文字になる・NULLなら頁名を削除する
 	@return				確保したバイト数・NULLターミネータ含む
 */
-INT DocAstSeparatorGetAlloc( FILES_ITR itFile, INT dPage, UINT bStyle, LPVOID *pText )
+INT_PTR DocAstSeparatorGetAlloc( FILES_ITR itFile, INT_PTR dPage, UINT_PTR bStyle, LPVOID *pText )
 {
-	UINT	cchSize, cbSize;
+	CCH_SIZE	cchSize, cbSize;
 	TCHAR	atBuffer[MAX_STRING];
 
 	StringCchPrintf( atBuffer, MAX_STRING, TEXT("[AA][%s]\r\n"), itFile->vcCont.at( dPage ).atPageName );
@@ -712,17 +712,17 @@ INT DocAstSeparatorGetAlloc( FILES_ITR itFile, INT dPage, UINT bStyle, LPVOID *p
 	@param[in]	hFont	描画に使うフォント受け取る
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocImageSave( HWND hWnd, UINT bStyle, HFONT hFont )
+HRESULT DocImageSave( HWND hWnd, UINT_PTR bStyle, HFONT hFont )
 {
 
 	LPVOID	pBuffer;
 	LPTSTR	ptText;
-	UINT	dLines;
-	INT		iDotX, iDotY, iByteSize, bType;
+	UINT_PTR	dLines;
+	INT_PTR		iDotX, iDotY, iByteSize, bType;
 	UINT_PTR	cchSize;
 	RECT	rect;
 
-	INT	iLine;
+	INT_PTR	iLine;
 	UINT_PTR	cchLen, start, caret = 0;
 
 	BOOL	bOpened;

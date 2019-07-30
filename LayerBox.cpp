@@ -80,11 +80,11 @@ static  TBBUTTON	gstTBInfo[] = {
 //-------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------
 
-extern INT		gdDocXdot;		//!<	キャレットのＸドット・ドキュメント位置
-extern INT		gdDocLine;		//!<	キャレットのＹ行数・ドキュメント位置
+extern INT_PTR		gdDocXdot;		//!<	キャレットのＸドット・ドキュメント位置
+extern INT_PTR		gdDocLine;		//!<	キャレットのＹ行数・ドキュメント位置
 
-extern INT		gdHideXdot;		//!<	左の隠れ部分
-extern INT		gdViewTopLine;	//!<	表示中の最上部行番号
+extern INT_PTR		gdHideXdot;		//!<	左の隠れ部分
+extern INT_PTR		gdViewTopLine;	//!<	表示中の最上部行番号
 
 extern HFONT	ghAaFont;		//!<	AA用フォント
 
@@ -97,7 +97,7 @@ static  ATOM	gLyrBoxAtom;	//!<	レイヤボックス窓のクラスアトム
 static  LONG	gdBoxID;		//!<	通し番号・常にINCREMENT
 
 static POINT	gstFrmSz;		//!<	ウインドウエッジからスタティックまでのオフセット
-static INT		gdToolBarHei;	//!<	ツールバー太さ
+static INT_PTR		gdToolBarHei;	//!<	ツールバー太さ
 
 EXTERNED BYTE	gbAlpha;		//!<	透明度
 
@@ -118,35 +118,37 @@ static LRESULT	CALLBACK gpfLyrEditProc( HWND, UINT, WPARAM, LPARAM );	//!<
 LRESULT	CALLBACK LayerBoxProc( HWND, UINT, WPARAM, LPARAM );	//!<	
 
 BOOLEAN	Lyb_OnCreate( HWND, LPCREATESTRUCT );				//!<	WM_CREATE の処理
-VOID	Lyb_OnCommand( HWND , INT, HWND, UINT );			//!<	
-//VOID	Lyb_OnSize( HWND , UINT, INT, INT );				//!<	
-VOID	Lyb_OnKey( HWND, UINT, BOOL, INT, UINT );			//!<	
+VOID	Lyb_OnCommand( HWND , INT_PTR, HWND, UINT_PTR );			//!<	
+//VOID	Lyb_OnSize( HWND , UINT_PTR, INT_PTR, INT_PTR );				//!<	
+VOID	Lyb_OnKey( HWND, UINT_PTR, BOOL, INT_PTR, UINT_PTR );			//!<	
 VOID	Lyb_OnPaint( HWND );								//!<	
 VOID	Lyb_OnDestroy( HWND );								//!<	
 VOID	Lyb_OnMoving( HWND, LPRECT );						//!<	
 BOOL	Lyb_OnWindowPosChanging( HWND, LPWINDOWPOS );		//!<	
 VOID	Lyb_OnWindowPosChanged( HWND, const LPWINDOWPOS );	//!<	
-VOID	Lyb_OnLButtonDown( HWND, BOOL, INT, INT, UINT );	//!<	
-VOID	Lyb_OnContextMenu( HWND, HWND, UINT, UINT );		//!<	
+VOID	Lyb_OnLButtonDown( HWND, BOOL, INT_PTR, INT_PTR, UINT_PTR );	//!<	
+VOID	Lyb_OnContextMenu( HWND, HWND, UINT_PTR, UINT_PTR );		//!<	
 
-HRESULT	LayerEditOnOff( HWND, UINT );						//!<	
+HRESULT	LayerEditOnOff( HWND, UINT_PTR );						//!<	
 
 
 HRESULT	LayerStringObliterate( LAYER_ITR  );				//!<	
 HRESULT	LayerFromString( LAYER_ITR, LPCTSTR );				//!<	
-HRESULT	LayerFromSelectArea( LAYER_ITR , UINT );			//!<	
+HRESULT	LayerFromSelectArea( LAYER_ITR , UINT_PTR );			//!<	
 HRESULT	LayerFromClipboard( LAYER_ITR );					//!<	
-HRESULT	LayerForClipboard( HWND, UINT );					//!<	
+HRESULT	LayerForClipboard( HWND, UINT_PTR );					//!<	
 HRESULT	LayerOnDelete( HWND );								//!<	
-INT		LayerInputLetter( LAYER_ITR, INT, INT, TCHAR );		//!<	
-LPTSTR	LayerLineTextGetAlloc( LAYER_ITR, INT );			//!<	
-HRESULT	LayerBoxSetString( LAYER_ITR, LPCTSTR, UINT, LPPOINT, UINT );	//!<	
+
+INT_PTR		LayerInputLetter( LAYER_ITR, INT_PTR, INT_PTR, TCHAR );		//!<	
+LPTSTR	LayerLineTextGetAlloc( LAYER_ITR, INT_PTR );			//!<	
+HRESULT	LayerBoxSetString( LAYER_ITR, LPCTSTR, UINT_PTR, LPPOINT, UINT_PTR );	//!<	
 HRESULT	LayerBoxSizeAdjust( LAYER_ITR );					//!<	
 
-INT		LayerTransparentAdjust( LAYER_ITR, INT, INT );		//!<	
+
+INT_PTR		LayerTransparentAdjust( LAYER_ITR, INT_PTR, INT_PTR );		//!<	
 
 #ifdef EDGE_BLANK_STYLE
-HRESULT	LayerEdgeBlankSizeCheck( HWND, INT );				//!<	
+HRESULT	LayerEdgeBlankSizeCheck( HWND, INT_PTR );				//!<	
 #endif
 //-------------------------------------------------------------------------------------------------
 
@@ -225,7 +227,7 @@ VOID LayerBoxInitialise( HINSTANCE hInstance, LPRECT pstFrame )
 	@param[in]	dParam	新しいアルファ値
 	@return		HRESULT	終了状態コード
 */
-HRESULT LayerBoxAlphaSet( UINT dParam )
+HRESULT LayerBoxAlphaSet( UINT_PTR dParam )
 {
 	gbAlpha = dParam & 0xFF;
 
@@ -240,14 +242,14 @@ HRESULT LayerBoxAlphaSet( UINT dParam )
 	@param[in]	bNormal	0x00普通に処理　0x10裏処理
 	@return		HWND	作成されたレイヤボックスのウインドウハンドル
 */
-HWND LayerBoxVisibalise( HINSTANCE hInst, LPCTSTR ptStr, UINT bNormal )
+HWND LayerBoxVisibalise( HINSTANCE hInst, LPCTSTR ptStr, UINT_PTR bNormal )
 {
-	INT		x, y;
+	INT_PTR		x, y;
 	RECT	vwRect, rect;
 	DWORD	dwStyle;
 
 	BOOLEAN	bSelect = FALSE;
-	UINT	bSqSel = 0;
+	UINT_PTR	bSqSel = 0;
 
 	LAYERBOXSTRUCT	stLayer;
 	LAYER_ITR	itLyr;
@@ -383,7 +385,7 @@ HRESULT LayerBoxPositionChange( HWND hWnd, LONG x, LONG y )
 */
 LRESULT CALLBACK gpfLayerTBProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-	INT		itemID;
+	INT_PTR		itemID;
 	HDC		hdc;
 	HWND	hWndChild;
 
@@ -423,10 +425,10 @@ LRESULT CALLBACK gpfLayerTBProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 */
 LRESULT CALLBACK gpfLyrEditProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-	INT		len;
-	INT		id;
+	INT_PTR		len;
+	INT_PTR		id;
 	HWND	hWndCtl;
-	UINT	codeNotify;
+	UINT_PTR	codeNotify;
 
 	switch( msg )
 	{
@@ -504,7 +506,7 @@ BOOLEAN Lyb_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 	HINSTANCE	lcInst  = lpCreateStruct->hInstance;	//	受け取った初期化情報から、インスタンスハンドルをひっぱる
 	HWND	hToolWnd, hWorkWnd;
 	TCHAR	atBuffer[MAX_STRING];
-//	UINT	iIndex;
+//	UINT_PTR	iIndex;
 	RECT	tbRect;
 //	TBADDBITMAP	stToolBmp;
 
@@ -575,11 +577,11 @@ BOOLEAN Lyb_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 	@param[in]	codeNotify	通知メッセージ	HIWORD(wParam)
 	@return		なし
 */
-VOID Lyb_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
+VOID Lyb_OnCommand( HWND hWnd, INT_PTR id, HWND hWndCtl, UINT_PTR codeNotify )
 {
 	LRESULT	lRslt;
-	INT		bEdgeBlank;
-	INT		iXpos, iYln;
+	INT_PTR		bEdgeBlank;
+	INT_PTR		iXpos, iYln;
 
 	switch( id )
 	{
@@ -658,7 +660,7 @@ VOID Lyb_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 	@param[in]	flags	キーフラグいろいろ
 	@return		無し
 */
-VOID Lyb_OnKey( HWND hWnd, UINT vk, BOOL fDown, int cRepeat, UINT flags )
+VOID Lyb_OnKey( HWND hWnd, UINT_PTR vk, BOOL fDown, INT_PTR cRepeat, UINT_PTR flags )
 {
 	RECT	rect;
 
@@ -694,15 +696,15 @@ VOID Lyb_OnPaint( HWND hWnd )
 	HFONT		hFtOld;
 	COLORREF	clrTextOld, clrBackOld;
 	HDC			hdc;
-	INT			height;
+	INT_PTR			height;
 	UINT_PTR	iLines, i;
 	LPTSTR		ptText;
 	RECT		rect;
 	LAYER_ITR	itLyr;
 
 	UINT_PTR	mz, cchLen;
-	UINT		bStyle, cchMr, cbSize;
-	INT			width, rdStart;
+	UINT_PTR		bStyle, cchMr, cbSize;
+	INT_PTR			width, rdStart;
 	BOOLEAN		doDraw, bRslt;
 
 	hdc = BeginPaint( hWnd, &ps );
@@ -850,7 +852,7 @@ VOID Lyb_OnDestroy( HWND hWnd )
 */
 BOOL Lyb_OnWindowPosChanging( HWND hWnd, LPWINDOWPOS pstWpos )
 {
-	INT		clPosY, vwTopY, dSabun, dRem;
+	INT_PTR		clPosY, vwTopY, dSabun, dRem;
 	BOOLEAN	bMinus = FALSE;
 	RECT	vwRect;
 
@@ -980,9 +982,9 @@ VOID Lyb_OnMoving( HWND hWnd, LPRECT pstPos )
 	@param[in]	y				発生したＹ座標値
 	@param[in]	keyFlags		他に押されてるキーについて
 */
-VOID Lyb_OnLButtonDown( HWND hWnd, BOOL fDoubleClick, INT x, INT y, UINT keyFlags )
+VOID Lyb_OnLButtonDown( HWND hWnd, BOOL fDoubleClick, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
-	INT			sy, iDot, iLine;
+	INT_PTR			sy, iDot, iLine;
 	LAYER_ITR	itLyr;
 	RECT		rect;
 	BOOLEAN		bGet = FALSE;
@@ -1026,11 +1028,11 @@ VOID Lyb_OnLButtonDown( HWND hWnd, BOOL fDoubleClick, INT x, INT y, UINT keyFlag
 	@param[in]	yPos		スクリーンＹ座業
 	@return		無し
 */
-VOID Lyb_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
+VOID Lyb_OnContextMenu( HWND hWnd, HWND hWndContext, UINT_PTR xPos, UINT_PTR yPos )
 {
-	INT		posX, posY;
+	INT_PTR		posX, posY;
 	HMENU	hMenu, hSubMenu;
-	UINT	dRslt;
+	UINT_PTR	dRslt;
 
 	posX = (SHORT)xPos;	//	画面座標はマイナスもありうる
 	posY = (SHORT)yPos;
@@ -1053,7 +1055,7 @@ VOID Lyb_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 	@param[in]	bMode	非０全選択　０全解除
 	@return		HRESULT	終了状態コード
 */
-HRESULT LayerTransparentToggle( HWND hWnd, UINT bMode )
+HRESULT LayerTransparentToggle( HWND hWnd, UINT_PTR bMode )
 {
 	TCHAR	chb;
 	INT_PTR	iLines, iL;
@@ -1111,10 +1113,11 @@ HRESULT LayerTransparentToggle( HWND hWnd, UINT bMode )
 	@param[in]	rdLine	対象の行番号・絶対０インデックスか
 	@return		文字数
 */
-INT LayerTransparentAdjust( LAYER_ITR itLyr, INT dNowDot, INT rdLine )
+
+INT_PTR LayerTransparentAdjust( LAYER_ITR itLyr, INT_PTR dNowDot, INT_PTR rdLine )
 {
 	INT_PTR	i, iCount, iLines, iLetter;
-	INT		dDotCnt = 0, dPrvCnt = 0, rdWidth = 0;
+	INT_PTR		dDotCnt = 0, dPrvCnt = 0, rdWidth = 0;
 	TCHAR	ch, chb;
 	LETR_ITR	itMozi, itHead, itTail, itTemp;
 
@@ -1197,7 +1200,7 @@ INT LayerTransparentAdjust( LAYER_ITR itLyr, INT dNowDot, INT rdLine )
 	@param[in]	state	窓状態・最小化なら違うコトする
 	@return		HRESULT	終了状態コード
 */
-HRESULT LayerMoveFromView( HWND hWnd, UINT state )
+HRESULT LayerMoveFromView( HWND hWnd, UINT_PTR state )
 {
 	LAYER_ITR	itLyr;
 	RECT	vwRect = {0,0,0,0};
@@ -1242,7 +1245,7 @@ HRESULT LayerMoveFromView( HWND hWnd, UINT state )
 	@param[in]	il		行番号
 	@return		LPTSTR	文字列のぽいんた〜
 */
-LPTSTR LayerLineTextGetAlloc( LAYER_ITR itLyr, INT il )
+LPTSTR LayerLineTextGetAlloc( LAYER_ITR itLyr, INT_PTR il )
 {
 	UINT_PTR	cchSize, i = 0;
 	LPTSTR	ptText;
@@ -1288,11 +1291,11 @@ HRESULT LayerStringObliterate( LAYER_ITR itLyr )
 	@param[in]	dStyle	非０編集する　０終了
 	@return		HRESULT	終了状態コード
 */
-HRESULT LayerEditOnOff( HWND hWnd, UINT dStyle )
+HRESULT LayerEditOnOff( HWND hWnd, UINT_PTR dStyle )
 {
 	UINT_PTR	i, iLines;
-	INT			ndx;
-	UINT		cchSize;
+	INT_PTR			ndx;
+	CCH_SIZE	cchSize;
 	LPTSTR		ptStr;
 	ONELINE		stLine;
 	LAYER_ITR	itLyr;
@@ -1374,7 +1377,7 @@ HRESULT LayerEditOnOff( HWND hWnd, UINT dStyle )
 */
 HRESULT LayerStringReplace( HWND hLyrWnd, LPTSTR ptStr )
 {
-	UINT		cchSize;
+	CCH_SIZE	cchSize;
 	ONELINE		stLine;
 	LAYER_ITR	itLyr;
 
@@ -1407,7 +1410,7 @@ HRESULT LayerStringReplace( HWND hLyrWnd, LPTSTR ptStr )
 */
 HRESULT LayerFromString( LAYER_ITR itLyr, LPCTSTR ptStr )
 {
-	UINT	cchSize;
+	CCH_SIZE	cchSize;
 	ONELINE	stLine;
 
 	ZeroONELINE( &stLine );
@@ -1428,10 +1431,10 @@ HRESULT LayerFromString( LAYER_ITR itLyr, LPCTSTR ptStr )
 	@param[in]	bSqSel	矩形選択中であるか
 	@return		HRESULT	終了状態コード
 */
-HRESULT LayerFromSelectArea( LAYER_ITR itLyr, UINT bSqSel )
+HRESULT LayerFromSelectArea( LAYER_ITR itLyr, UINT_PTR bSqSel )
 {
 	LPTSTR	ptString = NULL;
-	UINT	cchSize, cbSize;
+	CCH_SIZE	cchSize, cbSize;
 	LPPOINT	pstPos;
 	ONELINE	stLine;
 
@@ -1470,8 +1473,8 @@ HRESULT LayerFromSelectArea( LAYER_ITR itLyr, UINT bSqSel )
 HRESULT LayerFromClipboard( LAYER_ITR itLyr )
 {
 	LPTSTR	ptString = NULL;
-	UINT	cchSize, dStyle;//, i;
-//	INT		insDot, yLine;
+	CCH_SIZE	cchSize, dStyle;//, i;
+//	INT_PTR		insDot, yLine;
 	ONELINE	stLine;
 
 	ZeroONELINE( &stLine );
@@ -1498,8 +1501,8 @@ HRESULT LayerFromClipboard( LAYER_ITR itLyr )
 */
 HRESULT LayerBoxSizeAdjust( LAYER_ITR itLyr )
 {
-	INT	dViewXdot, dYline, dViewYdot;
-	INT	iMaxDot = 0, iYdot;
+	INT_PTR	dViewXdot, dYline, dViewYdot;
+	INT_PTR	iMaxDot = 0, iYdot;
 	INT_PTR	iLine, i;
 	SIZE	wdSize, tgtSize;//clSize
 
@@ -1558,11 +1561,11 @@ HRESULT LayerBoxSizeAdjust( LAYER_ITR itLyr )
 	@param[in]	bStyle	非０内容に合わせてサイズ変更　０ナニもしない
 	@return		HRESULT	終了状態コード
 */
-HRESULT LayerBoxSetString( LAYER_ITR itLyr, LPCTSTR ptText, UINT cchSize, LPPOINT pstPt, UINT bStyle )
+HRESULT LayerBoxSetString( LAYER_ITR itLyr, LPCTSTR ptText, UINT_PTR cchSize, LPPOINT pstPt, UINT_PTR bStyle )
 {
 	UINT_PTR	i, j, iLine, iTexts;
 	LONG	dMin = 0;
-	INT		insDot, yLine, dSpDot, dSpMozi, iLines = 0, dOffset;
+	INT_PTR		insDot, yLine, dSpDot, dSpMozi, iLines = 0, dOffset;
 	LPTSTR	ptBuff, ptSpace = NULL;
 	ONELINE	stLine;
 
@@ -1678,10 +1681,11 @@ HRESULT LayerBoxSetString( LAYER_ITR itLyr, LPCTSTR ptText, UINT cchSize, LPPOIN
 	@param[out]	pdMozi		文字数を入れるポインタ〜
 	@return	非空白に至るまでのドット数
 */
-INT LayerHeadSpaceCheck( vector<LETTER> *vcTgLine, PINT pdMozi )
+
+INT_PTR LayerHeadSpaceCheck( vector<LETTER> *vcTgLine, PINT_PTR pdMozi )
 {
 	TCHAR		ch;
-	INT			cchSp, dDot;	//	文字数とドット数
+	INT_PTR			cchSp, dDot;	//	文字数とドット数
 	UINT_PTR	i, iMozi;
 
 #ifdef DO_TRY_CATCH
@@ -1722,12 +1726,13 @@ INT LayerHeadSpaceCheck( vector<LETTER> *vcTgLine, PINT pdMozi )
 	@param[in]	nowDot	挿入するドット位置・使ってない
 	@param[in]	rdLine	対象の行番号・絶対０インデックスか
 	@param[in]	ch		追加したい文字
-	@return		INT		追加した文字のドット数
+	@return		INT_PTR		追加した文字のドット数
 */
-INT LayerInputLetter( LAYER_ITR itLyr, INT nowDot, INT rdLine, TCHAR ch )
+
+INT_PTR LayerInputLetter( LAYER_ITR itLyr, INT_PTR nowDot, INT_PTR rdLine, TCHAR ch )
 {
 	LETTER	stLetter;
-//	INT		iRslt;
+//	INT_PTR		iRslt;
 
 #ifdef DO_TRY_CATCH
 	try{
@@ -1761,16 +1766,16 @@ INT LayerInputLetter( LAYER_ITR itLyr, INT nowDot, INT rdLine, TCHAR ch )
 	@param[in]	dStyle	不可視特別処理を？
 	@return		HRESULT	終了状態コード
 */
-HRESULT LayerContentsImportable( HWND hWnd, UINT cmdID, LPINT pXdot, LPINT pYline, UINT dStyle )
+HRESULT LayerContentsImportable( HWND hWnd, UINT_PTR cmdID, PINT_PTR pXdot, PINT_PTR pYline, UINT_PTR dStyle )
 {
 	RECT		vwRect, lyRect;
 	POINT		conPoint;
-	INT			xTgDot, xDot, iSrcDot, iSabun, iDivid, iSpDot;
-	INT			dGap, dInLen, dInBgn, dInEnd, dEndot;
-	INT			dLeft, dRight;
-	INT			iPageLine, yTgLine, dWkLine, dLyLine;
-	INT			iMinus, iMozi, iStMozi, iEdMozi;
-	INT			dBkLeft, dBkRight, dBkStMozi, dBkEdMozi;
+	INT_PTR		xTgDot, xDot, iSrcDot, iSabun, iDivid, iSpDot;
+	INT_PTR		dGap, dInLen, dInBgn, dInEnd, dEndot;
+	INT_PTR		dLeft, dRight;
+	INT_PTR		iPageLine, yTgLine, dWkLine, dLyLine;
+	INT_PTR		iMinus, iMozi, iStMozi, iEdMozi;
+	INT_PTR		dBkLeft, dBkRight, dBkStMozi, dBkEdMozi;
 	INT_PTR		dNeedLine;
 	UINT_PTR	cchSize;
 	LPTSTR		ptStr, ptBuffer;
@@ -1778,8 +1783,8 @@ HRESULT LayerContentsImportable( HWND hWnd, UINT cmdID, LPINT pXdot, LPINT pYlin
 	BOOLEAN		bSpace, bBkSpase;
 
 #ifdef EDGE_BLANK_STYLE
-	INT		bEdgeBlank;
-	INT		xDotEx, iMoziEx;
+	INT_PTR		bEdgeBlank;
+	INT_PTR		xDotEx, iMoziEx;
 #endif
 	LAYER_ITR	itLyr;
 
@@ -2104,7 +2109,7 @@ HRESULT LayerContentsImportable( HWND hWnd, UINT cmdID, LPINT pXdot, LPINT pYlin
 	@param[in]	bStyle	ユニコードかシフトJISで
 	@return		HRESULT	終了状態コード
 */
-HRESULT LayerForClipboard( HWND hWnd, UINT bStyle )
+HRESULT LayerForClipboard( HWND hWnd, UINT_PTR bStyle )
 {
 	INT_PTR	iLines, iL, cchSize, cbSize;
 	LETR_ITR	itMozi;
@@ -2201,10 +2206,10 @@ HRESULT LayerOnDelete( HWND hWnd )
 	@param[in]	iCanWid	キャンセルする最大幅
 	@return		HRESULT	終了状態コード
 */
-HRESULT LayerEdgeBlankSizeCheck( HWND hWnd, INT iCanWid )
+HRESULT LayerEdgeBlankSizeCheck( HWND hWnd, INT_PTR iCanWid )
 {
 	INT_PTR	iLines;
-	INT		iWidth;
+	INT_PTR		iWidth;
 
 	LAYER_ITR	itLyr;
 

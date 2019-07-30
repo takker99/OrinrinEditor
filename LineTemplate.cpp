@@ -33,7 +33,7 @@ If not, see <http://www.gnu.org/licenses/>.
 extern HFONT	ghAaFont;		//	AA用フォント
 extern HFONT	ghNameFont;		//	ファイルタブ用フォント
 
-extern INT		gbTmpltDock;	//	頁・壱行テンプレのドッキング
+extern INT_PTR		gbTmpltDock;	//	頁・壱行テンプレのドッキング
 extern BOOLEAN	gbDockTmplView;	//	くっついてるテンプレは見えているか
 
 //extern  HWND	ghMainSplitWnd;	//	メインのスプリットバーハンドル
@@ -50,9 +50,9 @@ static  HWND	ghLnLvTipWnd;	//!<	壱行リストツールチップ
 static  HWND	ghDockTabWnd;	//!<	ドッキングしたときの選択肢タブ
 
 
-static  UINT	gNowGroup;		//!<	今みてるグループ番号
+static  UINT_PTR	gNowGroup;		//!<	今みてるグループ番号
 
-static  UINT	gLnClmCnt;	//!<	表示カラム数
+static  UINT_PTR	gLnClmCnt;	//!<	表示カラム数
 
 static WNDPROC	gpfOrigLineCtgryProc;	//!<	
 static WNDPROC	gpfOrigLineItemProc;	//!<	
@@ -61,26 +61,26 @@ static vector<AATEMPLATE>	gvcTmples;	//!<	テンプレの保持
 //-------------------------------------------------------------------------------------------------
 
 LRESULT	CALLBACK LineTmpleProc( HWND, UINT, WPARAM, LPARAM );	//!<	
-VOID	Ltp_OnCommand( HWND , INT, HWND, UINT );	//!<	
-VOID	Ltp_OnSize( HWND , UINT, INT, INT );	//!<	
-VOID	Ltp_OnContextMenu( HWND, HWND, UINT, UINT );	//!<	
+VOID	Ltp_OnCommand( HWND , INT_PTR, HWND, UINT_PTR );	//!<	
+VOID	Ltp_OnSize( HWND , UINT_PTR, INT_PTR, INT_PTR );	//!<	
+VOID	Ltp_OnContextMenu( HWND, HWND, UINT_PTR, UINT_PTR );	//!<	
 #ifndef LTP_CLICK_NEW
-LRESULT	Ltp_OnNotify( HWND , INT, LPNMHDR );	//!<	
+LRESULT	Ltp_OnNotify( HWND , INT_PTR, LPNMHDR );	//!<	
 #endif
 
-UINT	CALLBACK LineTmpleItemData( LPTSTR, LPCTSTR, INT );	//!<	
+UINT_PTR	CALLBACK LineTmpleItemData( LPTSTR, LPCTSTR, INT_PTR );	//!<	
 
-HRESULT	LineTmpleItemListOn( UINT );	//!<	
+HRESULT	LineTmpleItemListOn( UINT_PTR );	//!<	
 HRESULT	LineTmpleItemReload( HWND );	//!<	
 
-HRESULT	TemplateItemSplit( LPTSTR, UINT, PAGELOAD );	//!<	
-HRESULT	TemplateItemScatter( LPCTSTR, INT, PAGELOAD );	//!<	
+HRESULT	TemplateItemSplit( LPTSTR, UINT_PTR, PAGELOAD );	//!<	
+HRESULT	TemplateItemScatter( LPCTSTR, INT_PTR, PAGELOAD );	//!<	
 
 LRESULT	CALLBACK gpfLineCtgryProc( HWND, UINT, WPARAM, LPARAM );	//!<	
 LRESULT	CALLBACK gpfLineItemProc(  HWND, UINT, WPARAM, LPARAM );	//!<	
-LRESULT	Ltl_OnNotify( HWND , INT, LPNMHDR );						//!<	
+LRESULT	Ltl_OnNotify( HWND , INT_PTR, LPNMHDR );						//!<	
 #ifdef LTP_CLICK_NEW
-VOID	Ltl_OnMouseButtonUp( HWND, UINT, INT, INT, UINT );			//!<	
+VOID	Ltl_OnMouseButtonUp( HWND, UINT_PTR, INT_PTR, INT_PTR, UINT_PTR );			//!<	
 #endif
 
 HWND	DockingTabCreate( HINSTANCE, HWND, LPRECT );	//!<	
@@ -105,7 +105,7 @@ HWND LineTmpleInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame 
 	UINT_PTR	dItems, i;
 	DWORD		dwExStyle, dwStyle;
 	HWND		hPrWnd;
-	INT			spPos;
+	INT_PTR			spPos;
 
 	TTTOOLINFO	stToolInfo;
 	LVCOLUMN	stLvColm;
@@ -444,10 +444,10 @@ LRESULT CALLBACK LineTmpleProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 	@param[in]	codeNotify	通知メッセージ	HIWORD(wParam)
 	@return		なし
 */
-VOID Ltp_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
+VOID Ltp_OnCommand( HWND hWnd, INT_PTR id, HWND hWndCtl, UINT_PTR codeNotify )
 {
-	INT		rslt;
-	UINT	dClm;
+	INT_PTR		rslt;
+	UINT_PTR	dClm;
 	LONG_PTR	rdExStyle;
 
 	switch( id )
@@ -529,10 +529,10 @@ VOID Ltp_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 	@param[in]	cy		変更されたクライヤント高さ
 	@return		なし
 */
-VOID Ltp_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
+VOID Ltp_OnSize( HWND hWnd, UINT_PTR state, INT_PTR cx, INT_PTR cy )
 {
 	LONG	width;
-	UINT	i;
+	UINT_PTR	i;
 	RECT	cbxRect, rect;
 
 	MoveWindow( ghCtgryBxWnd, 0, 0, cx, 127, TRUE );
@@ -560,10 +560,10 @@ VOID Ltp_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 	@param[in]	pstNmhdr	NOTIFYの詳細
 	@return		処理した内容とか
 */
-LRESULT Ltp_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
+LRESULT Ltp_OnNotify( HWND hWnd, INT_PTR idFrom, LPNMHDR pstNmhdr )
 {
 	HWND	hLvWnd;
-	INT		iPos, iItem, nmCode, iSubItem;
+	INT_PTR		iPos, iItem, nmCode, iSubItem;
 	INT_PTR	items;
 	TCHAR	atItem[SUB_STRING];
 	LPNMLISTVIEW	pstLv;
@@ -620,10 +620,10 @@ LRESULT Ltp_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 	@param[in]	yPos		スクリーンＹ座業
 	@return		無し
 */
-VOID Ltp_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
+VOID Ltp_OnContextMenu( HWND hWnd, HWND hWndContext, UINT_PTR xPos, UINT_PTR yPos )
 {
 	HMENU	hMenu, hSubMenu;
-	UINT	dRslt;
+	UINT_PTR	dRslt;
 	LONG_PTR	rdExStyle;
 
 	POINT	stPoint;
@@ -656,9 +656,9 @@ VOID Ltp_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 	@param[in]	ptName	セット名称・無効ならNULL・こっちの存在優先
 	@param[in]	ptLine	項目の内容・無効ならNULL・両方NULLで末端処理
 	@param[in]	cchSize	どっちかの内容の文字数
-	@return	UINT	特に意味はない
+	@return	UINT_PTR	特に意味はない
 */
-UINT CALLBACK LineTmpleItemData( LPTSTR ptName, LPCTSTR ptLine, INT cchSize )
+UINT_PTR CALLBACK LineTmpleItemData( LPTSTR ptName, LPCTSTR ptLine, INT_PTR cchSize )
 {
 //	両方NULLだったら、本体に追加処理をすれ
 	static AATEMPLATE	cstItem;
@@ -687,9 +687,9 @@ UINT CALLBACK LineTmpleItemData( LPTSTR ptName, LPCTSTR ptLine, INT cchSize )
 	@param[in]	listNum	展開するセット番号・０インデックス
 	@return		HRESULT	終了状態コード
 */
-HRESULT LineTmpleItemListOn( UINT listNum )
+HRESULT LineTmpleItemListOn( UINT_PTR listNum )
 {
-	INT			width;
+	INT_PTR			width;
 	UINT_PTR	i, items;
 	TCHAR		atItem[SUB_STRING];
 	LVITEM		stLvi;
@@ -779,11 +779,11 @@ HRESULT TemplateItemLoad( LPTSTR ptFileName, PAGELOAD pfCalling )
 	DWORD	readed;
 
 	LPVOID	pBuffer;	//	文字列バッファ用ポインター
-	INT		iByteSize;
+	INT_PTR		iByteSize;
 
 	LPTSTR	ptString;
 	LPSTR	pcText;
-	UINT	cchSize;
+	CCH_SIZE	cchSize;
 
 	TCHAR	atFileName[MAX_PATH];
 
@@ -835,14 +835,14 @@ HRESULT TemplateItemLoad( LPTSTR ptFileName, PAGELOAD pfCalling )
 	@param[in]	pfCalling	受け取ったデータを処理する函数へのポインター
 	@return		HRESULT		終了状態コード
 */
-HRESULT TemplateItemSplit( LPTSTR ptStr, UINT cchSize, PAGELOAD pfCalling )
+HRESULT TemplateItemSplit( LPTSTR ptStr, UINT_PTR cchSize, PAGELOAD pfCalling )
 {
 	LPCTSTR	ptCaret;	//	読込開始・現在位置
 	LPCTSTR	ptStart;	//	セパレータの直前
 	LPTSTR	ptEnd;
-	UINT	iNumber;	//	通し番号カウント
-	UINT	cchItem;
-//	INT		dmyX = 0, dmyY = 0;
+	UINT_PTR	iNumber;	//	通し番号カウント
+	CCH_SIZE	cchItem;
+//	INT_PTR		dmyX = 0, dmyY = 0;
 	BOOLEAN	bLast;
 	TCHAR	atName[MAX_PATH];
 
@@ -906,10 +906,10 @@ HRESULT TemplateItemSplit( LPTSTR ptStr, UINT cchSize, PAGELOAD pfCalling )
 	@param[in]	pfCalling	受け取ったデータを処理する函数へのポインター
 	@return		HRESULT	終了状態コード
 */
-HRESULT TemplateItemScatter( LPCTSTR ptCont, INT cchSize, PAGELOAD pfCalling )
+HRESULT TemplateItemScatter( LPCTSTR ptCont, INT_PTR cchSize, PAGELOAD pfCalling )
 {
 	//	改行で区切られた壱行単位のアイテムである
-	INT	nowCaret, nYct, nXct, rtcnt;
+	UINT_PTR	nowCaret, nYct, nXct, rtcnt;
 
 	TCHAR	hdBuf[MAX_STRING];	//	データを確保
 
@@ -950,9 +950,9 @@ HRESULT TemplateItemScatter( LPCTSTR ptCont, INT cchSize, PAGELOAD pfCalling )
 	@param[in]	dFluct	正：増やす　負：減らす
 	@return	０：操作無し　１〜：その数になった
 */
-UINT TemplateGridFluctuate( HWND hLvWnd, INT dFluct )
+UINT_PTR TemplateGridFluctuate( HWND hLvWnd, INT_PTR dFluct )
 {
-	INT	clmCount, clmNew, i;
+	INT_PTR	clmCount, clmNew, i;
 	LVCOLUMN	stLvColm;
 
 	if( 0 == dFluct )	return 0;
@@ -1002,7 +1002,7 @@ UINT TemplateGridFluctuate( HWND hLvWnd, INT dFluct )
 */
 LRESULT CALLBACK gpfLineCtgryProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-	INT	id;
+	INT_PTR	id;
 
 	switch( msg )
 	{
@@ -1041,7 +1041,7 @@ LRESULT CALLBACK gpfLineCtgryProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 */
 LRESULT CALLBACK gpfLineItemProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-	INT	id;
+	INT_PTR	id;
 
 //	Ctrl押しながらマウスホイール廻るとまずい？
 
@@ -1057,7 +1057,7 @@ LRESULT CALLBACK gpfLineItemProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 
 		case WM_LBUTTONUP:
 		case WM_MBUTTONUP:
-			Ltl_OnMouseButtonUp( hWnd, msg, (INT)(SHORT)LOWORD(lParam), (INT)(SHORT)HIWORD(lParam), (UINT)(wParam) );
+			Ltl_OnMouseButtonUp( hWnd, msg, (INT)(SHORT)LOWORD(lParam), (INT)(SHORT)HIWORD(lParam), (UINT_PTR)(wParam) );
 			return 0;
 #endif
 		case WM_COMMAND:
@@ -1089,9 +1089,9 @@ LRESULT CALLBACK gpfLineItemProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 	@param[in]	y			発生したクライヤントＹ座標値
 	@param[in]	keyFlags	他に押されてるキーについて
 */
-VOID Ltl_OnMouseButtonUp( HWND hWnd, UINT msg, INT x, INT y, UINT keyFlags )
+VOID Ltl_OnMouseButtonUp( HWND hWnd, UINT_PTR msg, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
-	INT		iPos, iItem, iSubItem;
+	INT_PTR		iPos, iItem, iSubItem;
 	INT_PTR	items;
 	//TCHAR	atItem[SUB_STRING];
 	//LPTSTR	ptStr = NULL, ptItem = NULL;
@@ -1161,10 +1161,10 @@ VOID Ltl_OnMouseButtonUp( HWND hWnd, UINT msg, INT x, INT y, UINT keyFlags )
 	@param[in]	pstNmhdr	NOTIFYの詳細
 	@return		処理した内容とか
 */
-LRESULT Ltl_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
+LRESULT Ltl_OnNotify( HWND hWnd, INT_PTR idFrom, LPNMHDR pstNmhdr )
 {
 	HWND	hLvWnd;
-	INT		iPos, iItem, nmCode, iSubItem, iDot;
+	INT_PTR		iPos, iItem, nmCode, iSubItem, iDot;
 	INT_PTR	items;
 	TCHAR	atItem[SUB_STRING];
 	LVHITTESTINFO	stHitTestInfo;

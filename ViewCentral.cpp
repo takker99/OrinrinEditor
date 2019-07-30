@@ -79,16 +79,16 @@ extern  HWND	ghBrTmplWnd;	//	ブラシテンプレ
 extern BOOLEAN	gbDockTmplView;	//	くっついてるテンプレは見えているか
 
 
-EXTERNED INT	gdXmemory;		//!<	直前のＸ位置を覚えておく
-EXTERNED INT	gdDocXdot;		//!<	キャレットのＸドット・ドキュメント位置
-EXTERNED INT	gdDocLine;		//!<	キャレットのＹ行数・ドキュメント位置
-EXTERNED INT	gdDocMozi;		//!<	キャレットの左側の文字数
+EXTERNED INT_PTR	gdXmemory;		//!<	直前のＸ位置を覚えておく
+EXTERNED INT_PTR	gdDocXdot;		//!<	キャレットのＸドット・ドキュメント位置
+EXTERNED INT_PTR	gdDocLine;		//!<	キャレットのＹ行数・ドキュメント位置
+EXTERNED INT_PTR	gdDocMozi;		//!<	キャレットの左側の文字数
 
 //	画面サイズを確認して、移動によるスクロールの面倒みる
-EXTERNED INT	gdHideXdot;		//!<	左の隠れ部分
-EXTERNED INT	gdViewTopLine;	//!<	表示中の最上部行番号
+EXTERNED INT_PTR	gdHideXdot;		//!<	左の隠れ部分
+EXTERNED INT_PTR	gdViewTopLine;	//!<	表示中の最上部行番号
 EXTERNED SIZE	gstViewArea;	//!<	表示領域のドットサイズ・ルーラー等の領域は無し
-EXTERNED INT	gdDispingLine;	//!<	見えてる行数・中途半端に見えてる末端は含まない
+EXTERNED INT_PTR	gdDispingLine;	//!<	見えてる行数・中途半端に見えてる末端は含まない
 
 
 
@@ -102,31 +102,31 @@ static HFONT	ghNumFont5L;	//!<	行番号用フォント５桁用
 static HFONT	ghNumFont6L;	//!<	行番号用フォント６桁用
 
 
-static INT		gdAutoDiffBase;	//!<	自動調整のベース
+static INT_PTR		gdAutoDiffBase;	//!<	自動調整のベース
 
-static  UINT	gdUseMode;		//!<	MAAからの左クルックによる使用スタイルの指示
-static  UINT	gdUseSubMode;	//!<	MAAからの中クルックによる使用スタイルの指示
+static  UINT_PTR	gdUseMode;		//!<	MAAからの左クルックによる使用スタイルの指示
+static  UINT_PTR	gdUseSubMode;	//!<	MAAからの中クルックによる使用スタイルの指示
 
-static  UINT	gdSpaceView;	//!<	空白を表示する
+static  UINT_PTR	gdSpaceView;	//!<	空白を表示する
 
 static BOOLEAN	gbGridView;		//!<	グリッド表示するか
-EXTERNED UINT	gdGridXpos;		//!<	グリッド線のＸ間隔
-EXTERNED UINT	gdGridYpos;		//!<	グリッド線のＹ間隔
+EXTERNED UINT_PTR	gdGridXpos;		//!<	グリッド線のＸ間隔
+EXTERNED UINT_PTR	gdGridYpos;		//!<	グリッド線のＹ間隔
 
 static BOOLEAN	gbRitRlrView;	//!<	右線表示するか
-EXTERNED UINT	gdRightRuler;	//!<	右線の位置ドット
+EXTERNED UINT_PTR	gdRightRuler;	//!<	右線の位置ドット
 
 static BOOLEAN	gbUndRlrView;	//!<	下線表示するか
-EXTERNED UINT	gdUnderRuler;	//!<	下線の位置行数
+EXTERNED UINT_PTR	gdUnderRuler;	//!<	下線の位置行数
 
-static  UINT	gdWheelLine;	//!<	マウスホウィールの行移動量のOS標準
+static  UINT_PTR	gdWheelLine;	//!<	マウスホウィールの行移動量のOS標準
 
-extern  UINT	gbSqSelect;		//		矩形選択中である
-extern  UINT	gbBrushMode;	//		ブラシ中である
+extern  UINT_PTR	gbSqSelect;		//		矩形選択中である
+extern  UINT_PTR	gbBrushMode;	//		ブラシ中である
 
-extern INT		gixFocusPage;	//	注目中のページ・とりあえず０・０インデックス
+extern INT_PTR		gixFocusPage;	//	注目中のページ・とりあえず０・０インデックス
 
-extern INT		gbTmpltDock;	//	ページ窓のドッキング
+extern INT_PTR		gbTmpltDock;	//	ページ窓のドッキング
 
 extern  HWND	ghMainSplitWnd;	//	メインのスプリットバーハンドル
 extern  LONG	grdSplitPos;	//	スプリットバーの、左側の、画面右からのオフセット
@@ -217,41 +217,41 @@ static  HBRUSH	gahBrush[BRUSHS_MAX];
 
 LRESULT	CALLBACK ViewWndProc( HWND, UINT, WPARAM, LPARAM );
 BOOLEAN	Evw_OnCreate( HWND, LPCREATESTRUCT );		//!<	WM_CREATE の処理・固定Editとかつくる
-VOID	Evw_OnCommand( HWND , INT, HWND, UINT );	//!<	WM_COMMAND の処理
+VOID	Evw_OnCommand( HWND , INT_PTR, HWND, UINT_PTR );	//!<	WM_COMMAND の処理
 VOID	Evw_OnPaint( HWND );						//!<	WM_PAINT の処理・枠線描画とか
 VOID	Evw_OnDestroy( HWND );						//!<	WM_DESTROY の処理・BRUSHとかのオブジェクトの破壊を忘れないように
-VOID	Evw_OnVScroll( HWND, HWND, UINT, INT );
-VOID	Evw_OnHScroll( HWND, HWND, UINT, INT );
-VOID	Evw_OnContextMenu( HWND, HWND, UINT, UINT );
+VOID	Evw_OnVScroll( HWND, HWND, UINT_PTR, INT_PTR );
+VOID	Evw_OnHScroll( HWND, HWND, UINT_PTR, INT_PTR );
+VOID	Evw_OnContextMenu( HWND, HWND, UINT_PTR, UINT_PTR );
 
 
 //	親ウインドウから回す必要が有る
-//VOID	Evw_OnKey( HWND, UINT, BOOL, INT, UINT );	//!<	
-//VOID	Evw_OnChar( HWND, TCHAR, INT );				//!<	
+//VOID	Evw_OnKey( HWND, UINT_PTR, BOOL, INT_PTR, UINT_PTR );	//!<	
+//VOID	Evw_OnChar( HWND, TCHAR, INT_PTR );				//!<	
 
 HRESULT	ViewScrollBarAdjust( LPVOID );
 
 HRESULT	ViewRedrawDo( HWND, HDC );
-HRESULT	ViewDrawMetricLine( HDC,UINT );
-BOOLEAN	ViewDrawTextOut( HDC, INT, UINT, LPLETTER, UINT_PTR );
-BOOLEAN	ViewDrawSpace( HDC, INT, UINT, LPTSTR, UINT_PTR, UINT );
-HRESULT	ViewDrawReturnMark( HDC, INT, INT, UINT );
-INT		ViewDrawEOFMark( HDC, INT, INT, UINT );
+HRESULT	ViewDrawMetricLine( HDC,UINT_PTR );
+BOOLEAN	ViewDrawTextOut( HDC, INT_PTR, UINT_PTR, LPLETTER, UINT_PTR );
+BOOLEAN	ViewDrawSpace( HDC, INT_PTR, UINT_PTR, LPTSTR, UINT_PTR, UINT_PTR );
+HRESULT	ViewDrawReturnMark( HDC, INT_PTR, INT_PTR, UINT_PTR );
+INT_PTR		ViewDrawEOFMark( HDC, INT_PTR, INT_PTR, UINT_PTR );
 
 HRESULT	ViewDrawRuler( HDC );
 HRESULT	ViewDrawLineNumber( HDC );
 
-VOID	OperationUndoRedo( INT, PINT, PINT );
+VOID	OperationUndoRedo( INT_PTR, PINT_PTR, PINT_PTR );
 
 //	配色変更
 HRESULT	ViewColourEditDlg( HWND );
 INT_PTR	CALLBACK ColourEditDlgProc( HWND, UINT, WPARAM, LPARAM );
-UINT	ColourEditChoose( HWND, LPCOLORREF );
+UINT_PTR	ColourEditChoose( HWND, LPCOLORREF );
 INT_PTR	ColourEditDrawItem( HWND, CONST LPDRAWITEMSTRUCT, LPCOLOUROBJECT );
 
 //-------------------------------------------------------------------------------------------------
 
-VOID AaFontCreate( UINT bMode )
+VOID AaFontCreate( UINT_PTR bMode )
 {
 	LOGFONT	stFont;
 
@@ -267,14 +267,14 @@ VOID AaFontCreate( UINT bMode )
 #ifdef TODAY_HINT_STYLE
 
 //	乱数発生・他に必要なところあるか？
-UINT XorShift( UINT seed )
+UINT_PTR XorShift( UINT_PTR seed )
 {
-	static  UINT	x = 123456789;
-	static  UINT	y = 362436069;
-	static  UINT	z = 521288629;
-	static  UINT	w =  88675123;
+	static  UINT_PTR	x = 123456789;
+	static  UINT_PTR	y = 362436069;
+	static  UINT_PTR	z = 521288629;
+	static  UINT_PTR	w =  88675123;
 
-	UINT	t;
+	UINT_PTR	t;
 
 	if( 0 != seed ){	x = seed;	}
 
@@ -294,12 +294,12 @@ UINT XorShift( UINT seed )
 	@param[in]	ptStr	内容をいれるバッファ
 	@param[in]	cchLen	バッファの文字数
 */
-UINT HintStringLoad( LPTSTR ptString, UINT_PTR cchLen, LPCTSTR ptHintPath )
+UINT_PTR HintStringLoad( LPTSTR ptString, UINT_PTR cchLen, LPCTSTR ptHintPath )
 {
-	static  UINT	cdPreSel = 0;
+	static  UINT_PTR	cdPreSel = 0;
 
-	UINT	randVle, maxCnt, target;
-	UINT	de;
+	UINT_PTR	randVle, maxCnt, target;
+	UINT_PTR	de;
 	TCHAR	atKeyName[MIN_STRING];
 
 	de = 0;
@@ -348,12 +348,12 @@ INT_PTR CALLBACK TodayHintDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARA
 {
 	static TCHAR	catHintPath[MAX_PATH];
 
-	 INT	id;
+	INT_PTR	id;
 	HWND	hWndCtl;
-	UINT	codeNotify;
+	UINT_PTR	codeNotify;
 	TCHAR	atHintStr[BIG_STRING];
 
-	UINT	dRslt;
+	UINT_PTR	dRslt;
 	time_t	tmValue;
 
 	switch( message )
@@ -362,7 +362,7 @@ INT_PTR CALLBACK TodayHintDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARA
 
 		case WM_INITDIALOG:
 			time( &tmValue );
-			XorShift( (UINT)tmValue );
+			XorShift( (UINT_PTR)tmValue );
 			StringCchCopy( catHintPath, MAX_PATH, (LPCTSTR)lParam );
 
 			SetWindowFont( GetDlgItem(hDlg,IDS_CHAR_IMAGE),  ghAaFont, TRUE );
@@ -378,7 +378,7 @@ INT_PTR CALLBACK TodayHintDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARA
 		case WM_COMMAND:
 			id = (INT)(LOWORD(wParam));
 			hWndCtl = (HWND)(lParam);
-			codeNotify = (UINT)HIWORD(wParam);
+			codeNotify = (UINT_PTR)HIWORD(wParam);
 			switch( id )
 			{
 				case IDOK:
@@ -454,12 +454,12 @@ HWND ViewInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame, LPTS
 
 	LOGFONT		stFont;
 
-//	INT			iNewPage;
-	INT			iFiles, i;
+//	INT_PTR			iNewPage;
+	INT_PTR			iFiles, i;
 	LPARAM		dNumber;
 	BOOLEAN		bOpen = FALSE;
 
-	INT			spPos, iOpMode, iRslt;
+	INT_PTR			spPos, iOpMode, iRslt;
 
 	ghInst = hInstance;
 
@@ -748,7 +748,7 @@ HRESULT ViewSizeMove( HWND hPrntWnd, LPRECT pstFrame )
 */
 HRESULT ViewScrollBarAdjust( LPVOID pVoid )
 {
-	INT	dMargin, dRange, dDot, dPos, dLines;
+	INT_PTR	dMargin, dRange, dDot, dPos, dLines;
 
 //Ｘバー　画面右には余裕必要か？
 	dMargin = gstViewArea.cx / 2;	//	一画面の半分？
@@ -813,7 +813,7 @@ HRESULT ViewScrollBarAdjust( LPVOID pVoid )
 	@param[in]	bTrans	非０文書位置＞描画位置　０描画位置＞文書位置
 	@return		HRESULT	終了状態コード
 */
-HRESULT ViewPositionTransform( PINT pDotX, PINT pDotY, BOOLEAN bTrans )
+HRESULT ViewPositionTransform( PINT_PTR pDotX, PINT_PTR pDotY, BOOLEAN bTrans )
 {
 	assert( pDotX );
 	assert( pDotY );
@@ -845,7 +845,7 @@ HRESULT ViewPositionTransform( PINT pDotX, PINT pDotY, BOOLEAN bTrans )
 	@param[in]	yy	描画位置のＹドット位置
 	@return		非０枠内である　０はみ出してる
 */
-BOOLEAN ViewIsPosOnFrame( INT xx, INT yy )
+BOOLEAN ViewIsPosOnFrame( INT_PTR xx, INT_PTR yy )
 {
 	POINT	stPoint;
 	RECT	stRect;
@@ -865,7 +865,7 @@ BOOLEAN ViewIsPosOnFrame( INT xx, INT yy )
 	@param[in]	pdXdot	ドット数を入れるバッファへのポインタ
 	@return		行数
 */
-INT ViewAreaSizeGet( PINT pdXdot )
+INT_PTR ViewAreaSizeGet( PINT_PTR pdXdot )
 {
 	if( pdXdot )	*pdXdot = gstViewArea.cx;
 
@@ -944,7 +944,7 @@ LRESULT CALLBACK ViewWndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 			ViewHideCaret(  );
 			break;
 
-/* void Cls_OnActivate(HWND hwnd, UINT state, HWND hwndActDeact, BOOL fMinimized) */
+/* void Cls_OnActivate(HWND hwnd, UINT_PTR state, HWND hwndActDeact, BOOL fMinimized) */
 		case WM_ACTIVATE:
 			TRACE( TEXT("VIEW_WM_ACTIVATE[0x%X][0x%X]"), wParam, lParam );
 			if( WA_INACTIVE == LOWORD(wParam) ){	ViewHideCaret(  );	}
@@ -1009,7 +1009,7 @@ BOOLEAN Evw_OnCreate( HWND hWnd, LPCREATESTRUCT lpCreateStruct )
 	@param[in]	codeNotify	通知メッセージ	HIWORD(wParam)
 	@return		なし
 */
-VOID Evw_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
+VOID Evw_OnCommand( HWND hWnd, INT_PTR id, HWND hWndCtl, UINT_PTR codeNotify )
 {
 	OperationOnCommand( ghPrntWnd, id, hWndCtl, codeNotify );
 
@@ -1044,7 +1044,7 @@ VOID Evw_OnPaint( HWND hWnd )
 */
 VOID Evw_OnDestroy( HWND hWnd )
 {
-	UINT	i;
+	UINT_PTR	i;
 
 	SetWindowFont( hWnd, GetStockFont(DEFAULT_GUI_FONT), FALSE );
 	DeleteFont( ghRulerFont );
@@ -1080,10 +1080,10 @@ VOID Evw_OnDestroy( HWND hWnd )
 	@param[in]	pos		スクロールボックス（つまみ）の位置
 	@return		無し
 */
-VOID Evw_OnHScroll( HWND hWnd, HWND hWndCtl, UINT code, INT pos )
+VOID Evw_OnHScroll( HWND hWnd, HWND hWndCtl, UINT_PTR code, INT_PTR pos )
 {
 	SCROLLINFO	stScrollInfo;
-	INT	dDot = gdHideXdot;
+	INT_PTR	dDot = gdHideXdot;
 
 	//	状態をくやしく
 	ZeroMemory( &stScrollInfo, sizeof(SCROLLINFO) );
@@ -1148,10 +1148,10 @@ VOID Evw_OnHScroll( HWND hWnd, HWND hWndCtl, UINT code, INT pos )
 	@param[in]	pos		スクロールボックス（つまみ）の位置
 	@return		無し
 */
-VOID Evw_OnVScroll( HWND hWnd, HWND hWndCtl, UINT code, INT pos )
+VOID Evw_OnVScroll( HWND hWnd, HWND hWndCtl, UINT_PTR code, INT_PTR pos )
 {
 	SCROLLINFO	stScrollInfo;
-	INT	dPos = gdViewTopLine, iLines, dPrev;
+	INT_PTR	dPos = gdViewTopLine, iLines, dPrev;
 
 	//	posを、ホイールフラグにする
 
@@ -1230,12 +1230,12 @@ VOID Evw_OnVScroll( HWND hWnd, HWND hWndCtl, UINT code, INT pos )
 	@param[in]	yPos		スクリーンＹ座業
 	@return		無し
 */
-VOID Evw_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
+VOID Evw_OnContextMenu( HWND hWnd, HWND hWndContext, UINT_PTR xPos, UINT_PTR yPos )
 {
-	INT	posX, posY;
+	INT_PTR	posX, posY;
 
 	HMENU	hSubMenu;
-	UINT	dRslt;
+	UINT_PTR	dRslt;
 
 	posX = (SHORT)xPos;	//	画面座標はマイナスもありうる
 	posY = (SHORT)yPos;
@@ -1288,7 +1288,7 @@ HRESULT ViewFocusSet( VOID )
 */
 HRESULT ViewNowPosStatus( VOID )
 {
-	static INT	cdPreDot;	//	直前のドット位置かな
+	static INT_PTR	cdPreDot;	//	直前のドット位置かな
 	TCHAR	atString[SUB_STRING];
 
 	StringCchPrintf( atString, SUB_STRING, TEXT("%d[dot] %d[char] %d[line]"), gdDocXdot, gdDocMozi, gdDocLine + 1 );
@@ -1308,7 +1308,7 @@ HRESULT ViewNowPosStatus( VOID )
 	@param[in]	ch	幅を計りたい文字
 	@return		幅ドット数
 */
-INT ViewLetterWidthGet( TCHAR ch )
+INT_PTR ViewLetterWidthGet( TCHAR ch )
 {
 	SIZE	stSize;
 	HDC		hdc= GetDC( ghViewWnd );
@@ -1331,10 +1331,10 @@ INT ViewLetterWidthGet( TCHAR ch )
 	@param[in]	ptStr	数えたい文字列
 	@return		幅ドット数・０ならエラー
 */
-INT ViewStringWidthGet( LPCTSTR ptStr )
+INT_PTR ViewStringWidthGet( LPCTSTR ptStr )
 {
 	SIZE	stSize;
-	UINT	cchSize;
+	CCH_SIZE	cchSize;
 	HDC		hdc= GetDC( ghViewWnd );
 	HFONT	hFtOld;
 
@@ -1369,8 +1369,8 @@ HRESULT ViewRedrawSetRect( LPRECT pstRect )
 	rect.right++;
 	rect.bottom++;	//	広げておく
 
-	ViewPositionTransform( (PINT)&(rect.left),  (PINT)&(rect.top),    1 );
-	ViewPositionTransform( (PINT)&(rect.right), (PINT)&(rect.bottom), 1 );
+	ViewPositionTransform( (PINT_PTR)&(rect.left),  (PINT_PTR)&(rect.top),    1 );
+	ViewPositionTransform( (PINT_PTR)&(rect.right), (PINT_PTR)&(rect.bottom), 1 );
 
 	InvalidateRect( ghViewWnd, &rect, TRUE );
 
@@ -1383,17 +1383,17 @@ HRESULT ViewRedrawSetRect( LPRECT pstRect )
 	@param[in]	rdLine	対象の行番号・絶対０インデックス・マイナスなら画面全体再描画
 	@return		HRESULT	終了状態コード
 */
-HRESULT ViewRedrawSetVartRuler( INT rdLine )
+HRESULT ViewRedrawSetVartRuler( INT_PTR rdLine )
 {
 	RECT	rect;
-	INT	dDummy = 0;
+	INT_PTR	dDummy = 0;
 
 	//	表示範囲外ならナニもする必要は無い
 	if( gdViewTopLine > rdLine )	return S_FALSE;
 	if( (gdViewTopLine + gdDispingLine + 1) < rdLine )	return S_FALSE;
 
 	rect.top    = rdLine * LINE_HEIGHT;
-	ViewPositionTransform( &dDummy, (PINT)&(rect.top), 1 );
+	ViewPositionTransform( &dDummy, (PINT_PTR)&(rect.top), 1 );
 
 	rect.bottom = rect.top + LINE_HEIGHT;
 	rect.left   = 0;
@@ -1410,10 +1410,10 @@ HRESULT ViewRedrawSetVartRuler( INT rdLine )
 	@param[in]	rdLine	対象の行番号・絶対０インデックス・マイナスなら画面全体再描画
 	@return		HRESULT	終了状態コード
 */
-HRESULT ViewRedrawSetLine( INT rdLine )
+HRESULT ViewRedrawSetLine( INT_PTR rdLine )
 {
 	RECT	rect, clRect;
-	INT	dDummy;
+	INT_PTR	dDummy;
 
 //InvalidateRectは、対象領域に対してWM_PAINTを発行する。通常だと
 //ウインドウプロシージャに処理が廻って、WM_PAINTが処理されるが、
@@ -1436,8 +1436,8 @@ HRESULT ViewRedrawSetLine( INT rdLine )
 	SetRect( &rect, 0, rdLine * LINE_HEIGHT, clRect.right, (rdLine+1) * LINE_HEIGHT );
 
 	dDummy = 0;
-	ViewPositionTransform( &dDummy, (PINT)&(rect.top), 1 );
-	ViewPositionTransform( &dDummy, (PINT)&(rect.bottom), 1 );
+	ViewPositionTransform( &dDummy, (PINT_PTR)&(rect.top), 1 );
+	ViewPositionTransform( &dDummy, (PINT_PTR)&(rect.bottom), 1 );
 
 	InvalidateRect( ghViewWnd, &rect, TRUE );
 
@@ -1454,11 +1454,11 @@ HRESULT ViewRedrawSetLine( INT rdLine )
 HRESULT ViewRedrawDo( HWND hWnd, HDC hdc )
 {
 	LPLETTER	pstTexts = NULL;
-	INT		cchLen = 0, dot, iLines, i, vwLines;
-	UINT	dFlag = 0;
+	INT_PTR		cchLen = 0, dot, iLines, i, vwLines;
+	UINT_PTR	dFlag = 0;
 	HFONT	hFtOld;
 
-	UINT	bTrace = FALSE;	//	トレス中であるか
+	UINT_PTR	bTrace = FALSE;	//	トレス中であるか
 
 	//	画面に入ってない場合は？
 
@@ -1520,14 +1520,14 @@ HRESULT ViewRedrawDo( HWND hWnd, HDC hdc )
 	@param[in]	cchLen		文字数
 	@return		BOOLEAN		描画ＯＫかどうか
 */
-BOOLEAN ViewDrawTextOut( HDC hdc, INT dDot, UINT rdLine, LPLETTER pstTexts, UINT_PTR cchLen )
+BOOLEAN ViewDrawTextOut( HDC hdc, INT_PTR dDot, UINT_PTR rdLine, LPLETTER pstTexts, UINT_PTR cchLen )
 {
 	UINT_PTR	mz, cchMr;
 	COLORREF	clrTextOld, clrBackOld, clrTrcMozi, clrMozi, clrRvsMozi;
-	INT		dX, dY;	//	描画位置左上
-	INT		width, rdStart;
+	INT_PTR		dX, dY;	//	描画位置左上
+	INT_PTR		width, rdStart;
 	LPTSTR	ptText;
-	UINT	bStyle, cbSize;
+	UINT_PTR	bStyle, cbSize;
 	BOOLEAN	bRslt, doDraw;
 	RECT	rect;
 
@@ -1649,11 +1649,11 @@ BOOLEAN ViewDrawTextOut( HDC hdc, INT dDot, UINT rdLine, LPLETTER pstTexts, UINT
 	@param[in]	bStyle	警告付き・選択中
 	@return		正否
 */
-BOOLEAN ViewDrawSpace( HDC hdc, INT dX, UINT dY, LPTSTR ptText, UINT_PTR cchLen, UINT bStyle )
+BOOLEAN ViewDrawSpace( HDC hdc, INT_PTR dX, UINT_PTR dY, LPTSTR ptText, UINT_PTR cchLen, UINT_PTR bStyle )
 {
 	HPEN	hPenOld;	//	描画用にペンを用意
-	INT		width, xx, yy;
-	UINT	cchPos;
+	INT_PTR		width, xx, yy;
+	UINT_PTR	cchPos;
 	SIZE	stSize;
 	RECT	stRect;
 
@@ -1728,11 +1728,11 @@ BOOLEAN ViewDrawSpace( HDC hdc, INT dX, UINT dY, LPTSTR ptText, UINT_PTR cchLen,
 	@param[in]	bUpper	０文字の描画前　非０文字の描画後
 	@return		HRESULT	終了状態コード
 */
-HRESULT ViewDrawMetricLine( HDC hdc, UINT bUpper )
+HRESULT ViewDrawMetricLine( HDC hdc, UINT_PTR bUpper )
 {
 	HPEN	hPenOld;	//	描画用にペンを用意
-	INT		dX, dY;	//	描画枠左上
-	INT		aX, aY;	//	ペンの位置
+	INT_PTR		dX, dY;	//	描画枠左上
+	INT_PTR		aX, aY;	//	ペンの位置
 	LONG	width, height;
 
 
@@ -1808,11 +1808,11 @@ HRESULT ViewDrawMetricLine( HDC hdc, UINT bUpper )
 	@param[in]	dFlag	描画必要なフラグ
 	@return		HRESULT	終了状態コード
 */
-HRESULT ViewDrawReturnMark( HDC hdc, INT dDot, INT rdLine, UINT dFlag )
+HRESULT ViewDrawReturnMark( HDC hdc, INT_PTR dDot, INT_PTR rdLine, UINT_PTR dFlag )
 {
 	HPEN	hPenOld;	//	描画用にペンを用意
-	INT		dX, dY;	//	描画枠左上
-	INT		aX, aY;	//	ペンの位置
+	INT_PTR		dX, dY;	//	描画枠左上
+	INT_PTR		aX, aY;	//	ペンの位置
 	COLORREF	clrBackOld = 0;
 	RECT	rect;
 
@@ -1877,10 +1877,10 @@ HRESULT ViewDrawReturnMark( HDC hdc, INT dDot, INT rdLine, UINT dFlag )
 	@param[in]	dFlag	文字列終端の情報
 	@return		使ったドット数
 */
-INT ViewDrawEOFMark( HDC hdc, INT dDot, INT rdLine, UINT dFlag )
+INT_PTR ViewDrawEOFMark( HDC hdc, INT_PTR dDot, INT_PTR rdLine, UINT_PTR dFlag )
 {
 
-	INT			dX, dY;	//	描画枠左上
+	INT_PTR			dX, dY;	//	描画枠左上
 	COLORREF	clrTextOld, clrBackOld = 0;
 	RECT		stClip;
 	SIZE		stSize;
@@ -1924,7 +1924,7 @@ INT ViewDrawEOFMark( HDC hdc, INT dDot, INT rdLine, UINT dFlag )
 	@param[in]	iEnd	更新範囲Ｘ終了
 	@return		HRESULT	終了状態コード
 */
-HRESULT ViewRulerRedraw( INT iBgn, INT iEnd )
+HRESULT ViewRulerRedraw( INT_PTR iBgn, INT_PTR iEnd )
 {
 	RECT	rect;
 
@@ -2035,7 +2035,7 @@ HRESULT ViewDrawLineNumber( HDC hdc )
 	LONG		height, num, hei;
 	TCHAR		atStr[10];
 	UINT_PTR	count;
-	UINT		figure = 4;
+	UINT_PTR		figure = 4;
 	RECT		rect;
 
 	hPenOld = SelectPen( hdc , gahPen[PENT_RULER] );	//	あらかじめ確保っとく
@@ -2108,7 +2108,7 @@ HRESULT ViewDrawLineNumber( HDC hdc )
 	@param[in]	dMode	枠番号０インデックス
 	@return		HRESULT	終了状態コード
 */
-HRESULT ViewFrameInsert( INT dMode )
+HRESULT ViewFrameInsert( INT_PTR dMode )
 {
 	return DocFrameInsert( dMode , gbSqSelect );
 }
@@ -2120,7 +2120,7 @@ HRESULT ViewFrameInsert( INT dMode )
 	@param[in]	dSubMode	中クルック用・０通常挿入　１割込挿入　２レイヤ　３ユニコピー　４SJISコピー　５ドラフトボードへ
 	@return		HRESULT	終了状態コード
 */
-HRESULT ViewMaaItemsModeSet( UINT dMode, UINT dSubMode )
+HRESULT ViewMaaItemsModeSet( UINT_PTR dMode, UINT_PTR dSubMode )
 {
 	gdUseMode = dMode;
 	gdUseSubMode = dSubMode;
@@ -2133,7 +2133,7 @@ HRESULT ViewMaaItemsModeSet( UINT dMode, UINT dSubMode )
 	MAA一覧からの使用モードを確保
 	@return	使用モード　０通常挿入　１割込挿入　２レイヤ　３ユニコピー　４SJISコピー　５ドラフトボードへ
 */
-UINT ViewMaaItemsModeGet( PUINT pdSubMode )
+UINT_PTR ViewMaaItemsModeGet( PUINT_PTR pdSubMode )
 {
 	if( pdSubMode ){	*pdSubMode = gdUseSubMode;	}
 
@@ -2149,12 +2149,12 @@ UINT ViewMaaItemsModeGet( PUINT pdSubMode )
 	@param[in]	dMode	使用モード・デフォもしくは個別指定
 	@return		非０デフォ動作した　０指定モードだった
 */
-UINT ViewMaaMaterialise( HWND hWnd, LPSTR pcCont, UINT cbSize, UINT dMode )
+UINT_PTR ViewMaaMaterialise( HWND hWnd, LPSTR pcCont, UINT_PTR cbSize, UINT_PTR dMode )
 {
 	LPTSTR		ptString;
 	UINT_PTR	cchSize;
-	UINT		uRslt = TRUE;	//	デフォ動作であるならTRUE・仕様変更により常にTRUE
-	INT			xDot;
+	UINT_PTR		uRslt = TRUE;	//	デフォ動作であるならTRUE・仕様変更により常にTRUE
+	INT_PTR			xDot;
 
 	//	デフォ動作であるかどうか
 //	if( dMode == gdUseMode ){	uRslt = TRUE;	}
@@ -2244,9 +2244,9 @@ HRESULT OperationOnStatusBar( VOID )
 	@param[in]	pyLine	カーソル行・処理したら戻す
 	@return		なし
 */
-VOID OperationUndoRedo( INT id, PINT pxDot, PINT pyLine )
+VOID OperationUndoRedo( INT_PTR id, PINT_PTR pxDot, PINT_PTR pyLine )
 {
-	INT		dCrLf;
+	INT_PTR		dCrLf;
 
 	DocPageSelStateToggle( -1 );	//	操作前には選択範囲解除すべき
 
@@ -2271,9 +2271,9 @@ VOID OperationUndoRedo( INT id, PINT pxDot, PINT pyLine )
 	@param[in]	codeNotify	通知メッセージ	HIWORD(wParam)
 	@return		なし
 */
-VOID OperationOnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
+VOID OperationOnCommand( HWND hWnd, INT_PTR id, HWND hWndCtl, UINT_PTR codeNotify )
 {
-	UINT	bMode;
+	UINT_PTR	bMode;
 
 	//	ユーザ定義メニュー
 	if( IDM_USERINS_ITEM_FIRST <= id && id <= IDM_USERINS_ITEM_LAST )
@@ -2773,7 +2773,7 @@ HRESULT ViewColourEditDlg( HWND hWnd )
 		InitColourValue( INIT_SAVE, CLRV_CRLFMARK, gaColourTable[CLRT_CRLF_MARK] );
 		InitColourValue( INIT_SAVE, CLRV_CANTSJIS, gaColourTable[CLRT_CANTSJIS] );
 
-		SetClassLongPtr( ghViewWnd, GCL_HBRBACKGROUND, (LONG_PTR)(gahBrush[BRHT_BASICBK]) );
+		SetClassLongPtr( ghViewWnd, GCLP_HBRBACKGROUND, (LONG_PTR)(gahBrush[BRHT_BASICBK]) );
 
 		InvalidateRect( ghViewWnd, NULL, TRUE );
 	}
@@ -2796,8 +2796,8 @@ INT_PTR CALLBACK ColourEditDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPAR
 	static LPCOLORREF	pcadColour;	//	0:Pen　1:Back　2:Grid　3:CrLf　4:CantSjis
 	static COLOUROBJECT	cstColours;	
 //	COLORREF	dColourTmp;
-//	UINT	dRslt;
-	INT	id;
+//	UINT_PTR	dRslt;
+	INT_PTR	id;
 
 	switch( message )
 	{
@@ -2881,9 +2881,9 @@ INT_PTR CALLBACK ColourEditDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPAR
 	色選択ダイヤログ使っていろいろする
 	@param[in]		hWnd		オーナーウインドウハンドル
 	@param[in,out]	pdTgtColour	元の色入れて、変更した色出てくる
-	@return	UINT	非０変更した　０キャンセルした
+	@return	UINT_PTR	非０変更した　０キャンセルした
 */
-UINT ColourEditChoose( HWND hWnd, LPCOLORREF pdTgtColour )
+UINT_PTR ColourEditChoose( HWND hWnd, LPCOLORREF pdTgtColour )
 {
 	BOOL	bRslt;
 	COLORREF	adColourTemp[16];
@@ -2923,11 +2923,11 @@ INT_PTR ColourEditDrawItem( HWND hDlg, CONST LPDRAWITEMSTRUCT pstDrawItem, LPCOL
 
 
 	RECT	rect;
-	INT		xpos;
+	INT_PTR		xpos;
 
-	INT		dotlen;
-	INT		dX = 6 , dY = 6;	//	改行描画枠左上
-	INT		aX , aY;	//	改行ペンの位置
+	INT_PTR		dotlen;
+	INT_PTR		dX = 6 , dY = 6;	//	改行描画枠左上
+	INT_PTR		aX , aY;	//	改行ペンの位置
 
 	HFONT	hFtOld;
 	HPEN	hPenOld;

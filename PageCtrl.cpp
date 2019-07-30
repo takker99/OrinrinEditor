@@ -33,8 +33,8 @@ If not, see <http://www.gnu.org/licenses/>.
 
 extern FILES_ITR	gitFileIt;	//	今見てるファイルの本体
 
-extern INT		gixFocusPage;	//	注目中のページ・とりあえず０・０インデックス
-extern INT		gixDropPage;	//	投下ホット番号
+extern INT_PTR		gixFocusPage;	//	注目中のページ・とりあえず０・０インデックス
+extern INT_PTR		gixDropPage;	//	投下ホット番号
 //-------------------------------------------------------------------------------------------------
 
 static HINSTANCE	ghInst;		//!<	このアプリの実存値
@@ -52,11 +52,11 @@ static LPTSTR	gptPgTipBuf;	//!<
 #endif
 static BOOLEAN	gbPgTipView;	//!<	頁ツールティップ表示ON/OFF
 
-static INT		gixPreviSel;	//!<	直前まで選択してた頁
+static INT_PTR		gixPreviSel;	//!<	直前まで選択してた頁
 
-static INT		gixMouseSel;	//!<	マウスカーソル下のアレ
+static INT_PTR		gixMouseSel;	//!<	マウスカーソル下のアレ
 #ifdef PGL_TOOLTIP
-static INT	gixPreSel;		//!<	マウスカーソル下のアレ
+static INT_PTR	gixPreSel;		//!<	マウスカーソル下のアレ
 #endif
 
 static BOOLEAN	gbPgRetFocus;	//!<	頁を選択したら編集窓にフォーカス戻すか
@@ -66,10 +66,10 @@ static WNDPROC	gpfOrigPageToolProc;	//!<	ツールバーの元プロシージャ
 
 static HIMAGELIST	ghPgLstImgLst;	//!<	
 
-extern INT	gbTmpltDock;		//	頁・壱行テンプレのドッキング
+extern INT_PTR	gbTmpltDock;		//	頁・壱行テンプレのドッキング
 extern BOOLEAN	gbDockTmplView;	//	くっついてるテンプレは見えているか
 
-extern  UINT	gdPageByteMax;	//	壱レスの最大バイト数
+extern  UINT_PTR	gdPageByteMax;	//	壱レスの最大バイト数
 
 //extern  HWND	ghMainSplitWnd;	//	メインのスプリットバーハンドル
 extern  LONG	grdSplitPos;	//	スプリットバーの、左側の、画面右からのオフセット
@@ -93,23 +93,23 @@ static TBBUTTON gstPgTlBarInfo[] = {
 
 
 LRESULT	CALLBACK PageListProc( HWND, UINT, WPARAM, LPARAM );
-VOID	Plt_OnCommand( HWND, INT, HWND, UINT );
-VOID	Plt_OnSize( HWND, UINT, INT, INT );
-LRESULT	Plt_OnNotify( HWND, INT, LPNMHDR );
-VOID	Plt_OnContextMenu( HWND, HWND, UINT, UINT );
+VOID	Plt_OnCommand( HWND, INT_PTR, HWND, UINT_PTR );
+VOID	Plt_OnSize( HWND, UINT_PTR, INT_PTR, INT_PTR );
+LRESULT	Plt_OnNotify( HWND, INT_PTR, LPNMHDR );
+VOID	Plt_OnContextMenu( HWND, HWND, UINT_PTR, UINT_PTR );
 
 LRESULT	PageListNotify( HWND, LPNMLISTVIEW );
-HRESULT	PageListNameChange( INT );
-HRESULT	PageListSpinning( HWND, INT, INT );
-HRESULT	PageListDuplicate( HWND, INT );
-HRESULT PageListCombine( HWND, INT );
+HRESULT	PageListNameChange( INT_PTR );
+HRESULT	PageListSpinning( HWND, INT_PTR, INT_PTR );
+HRESULT	PageListDuplicate( HWND, INT_PTR );
+HRESULT PageListCombine( HWND, INT_PTR );
 
-HRESULT	PageListJump( INT );
+HRESULT	PageListJump( INT_PTR );
 
 LRESULT	CALLBACK gpfPageViewProc( HWND, UINT, WPARAM, LPARAM );
-VOID	Plv_OnMouseMove( HWND, INT, INT, UINT );	//!<	
+VOID	Plv_OnMouseMove( HWND, INT_PTR, INT_PTR, UINT_PTR );	//!<	
 #ifdef PGL_TOOLTIP
-LRESULT	Plv_OnNotify( HWND , INT, LPNMHDR );	//!<	
+LRESULT	Plv_OnNotify( HWND , INT_PTR, LPNMHDR );	//!<	
 #endif
 
 LRESULT	CALLBACK gpfPageToolProc( HWND, UINT, WPARAM, LPARAM );
@@ -138,9 +138,9 @@ HWND PageListInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame )
 	TCHAR		atBuff[MAX_STRING];
 	HWND		hPrWnd;
 
-	UINT		ici, resnum;
+	UINT_PTR		ici, resnum;
 	HBITMAP		hImg, hMsq;
-	INT			spPos;
+	INT_PTR			spPos;
 
 #ifdef PGL_TOOLTIP
 	TTTOOLINFO	stToolInfo;
@@ -389,12 +389,12 @@ LRESULT CALLBACK PageListProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 	@param[in]	codeNotify	通知メッセージ	HIWORD(wParam)
 	@return		なし
 */
-VOID Plt_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
+VOID Plt_OnCommand( HWND hWnd, INT_PTR id, HWND hWndCtl, UINT_PTR codeNotify )
 {
-	INT	iPage, iItem, mRslt, iDiff;
+	INT_PTR	iPage, iItem, mRslt, iDiff;
 	LONG_PTR	rdExStyle;
 #ifdef PAGE_MULTISELECT
-	INT	iNxItem = 0, iCount, i;
+	INT_PTR	iNxItem = 0, iCount, i;
 #endif
 
 	switch( id )
@@ -571,7 +571,7 @@ VOID Plt_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 	@param[in]	cx		変更されたクライヤント幅
 	@param[in]	cy		変更されたクライヤント高さ
 */
-VOID Plt_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
+VOID Plt_OnSize( HWND hWnd, UINT_PTR state, INT_PTR cx, INT_PTR cy )
 {
 	RECT	tbRect;
 #ifdef PGL_TOOLTIP
@@ -607,7 +607,7 @@ VOID Plt_OnSize( HWND hWnd, UINT state, INT cx, INT cy )
 	@param[in]	pstNmhdr	NOTIFYの詳細
 	@return		処理した内容とか
 */
-LRESULT Plt_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
+LRESULT Plt_OnNotify( HWND hWnd, INT_PTR idFrom, LPNMHDR pstNmhdr )
 {
 	//	ページリストビュー
 	if( IDLV_PAGELISTVIEW == idFrom ){	return PageListNotify( hWnd, (LPNMLISTVIEW)pstNmhdr );	}
@@ -624,11 +624,11 @@ LRESULT Plt_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 	@param[in]	yPos		スクリーンＹ座業
 	@return		無し
 */
-VOID Plt_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
+VOID Plt_OnContextMenu( HWND hWnd, HWND hWndContext, UINT_PTR xPos, UINT_PTR yPos )
 {
 	HMENU	hMenu, hSubMenu;
-	UINT	dRslt;
-	INT		iCount, iItem;
+	UINT_PTR	dRslt;
+	INT_PTR		iCount, iItem;
 	BOOLEAN	bSel;
 	LONG_PTR	rdExStyle;
 
@@ -746,12 +746,12 @@ VOID PageListResize( HWND hPrntWnd, LPRECT pstFrame )
 LRESULT PageListNotify( HWND hWnd, LPNMLISTVIEW pstLv )
 {
 	HWND	hLvWnd;
-	INT		iCount, iItem, nmCode;//, iPage;
+	INT_PTR		iCount, iItem, nmCode;//, iPage;
 
-	INT		iSel;
+	INT_PTR		iSel;
 
 	DWORD	lvClmn;
-	INT		lvLine;
+	INT_PTR		lvLine;
 	LPNMLVCUSTOMDRAW	pstDraw;
 
 	PAGEINFOS	stInfo;
@@ -844,7 +844,7 @@ LRESULT PageListNotify( HWND hWnd, LPNMLISTVIEW pstLv )
 				stInfo.dMasqus = PI_BYTES;
 				NowPageInfoGet( lvLine, &stInfo );
 
-				if( gdPageByteMax <  (UINT)(stInfo.iBytes) )	pstDraw->clrTextBk = 0x000000FF;
+				if( gdPageByteMax <  (UINT_PTR)(stInfo.iBytes) )	pstDraw->clrTextBk = 0x000000FF;
 				//else	pstDraw->clrTextBk = 0xFF000000;
 			}
 			//else
@@ -878,7 +878,7 @@ HRESULT PageListClear( VOID )
 	@param[in]	iPrePage	直前まで選択してた頁・切り替えた場合は−１
 	@return		HRESULT	終了状態コード
 */
-HRESULT PageListViewChange( INT iPage, INT iPrePage )
+HRESULT PageListViewChange( INT_PTR iPage, INT_PTR iPrePage )
 {
 	//	フォーカスページは、ここに来る前に変更しておくこと
 
@@ -912,10 +912,10 @@ HRESULT PageListViewChange( INT iPage, INT iPrePage )
 	@param[in]	iBefore	−１なら末尾追加
 	@return		HRESULT	終了状態コード
 */
-HRESULT PageListInsert( INT iBefore )
+HRESULT PageListInsert( INT_PTR iBefore )
 {
 	//	リストビューの途中挿入ってできたっけ？
-	UINT	iItem, i;
+	UINT_PTR	iItem, i;
 	TCHAR	atBuffer[MIN_STRING];
 	LVITEM	stLvi;
 
@@ -980,7 +980,7 @@ HRESULT PageListInsert( INT iBefore )
 */
 HRESULT PageListBuild( LPVOID pVoid )
 {
-	INT			i, iLastPage;
+	INT_PTR			i, iLastPage;
 	PAGE_ITR	itPage;
 	LVITEM		stLvi;
 	TCHAR		atBuffer[MIN_STRING];
@@ -1030,9 +1030,9 @@ HRESULT PageListBuild( LPVOID pVoid )
 	@param[in]	bDir	正：上へ　負：下へ
 	@return		HRESULT	終了状態コード
 */
-HRESULT PageListSpinning( HWND hWnd, INT iPage, INT bDir )
+HRESULT PageListSpinning( HWND hWnd, INT_PTR iPage, INT_PTR bDir )
 {
-	INT	iItem, i = 0;
+	INT_PTR	iItem, i = 0;
 	PAGE_ITR	itPage, itSwap;
 
 	iItem = ListView_GetItemCount( ghPageListWnd );
@@ -1075,9 +1075,9 @@ HRESULT PageListSpinning( HWND hWnd, INT iPage, INT bDir )
 	@param[in]	iPage	サクッた頁番号
 	@return		HRESULT	終了状態コード
 */
-HRESULT PageListDelete( INT iPage )
+HRESULT PageListDelete( INT_PTR iPage )
 {
-	UINT	iItem, i;
+	UINT_PTR	iItem, i;
 	TCHAR	atBuffer[MIN_STRING];
 
 	ListView_DeleteItem( ghPageListWnd, iPage );
@@ -1102,9 +1102,9 @@ HRESULT PageListDelete( INT iPage )
 	@param[in]	dLine	行数
 	@return		HRESULT	終了状態コード
 */
-HRESULT PageListInfoSet( INT iPage, INT dByte, INT dLine )
+HRESULT PageListInfoSet( INT_PTR iPage, INT_PTR dByte, INT_PTR dLine )
 {
-	INT		iPageCnt;
+	INT_PTR		iPageCnt;
 	TCHAR	atBuffer[MIN_STRING];
 
 	iPageCnt = ListView_GetItemCount( ghPageListWnd );
@@ -1125,12 +1125,12 @@ HRESULT PageListInfoSet( INT iPage, INT dByte, INT dLine )
 	@param[in]	iPage	頁番号
 	@return		HRESULT	終了状態コード
 */
-HRESULT PageListViewRewrite( INT iPage )
+HRESULT PageListViewRewrite( INT_PTR iPage )
 {
 #pragma message ("頁一覧再描画・項目注意")
 	UINT_PTR	dLines;
-	UINT		dBytes;
-	INT			iPageCount, i;
+	UINT_PTR		dBytes;
+	INT_PTR			iPageCount, i;
 	TCHAR	atBuffer[MIN_STRING];
 
 	iPageCount = ListView_GetItemCount( ghPageListWnd );
@@ -1170,9 +1170,9 @@ HRESULT PageListViewRewrite( INT iPage )
 	@param[in]	iDiff	移動先・範囲外かもしれない
 	@return		HRESULT	終了状態コード
 */
-HRESULT PageListJump( INT iDiff )
+HRESULT PageListJump( INT_PTR iDiff )
 {
-	INT	iItem;
+	INT_PTR	iItem;
 
 	if( 0 >  iDiff )	return E_OUTOFMEMORY;
 
@@ -1200,7 +1200,7 @@ HRESULT PageListJump( INT iDiff )
 */
 INT_PTR CALLBACK PageNameDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
-	static INT cdPage;
+	static INT_PTR cdPage;
 //	TCHAR	atBuffer[MAX_PATH];
 
 	switch( message )
@@ -1236,7 +1236,7 @@ INT_PTR CALLBACK PageNameDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM
 	@param[in]	dPage	頁番号
 	@return		HRESULT	終了状態コード
 */
-HRESULT PageListNameChange( INT dPage )
+HRESULT PageListNameChange( INT_PTR dPage )
 {
 	INT_PTR	iRslt;
 
@@ -1257,9 +1257,9 @@ HRESULT PageListNameChange( INT dPage )
 	@param[in]	ptName	頁名称
 	@return		HRESULT	終了状態コード
 */
-HRESULT PageListNameSet( INT dPage, LPTSTR ptName )
+HRESULT PageListNameSet( INT_PTR dPage, LPTSTR ptName )
 {
-	INT		iPageCount;
+	INT_PTR		iPageCount;
 	LVITEM	stLvi;
 
 	iPageCount = ListView_GetItemCount( ghPageListWnd );
@@ -1302,9 +1302,9 @@ HRESULT PageListNameRewrite( LPTSTR ptName )
 /*!
 	名前の付いている頁があるか
 	@param[in]	itFile	チェック対象ファイルのイテレータ
-	@return	INT	非０名前付きがあった　０なかった
+	@return	INT_PTR	非０名前付きがあった　０なかった
 */
-INT PageListIsNamed( FILES_ITR itFile )
+INT_PTR PageListIsNamed( FILES_ITR itFile )
 {
 	UINT_PTR	iPageCount, i;
 
@@ -1324,9 +1324,9 @@ INT PageListIsNamed( FILES_ITR itFile )
 	@param[in]	iNowPage	フォーカスしてる頁
 	@return		HRESULT		終了状態コード
 */
-HRESULT PageListDuplicate( HWND hWnd, INT iNowPage )
+HRESULT PageListDuplicate( HWND hWnd, INT_PTR iNowPage )
 {
-	INT		iNewPage;
+	INT_PTR		iNewPage;
 //	INT_PTR	iNext, iTotal;
 	LINE_ITR	itLine;
 
@@ -1358,10 +1358,10 @@ HRESULT PageListDuplicate( HWND hWnd, INT iNowPage )
 	@param[in]	iNowPage	フォーカスしてる頁
 	@return		HRESULT		終了状態コード
 */
-HRESULT PageListCombine( HWND hWnd, INT iNowPage )
+HRESULT PageListCombine( HWND hWnd, INT_PTR iNowPage )
 {
-	 INT	iLastLine, iLastDot;
-	 INT	iNext;
+	 INT_PTR	iLastLine, iLastDot;
+	 INT_PTR	iNext;
 	INT_PTR	iTotal;
 	ONELINE	stLine;
 	LINE_ITR	itLine;
@@ -1450,10 +1450,10 @@ LRESULT CALLBACK gpfPageViewProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 	@param[in]	keyFlags	押されてる他のボタン
 	@return		なし
 */
-VOID Plv_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
+VOID Plv_OnMouseMove( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
 	LVHITTESTINFO	stHitInfo;
-	INT	iItem;
+	INT_PTR	iItem;
 	BOOLEAN	bReDraw = FALSE;
 
 	//	そのときマウスカーソル下にあるアイテムを選択しておく
@@ -1490,7 +1490,7 @@ VOID Plv_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
 */
 LRESULT Plv_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 {
-	INT				dBytes;
+	INT_PTR				dBytes;
 	UINT_PTR		rdLength;
 	LPNMTTDISPINFO	pstDispInfo;
 
@@ -1560,7 +1560,7 @@ LRESULT Plv_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 */
 LPTSTR CALLBACK PageListHoverTipInfo( LPVOID pVoid )
 {
-	INT		dBytes;
+	INT_PTR		dBytes;
 	LPTSTR	ptBuffer = NULL;
 
 	if( !(gbPgTipView) ){	return NULL;	}	//	非表示なら何もしないでおｋ

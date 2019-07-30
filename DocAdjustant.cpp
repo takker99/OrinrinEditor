@@ -55,11 +55,11 @@ If not, see <http://www.gnu.org/licenses/>.
 
 
 extern FILES_ITR	gitFileIt;	//!<	今見てるファイルの本体
-extern INT		gixFocusPage;	//!<	注目中のページ・とりあえず０・０インデックス
+extern INT_PTR		gixFocusPage;	//!<	注目中のページ・とりあえず０・０インデックス
 
-extern  UINT	gbUniPad;		//!<	パディングにユニコードをつかって、ドットを見せないようにする
+extern  UINT_PTR	gbUniPad;		//!<	パディングにユニコードをつかって、ドットを見せないようにする
 
-static INT		gdDiffLock;		//!<	ずれ調整の基準ドット値
+static INT_PTR		gdDiffLock;		//!<	ずれ調整の基準ドット値
 //-------------------------------------------------------------------------------------------------
 
 //	右揃え用空白パヤーン
@@ -151,14 +151,14 @@ CONST TCHAR gaatPaddingSpDotW[11][3] = {
 //-------------------------------------------------------------------------------------------------
 
 
-UINT	SpaceWidthAdjust( INT, PINT, PINT );	//!<	
-LPTSTR	SpaceStrAlloc( INT, INT );	//!<	
+UINT_PTR	SpaceWidthAdjust( INT_PTR, PINT_PTR, PINT_PTR );	//!<	
+LPTSTR	SpaceStrAlloc( INT_PTR, INT_PTR );	//!<	
 
-UINT	DocSpaceDifference( UINT, PINT, INT, UINT );	//!<	
+UINT_PTR	DocSpaceDifference( UINT_PTR, PINT_PTR, INT_PTR, UINT_PTR );	//!<	
 
-HRESULT	DocRightGuideSet( INT, INT );	//!<	
+HRESULT	DocRightGuideSet( INT_PTR, INT_PTR );	//!<	
 
-LPTSTR	DocPaddingSpace( INT , PINT, PINT );	//!<	
+LPTSTR	DocPaddingSpace( INT_PTR , PINT_PTR, PINT_PTR );	//!<	
 //-------------------------------------------------------------------------------------------------
 
 
@@ -167,11 +167,11 @@ LPTSTR	DocPaddingSpace( INT , PINT, PINT );	//!<
 	@param[in]		dDot	目標ドット数
 	@param[in,out]	pZen	全角ＳＰ数を受けて、調整した個数を返す
 	@param[in,out]	pHan	半角ＳＰ数を受けて、調整した個数を返す
-	@return			UINT	非０調整ＯＫ・０失敗
+	@return			UINT_PTR	非０調整ＯＫ・０失敗
 */
-UINT SpaceWidthAdjust( INT dDot, PINT pZen, PINT pHan )
+UINT_PTR SpaceWidthAdjust( INT_PTR dDot, PINT_PTR pZen, PINT_PTR pHan )
 {
-	INT		dZen, dHan, size;
+	INT_PTR		dZen, dHan, size;
 
 	dZen = *pZen;
 	dHan = *pHan;
@@ -202,9 +202,9 @@ UINT SpaceWidthAdjust( INT dDot, PINT pZen, PINT pHan )
 	@param[in]	dHan	半角スペースの個数
 	@return		LPTSTR	作成したスペースの文字列
 */
-LPTSTR SpaceStrAlloc( INT dZen, INT dHan )
+LPTSTR SpaceStrAlloc( INT_PTR dZen, INT_PTR dHan )
 {
-	INT		cchSize, i;
+	INT_PTR		cchSize, i;
 	LPTSTR	ptStr;
 
 	cchSize = dZen + dHan;	//	必要数	↓NULLたみねた分増やす
@@ -241,11 +241,11 @@ LPTSTR SpaceStrAlloc( INT dZen, INT dHan )
 	@param[out]	pdUniSp	使用したユニコードの個数入れる・NULLでもＯＫ
 	@return		LPTSTR	作成したスペースの文字列・開放は呼んだ方で面倒見る
 */
-LPTSTR DocPaddingSpaceUni( INT dTgtDot, PINT pdZenSp, PINT pdHanSp, PINT pdUniSp )
+LPTSTR DocPaddingSpaceUni( INT_PTR dTgtDot, PINT_PTR pdZenSp, PINT_PTR pdHanSp, PINT_PTR pdUniSp )
 {
-	INT		dZen, dHan, dUni;
-	INT		iCnt, iRem;
-	INT		cchSize, i;
+	INT_PTR		dZen, dHan, dUni;
+	INT_PTR		iCnt, iRem;
+	INT_PTR		cchSize, i;
 	LPTSTR	ptStr = NULL;
 
 	//	幅０だと作れない
@@ -308,11 +308,11 @@ LPTSTR DocPaddingSpaceUni( INT dTgtDot, PINT pdZenSp, PINT pdHanSp, PINT pdUniSp
 	@param[out]	pdHanSp	使用した半角スペースの個数入れる・NULLでもＯＫ
 	@return		LPTSTR	作成したスペースの文字列・開放は呼んだ方で面倒見る・作成不可ならNULL
 */
-LPTSTR DocPaddingSpace( INT dTgtDot, PINT pdZenSp, PINT pdHanSp )
+LPTSTR DocPaddingSpace( INT_PTR dTgtDot, PINT_PTR pdZenSp, PINT_PTR pdHanSp )
 {
-	INT		dZen, dHan;
-	INT		iCnt, iRem;
-	UINT	dRslt;
+	INT_PTR		dZen, dHan;
+	INT_PTR		iCnt, iRem;
+	UINT_PTR	dRslt;
 	LPTSTR	ptStr = NULL;
 
 	//	幅０だと作れない
@@ -362,9 +362,9 @@ LPTSTR DocPaddingSpace( INT dTgtDot, PINT pdZenSp, PINT pdHanSp )
 	@param[out]	pdHanSp	使用した半角スペースの個数入れる・NULLでもＯＫ
 	@return		LPTSTR	作成したスペースの文字列・開放は呼んだ方で面倒見る・作成不可ならNULL
 */
-LPTSTR DocPaddingSpaceWithGap( INT dTgtDot, PINT pdZenSp, PINT pdHanSp )
+LPTSTR DocPaddingSpaceWithGap( INT_PTR dTgtDot, PINT_PTR pdZenSp, PINT_PTR pdHanSp )
 {
-	INT		cchSize, i;
+	INT_PTR		cchSize, i;
 	LPTSTR	ptStr = NULL;
 
 	if( 16 <= dTgtDot )	//	幅を増やしながら収まる範囲をさがす
@@ -418,14 +418,14 @@ LPTSTR DocPaddingSpaceWithGap( INT dTgtDot, PINT pdZenSp, PINT pdHanSp )
 	@param[out]	pIsSp	該当はスペースであるか？
 	@return		該当範囲のドット数
 */
-INT DocLineStateCheckWithDot( INT dDot, INT rdLine, PINT pLeft, PINT pRight, PINT pStCnt, PINT pCount, PBOOLEAN pIsSp )
+INT_PTR DocLineStateCheckWithDot(INT_PTR dDot, INT_PTR rdLine, PINT_PTR pLeft, PINT_PTR pRight, PINT_PTR pStCnt, PINT_PTR pCount, PBOOLEAN pIsSp )
 {
 	UINT_PTR	iCount;
-	INT		bgnDot, endDot;
-	INT		iBgnCnt, iRngCnt;
+	INT_PTR		bgnDot, endDot;
+	INT_PTR		iBgnCnt, iRngCnt;
 	TCHAR	ch, chb;
-	UINT	dMozis;
-	INT		bSpace;
+	UINT_PTR	dMozis;
+	INT_PTR		bSpace;
 	LETR_ITR	itMozi, itHead, itTail, itTemp;
 
 	LINE_ITR	itLine;
@@ -505,18 +505,18 @@ INT DocLineStateCheckWithDot( INT dDot, INT rdLine, PINT pLeft, PINT pRight, PIN
 	@param[in]	pXdot	今のドット位置を受けて戻す
 	@param[in]	dLine	今の行数
 	@param[in]	dFirst	アンドゥグループ・非０なら最初の一発　０続き
-	@return	UINT	非０ズレ値　０失敗
+	@return	UINT_PTR	非０ズレ値　０失敗
 */
-UINT DocSpaceDifference( UINT vk, PINT pXdot, INT dLine, UINT dFirst )
+UINT_PTR DocSpaceDifference( UINT_PTR vk, PINT_PTR pXdot, INT_PTR dLine, UINT_PTR dFirst )
 {
-	INT			dTgtDot, dNowDot;
-	INT			dBgnDot, dEndDot;
-	INT			dBgnCnt, dRngCnt;
+	INT_PTR			dTgtDot, dNowDot;
+	INT_PTR			dBgnDot, dEndDot;
+	INT_PTR			dBgnCnt, dRngCnt;
 	UINT_PTR	cchSize;
 	BOOLEAN		bIsSpace;
 	LPTSTR		ptSpace;//, ptOldSp;
-	INT			dZenSp, dHanSp, dUniSp;
-	INT			iDots, iBytes;
+	INT_PTR			dZenSp, dHanSp, dUniSp;
+	INT_PTR			iDots, iBytes;
 
 	wstring		wsBuffer;
 	LETR_ITR	vcLtrBgn, vcLtrEnd, vcItr;
@@ -605,11 +605,11 @@ UINT DocSpaceDifference( UINT vk, PINT pXdot, INT dLine, UINT dFirst )
 	@param[in]	vk		方向・右か左か
 	@param[in]	pXdot	今のドット位置を受けて戻す
 	@param[in]	dLine	今の行数
-	@return	INT	非０ズレ値　０失敗
+	@return	INT_PTR	非０ズレ値　０失敗
 */
-INT DocSpaceShiftProc( UINT vk, PINT pXdot, INT dLine )
+INT_PTR DocSpaceShiftProc( UINT_PTR vk, PINT_PTR pXdot, INT_PTR dLine )
 {
-	INT		dDot, dMozi, dPreByte;
+	INT_PTR		dDot, dMozi, dPreByte;
 
 	//	20110720	０文字で操作するとあぼーんするので確認しておく
 	dDot = DocLineParamGet( dLine, &dMozi, &dPreByte );
@@ -634,7 +634,7 @@ INT DocSpaceShiftProc( UINT vk, PINT pXdot, INT dLine )
 */
 HRESULT	DocRightGuideline( LPVOID pVoid )
 {
-	INT	iTop, iBottom, i;
+	INT_PTR	iTop, iBottom, i;
 
 	TRACE( TEXT("右揃え線") );
 
@@ -661,12 +661,12 @@ HRESULT	DocRightGuideline( LPVOID pVoid )
 	@param[in]	dBottom	終了行・含む・−１で最後まで
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocRightGuideSet( INT dTop, INT dBottom )
+HRESULT DocRightGuideSet( INT_PTR dTop, INT_PTR dBottom )
 {
 	//	処理が終わったら、呼んだ方で選択範囲の解除と画面更新すること
 
 	UINT_PTR	iLines, cchSize;
-	INT			baseDot, i, j, iMz, nDot, sDot, lDot, iUnt, iPadot;
+	INT_PTR			baseDot, i, j, iMz, nDot, sDot, lDot, iUnt, iPadot;
 	TCHAR		ch, atBuffer[MAX_PATH];
 	LPTSTR		ptBuffer;
 	BOOLEAN		bFirst;
@@ -747,11 +747,11 @@ HRESULT DocRightGuideSet( INT dTop, INT dBottom )
 /*!
 	ずれ調整用の基準ドット値をセット
 	@param[in]	yLine	対象行
-	@return		INT		設定したドット値
+	@return		INT_PTR		設定したドット値
 */
-INT DocDiffAdjBaseSet( INT yLine )
+INT_PTR DocDiffAdjBaseSet( INT_PTR yLine )
 {
-	INT	dDot = 0;
+	INT_PTR	dDot = 0;
 	TCHAR	atMessage[MAX_STRING];
 
 	TRACE( TEXT("自動調整基準点ロックオン") );
@@ -771,12 +771,12 @@ INT DocDiffAdjBaseSet( INT yLine )
 	ずれ調整を実行する
 	@param[in]	pxDot	調整位置
 	@param[in]	yLine	対象行
-	@return		INT		調整したドット量
+	@return		INT_PTR		調整したドット量
 */
-INT DocDiffAdjExec( PINT pxDot, INT yLine )
+INT_PTR DocDiffAdjExec( PINT_PTR pxDot, INT_PTR yLine )
 {
-	INT			dMotoDot = 0;
-	INT			dBgnDot, dEndDot, dBgnCnt, dRngCnt, iSabun, dTgtDot, nDot;
+	INT_PTR			dMotoDot = 0;
+	INT_PTR			dBgnDot, dEndDot, dBgnCnt, dRngCnt, iSabun, dTgtDot, nDot;
 	UINT_PTR	cchSize, cchPlus;
 	BOOLEAN		bIsSpace;
 	LPTSTR		ptPlus, ptBuffer;
@@ -870,11 +870,11 @@ INT DocDiffAdjExec( PINT pxDot, INT yLine )
 	@param[in]	bFull	固定テーブルつかって強引にあわせる？
 	@return		LPTSTR	作成したスペースの文字列・開放は呼んだ方で面倒見る・作成不可ならNULL
 */
-LPTSTR DocPaddingSpaceWithPeriod( INT dTgtDot, PINT pdZen, PINT pdHan, PINT pdPrd, BOOLEAN bFull )
+LPTSTR DocPaddingSpaceWithPeriod( INT_PTR dTgtDot, PINT_PTR pdZen, PINT_PTR pdHan, PINT_PTR pdPrd, BOOLEAN bFull )
 {
-	INT	dZenSp, dHanSp, dPrdSp, m, dPre;
+	INT_PTR	dZenSp, dHanSp, dPrdSp, m, dPre;
 	LPTSTR	ptSpace = NULL, ptPlus = NULL;
-	UINT	cchSize, cchPlus;
+	UINT_PTR	cchSize, cchPlus;
 
 
 	dPre = dTgtDot;
@@ -952,10 +952,10 @@ LPTSTR DocPaddingSpaceWithPeriod( INT dTgtDot, PINT pdZen, PINT pdHan, PINT pdPr
 	@param[in]	dLine	今の行数
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocTopLetterInsert( TCHAR ch, PINT pXdot, INT dLine )
+HRESULT DocTopLetterInsert( TCHAR ch, PINT_PTR pXdot, INT_PTR dLine )
 {
 	UINT_PTR	iLines;
-	INT			iTop, iBottom, i, xDot = 0;
+	INT_PTR			iTop, iBottom, i, xDot = 0;
 	BOOLEAN		bFirst = TRUE, bSeled = FALSE;
 
 	TRACE( TEXT("行頭空白を追加") );
@@ -1006,10 +1006,10 @@ HRESULT DocTopLetterInsert( TCHAR ch, PINT pXdot, INT dLine )
 	@param[in]	dLine	今の行数
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocTopSpaceErase( PINT pXdot, INT dLine )
+HRESULT DocTopSpaceErase( PINT_PTR pXdot, INT_PTR dLine )
 {
 	UINT_PTR	iLines;
-	INT			iTop, iBottom, i;
+	INT_PTR			iTop, iBottom, i;
 	BOOLEAN		bFirst = TRUE, bSeled = FALSE;
 	TCHAR		ch;
 
@@ -1077,10 +1077,10 @@ HRESULT DocTopSpaceErase( PINT pXdot, INT dLine )
 	@param[in]	dLine	今の行数
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocLastLetterErase( PINT pXdot, INT dLine )
+HRESULT DocLastLetterErase( PINT_PTR pXdot, INT_PTR dLine )
 {
 	UINT_PTR	iLines;
-	INT			iTop, iBottom, i, xDot = 0;
+	INT_PTR			iTop, iBottom, i, xDot = 0;
 	TCHAR		ch;
 	BOOLEAN		bFirst = TRUE, bSeled = FALSE;
 	RECT		rect;
@@ -1159,10 +1159,10 @@ HRESULT DocLastLetterErase( PINT pXdot, INT dLine )
 	@param[in]	dLine	今の行数
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocLastSpaceErase( PINT pXdot, INT dLine )
+HRESULT DocLastSpaceErase( PINT_PTR pXdot, INT_PTR dLine )
 {
 	UINT_PTR	iLines;
-	INT			iTop, iBottom, i, xDelDot, xMotoDot;
+	INT_PTR			iTop, iBottom, i, xDelDot, xMotoDot;
 	BOOLEAN		bFirst = TRUE;
 	LPTSTR		ptBuffer = NULL;
 	RECT		rect;
@@ -1275,12 +1275,12 @@ LPTSTR DocLastSpDel( vector<LETTER> *vcTgLine )
 	@param[in]		dBgnMozi	開始文字位置
 	@param[in]		dEndMozi	終端文字位置
 	@param[in,out]	pFirst		アンドゥ記録用
-	@return	UINT	街頭部分の文字数
+	@return	UINT_PTR	街頭部分の文字数
 */
-UINT DocRangeDeleteByMozi( INT xDot, INT yLine, INT dBgnMozi, INT dEndMozi, PBOOLEAN pFirst )
+UINT_PTR DocRangeDeleteByMozi( INT_PTR xDot, INT_PTR yLine, INT_PTR dBgnMozi, INT_PTR dEndMozi, PBOOLEAN pFirst )
 {
 	UINT_PTR	cchSize;
-	INT			iBytes;
+	INT_PTR			iBytes;
 	LPTSTR		ptBuffer;
 	LETR_ITR	vcLtrBgn, vcLtrEnd, vcItr;
 	wstring		wsDelBuf;
@@ -1313,7 +1313,7 @@ UINT DocRangeDeleteByMozi( INT xDot, INT yLine, INT dBgnMozi, INT dEndMozi, PBOO
 	SqnAppendString( &((*gitFileIt).vcCont.at( gixFocusPage ).stUndoLog), DO_DELETE, ptBuffer, xDot, yLine, *pFirst );
 	FREE( ptBuffer );	*pFirst = FALSE;
 
-	return (UINT)(cchSize - 1);
+	return (UINT_PTR)(cchSize - 1);
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -1323,12 +1323,12 @@ UINT DocRangeDeleteByMozi( INT xDot, INT yLine, INT dBgnMozi, INT dEndMozi, PBOO
 	@param[in]	dLine	今の行数
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocRightSlide( PINT pXdot, INT dLine )
+HRESULT DocRightSlide(PINT_PTR pXdot, INT_PTR dLine )
 {
 	UINT_PTR	iLines;
-	INT			iTop, iBottom, i;
-	INT			dSliDot, dRitDot, dPaDot, dInBgn;
-	INT			dMozi, dLefDot, dAdDot;
+	INT_PTR		iTop, iBottom, i;
+	INT_PTR		dSliDot, dRitDot, dPaDot, dInBgn;
+	INT_PTR		dMozi, dLefDot, dAdDot;
 	BOOLEAN		bFirst = TRUE;
 	LPTSTR		ptBuffer = NULL;
 
@@ -1399,10 +1399,10 @@ HRESULT DocRightSlide( PINT pXdot, INT dLine )
 	@param[in]	dTgtDot	作成するドット数
 	@return		LPTSTR	作成したスペースの文字列・開放は呼んだ方で面倒見る
 */
-LPTSTR DocPaddingSpaceMake( INT dTgtDot )
+LPTSTR DocPaddingSpaceMake( INT_PTR dTgtDot )
 {
 	LPTSTR	ptReplc = NULL;
-	INT		dZenSp, dHanSp, dUniSp;
+	INT_PTR		dZenSp, dHanSp, dUniSp;
 
 	//	幅０だと作れない
 	if( 0 >= dTgtDot )	return NULL;
@@ -1433,12 +1433,12 @@ LPTSTR DocPaddingSpaceMake( INT dTgtDot )
 	@param[in]	dLine	今の行数
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocPositionShift( UINT vk, PINT pXdot, INT dLine )
+HRESULT DocPositionShift( UINT_PTR vk, PINT_PTR pXdot, INT_PTR dLine )
 {
 	UINT_PTR	iLines, cchSz;
-	INT			iTop, iBottom, i;
-	INT			wid, iDot, iLin, iMzCnt;
-	INT			iTgtWid, iLefDot, iRitDot;
+	INT_PTR			iTop, iBottom, i;
+	INT_PTR			wid, iDot, iLin, iMzCnt;
+	INT_PTR			iTgtWid, iLefDot, iRitDot;
 	BOOLEAN		bFirst = TRUE, bSeled = FALSE, bDone = FALSE;
 	BOOLEAN		bRight;	//	非０右へ　０左へ
 	BOOLEAN		bIsSp;
@@ -1576,8 +1576,8 @@ HRESULT DocPositionShift( UINT vk, PINT pXdot, INT dLine )
 HRESULT DocHeadHalfSpaceExchange( HWND hWnd )
 {
 	UINT_PTR	iLines;
-	INT			iTop, iBottom, i;
-	INT			xDot;
+	INT_PTR			iTop, iBottom, i;
+	INT_PTR			xDot;
 	BOOLEAN		bFirst = TRUE, bSeled = FALSE;
 	TCHAR		ch;
 
@@ -1645,13 +1645,13 @@ HRESULT DocHeadHalfSpaceExchange( HWND hWnd )
 	@param[in]	dLine	今の行数
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocCentreWidthShift( UINT vk, PINT pXdot, INT dLine )
+HRESULT DocCentreWidthShift( UINT_PTR vk, PINT_PTR pXdot, INT_PTR dLine )
 {
 	UINT_PTR	iLines, cchSz;
-	UINT		dRslt, dFirst;
-	INT			iBaseDot, iTop, iBottom, iBufDot;
-	INT			wid, iDot, iLin, iMzCnt;
-	INT			iFnlDot;
+	UINT_PTR		dRslt, dFirst;
+	INT_PTR			iBaseDot, iTop, iBottom, iBufDot;
+	INT_PTR			wid, iDot, iLin, iMzCnt;
+	INT_PTR			iFnlDot;
 	BOOLEAN		bSeled = FALSE;
 	BOOLEAN		bRight;	//	非０右へ　０左へ
 	LPTSTR		ptRepl;

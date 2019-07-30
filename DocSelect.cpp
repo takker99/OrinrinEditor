@@ -22,16 +22,16 @@ If not, see <http://www.gnu.org/licenses/>.
 //-------------------------------------------------------------------------------------------------
 
 extern FILES_ITR	gitFileIt;	//	今見てるファイルの本体・イテレータを構造体と見なす
-extern INT		gixFocusPage;	//	注目中のページ・とりあえず０・０インデックス
+extern INT_PTR		gixFocusPage;	//	注目中のページ・とりあえず０・０インデックス
 
-extern  UINT	gbUniPad;		//	パディングにユニコードをつかって、ドットを見せないようにする
-extern  UINT	gbCrLfCode;		//	改行コード：０したらば・非０ＹＹ 
+extern  UINT_PTR	gbUniPad;		//	パディングにユニコードをつかって、ドットを見せないようにする
+extern  UINT_PTR	gbCrLfCode;		//	改行コード：０したらば・非０ＹＹ 
 
-static INT		gdSelByte;		//!<	選択範囲のバイト数
+static INT_PTR		gdSelByte;		//!<	選択範囲のバイト数
 //-------------------------------------------------------------------------------------------------
 
 
-INT		DocLetterSelStateToggle( INT, INT, INT );
+INT_PTR		DocLetterSelStateToggle( INT_PTR, INT_PTR, INT_PTR );
 VOID	DocSelectedByteStatus( VOID );
 //-------------------------------------------------------------------------------------------------
 
@@ -41,7 +41,7 @@ VOID	DocSelectedByteStatus( VOID );
 	@param[in]	dBottom	選択範囲終了行
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocSelRangeSet( INT dTop, INT dBottom )
+HRESULT DocSelRangeSet( INT_PTR dTop, INT_PTR dBottom )
 {
 	TRACE( TEXT(" 選択レンジセット[%d - %d]"), dTop, dBottom );
 
@@ -58,7 +58,7 @@ HRESULT DocSelRangeSet( INT dTop, INT dBottom )
 	@param[in]	pdBtm	選択範囲終了行いれるバッファえのぽいんた
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocSelRangeGet( PINT pdTop, PINT pdBtm )
+HRESULT DocSelRangeGet( PINT_PTR pdTop, PINT_PTR pdBtm )
 {
 	if( pdTop ){	*pdTop = (*gitFileIt).vcCont.at( gixFocusPage ).dSelLineTop;	}
 	if( pdBtm ){	*pdBtm = (*gitFileIt).vcCont.at( gixFocusPage ).dSelLineBottom;	}
@@ -73,9 +73,9 @@ HRESULT DocSelRangeGet( PINT pdTop, PINT pdBtm )
 	@param[in]	pdBtm	選択範囲終了行いれるバッファえのぽいんた・NULL可
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocSelRangeReset( PINT pdTop, PINT pdBtm )
+HRESULT DocSelRangeReset( PINT_PTR pdTop, PINT_PTR pdBtm )
 {
-	INT	iTop, iEnd, iLine;
+	INT_PTR	iTop, iEnd, iLine;
 	LINE_ITR	itLine, itLnEnd;
 	LETR_ITR	itLtr;
 
@@ -111,7 +111,7 @@ HRESULT DocSelRangeReset( PINT pdTop, PINT pdBtm )
 	選択バイト数を指定した値に書き直す・多分クルヤー用
 	@param[in]	iBytes	新しい値
 */
-VOID DocSelByteSet( INT iBytes )
+VOID DocSelByteSet( INT_PTR iBytes )
 {
 	gdSelByte = iBytes;
 }
@@ -123,10 +123,10 @@ VOID DocSelByteSet( INT iBytes )
 	@param[in]	rdLine	対象の行番号・ドキュメントの０インデックス
 	@return		非０選択状態　０選択してない
 */
-UINT DocLetterSelStateGet( INT nowDot, INT rdLine )
+UINT_PTR DocLetterSelStateGet(INT_PTR nowDot, INT_PTR rdLine )
 {
-	UINT	dStyle;
-	INT		iLetter;
+	UINT_PTR	dStyle;
+	INT_PTR	iLetter;
 	INT_PTR	iLines, iLength;
 
 	LINE_ITR	itLine;
@@ -160,10 +160,10 @@ UINT DocLetterSelStateGet( INT nowDot, INT rdLine )
 	@param[in]	dForce	０斗愚留　＋選択状態　ー選択解除
 	@return		該当文字のドット数
 */
-INT DocLetterSelStateToggle( INT nowDot, INT rdLine, INT dForce )
+INT_PTR DocLetterSelStateToggle(INT_PTR nowDot, INT_PTR rdLine, INT_PTR dForce )
 {
-	UINT	dStyle, maeSty;
-	INT		dLtrDot = 0, iLetter, dByte;
+	UINT_PTR	dStyle, maeSty;
+	INT_PTR		dLtrDot = 0, iLetter, dByte;
 	INT_PTR	iLines, iLength;
 
 	LINE_ITR	itLine;
@@ -216,10 +216,10 @@ INT DocLetterSelStateToggle( INT nowDot, INT rdLine, INT dForce )
 	@param[in]	dForce	０斗愚留　＋選択状態　ー選択解除
 	@return		該当文字のドット数
 */
-INT DocRangeSelStateToggle( INT dBgnDot, INT dEndDot, INT rdLine, INT dForce )
+INT_PTR DocRangeSelStateToggle( INT_PTR dBgnDot, INT_PTR dEndDot, INT_PTR rdLine, INT_PTR dForce )
 {
 	UINT_PTR	iLines;
-	INT	dLtrDot = 0, dMaxDots, dDot;
+	INT_PTR	dLtrDot = 0, dMaxDots, dDot;
 	RECT	rect;
 
 	iLines = DocNowFilePageLineCount( );
@@ -257,11 +257,11 @@ INT DocRangeSelStateToggle( INT dBgnDot, INT dEndDot, INT rdLine, INT dForce )
 	@param[in]	dForce	０斗愚留　＋選択状態　ー選択解除
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocReturnSelStateToggle( INT rdLine, INT dForce )
+HRESULT DocReturnSelStateToggle( INT_PTR rdLine, INT_PTR dForce )
 {
 	UINT_PTR	iLines;
-	UINT		dStyle, maeSty;
-	INT			iLnDot, dByte;
+	UINT_PTR		dStyle, maeSty;
+	INT_PTR			iLnDot, dByte;
 	RECT		rect;
 
 	LINE_ITR	itLine;
@@ -311,11 +311,11 @@ HRESULT DocReturnSelStateToggle( INT rdLine, INT dForce )
 	@param[in]	dForce	０无　＋選択状態　ー選択解除
 	@return		全体文字数
 */
-INT DocPageSelStateToggle( INT dForce )
+INT_PTR DocPageSelStateToggle( INT_PTR dForce )
 {
 	UINT_PTR	iLines, ln, iLetters, mz;
-	UINT		dStyle;
-	INT			iTotal, iDot, iWid;
+	UINT_PTR		dStyle;
+	INT_PTR			iTotal, iDot, iWid;
 	RECT		inRect;
 
 	LINE_ITR	itLine;
@@ -429,12 +429,12 @@ VOID DocSelectedByteStatus( VOID )
 	@param[in]	bFirst	アンドゥ用・これが最初のアクションか
 	@return	非０改行あった　０壱行のみ
 */
-INT DocSelectedDelete( PINT pdDot, PINT pdLine, UINT bSqSel, BOOLEAN bFirst )
+INT_PTR DocSelectedDelete( PINT_PTR pdDot, PINT_PTR pdLine, UINT_PTR bSqSel, BOOLEAN bFirst )
 {
 //	UINT_PTR	iLines;
 	UINT_PTR	iMozis;
-	INT			i, j, dBeginX = 0, dBeginY = 0, cbSize;
-	INT			iLct, k, bCrLf;
+	INT_PTR			i, j, dBeginX = 0, dBeginY = 0, cbSize;
+	INT_PTR			iLct, k, bCrLf;
 	LPTSTR		ptText;
 	LPPOINT		pstPt;
 
@@ -563,16 +563,16 @@ INT DocSelectedDelete( PINT pdDot, PINT pdLine, UINT bSqSel, BOOLEAN bFirst )
 	@param[in]	pdLine	行番号・書き換える必要がある
 	@return	非０塗った　０してない
 */
-INT DocSelectedBrushFilling( LPTSTR ptBrush, PINT pdDot, PINT pdLine )
+INT_PTR DocSelectedBrushFilling( LPTSTR ptBrush, PINT_PTR pdDot, PINT_PTR pdLine )
 {
 	UINT_PTR	iMozis;
 	UINT_PTR	cchSize;
-	INT			i, j, dBeginX = 0, dBeginY = 0;
-	INT			iLct, dTgtDot, dBgnDot, dNowDot;
+	INT_PTR			i, j, dBeginX = 0, dBeginY = 0;
+	INT_PTR			iLct, dTgtDot, dBgnDot, dNowDot;
 	BOOLEAN		bFirst;
 
 	LPTSTR		ptReplc = NULL, ptDeled;
-//	INT			dZenSp, dHanSp, dUniSp;
+//	INT_PTR			dZenSp, dHanSp, dUniSp;
 
 	wstring		wsBuffer;
 	LETR_ITR	itLtr, itEnd, itHead, itTail;
@@ -697,7 +697,7 @@ INT DocSelectedBrushFilling( LPTSTR ptBrush, PINT pdDot, PINT pdLine )
 	@param[out]	*piMozi	選択範囲のユニコード文字数を返す
 	@return				確保したバイト数・NULLターミネータも含む
 */
-INT DocSelectLineSelTextAlloc( LINE_ITR itLine, UINT bStyle, LPVOID *pText, PINT piDot, PINT piMozi )
+INT_PTR DocSelectLineSelTextAlloc( LINE_ITR itLine, UINT_PTR bStyle, LPVOID *pText, PINT_PTR piDot, PINT_PTR piMozi )
 {
 
 	return 0;
@@ -712,7 +712,7 @@ INT DocSelectLineSelTextAlloc( LINE_ITR itLine, UINT bStyle, LPVOID *pText, PINT
 	@param[out]	*pstPt	選択範囲の行番号と開始ドット位置をメモリして返す・開放は呼んだほうでやる・NULLなら何もしない
 	@return				確保したバイト数・NULLターミネータも含む
 */
-INT DocSelectTextGetAlloc( UINT bStyle, LPVOID *pText, LPPOINT *pstPt )
+INT_PTR DocSelectTextGetAlloc( UINT_PTR bStyle, LPVOID *pText, LPPOINT *pstPt )
 {
 	//	指定行の指定範囲をコピーするようにすればいい
 	//	SJISの場合は、ユニコード文字は&#ddddd;で確保される
@@ -720,7 +720,7 @@ INT DocSelectTextGetAlloc( UINT bStyle, LPVOID *pText, LPPOINT *pstPt )
 
 	UINT_PTR	iLines, i, j, iLetters;
 	INT_PTR		iSize, cchSz;
-	INT			d, k, m, iLn;
+	INT_PTR			d, k, m, iLn;
 	BOOLEAN		bNoSel;
 	LPPOINT		pstPoint = NULL;
 
@@ -828,7 +828,7 @@ INT DocSelectTextGetAlloc( UINT bStyle, LPVOID *pText, LPPOINT *pstPt )
 */
 HRESULT DocExtractExecute( HINSTANCE hInst )
 {
-	INT	dOffDot, dCount;
+	INT_PTR	dOffDot, dCount;
 	BOOLEAN	bLnFirst, bMzFirst, bIsVoid;
 	LPTSTR	ptSpace, ptString;
 	UINT_PTR	cch;//, i;

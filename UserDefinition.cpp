@@ -31,17 +31,17 @@ typedef struct tagUSERITEMS
 } USERITEMS, *LPUSERITEMS;
 //-------------------------------------------------------------------------------------------------
 
-extern INT		gdDocLine;		//!<	キャレットのＹ行数・ドキュメント位置
+extern INT_PTR		gdDocLine;		//!<	キャレットのＹ行数・ドキュメント位置
 
 
 static TCHAR	gatUsDfPath[MAX_PATH];	//!<	
 
-static  UINT	gdItemCnt;	//!<	登録されているアイテム数
+static  UINT_PTR	gdItemCnt;	//!<	登録されているアイテム数
 
 static USERITEMS	gstUserItem[USER_ITEM_MAX];	//!<	ユーザアイテムの保持
 //-------------------------------------------------------------------------------------------------
 
-UINT	CALLBACK UserDefItemLoad( LPTSTR, LPCTSTR, INT );	//!<	ユーザ定義の内容をぶち込む
+UINT_PTR	CALLBACK UserDefItemLoad( LPTSTR, LPCTSTR, INT_PTR );	//!<	ユーザ定義の内容をぶち込む
 
 HRESULT	UserDefAppendMenu( HWND );	//!<	ユーザ定義の内容をメニューに追加
 //-------------------------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ HRESULT UserDefObliterate( HWND hWnd )
 	@param[in]	bFirst	今回が最初であるか
 	@return	非０中身取った処理した　０ファイルなかった
 */
-INT UserDefInitialise( HWND hWnd, UINT bFirst )
+INT_PTR UserDefInitialise( HWND hWnd, UINT_PTR bFirst )
 {
 	CONST WCHAR rtHead = 0xFEFF;	//	ユニコードテキストヘッダ
 	WCHAR	rtUniBuf;
@@ -92,11 +92,11 @@ INT UserDefInitialise( HWND hWnd, UINT bFirst )
 	DWORD	readed;
 
 	LPVOID	pBuffer;	//	文字列バッファ用ポインター
-	INT		iByteSize;
+	INT_PTR		iByteSize;
 
 	LPTSTR	ptString;
 	LPSTR	pcText;
-	UINT	cchSize;
+	CCH_SIZE	cchSize;
 
 	if( bFirst )	//	最初ならパス作っておく
 	{
@@ -160,7 +160,7 @@ INT UserDefInitialise( HWND hWnd, UINT bFirst )
 	@param[in]	cchSize	内容の文字数
 	@return	非０しょりした　０しなかった
 */
-UINT CALLBACK UserDefItemLoad( LPTSTR ptName, LPCTSTR ptCont, INT cchSize )
+UINT_PTR CALLBACK UserDefItemLoad( LPTSTR ptName, LPCTSTR ptCont, INT_PTR cchSize )
 {
 	//	枠自体はある
 	//	名前をセットしておく
@@ -196,10 +196,10 @@ UINT CALLBACK UserDefItemLoad( LPTSTR ptName, LPCTSTR ptCont, INT cchSize )
 	@param[in]	cchSize		文字数
 	@return		HRESULT		終了状態コード
 */
-HRESULT UserDefSetString( vector<ONELINE> *pvcUnits, LPCTSTR ptText, UINT cchSize )
+HRESULT UserDefSetString( vector<ONELINE> *pvcUnits, LPCTSTR ptText, UINT_PTR cchSize )
 {
-	UINT	i;
-	INT		yLine;
+	UINT_PTR	i;
+	INT_PTR		yLine;
 	ONELINE	stLine;
 	LETTER	stLetter;
 
@@ -268,9 +268,9 @@ HRESULT UserDefAppendMenu( HWND hWnd )
 	@param[in]	hMenu	くっつけるメニューのハンドル
 	@param[in]	bMode		非０メニューキー付ける　０付けない
 */
-HRESULT UserDefMenuWrite( HMENU hMenu, UINT bMode )
+HRESULT UserDefMenuWrite( HMENU hMenu, UINT_PTR bMode )
 {
-	UINT	i;
+	UINT_PTR	i;
 	TCHAR	atBuffer[MAX_PATH];
 
 	for( i = 0; gdItemCnt > i; i++ )
@@ -296,7 +296,7 @@ HRESULT UserDefMenuWrite( HMENU hMenu, UINT bMode )
 	@param[in]	cchSize	バッファの文字数・バイトじゃないぞ
 	@return		HRESULT	終了状態コード
 */
-HRESULT UserDefItemNameget( UINT dNumber, LPTSTR ptNamed, UINT_PTR cchSize )
+HRESULT UserDefItemNameget( UINT_PTR dNumber, LPTSTR ptNamed, UINT_PTR cchSize )
 {
 	//	はみ出し確認
 	if( gdItemCnt <= dNumber )	return E_OUTOFMEMORY;
@@ -313,7 +313,7 @@ HRESULT UserDefItemNameget( UINT dNumber, LPTSTR ptNamed, UINT_PTR cchSize )
 	@param[in]	uLine	行番号
 	@return		LPTSTR	確保した内容・開放は呼んだ側が責任もてよ
 */
-LPTSTR UserDefTextLineAlloc( UINT idNum, INT uLine )
+LPTSTR UserDefTextLineAlloc( UINT_PTR idNum, INT_PTR uLine )
 {
 	INT_PTR	iLines, iLetters, i, cchSz;
 	LPTSTR	ptText;
@@ -349,9 +349,9 @@ LPTSTR UserDefTextLineAlloc( UINT idNum, INT uLine )
 	@param[in]	idNum	アイテム番号０〜１５
 	@return		HRESULT	終了状態コード
 */
-HRESULT UserDefItemInsert( HWND hWnd, UINT idNum )
+HRESULT UserDefItemInsert( HWND hWnd, UINT_PTR idNum )
 {
-	INT		iLines, yLine, iMinus, i, dmyDot;
+	INT_PTR		iLines, yLine, iMinus, i, dmyDot;
 	INT_PTR	dNeedLine;
 	LPTSTR	ptText;
 	BOOLEAN	bFirst = TRUE;

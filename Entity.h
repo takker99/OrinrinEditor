@@ -19,7 +19,7 @@ If not, see <http://www.gnu.org/licenses/>.
 
 typedef struct tagENTITYLIST
 {
-	UINT	dUniCode;
+	UINT_PTR	dUniCode;
 	CHAR	acCodeA[15];
 	TCHAR	atCodeW[15];
 	LPTSTR	aptInfo;

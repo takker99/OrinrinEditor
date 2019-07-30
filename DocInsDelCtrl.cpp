@@ -23,9 +23,9 @@ If not, see <http://www.gnu.org/licenses/>.
 
 typedef struct tagPAGENUMINFO
 {
-	UINT	dStartNum;	//	開始番号
-	UINT	bInUnder;	//	非０頁下部　０頁先頭
-	UINT	bOverride;	//	行内容に上書
+	UINT_PTR	dStartNum;	//	開始番号
+	UINT_PTR	bInUnder;	//	非０頁下部　０頁先頭
+	UINT_PTR	bOverride;	//	行内容に上書
 	TCHAR	atStyle[MAX_PATH];	//	書式
 
 } PAGENUMINFO, *LPPAGENUMINFO;
@@ -34,23 +34,23 @@ typedef struct tagPAGENUMINFO
 extern FILES_ITR	gitFileIt;	//	今見てるファイルの本体
 //#define gstFile	(*gitFileIt)	//!<	イテレータを構造体と見なす
 
-extern INT		gixFocusPage;	//	注目中のページ・とりあえず０・０インデックス
+extern INT_PTR		gixFocusPage;	//	注目中のページ・とりあえず０・０インデックス
 
-extern  UINT	gbUniPad;		//	パディングにユニコードをつかって、ドットを見せないようにする
-extern  UINT	gbUniRadixHex;	//	ユニコード数値参照が１６進数であるか
+extern  UINT_PTR	gbUniPad;		//	パディングにユニコードをつかって、ドットを見せないようにする
+extern  UINT_PTR	gbUniRadixHex;	//	ユニコード数値参照が１６進数であるか
 
-extern  UINT	gdRightRuler;	//	右線の位置
+extern  UINT_PTR	gdRightRuler;	//	右線の位置
 //-------------------------------------------------------------------------------------------------
 
 /*
 範囲選択中に、ALT左右したら、そこの部分がスライドするとか。壱行選択中のみ？
 */
 
-HRESULT	DocInputReturn( INT, INT );
-INT		DocSquareAddPreMod( INT, INT, INT, BOOLEAN );
-INT		DocLetterErase( INT, INT, INT );
+HRESULT	DocInputReturn( INT_PTR, INT_PTR );
+INT_PTR		DocSquareAddPreMod( INT_PTR, INT_PTR, INT_PTR, BOOLEAN );
+INT_PTR		DocLetterErase( INT_PTR, INT_PTR, INT_PTR );
 
-HRESULT	DocDelayPageNumInsert( FILES_ITR, INT, LPPAGENUMINFO, LPCTSTR );
+HRESULT	DocDelayPageNumInsert( FILES_ITR, INT_PTR, LPPAGENUMINFO, LPCTSTR );
 //-------------------------------------------------------------------------------------------------
 
 /*!
@@ -64,7 +64,7 @@ BOOLEAN DocIsSjisTrance( TCHAR cchMozi, LPSTR pcSjis )
 	TCHAR	atMozi[2];
 	CHAR	acSjis[10];
 	BOOL	bCant = FALSE;
-	INT		iRslt;
+	INT_PTR		iRslt;
 /*
 	シフトJISにできないユニコード文字について
 	WideCharToMultiByteで、変換不可が発生した場合のフラグを確認して、
@@ -160,7 +160,7 @@ INT_PTR DocLetterDataCheck( LPLETTER pstLttr, TCHAR ch )
 	@param[in]	bFirst	アンドゥ処理の先頭かどうか
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocCrLfAdd( INT xDot, INT yLine, BOOLEAN bFirst )
+HRESULT DocCrLfAdd( INT_PTR xDot, INT_PTR yLine, BOOLEAN bFirst )
 {
 	SqnAppendString( &((*gitFileIt).vcCont.at( gixFocusPage ).stUndoLog), DO_INSERT, CH_CRLFW, xDot, yLine, bFirst );
 
@@ -174,7 +174,7 @@ HRESULT DocCrLfAdd( INT xDot, INT yLine, BOOLEAN bFirst )
 	@param[in]	rdLine	対象の行番号・絶対０インデックスか
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocInputReturn( INT nowDot, INT rdLine )
+HRESULT DocInputReturn( INT_PTR nowDot, INT_PTR rdLine )
 {
 	INT_PTR	iLetter, iLines, iCount;
 	ONELINE	stLine;
@@ -265,13 +265,13 @@ HRESULT DocInputReturn( INT nowDot, INT rdLine )
 	指定行のドット位置(キャレット位置)でバックスペース押した
 	@param[in]	pdDot	今のキャレットのドット位置の値へのポインター
 	@param[in]	pdLine	対象の行番号・絶対０インデックスか
-	@return	INT	非０改行あった　０壱行のみ
+	@return	INT_PTR	非０改行あった　０壱行のみ
 */
-INT DocInputBkSpace( PINT pdDot, PINT pdLine )
+INT_PTR DocInputBkSpace( PINT_PTR pdDot, PINT_PTR pdLine )
 {
 	INT_PTR	iLines;
-	INT		iLetter, width = 0, neDot, bCrLf = 0;
-	INT		dLine = *pdLine;	//	函数内で使う行番号・調整に注意
+	INT_PTR		iLetter, width = 0, neDot, bCrLf = 0;
+	INT_PTR		dLine = *pdLine;	//	函数内で使う行番号・調整に注意
 	TCHAR	ch;
 
 	LINE_ITR	itLine;
@@ -326,12 +326,12 @@ INT DocInputBkSpace( PINT pdDot, PINT pdLine )
 	指定行のドット位置(キャレット位置)でデリート押した
 	@param[in]	xDot	今のキャレットのドット位置
 	@param[in]	yLine	対象の行番号・絶対０インデックスか
-	@return	INT			非０改行削除・０文字削除
+	@return	INT_PTR			非０改行削除・０文字削除
 */
-INT DocInputDelete( INT xDot, INT yLine )
+INT_PTR DocInputDelete(INT_PTR xDot, INT_PTR yLine )
 {
 	INT_PTR	iLines;
-	INT		iCount, iLetter, iCrLf;
+	INT_PTR		iCount, iLetter, iCrLf;
 	TCHAR	ch;
 
 
@@ -384,11 +384,11 @@ INT DocInputDelete( INT xDot, INT yLine )
 	@param[in]	xDot	今のキャレットのドット位置の値
 	@param[in]	yLine	対象の行番号・絶対０インデックスか
 	@param[in]	iLetter	対象の文字位置
-	@return	INT			正：改行削除・０：文字削除　負：異常発生
+	@return	INT_PTR			正：改行削除・０：文字削除　負：異常発生
 */
-INT DocLetterErase( INT xDot, INT yLine, INT iLetter )
+INT_PTR DocLetterErase( INT_PTR xDot, INT_PTR yLine, INT_PTR iLetter )
 {
-	INT		iCount, iRslt;
+	INT_PTR		iCount, iRslt;
 
 	LETR_ITR	vcLtrItr;
 	LINE_ITR	itLine;
@@ -425,9 +425,9 @@ INT DocLetterErase( INT xDot, INT yLine, INT iLetter )
 	@param[in]	pFirst	アンドゥの非０初めてのグループ　０続きの処理
 	@return	HRESULT	終了状態コード
 */
-HRESULT DocLineErase( INT yLine, PBOOLEAN pFirst )
+HRESULT DocLineErase( INT_PTR yLine, PBOOLEAN pFirst )
 {
-	INT		dLines, iMozis, i;
+	INT_PTR		dLines, iMozis, i;
 	INT_PTR	cbSize, cchSize;
 	LPTSTR	ptBuffer;
 	wstring	wsString;
@@ -476,11 +476,11 @@ HRESULT DocLineErase( INT yLine, PBOOLEAN pFirst )
 	対象文字のイテレータと行を受けて、その文字を削除する
 	@param[in]	itLtr	対象文字のイテレータ
 	@param[in]	dBsLine	対象の行番号・絶対０インデックスか
-	@return	INT			非０改行削除・０文字削除
+	@return	INT_PTR			非０改行削除・０文字削除
 */
-INT DocIterateDelete( LETR_ITR itLtr, INT dBsLine )
+INT_PTR DocIterateDelete( LETR_ITR itLtr, INT_PTR dBsLine )
 {
-	INT	width = 0, bySz;
+	INT_PTR	width = 0, bySz;
 	LINE_ITR	itLine;
 
 
@@ -510,7 +510,7 @@ INT DocIterateDelete( LETR_ITR itLtr, INT dBsLine )
 	@return		特に意味はない
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocLineCombine( INT dBsLine )
+HRESULT DocLineCombine( INT_PTR dBsLine )
 {
 	LETR_ITR	vcLtrItr, vcLtrNxItr, vcLtrNxEnd;
 
@@ -548,11 +548,11 @@ HRESULT DocLineCombine( INT dBsLine )
 	@param[in]	pxDot	挿入するドット位置へのポインター
 	@param[in]	yLine	対象の行番号・絶対０インデックスか
 	@param[in]	ch		追加したい文字
-	@return		INT		追加した文字のドット数
+	@return		INT_PTR		追加した文字のドット数
 */
-INT DocInsertLetter( PINT pxDot, INT yLine, TCHAR ch )
+INT_PTR DocInsertLetter( PINT_PTR pxDot, INT_PTR yLine, TCHAR ch )
 {
-	INT	width;
+	INT_PTR	width;
 
 	SqnAppendLetter( &((*gitFileIt).vcCont.at( gixFocusPage ).stUndoLog), DO_INSERT, ch, *pxDot, yLine, TRUE );
 
@@ -570,9 +570,9 @@ INT DocInsertLetter( PINT pxDot, INT yLine, TCHAR ch )
 	@param[in]	nowDot	挿入するドット位置
 	@param[in]	rdLine	対象の行番号・絶対０インデックスか
 	@param[in]	ch		追加したい文字
-	@return		INT		追加した文字のドット数
+	@return		INT_PTR		追加した文字のドット数
 */
-INT DocInputLetter( INT nowDot, INT rdLine, TCHAR ch )
+INT_PTR DocInputLetter(INT_PTR nowDot, INT_PTR rdLine, TCHAR ch )
 {
 	INT_PTR	iLetter, iCount, iLines;
 	LETTER	stLetter;
@@ -644,11 +644,11 @@ INT DocInputLetter( INT nowDot, INT rdLine, TCHAR ch )
 	@param[in]	yLine	対象の行番号・絶対０インデックスか
 	@param[in]	ptDummy	未使用・NULLで
 	@param[in]	cchSize	削除する文字数
-	@return		INT		０改行無し　１〜改行をサクった回数
+	@return		INT_PTR		０改行無し　１〜改行をサクった回数
 */
-INT DocStringErase( INT xDot, INT yLine, LPTSTR ptDummy, INT cchSize )
+INT_PTR DocStringErase(INT_PTR xDot, INT_PTR yLine, LPTSTR ptDummy, INT_PTR cchSize )
 {
-	INT	i, iCrLf, iLetter, rdCnt;
+	INT_PTR	i, iCrLf, iLetter, rdCnt;
 
 	//	今の文字位置・キャレットより末尾方向に削除するので、この位置は変わらない
 	iLetter = DocLetterPosGetAdjust( &xDot, yLine, 0 );	//	今の文字位置を確認
@@ -673,11 +673,11 @@ INT DocStringErase( INT xDot, INT yLine, LPTSTR ptDummy, INT cchSize )
 	@param[in]	pdLine	対象の行番号・絶対０インデックスか
 	@param[in]	ptStr	追加したい文字列
 	@param[in]	cchSize	文字列の文字数・ヌルターミネータ含まず
-	@return		INT		０改行無し　１〜改行した回数
+	@return		INT_PTR		０改行無し　１〜改行した回数
 */
-INT DocStringAdd( PINT pNowDot, PINT pdLine, LPCTSTR ptStr, INT cchSize )
+INT_PTR DocStringAdd( PINT_PTR pNowDot, PINT_PTR pdLine, LPCTSTR ptStr, INT_PTR cchSize )
 {
-	INT	i, insDot, dLn, dCrLf;
+	INT_PTR	i, insDot, dLn, dCrLf;
 
 	assert( ptStr );
 
@@ -744,14 +744,14 @@ INT DocStringAdd( PINT pNowDot, PINT pdLine, LPCTSTR ptStr, INT cchSize )
 	@param[in]	ptStr	追加したい文字列
 	@param[in]	cchSize	文字列の文字数・ヌルターミネータ含まず
 	@param[out]	*ppstPt	各挿入場所を入れるバッファのポインタをポインタ
-	@return		INT		処理した行数
+	@return		INT_PTR		処理した行数
 */
-INT DocSquareAdd( PINT pNowDot, PINT pdLine, LPCTSTR ptStr, INT cchSize, LPPOINT *ppstPt )
+INT_PTR DocSquareAdd( PINT_PTR pNowDot, PINT_PTR pdLine, LPCTSTR ptStr, INT_PTR cchSize, LPPOINT *ppstPt )
 {
 	LPCTSTR		ptCaret, ptSprt;
 	UINT_PTR	cchMozi;
-	INT			dCrLf;
-	INT			dBaseDot, dBaseLine;
+	INT_PTR		dCrLf;
+	INT_PTR		dBaseDot, dBaseLine;
 
 	LPPOINT	pstBuf;
 
@@ -801,11 +801,11 @@ INT DocSquareAdd( PINT pNowDot, PINT pdLine, LPCTSTR ptStr, INT cchSize, LPPOINT
 	@param[in]	pFirst	アンドゥの非０初めてのグループ　０続きの処理
 	@return		全体の行数
 */
-INT DocAdditionalLine( INT addLine, PBOOLEAN pFirst )
+INT_PTR DocAdditionalLine( INT_PTR addLine, PBOOLEAN pFirst )
 {
 	UINT_PTR	iLines;
-	INT			cbSize, cchMozi, i;
-	INT			dBaseDot, dBaseLine;
+	INT_PTR			cbSize, cchMozi, i;
+	INT_PTR			dBaseDot, dBaseLine;
 	LPTSTR		ptBuffer = NULL;
 
 	iLines = DocNowFilePageLineCount( );
@@ -843,14 +843,14 @@ INT DocAdditionalLine( INT addLine, PBOOLEAN pFirst )
 	@param[in]	yLine		追加開始する行番号
 	@param[in]	dNeedLine	使う行数
 	@param[in]	bFirst		アンドゥの非０初めてのグループ　０続きの処理
-	@return		INT		非０しなかった　０処理した
+	@return		INT_PTR		非０しなかった　０処理した
 */
-INT DocSquareAddPreMod( INT xDot, INT yLine, INT dNeedLine, BOOLEAN bFirst )
+INT_PTR DocSquareAddPreMod( INT_PTR xDot, INT_PTR yLine, INT_PTR dNeedLine, BOOLEAN bFirst )
 {
 //	行増やすのと、所定の位置までスペースで埋める
 	INT_PTR	iLines;
-	INT		iBaseDot, iBaseLine, iMinus, i;
-	UINT	cchBuf;
+	INT_PTR		iBaseDot, iBaseLine, iMinus, i;
+	CCH_SIZE	cchBuf;
 	LPTSTR	ptBuffer = NULL;
 
 
@@ -909,11 +909,11 @@ INT DocSquareAddPreMod( INT xDot, INT yLine, INT dNeedLine, BOOLEAN bFirst )
 	@param[in]		bFirst	アンドゥ用・これが最初のアクションか
 	@return		０壱行ですんだ　非０複数行に渡った
 */
-INT DocInsertString( PINT pNowDot, PINT pdLine, PINT pdMozi, LPCTSTR ptText, UINT dStyle, BOOLEAN bFirst )
+INT_PTR DocInsertString(INT_PTR *pNowDot, INT_PTR *pdLine, INT_PTR *pdMozi, LPCTSTR ptText, UINT_PTR dStyle, BOOLEAN bFirst )
 {
-	INT		dBaseDot, dBaseLine, dNeedLine;
-	INT		dCrLf, i, dLastLine;
-	UINT_PTR	cchSize;
+	INT_PTR		dBaseDot, dBaseLine, dNeedLine;
+	INT_PTR		dCrLf, i, dLastLine;
+	CCH_SIZE	cchSize;
 	LPPOINT	pstPoint;
 
 	dBaseDot  = *pNowDot;
@@ -981,13 +981,14 @@ INT DocInsertString( PINT pNowDot, PINT pdLine, PINT pdMozi, LPCTSTR ptText, UIN
 	@param[in]		bSqMode	非０強制矩形貼付・内容増やすならFlagに注意
 	@return		０壱行ですんだ　非０複数行に渡った
 */
-INT DocInputFromClipboard( PINT pNowDot, PINT pdLine, PINT pdMozi, UINT bSqMode )
+INT_PTR DocInputFromClipboard( PINT_PTR pNowDot, PINT_PTR pdLine, PINT_PTR pdMozi, UINT_PTR bSqMode )
 {
 	LPTSTR	ptString = NULL;
-	UINT	cchSize, dStyle = 0, i, j;
-	INT		dCrLf, dTop, dBtm;
+	CCH_SIZE cchSize;
+	UINT_PTR	dStyle = 0, i, j;
+	INT_PTR		dCrLf, dTop, dBtm;
 	BOOLEAN	bSelect;
-	UINT	dSqSel, iLines;
+	UINT_PTR	dSqSel, iLines;
 
 
 	//	クリップボードからデータを頂く
@@ -1045,9 +1046,9 @@ INT DocInputFromClipboard( PINT pNowDot, PINT pdLine, PINT pdMozi, UINT bSqMode 
 	@param[in]	bStyle	１ユニコードかシフトJISで、矩形かどうか
 	@return				コピーしたバイト数・NULLターミネータも含む
 */
-INT DocExClipSelect( UINT bStyle )
+INT_PTR DocExClipSelect( UINT_PTR bStyle )
 {
-	INT	cbSize;
+	INT_PTR	cbSize;
 	LPVOID	pString = NULL;
 
 	//	SJISの場合は、ユニコード文字は&#dddd;で確保される
@@ -1071,13 +1072,13 @@ INT DocExClipSelect( UINT bStyle )
 	@param[in]	pdStyle	矩形かどうかを確認
 	@return		確保した文字列・mallocしてるので、函数呼んだ方でfree忘れないように
 */
-LPTSTR DocClipboardDataGet( PUINT pdStyle )
+LPTSTR DocClipboardDataGet( PUINT_PTR pdStyle )
 {
 	LPTSTR	ptString = NULL, ptClipTxt;
 	LPSTR	pcStr, pcClipTp;	//	変換用臨時
 	DWORD	cbSize;
-	UINT	ixSqrFmt, dEnumFmt;
-	INT		ixCount, iC;
+	UINT_PTR	ixSqrFmt, dEnumFmt;
+	INT_PTR		ixCount, iC;
 	HANDLE	hClipData;
 
 	ixSqrFmt = RegisterClipboardFormat( CLIP_SQUARE );
@@ -1154,13 +1155,13 @@ LPTSTR DocClipboardDataGet( PUINT pdStyle )
 	@param[in]	dStyle	矩形かとかそういう指定
 	@return	HRESULT	終了状態コード
 */
-HRESULT DocClipboardDataSet( LPVOID pDatum, INT cbSize, UINT dStyle )
+HRESULT DocClipboardDataSet( LPVOID pDatum, INT_PTR cbSize, UINT_PTR dStyle )
 {
 	HGLOBAL	hGlobal;
 	HANDLE	hClip;
 	LPVOID	pBuffer;
 	HRESULT	hRslt;
-	UINT	ixFormat, ixSqrFmt;
+	UINT_PTR	ixFormat, ixSqrFmt;
 
 	//	オリジナルフォーマット名を定義しておく
 	ixFormat = RegisterClipboardFormat( CLIP_FORMAT );
@@ -1233,9 +1234,9 @@ HRESULT DocClipLetter( TCHAR ch )
 	@param[in]	bStyle	ユニコードかシフトJIS
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocPageAllCopy( UINT bStyle )
+HRESULT DocPageAllCopy( UINT_PTR bStyle )
 {
-	INT	cbSize;
+	INT_PTR	cbSize;
 	LPVOID	pString = NULL;
 
 	//	SJISの場合は、ユニコード文字は&#dddd;で確保される
@@ -1262,8 +1263,8 @@ HRESULT DocScreenFill( LPTSTR ptFill )
 {
 	UINT_PTR	dLines, dRiDot, cchSize;
 	BOOLEAN		bSel = TRUE, bFirst;
-	INT			iTop, iBottom, i, iUnt, j, remain;
-	INT			nDot, sDot, mDot;
+	INT_PTR		iTop, iBottom, i, iUnt, j, remain;
+	INT_PTR		nDot, sDot, mDot;
 	LPTSTR		ptBuffer;
 	wstring		wsBuffer;
 
@@ -1356,9 +1357,9 @@ HRESULT DocScreenFill( LPTSTR ptFill )
 INT_PTR CALLBACK PageNumDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
 	static LPPAGENUMINFO	pstInfo;
-	INT		id;
+	INT_PTR		id;
 	HWND	hWndCtl;
-	UINT	codeNotify;
+	UINT_PTR	codeNotify;
 
 	switch( message )
 	{
@@ -1403,10 +1404,10 @@ INT_PTR CALLBACK PageNumDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 */
 HRESULT DocPageNumInsert( HINSTANCE hInst, HWND hWnd )
 {
-	INT			dNowPageBuffer;
-	INT			iLine, iDot;
+	INT_PTR			dNowPageBuffer;
+	INT_PTR			iLine, iDot;
 	INT_PTR		iRslt, maxPage, iNow;
-	UINT		ixNumber;
+	UINT_PTR		ixNumber;
 	BOOLEAN		bFirst = TRUE;
 	TCHAR		atText[MAX_PATH];
 	PAGENUMINFO	stInfo;
@@ -1504,7 +1505,7 @@ HRESULT DocPageNumInsert( HINSTANCE hInst, HWND hWnd )
 	@param[in]	ptPageText	挿入する文字列・頁番号
 	@return	HRESULT	終了状態コード
 */
-HRESULT DocDelayPageNumInsert( FILES_ITR itFile, INT iPage, LPPAGENUMINFO pstInfo, LPCTSTR ptPageText )
+HRESULT DocDelayPageNumInsert( FILES_ITR itFile, INT_PTR iPage, LPPAGENUMINFO pstInfo, LPCTSTR ptPageText )
 {
 	UINT_PTR	cchPgTx;	//	頁文字列の文字数
 	UINT_PTR	cchSrc, cchSize;

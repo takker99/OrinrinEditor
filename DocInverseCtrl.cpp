@@ -39,7 +39,7 @@ typedef struct tagINVERSEPARTS
 
 extern list<ONEFILE>	gltMultiFiles;	//	複数ファイル保持
 extern FILES_ITR	gitFileIt;		//	今見てるファイルの本体
-extern INT			gixFocusPage;	//	注目中のページ・とりあえず０・０インデックス
+extern INT_PTR			gixFocusPage;	//	注目中のページ・とりあえず０・０インデックス
 
 static  vector<INVERSEPARTS>	gvcMirrorParts;	//!<	左右反転用入替パーツ
 static  vector<INVERSEPARTS>	gvcUpsetParts;	//!<	上下反転用入替パーツ
@@ -47,16 +47,16 @@ typedef vector<INVERSEPARTS>::iterator	PARTS_ITR;
 //-------------------------------------------------------------------------------------------------
 
 
-HRESULT	DocMirrorTranceLine( INT, INT );
-HRESULT	DocMirrorTranceBox( INT, INT );
+HRESULT	DocMirrorTranceLine( INT_PTR, INT_PTR );
+HRESULT	DocMirrorTranceBox( INT_PTR, INT_PTR );
 
-HRESULT	DocUpsetTranceLine( INT, INT );
-HRESULT	DocUpsetTranceBox( INT, INT );
+HRESULT	DocUpsetTranceLine( INT_PTR, INT_PTR );
+HRESULT	DocUpsetTranceBox( INT_PTR, INT_PTR );
 
-LPTSTR	SeledTextAlloc( LINE_ITR, PINT, PINT );
+LPTSTR	SeledTextAlloc( LINE_ITR, PINT_PTR, PINT_PTR );
 
-HRESULT	InversePartsLoad( UINT );
-UINT	InversePartsCheck( UINT, LPCTSTR, LPTSTR, UINT_PTR );
+HRESULT	InversePartsLoad( UINT_PTR );
+UINT_PTR	InversePartsCheck( UINT_PTR, LPCTSTR, LPTSTR, UINT_PTR );
 //-------------------------------------------------------------------------------------------------
 
 /*!
@@ -64,7 +64,7 @@ UINT	InversePartsCheck( UINT, LPCTSTR, LPTSTR, UINT_PTR );
 	@param[in]	dMode	非０初期化　０破棄
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocInverseInit( UINT dMode )
+HRESULT DocInverseInit( UINT_PTR dMode )
 {
 
 	if( dMode )
@@ -88,7 +88,7 @@ HRESULT DocInverseInit( UINT dMode )
 	@param[in]	dMode	非０左右　０上下
 	@return		HRESULT	終了状態コード
 */
-HRESULT InversePartsLoad( UINT dMode )
+HRESULT InversePartsLoad( UINT_PTR dMode )
 {
 	CONST WCHAR rtHead = 0xFEFF;	//	ユニコードテキストヘッダ
 	WCHAR	rtUniBuf;
@@ -97,16 +97,17 @@ HRESULT InversePartsLoad( UINT dMode )
 	DWORD	readed;
 
 	LPVOID	pBuffer;	//	文字列バッファ用ポインター
-	INT		iByteSize;
+	INT_PTR		iByteSize;
 
 	LPTSTR	ptString;
 	LPSTR	pcText;
-	UINT	cchSize, cchLen;
+	CCH_SIZE	cchSize, cchLen;
 	TCHAR	atFileName[MAX_PATH];
 
 	TCHAR	atBuff[INV_ITEMS][MIN_STRING];
-	INT		nYct, nXct;
-	UINT	caret, dItem;
+	INT_PTR		nYct, nXct;
+	CCH_SIZE	caret;
+	UINT_PTR	dItem;
 	//BOOLEAN	bEmpty = FALSE;
 
 
@@ -254,11 +255,11 @@ HRESULT InversePartsLoad( UINT dMode )
 	@param[out]	*piMozi	選択範囲のユニコード文字数を返す
 	@return				確保したユニコード文字列
 */
-LPTSTR SeledTextAlloc( LINE_ITR itLine, PINT piDot, PINT piMozi )
+LPTSTR SeledTextAlloc( LINE_ITR itLine, PINT_PTR piDot, PINT_PTR piMozi )
 {
 	UINT_PTR	j, dLetters;
-	INT			iDot, iMozi;
-	INT			iSelDot;
+	INT_PTR			iDot, iMozi;
+	INT_PTR			iSelDot;
 	LPTSTR		ptString = NULL;
 
 	UINT_PTR	cchSz;
@@ -309,10 +310,10 @@ LPTSTR SeledTextAlloc( LINE_ITR itLine, PINT piDot, PINT piMozi )
 	@param[in]	dLine	今の行数
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocInverseTransform( UINT dStyle, UINT dMode, PINT pXdot, INT dLine )
+HRESULT DocInverseTransform( UINT_PTR dStyle, UINT_PTR dMode, PINT_PTR pXdot, INT_PTR dLine )
 {
 	INT_PTR	iLines;
-	INT		iTop, iBtm, iInX;
+	INT_PTR		iTop, iBtm, iInX;
 
 #ifdef DO_TRY_CATCH
 	try{
@@ -366,17 +367,17 @@ HRESULT DocInverseTransform( UINT dStyle, UINT dMode, PINT pXdot, INT dLine )
 	@param[in]	iBtm	終了行
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocMirrorTranceLine( INT iTop, INT iBtm )
+HRESULT DocMirrorTranceLine( INT_PTR iTop, INT_PTR iBtm )
 {
 	INT_PTR		iLns;
-	INT			iPadd, baseDot, iBytes;
-	INT			iDot, iGyou, iMzDot;
+	INT_PTR			iPadd, baseDot, iBytes;
+	INT_PTR			iDot, iGyou, iMzDot;
 	LPTSTR		ptPadd;
 	LPTSTR		ptInvStr;
 	LPTSTR		ptString = NULL;
 
 	UINT_PTR	cchSz;
-	UINT		d;
+	UINT_PTR		d;
 	TCHAR		atBuff[MIN_STRING];
 
 	BOOLEAN		bFirst = TRUE;
@@ -458,16 +459,16 @@ HRESULT DocMirrorTranceLine( INT iTop, INT iBtm )
 	@param[in]	iBtm	終了行
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocMirrorTranceBox( INT iTop, INT iBtm )
+HRESULT DocMirrorTranceBox( INT_PTR iTop, INT_PTR iBtm )
 {
 	INT_PTR		iLns;
-	INT			iGyou;
-	INT			iSelDot, iMozi;
+	INT_PTR			iGyou;
+	INT_PTR			iSelDot, iMozi;
 	LPTSTR		ptInvStr;
 	LPTSTR		ptString = NULL;
 
 	UINT_PTR	cchSz;
-	UINT		d;
+	UINT_PTR		d;
 	TCHAR		atBuff[MIN_STRING];
 
 	BOOLEAN		bFirst = TRUE;
@@ -538,12 +539,12 @@ HRESULT DocMirrorTranceBox( INT iTop, INT iBtm )
 	@param[in]	iBtm	終了行
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocUpsetTranceLine( INT iTop, INT iBtm )
+HRESULT DocUpsetTranceLine( INT_PTR iTop, INT_PTR iBtm )
 {
 
 	INT_PTR		iLns;
-	INT			iBytes;
-	INT			iDot, iGyou;
+	INT_PTR			iBytes;
+	INT_PTR			iDot, iGyou;
 	LPTSTR		ptInvStr;
 	LPTSTR		ptString = NULL;
 
@@ -624,11 +625,11 @@ HRESULT DocUpsetTranceLine( INT iTop, INT iBtm )
 	@param[in]	iBtm	終了行
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocUpsetTranceBox( INT iTop, INT iBtm )
+HRESULT DocUpsetTranceBox( INT_PTR iTop, INT_PTR iBtm )
 {
 	INT_PTR		iLns;
-	INT			iGyou;
-	INT			iSelDot, iMozi;
+	INT_PTR			iGyou;
+	INT_PTR			iSelDot, iMozi;
 	LPTSTR		ptInvStr;
 	LPTSTR		ptString = NULL;
 
@@ -721,9 +722,9 @@ HRESULT DocUpsetTranceBox( INT iTop, INT iBtm )
 	@param[in]	ptSource	元文字列
 	@param[out]	ptOutput	先頭文字の変換結果を戻すバッファ
 	@param[in]	cchSz		バッファの文字数
-	@return		UINT		元文字列の、変換した文字数。通常１
+	@return		UINT_PTR		元文字列の、変換した文字数。通常１
 */
-UINT InversePartsCheck( UINT dMode, LPCTSTR ptSource, LPTSTR ptOutput, UINT_PTR cchSz )
+UINT_PTR InversePartsCheck( UINT_PTR dMode, LPCTSTR ptSource, LPTSTR ptOutput, UINT_PTR cchSz )
 {
 	UINT_PTR	dParts;
 	UINT_PTR	cchPrt = 1;

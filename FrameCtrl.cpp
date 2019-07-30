@@ -87,17 +87,17 @@ CONST  TCHAR	*gatDefaultName[20] = {
 
 
 extern FILES_ITR	gitFileIt;	//!<	今見てるファイルの本体
-extern INT		gixFocusPage;	//!<	注目中のページ・とりあえず０・０インデックス
+extern INT_PTR		gixFocusPage;	//!<	注目中のページ・とりあえず０・０インデックス
 
 
 extern  HWND	ghViewWnd;		//!<	ビューウインドウハンドル
 
-extern INT		gdHideXdot;		//!<	左の隠れ部分
-extern INT		gdViewTopLine;	//!<	表示中の最上部行番号
+extern INT_PTR		gdHideXdot;		//!<	左の隠れ部分
+extern INT_PTR		gdViewTopLine;	//!<	表示中の最上部行番号
 
 extern HFONT	ghAaFont;		//!<	AA用フォント
 
-static INT		gNowSel;		//!<	選択中の枠０インデックス
+static INT_PTR		gNowSel;		//!<	選択中の枠０インデックス
 
 static TCHAR	gatFrameIni[MAX_PATH];	//!<	20110707	枠用のINIいれる・増やした
 
@@ -112,9 +112,9 @@ static HIMAGELIST	ghFrameImgLst;	//!<	挿入BOX用のツールバー
 static POINT		gstViewOrigin;	//!<	ビューの左上ウインドウ位置・
 static POINT		gstOffset;		//!<	ビュー左上からの、ボックスの相対位置
 static POINT		gstFrmSz;		//!<	ウインドウエッジから描画領域までのオフセット
-static INT			gdToolBarHei;	//!<	ツールバー太さ
+static INT_PTR			gdToolBarHei;	//!<	ツールバー太さ
 
-static  UINT		gdSelect;		//!<	選択した枠番号０〜９
+static  UINT_PTR		gdSelect;		//!<	選択した枠番号０〜９
 static BOOLEAN		gbQuickClose;	//!<	貼り付けたら直ぐ閉じる
 
 extern HFONT		ghAaFont;		//	AA用フォント
@@ -127,7 +127,7 @@ static FRAMEINFO	gstNowFrameInfo;
 
 static LPTSTR		gptFrmBox;		//!<	挿入枠用の文字列
 
-static  UINT		gbMultiPaddTemp;	//!<	外周に沿うようにパディングするか・挿入BOX用
+static  UINT_PTR		gbMultiPaddTemp;	//!<	外周に沿うようにパディングするか・挿入BOX用
 
 static FRAMEINFO	gstFrameInfo[FRAME_MAX];	//!<	配列で必要数確保でいいか
 //-------------------------------------------------------------------------------------------------
@@ -135,44 +135,46 @@ static FRAMEINFO	gstFrameInfo[FRAME_MAX];	//!<	配列で必要数確保でいい
 INT_PTR	CALLBACK FrameEditDlgProc( HWND, UINT, WPARAM, LPARAM );	//!<	
 
 INT_PTR	Frm_OnInitDialog( HWND , HWND, LPARAM );	//!<	
-INT_PTR	Frm_OnCommand( HWND , INT, HWND, UINT );	//!<	
+INT_PTR	Frm_OnCommand( HWND , INT_PTR, HWND, UINT_PTR );	//!<	
 INT_PTR	Frm_OnDrawItem( HWND , CONST LPDRAWITEMSTRUCT );	//!<	
-INT_PTR	Frm_OnNotify( HWND , INT, LPNMHDR );	//!<	
+INT_PTR	Frm_OnNotify( HWND , INT_PTR, LPNMHDR );	//!<	
 
-HRESULT	InitFrameItem( UINT, UINT, LPFRAMEINFO );	//!<	
+HRESULT	InitFrameItem( UINT_PTR, UINT_PTR, LPFRAMEINFO );	//!<	
 
 HRESULT	FramePartsUpdate( HWND, HWND, LPFRAMEITEM );	//!<	
 
-HRESULT	FrameDataGet( UINT, LPFRAMEINFO );	//!<	
+HRESULT	FrameDataGet( UINT_PTR, LPFRAMEINFO );	//!<	
 HRESULT	FrameInfoDisp( HWND );	//!<	
 
-VOID	FrameDataTranslate( LPTSTR, UINT );	//!<	
-//INT		FramePartsSizeCalc( LPTSTR, PINT );
+VOID	FrameDataTranslate( LPTSTR, UINT_PTR );	//!<	
+//INT		FramePartsSizeCalc( LPTSTR, PINT_PTR );
 
-UINT	FrameMultiSubstring( LPCTSTR, CONST UINT, LPTSTR, CONST UINT_PTR, CONST INT );	//!<	
-
-INT		FrameMultiSizeGet( LPFRAMEINFO, PINT, PINT );	//!<	
-LPTSTR	FrameMakeOutsideBoundary( CONST INT, CONST INT, LPFRAMEINFO );	//!<	
-LPTSTR	FrameMakeInsideBoundary( UINT , PINT, LPFRAMEINFO );	//!<	
+UINT_PTR	FrameMultiSubstring( LPCTSTR, CONST UINT_PTR, LPTSTR, CONST UINT_PTR, CONST INT_PTR );	//!<	
 
 
-INT		FrameInsBoxSizeGet( LPRECT );
+INT_PTR		FrameMultiSizeGet( LPFRAMEINFO, PINT_PTR, PINT_PTR );	//!<	
+LPTSTR	FrameMakeOutsideBoundary( CONST INT_PTR, CONST INT_PTR, LPFRAMEINFO );	//!<	
+LPTSTR	FrameMakeInsideBoundary( UINT_PTR , PINT_PTR, LPFRAMEINFO );	//!<	
+
+
+
+INT_PTR		FrameInsBoxSizeGet( LPRECT );
 VOID	FrameInsBoxFrmDraw( HDC );
-VOID	FrameDrawItem( HDC, INT, LPTSTR );
-INT_PTR	Frm_OnSize( HWND, UINT, INT, INT );
+VOID	FrameDrawItem( HDC, INT_PTR, LPTSTR );
+INT_PTR	Frm_OnSize( HWND, UINT_PTR, INT_PTR, INT_PTR );
 INT_PTR	Frm_OnWindowPosChanging( HWND, LPWINDOWPOS );
 
 HRESULT	FrameInsBoxDoInsert( HWND );
 
 LRESULT	CALLBACK FrameInsProc( HWND, UINT, WPARAM, LPARAM );
 VOID	Fib_OnPaint( HWND );
-VOID	Fib_OnCommand( HWND, INT, HWND, UINT );
+VOID	Fib_OnCommand( HWND, INT_PTR, HWND, UINT_PTR );
 VOID	Fib_OnDestroy( HWND );
 VOID	Fib_OnMoving( HWND, LPRECT );			//!<	
-VOID	Fib_OnKey( HWND, UINT, BOOL, INT, UINT );	//!<	
+VOID	Fib_OnKey( HWND, UINT_PTR, BOOL, INT_PTR, UINT_PTR );	//!<	
 BOOL	Fib_OnWindowPosChanging( HWND, LPWINDOWPOS );		//!<	
 VOID	Fib_OnWindowPosChanged( HWND, const LPWINDOWPOS );	//!<	
-//-------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------
 
 /*!
 	枠設定のINIファイル名確保・アプリ起動後すぐ呼ばれる
@@ -183,9 +185,9 @@ VOID	Fib_OnWindowPosChanged( HWND, const LPWINDOWPOS );	//!<
 HRESULT FrameInitialise( LPTSTR ptCurrent, HINSTANCE hInstance )
 {
 	WNDCLASSEX	wcex;
-	UINT		resnum, ici;
+	UINT_PTR		resnum, ici;
 	HBITMAP		hImg, hMsq;
-	INT	iRslt;
+	INT_PTR	iRslt;
 
 	if( !(ptCurrent) || !(hInstance) )
 	{
@@ -271,7 +273,7 @@ HRESULT FrameInitialise( LPTSTR ptCurrent, HINSTANCE hInstance )
 HRESULT FrameNameModifyMenu( HWND hWnd )
 {
 	HMENU	hMenu, hSubMenu;
-	UINT	i, j, k;
+	UINT_PTR	i, j, k;
 	TCHAR	atBuffer[MAX_PATH], atName[MAX_STRING];
 
 	//	メニュー構造変わったらここも変更・どうにかならんのか
@@ -303,9 +305,9 @@ HRESULT FrameNameModifyMenu( HWND hWnd )
 	@param[in]	bMode		非０メニューキー付ける　０付けない
 	@return		HRESULT	終了状態コード
 */
-HRESULT FrameNameModifyPopUp( HMENU hPopMenu, UINT bMode )
+HRESULT FrameNameModifyPopUp( HMENU hPopMenu, UINT_PTR bMode )
 {
-	UINT	i, j, k;
+	UINT_PTR	i, j, k;
 	TCHAR	atBuffer[MAX_PATH], atName[MAX_STRING];
 
 	for( i = 0, j = 1; FRAME_MAX > i; i++, j++ )
@@ -338,7 +340,7 @@ HRESULT FrameNameModifyPopUp( HMENU hPopMenu, UINT bMode )
 	@param[in]	cchSize	バッファの文字数・バイトじゃないぞ
 	@return		HRESULT	終了状態コード
 */
-HRESULT FrameNameLoad( UINT dNumber, LPTSTR ptNamed, UINT_PTR cchSize )
+HRESULT FrameNameLoad( UINT_PTR dNumber, LPTSTR ptNamed, UINT_PTR cchSize )
 {
 	TCHAR	atAppName[MIN_STRING];
 
@@ -363,7 +365,7 @@ HRESULT FrameNameLoad( UINT dNumber, LPTSTR ptNamed, UINT_PTR cchSize )
 	@param[in,out]	pstInfo	情報入れるバッファだったり保存内容だったりする構造体ぽいんた〜
 	@return			HRESULT	終了状態コード
 */
-HRESULT InitFrameItem( UINT dMode, UINT dNumber, LPFRAMEINFO pstInfo )
+HRESULT InitFrameItem( UINT_PTR dMode, UINT_PTR dNumber, LPFRAMEINFO pstInfo )
 {
 	TCHAR	atAppName[MIN_STRING], atBuff[MIN_STRING];
 	TCHAR	atBuffer[PARTS_CCH];
@@ -445,11 +447,12 @@ HRESULT InitFrameItem( UINT dMode, UINT dNumber, LPFRAMEINFO pstInfo )
 	割り算する。０除算なら０を返す
 	@param[in]	iLeft	割られる数
 	@param[in]	iRight	割る数
-	@return	INT	計算結果
+	@return	INT_PTR	計算結果
 */
-INT Divinus( INT iLeft, INT iRight )
+
+INT_PTR Divinus( INT_PTR iLeft, INT_PTR iRight )
 {
-	 INT	iAnswer;
+	 INT_PTR	iAnswer;
 
 	if( 0 == iRight )	return 0;
 
@@ -467,7 +470,7 @@ INT Divinus( INT iLeft, INT iRight )
 	@param[in]	dRsv	未使用
 	@return 終了コード
 */
-INT_PTR FrameEditDialogue( HINSTANCE hInst, HWND hWnd, UINT dRsv )
+INT_PTR FrameEditDialogue( HINSTANCE hInst, HWND hWnd, UINT_PTR dRsv )
 {
 	INT_PTR	iRslt;
 
@@ -498,10 +501,10 @@ INT_PTR CALLBACK FrameEditDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARA
 		default:	break;
 
 		case WM_INITDIALOG:	return Frm_OnInitDialog( hDlg, (HWND)(wParam), lParam );
-		case WM_COMMAND:	return Frm_OnCommand( hDlg, (INT)(LOWORD(wParam)), (HWND)(lParam), (UINT)HIWORD(wParam) );
+		case WM_COMMAND:	return Frm_OnCommand( hDlg, (INT)(LOWORD(wParam)), (HWND)(lParam), (UINT_PTR)HIWORD(wParam) );
 		case WM_DRAWITEM:	return Frm_OnDrawItem( hDlg, ((CONST LPDRAWITEMSTRUCT)(lParam)) );
 		case WM_NOTIFY:		return Frm_OnNotify( hDlg, (INT)(wParam), (LPNMHDR)(lParam) );
-		case WM_SIZE:		return Frm_OnSize( hDlg, (UINT)(wParam), (INT)(SHORT)LOWORD(lParam), (INT)(SHORT)HIWORD(lParam) );
+		case WM_SIZE:		return Frm_OnSize( hDlg, (UINT_PTR)(wParam), (INT)(SHORT)LOWORD(lParam), (INT)(SHORT)HIWORD(lParam) );
 
 		case WM_WINDOWPOSCHANGING:	return Frm_OnWindowPosChanging( hDlg, (LPWINDOWPOS)(lParam) );
 
@@ -520,7 +523,7 @@ INT_PTR CALLBACK FrameEditDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARA
 INT_PTR Frm_OnInitDialog( HWND hDlg, HWND hWndFocus, LPARAM lParam )
 {
 	HWND	hWorkWnd;
-	UINT	i, ofs;
+	UINT_PTR	i, ofs;
 	RECT	rect;
 	POINT	point;
 
@@ -596,12 +599,12 @@ INT_PTR Frm_OnInitDialog( HWND hDlg, HWND hWndFocus, LPARAM lParam )
 	@param[in]	codeNotify	通知メッセージ	HIWORD(wParam)
 	@return		処理したかせんかったか
 */
-INT_PTR Frm_OnCommand( HWND hDlg, INT id, HWND hWndCtl, UINT codeNotify )
+INT_PTR Frm_OnCommand( HWND hDlg, INT_PTR id, HWND hWndCtl, UINT_PTR codeNotify )
 {
 	static BOOLEAN	cbNameMod = FALSE;	//	ダイヤログ終わり用の恒久的なもの
 	static BOOLEAN	cbNameChg = FALSE;	//	APPLY用
-	UINT	i;
-	INT		iRslt;
+	UINT_PTR	i;
+	INT_PTR		iRslt;
 	HWND	hCmboxWnd;
 	RECT	rect;
 
@@ -750,10 +753,10 @@ INT_PTR Frm_OnWindowPosChanging( HWND hDlg, LPWINDOWPOS pstWpos )
 	@param[in]	cy		クライヤントＹサイズ
 	@return	処理したかせんかったか
 */
-INT_PTR Frm_OnSize( HWND hDlg, UINT state, INT cx, INT cy )
+INT_PTR Frm_OnSize( HWND hDlg, UINT_PTR state, INT_PTR cx, INT_PTR cy )
 {
 	HWND	hSmpWnd;
-	INT		xx, yy;
+	INT_PTR		xx, yy;
 	RECT	rect;
 
 	TRACE( TEXT("FRM SIZE [%d x %d]"), cx, cy );
@@ -831,7 +834,7 @@ INT_PTR Frm_OnDrawItem( HWND hDlg, CONST LPDRAWITEMSTRUCT pstDrawItem )
 	@param[in]	cchSz	バッファの文字数・バイトに非ず
 	@return	
 */
-UINT FrameMakeMultiSubLine( CONST BOOLEAN bEnable, LPFRAMEITEM pstItem, LPTSTR ptDest, CONST UINT_PTR cchSz )
+UINT_PTR FrameMakeMultiSubLine( CONST BOOLEAN bEnable, LPFRAMEITEM pstItem, LPTSTR ptDest, CONST UINT_PTR cchSz )
 {
 	LPTSTR	ptBufStr;
 
@@ -856,9 +859,10 @@ UINT FrameMakeMultiSubLine( CONST BOOLEAN bEnable, LPFRAMEITEM pstItem, LPTSTR p
 /*!
 	枠パーツの、天井と床の占有行数と、左柱のドット数を確保する
 */
-INT FrameMultiSizeGet( LPFRAMEINFO pstInfo, PINT piUpLine, PINT piDnLine )
+
+INT_PTR FrameMultiSizeGet( LPFRAMEINFO pstInfo, PINT_PTR piUpLine, PINT_PTR piDnLine )
 {
-	INT	iUpLine, iDnLine;
+	INT_PTR	iUpLine, iDnLine;
 
 	//	行数の確認
 	iUpLine = pstInfo->stMorning.iLine;	//	左上
@@ -884,10 +888,10 @@ INT FrameMultiSizeGet( LPFRAMEINFO pstInfo, PINT piUpLine, PINT piDnLine )
 	@param[in]		iMaxDot	全体のドット数・０で無視
 	@return	
 */
-UINT StringWidthAdjust( CONST UINT iFwOffs, LPTSTR ptStr, CONST UINT_PTR cchSz, CONST INT iMaxDot )
+UINT_PTR StringWidthAdjust( CONST UINT_PTR iFwOffs, LPTSTR ptStr, CONST UINT_PTR cchSz, CONST INT_PTR iMaxDot )
 {
-	INT			iDot, iPadd;
-	INT			iDotCnt, iBuf;
+	INT_PTR			iDot, iPadd;
+	INT_PTR			iDotCnt, iBuf;
 	UINT_PTR	dm, dMozi;
 	TCHAR		atWork[MAX_PATH];
 	LPTSTR		ptBufStr;
@@ -961,26 +965,26 @@ UINT StringWidthAdjust( CONST UINT iFwOffs, LPTSTR ptStr, CONST UINT_PTR cchSz, 
 	@param[in]	pstInfo	使う枠の情報
 	@return	確保した文字列を返す・freeに注意・失敗ならNULL
 */
-LPTSTR FrameMakeOutsideBoundary( CONST INT iWidth, CONST INT iHeight, LPFRAMEINFO pstInfo )
+LPTSTR FrameMakeOutsideBoundary( CONST INT_PTR iWidth, CONST INT_PTR iHeight, LPFRAMEINFO pstInfo )
 {
 	LPFRAMEITEM	pstItem;
 
 	TCHAR		atSubStr[MAX_PATH];
 	LPTSTR		ptBufStr;
-	INT	iLines, i;	//	全体行数
-	INT	iUpLine, iMdLine, iDnLine;	//	天井、柱、床の占有行
+	INT_PTR	iLines, i;	//	全体行数
+	INT_PTR	iUpLine, iMdLine, iDnLine;	//	天井、柱、床の占有行
 
-	INT	iRitOccup;
-	INT	iOfsLine, iRight;
-	INT	iRoofDot, iFloorDot;
-	INT	iRoofCnt, iFloorCnt;	//	上と下のパーツの個数
-	INT	iRfRstDot, iFlRstDot;
-	INT	iRitOff;//, iPillarDot, iFloodDot;
-	INT	iRitBuf;
-	INT	iRealWid;
-	INT	ic;
-	INT	iTgtLn;	//	各部のフォーカス行数
-	UINT	bMultiPadd;
+	INT_PTR	iRitOccup;
+	INT_PTR	iOfsLine, iRight;
+	INT_PTR	iRoofDot, iFloorDot;
+	INT_PTR	iRoofCnt, iFloorCnt;	//	上と下のパーツの個数
+	INT_PTR	iRfRstDot, iFlRstDot;
+	INT_PTR	iRitOff;//, iPillarDot, iFloodDot;
+	INT_PTR	iRitBuf;
+	INT_PTR	iRealWid;
+	INT_PTR	ic;
+	INT_PTR	iTgtLn;	//	各部のフォーカス行数
+	UINT_PTR	bMultiPadd;
 	BOOLEAN	bEnable;
 
 	UINT_PTR	cchTotal, dCount, d;
@@ -1189,22 +1193,22 @@ LPTSTR FrameMakeOutsideBoundary( CONST INT iWidth, CONST INT iHeight, LPFRAMEINF
 	@param[in]		pstInfo	使う枠の情報
 	@return	確保した文字列を返す・freeに注意・失敗ならNULL
 */
-LPTSTR FrameMakeInsideBoundary( UINT dType, PINT piValue, LPFRAMEINFO pstInfo )
+LPTSTR FrameMakeInsideBoundary( UINT_PTR dType, PINT_PTR piValue, LPFRAMEINFO pstInfo )
 {
-	static INT	iRoofCnt, iFloorCnt;	//	上と下のパーツの個数
-	static INT	iRfRstDot, iFlRstDot;
+	static INT_PTR	iRoofCnt, iFloorCnt;	//	上と下のパーツの個数
+	static INT_PTR	iRfRstDot, iFlRstDot;
 
 	TCHAR		atSubStr[MAX_PATH];
 	LPTSTR		ptBufStr;
 
-	UINT	bMultiPadd;
-	INT	iUpLine, iDnLine;
-	INT	i, ic;
-	INT	iRitOff;
-	INT	iRitBuf, iRitVle;
-	INT	iRoofDot, iFloorDot;
-	INT	iTgtLn;	//	各部のフォーカス行数
-	INT	iOfsLine;
+	UINT_PTR	bMultiPadd;
+	INT_PTR	iUpLine, iDnLine;
+	INT_PTR	i, ic;
+	INT_PTR	iRitOff;
+	INT_PTR	iRitBuf, iRitVle;
+	INT_PTR	iRoofDot, iFloorDot;
+	INT_PTR	iTgtLn;	//	各部のフォーカス行数
+	INT_PTR	iOfsLine;
 	BOOLEAN	bEnable;
 
 	UINT_PTR	cchTotal, dCount, d;
@@ -1390,9 +1394,9 @@ LPTSTR FrameMakeInsideBoundary( UINT dType, PINT piValue, LPFRAMEINFO pstInfo )
 	@param[in]	pstNmhdr	NOTIFYの詳細
 	@return		処理した内容とか
 */
-INT_PTR Frm_OnNotify( HWND hDlg, INT idFrom, LPNMHDR pstNmhdr )
+INT_PTR Frm_OnNotify( HWND hDlg, INT_PTR idFrom, LPNMHDR pstNmhdr )
 {
-	INT	nmCode;
+	INT_PTR	nmCode;
 	TCHAR	atBuff[MIN_STRING];
 	LPNMUPDOWN	pstUpDown;
 	RECT	rect;
@@ -1453,7 +1457,7 @@ INT_PTR Frm_OnNotify( HWND hDlg, INT idFrom, LPNMHDR pstNmhdr )
 	@param[in]	pstFrame	枠データ入れる構造体へのポインタ〜
 	@return		HRESULT	終了状態コード
 */
-HRESULT FrameDataGet( UINT dNumber, LPFRAMEINFO pstFrame )
+HRESULT FrameDataGet( UINT_PTR dNumber, LPFRAMEINFO pstFrame )
 {
 	InitFrameItem( INIT_LOAD, dNumber, pstFrame );
 
@@ -1511,18 +1515,18 @@ HRESULT FrameInfoDisp( HWND hDlg )
 	@param[in]	dStyle	矩形かどうか
 	@return		HRESULT	終了状態コード
 */
-HRESULT DocFrameInsert( INT dMode, INT dStyle )
+HRESULT DocFrameInsert(INT_PTR dMode, INT_PTR dStyle )
 {
 	UINT_PTR	iLines;
 	INT_PTR		iLns, iLast;
-	INT			iTop, iBtm, iInX, iEndot, iPadding, i, baseDot;
-	INT			xMidLen;
+	INT_PTR		iTop, iBtm, iInX, iEndot, iPadding, i, baseDot;
+	INT_PTR		xMidLen;
 	LPTSTR		ptPadding;
 	LPTSTR		ptString;
 
 	FRAMEINFO	stInfo;
 
-	INT			iMidLine, iUpLine, iDnLine;
+	INT_PTR		iMidLine, iUpLine, iDnLine;
 	LPFRAMEITEM	pstItem;
 	TCHAR		atSubStr[MAX_PATH];	//	足りるか？
 
@@ -1659,7 +1663,7 @@ HRESULT DocFrameInsert( INT dMode, INT dStyle )
 	@param[in,out]	ptData	変換元バッファで、変換後文字列入れる。PARTS_CCHサイズであること
 	@param[in]		bMode	１：\ｎを改行にする　０：改行を\ｎにする
 */
-VOID FrameDataTranslate( LPTSTR ptData, UINT bMode )
+VOID FrameDataTranslate( LPTSTR ptData, UINT_PTR bMode )
 {
 	TCHAR	atBuffer[SUB_STRING];
 	UINT_PTR	i, j, cchLen;
@@ -1734,14 +1738,14 @@ VOID FrameDataTranslate( LPTSTR ptData, UINT bMode )
 	@param[out]	ptDest	切り出した文字列を入れるバッファへのポインター
 	@param[in]	cchSz	バッファの文字数・バイトに非ず
 	@param[in]	iUseDot	必要とするドット数・足りないならパディング・多いなら放置
-	@return	UINT	全体の行数
+	@return	UINT_PTR	全体の行数
 */
-UINT FrameMultiSubstring( LPCTSTR ptSrc, CONST UINT dLine, LPTSTR ptDest, CONST UINT_PTR cchSz, CONST INT iUseDot )
+UINT_PTR FrameMultiSubstring( LPCTSTR ptSrc, CONST UINT_PTR dLine, LPTSTR ptDest, CONST UINT_PTR cchSz, CONST INT_PTR iUseDot )
 {
 	LPTSTR		ptPadding;
-	INT			iPaDot, iStrDot;
+	INT_PTR			iPaDot, iStrDot;
 	UINT_PTR	cchSrc, c, d;
-	UINT		iLnCnt;
+	UINT_PTR		iLnCnt;
 
 	StringCchLength( ptSrc, STRSAFE_MAX_CCH , &cchSrc );	//	元文字列の長さ確認
 
@@ -1790,14 +1794,14 @@ UINT FrameMultiSubstring( LPCTSTR ptSrc, CONST UINT dLine, LPTSTR ptDest, CONST 
 */
 HWND FrameInsBoxCreate( HINSTANCE hInst, HWND hPrWnd )
 {
-	INT			x, y;
-	UINT		d;
+	INT_PTR			x, y;
+	UINT_PTR		d;
 	TCHAR		atBuffer[MAX_STRING];
 	RECT		rect, vwRect;
 //	TBADDBITMAP	stToolBmp;
 
 	RECT	stFrmRct;
-	INT		topOst;
+	INT_PTR		topOst;
 
 	if( ghFrInbxWnd )
 	{
@@ -1897,7 +1901,8 @@ HWND FrameInsBoxCreate( HINSTANCE hInst, HWND hPrWnd )
 	@param[out]	pstRect	フレームサイズを入れるバッファ
 	@return		高さオフセット（ツールバーの高さ）
 */
-INT FrameInsBoxSizeGet( LPRECT pstRect )
+
+INT_PTR FrameInsBoxSizeGet( LPRECT pstRect )
 {
 	RECT	rect;
 
@@ -1918,7 +1923,7 @@ INT FrameInsBoxSizeGet( LPRECT pstRect )
 */
 HRESULT FrameInsBoxDoInsert( HWND hWnd )
 {
-	INT			iX, iY;
+	INT_PTR			iX, iY;
 	HWND		hLyrWnd;
 	RECT		rect;
 
@@ -1979,10 +1984,10 @@ LRESULT CALLBACK FrameInsProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 	@param[in]	codeNotify	通知メッセージ	HIWORD(wParam)
 	@return		なし
 */
-VOID Fib_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
+VOID Fib_OnCommand( HWND hWnd, INT_PTR id, HWND hWndCtl, UINT_PTR codeNotify )
 {
 	RECT	stFrmRct;
-	INT		topOst, iRslt = -1;
+	INT_PTR		topOst, iRslt = -1;
 
 	switch( id )
 	{
@@ -2046,7 +2051,7 @@ VOID Fib_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
 	@param[in]	flags	キーフラグいろいろ
 	@return		無し
 */
-VOID Fib_OnKey( HWND hWnd, UINT vk, BOOL fDown, int cRepeat, UINT flags )
+VOID Fib_OnKey( HWND hWnd, UINT_PTR vk, BOOL fDown, INT_PTR cRepeat, UINT_PTR flags )
 {
 	RECT	rect;
 
@@ -2105,10 +2110,10 @@ VOID FrameInsBoxFrmDraw( HDC hDC )
 {
 	//UINT_PTR	cchSize;
 	HFONT	hOldFnt;
-	INT		topOst, iYpos;
+	INT_PTR		topOst, iYpos;
 	RECT	stFrmRct;
 
-	UINT	dLines, d;
+	UINT_PTR	dLines, d;
 //	LPTSTR	ptMultiStr;
 	TCHAR	atBuffer[MAX_PATH];
 
@@ -2150,11 +2155,11 @@ VOID FrameInsBoxFrmDraw( HDC hDC )
 	@param[in]	iY		描画する高さ（左は常に０でよろし）
 	@param[in]	ptLine	壱行分のデータ
 */
-VOID FrameDrawItem( HDC hDC, INT iY, LPTSTR ptLine )
+VOID FrameDrawItem( HDC hDC, INT_PTR iY, LPTSTR ptLine )
 {
 	UINT_PTR	cchSize, cl;
-	UINT		iX, caret, len;
-	INT			mRslt, mBase;
+	UINT_PTR		iX, caret, len;
+	INT_PTR			mRslt, mBase;
 	LPTSTR		ptBgn;
 	SIZE		stSize;
 
@@ -2256,7 +2261,7 @@ VOID Fib_OnMoving( HWND hWnd, LPRECT pstPos )
 */
 BOOL Fib_OnWindowPosChanging( HWND hWnd, LPWINDOWPOS pstWpos )
 {
-	INT		clPosY, vwTopY, dSabun, dRem;
+	INT_PTR		clPosY, vwTopY, dSabun, dRem;
 	BOOLEAN	bMinus = FALSE;
 	RECT	vwRect;
 
@@ -2297,7 +2302,7 @@ VOID Fib_OnWindowPosChanged( HWND hWnd, const LPWINDOWPOS pstWpos )
 {
 	RECT	vwRect;
 	RECT	stFrmRct;
-	INT		topOst;
+	INT_PTR		topOst;
 
 	MoveWindow( ghFIBtlbrWnd, 0, 0, 0, 0, TRUE );	//	ツールバーは数値なくても勝手に合わせてくれる
 
@@ -2331,7 +2336,7 @@ VOID Fib_OnWindowPosChanged( HWND hWnd, const LPWINDOWPOS pstWpos )
 	@param[in]	state	窓状態・最小化なら違うコトする
 	@return		HRESULT	終了状態コード
 */
-HRESULT FrameMoveFromView( HWND hWnd, UINT state )
+HRESULT FrameMoveFromView( HWND hWnd, UINT_PTR state )
 {
 	RECT	vwRect = {0,0,0,0};
 	POINT	lyPoint;

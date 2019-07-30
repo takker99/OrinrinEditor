@@ -26,9 +26,9 @@ If not, see <http://www.gnu.org/licenses/>.
 LRESULT	CALLBACK SplitProc( HWND, UINT, WPARAM, LPARAM );
 
 VOID	Spt_OnPaint( HWND );
-VOID	Spt_OnLButtonDown( HWND, BOOL, INT, INT, UINT );
-VOID	Spt_OnMouseMove( HWND, INT, INT, UINT );
-VOID	Spt_OnLButtonUp( HWND, INT, INT, UINT );
+VOID	Spt_OnLButtonDown( HWND, BOOL, INT_PTR, INT_PTR, UINT_PTR );
+VOID	Spt_OnMouseMove( HWND, INT_PTR, INT_PTR, UINT_PTR );
+VOID	Spt_OnLButtonUp( HWND, INT_PTR, INT_PTR, UINT_PTR );
 //-------------------------------------------------------------------------------------------------
 
 
@@ -67,7 +67,7 @@ ATOM SplitBarClass( HINSTANCE hInst )
 	@param[in]	dHeight	高さ
 	@return		スプリットバーのハンドル
 */
-HWND SplitBarCreate( HINSTANCE hInst, HWND hPrWnd, INT x, INT y, INT dHeight )
+HWND SplitBarCreate( HINSTANCE hInst, HWND hPrWnd, INT_PTR x, INT_PTR y, INT_PTR dHeight )
 {
 	HWND	hWorkWnd;
 
@@ -131,7 +131,7 @@ VOID Spt_OnPaint( HWND hWnd )
 	@param[in]	y				クライアント座標Ｙ
 	@param[in]	keyFlags		押されてる他のボタン
 */
-VOID Spt_OnLButtonDown( HWND hWnd, BOOL fDoubleClick, INT x, INT y, UINT keyFlags )
+VOID Spt_OnLButtonDown( HWND hWnd, BOOL fDoubleClick, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
 	if( fDoubleClick )	return;	//	ダブルクルックは何もしない
 
@@ -152,7 +152,7 @@ VOID Spt_OnLButtonDown( HWND hWnd, BOOL fDoubleClick, INT x, INT y, UINT keyFlag
 	@param[in]	y			スプリットバー上からの相対座標Ｙ
 	@param[in]	keyFlags	押されてる他のボタン
 */
-VOID Spt_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
+VOID Spt_OnMouseMove( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
 	HWND	hPrWnd;
 	RECT	stRect;
@@ -190,7 +190,7 @@ VOID Spt_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
 	@param[in]	y			クライアント座標Ｙ
 	@param[in]	keyFlags	押されてる他のボタン
 */
-VOID Spt_OnLButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
+VOID Spt_OnLButtonUp( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
 	HWND	hPrWnd;
 	RECT	stRect;

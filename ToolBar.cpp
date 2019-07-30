@@ -215,7 +215,7 @@ VOID ToolBarCreate( HWND hWnd, HINSTANCE lcInst )
 //	TBADDBITMAP	stToolBmp;
 	TCHAR	atBuff[MAX_STRING];
 
-	UINT			ici, resnum, d;
+	UINT_PTR			ici, resnum, d;
 	REBARINFO		stRbrInfo;
 	REBARBANDINFO	stRbandInfo;
 	REBARLAYOUTINFO	stInfo[TB_BAND_COUNT];
@@ -519,12 +519,12 @@ VOID ToolBarCreate( HWND hWnd, HINSTANCE lcInst )
 	@param[in]	iEntry		テーブルのエントリ数
 	@return		HRESULT	終了状態コード
 */
-HRESULT ToolBarInfoChange( LPACCEL pstAccel, INT iEntry )
+HRESULT ToolBarInfoChange( LPACCEL pstAccel, INT_PTR iEntry )
 {
 	TCHAR	atText[MAX_STRING];
 	TBBUTTONINFO	stButtonInfo;
 
-	INT	i;
+	INT_PTR	i;
 
 	ZeroMemory( &stButtonInfo, sizeof(TBBUTTONINFO) );
 	stButtonInfo.cbSize  = sizeof(TBBUTTONINFO);
@@ -624,7 +624,7 @@ HRESULT ToolBarSizeGet( LPRECT pstRect )
 	@param[in]	bCheck	非０チェック・０はずす
 	@return		HRESULT	終了状態コード
 */
-HRESULT ToolBarCheckOnOff( UINT itemID, UINT bCheck )
+HRESULT ToolBarCheckOnOff( UINT_PTR itemID, UINT_PTR bCheck )
 {
 	HWND	hTlBrWnd;
 
@@ -654,7 +654,7 @@ HRESULT ToolBarCheckOnOff( UINT itemID, UINT bCheck )
 	@param[in]	cy		クライヤントＹサイズ
 	@return		無し
 */
-HRESULT ToolBarOnSize( HWND hWnd, UINT state, INT cx, INT cy )
+HRESULT ToolBarOnSize( HWND hWnd, UINT_PTR state, INT_PTR cx, INT_PTR cy )
 {
 	FORWARD_WM_SIZE( ghRebarWnd, state, cx, cy, SendMessage );
 
@@ -667,10 +667,10 @@ HRESULT ToolBarOnSize( HWND hWnd, UINT state, INT cx, INT cy )
 	@param[in]	hWnd	親ウインドウのハンドル
 	@param[in]	itemID	押されたボタンのＩＤ
 */
-VOID ToolBarPseudoDropDown( HWND hWnd, INT itemID )
+VOID ToolBarPseudoDropDown( HWND hWnd, INT_PTR itemID )
 {
 	NMTOOLBAR	stNmToolBar;
-	INT	iFrom;
+	INT_PTR	iFrom;
 
 
 	ZeroMemory( &stNmToolBar, sizeof(NMTOOLBAR) );
@@ -729,9 +729,9 @@ LRESULT ToolBarOnContextMenu( HWND hWnd, HWND hWndContext, LONG xPos, LONG yPos 
 	@param[in]	pstNmhdr	NOTIFYの詳細
 	@return		処理した内容とか・特に返すモノはない
 */
-LRESULT ToolBarOnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
+LRESULT ToolBarOnNotify( HWND hWnd, INT_PTR idFrom, LPNMHDR pstNmhdr )
 {
-	INT			iItem, i;
+	INT_PTR			iItem, i;
 	HWND		hWndFrom;
 	HMENU		hPopupMenu = NULL, hMainMenu;
 	LPNMTOOLBAR	pstNmToolBar;
@@ -815,8 +815,8 @@ LRESULT ToolBarOnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
 */
 HRESULT ToolBarBandReset( HWND hWnd )
 {
-	INT		index;
-	UINT	d;
+	INT_PTR		index;
+	UINT_PTR	d;
 	REBARBANDINFO	stRbandInfo;
 
 	TRACE( TEXT("REBAR RESET") );
@@ -846,9 +846,9 @@ HRESULT ToolBarBandReset( HWND hWnd )
 /*!
 	リバーの配置情報を確認する
 */
-UINT ToolBarBandInfoGet( LPVOID pVoid )
+UINT_PTR ToolBarBandInfoGet( LPVOID pVoid )
 {
-	UINT	d;
+	UINT_PTR	d;
 	REBARBANDINFO	stBandInfo;
 	REBARLAYOUTINFO	stInfo[TB_BAND_COUNT];
 
@@ -879,14 +879,14 @@ UINT ToolBarBandInfoGet( LPVOID pVoid )
 
 復元するのに必要なのは、バンドの並んでいる順番、バンドの幅、そしてどのバンドで改行するか。
 
-UINT count = SendMessage(hRebar, RB_GETBANDCOUNT, 0, 0);
+UINT_PTR count = SendMessage(hRebar, RB_GETBANDCOUNT, 0, 0);
 
 REBARBANDINFO rbi = {0};
 rbi.cbSize = sizeof(REBARBANDINFO);
 rbi.fMask = RBBIM_ID | RBBIM_STYLE | RBBIM_SIZE;
 
 DWORD written;
-for (UINT i = 0; i < count; ++i)
+for (UINT_PTR i = 0; i < count; ++i)
 {
 	SendMessage(hRebar, RB_GETBANDINFO, i, (LPARAM)&rbi);
 
@@ -912,7 +912,7 @@ bandInfo.fMask = RBBIM_ID | RBBIM_SIZE | RBBIM_STYLE;
 int barcnt = SendMessage(wprop->hRebar, RB_GETBANDCOUNT, 0, 0);
 for(int i = 0; i < barcnt; i++){
     sprintf(iniSection, INISECTION_BAR, i);
-    SendMessage(hRebar, RB_GETBANDINFO, (WPARAM)(UINT)i, (LPARAM)(LPREBARBANDINFO)&bandInfo);
+    SendMessage(hRebar, RB_GETBANDINFO, (WPARAM)(UINT_PTR)i, (LPARAM)(LPREBARBANDINFO)&bandInfo);
 
     // wID, cx, fStyle を ini ファイルに保存する
     MyWriteProfileInt(iniSection, "ID", bandInfo.wID);

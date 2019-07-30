@@ -89,10 +89,10 @@ typedef struct tagMOZIITEM
 	TCHAR	cch;	//!<	文字
 	LPTSTR	ptAA;	//!<	文字ＡＡ
 
-	INT		iLeft;	//!<	左ドット
-	INT		iTop;	//!<	上ドット
-	INT		iWidth;	//!<	最大ドット幅
-	INT		iLine;	//!<	使用行数
+	INT_PTR		iLeft;	//!<	左ドット
+	INT_PTR		iTop;	//!<	上ドット
+	INT_PTR		iWidth;	//!<	最大ドット幅
+	INT_PTR		iLine;	//!<	使用行数
 
 } MOZIITEM, *LPMOZIITEM;
 //-------------------------------------------------------------------------------------------------
@@ -101,15 +101,15 @@ typedef struct tagMOZIITEM
 extern FILES_ITR	gitFileIt;		//!<	今見てるファイルの本体
 //#define gstFile	(*gitFileIt)		//!<	イテレータを構造体と見なす
 
-extern INT			gixFocusPage;	//	注目中のページ・０インデックス
+extern INT_PTR			gixFocusPage;	//	注目中のページ・０インデックス
 
 extern HFONT		ghAaFont;		//	AA用フォント
 
 extern  BYTE		gbAlpha;		//	透明度
 
 extern  HWND		ghViewWnd;		//	編集ビューウインドウのハンドル
-extern INT			gdHideXdot;		//	左の隠れ部分
-extern INT			gdViewTopLine;	//	表示中の最上部行番号
+extern INT_PTR			gdHideXdot;		//	左の隠れ部分
+extern INT_PTR			gdViewTopLine;	//	表示中の最上部行番号
 
 
 
@@ -131,14 +131,14 @@ static POINT		gstViewOrigin;	//!<	ビューの左上ウインドウ位置・
 static POINT		gstOffset;		//!<	ビュー左上からの、ボックスの相対位置
 static POINT		gstFrmSz;		//!<	ウインドウエッジから描画領域までのオフセット
 
-static INT			gdToolBarHei;	//!<	ツールバー太さ
+static INT_PTR			gdToolBarHei;	//!<	ツールバー太さ
 
-static INT			gdMoziInterval;	//!<	文字間隔・正：広がる　負：縮まる
+static INT_PTR			gdMoziInterval;	//!<	文字間隔・正：広がる　負：縮まる
 
-static INT			gdNowMode;		//!<	０通常　１アドバンズド　0x10設定
+static INT_PTR			gdNowMode;		//!<	０通常　１アドバンズド　0x10設定
 
-static INT			gdAvrWidth;		//!<	平均占有幅
-static INT			gdMaxLine;		//!<	最大占有行
+static INT_PTR			gdAvrWidth;		//!<	平均占有幅
+static INT_PTR			gdMaxLine;		//!<	最大占有行
 
 static LPTSTR		gptMzBuff;		//!<	テキスト枠から文字確保枠・可変
 static DWORD		gcchMzBuf;		//!<	確保枠の文字数・バイトじゃないぞ
@@ -158,21 +158,21 @@ static LRESULT	CALLBACK gpfMoziEditProc( HWND , UINT, WPARAM, LPARAM );	//!<
 
 
 LRESULT	CALLBACK MoziProc( HWND, UINT, WPARAM, LPARAM );	//!<	
-VOID	Mzs_OnCommand( HWND , INT, HWND, UINT );			//!<	
+VOID	Mzs_OnCommand( HWND , INT_PTR, HWND, UINT_PTR );			//!<	
 VOID	Mzs_OnPaint( HWND );								//!<	
 VOID	Mzs_OnDestroy( HWND );								//!<	
-VOID	Mzs_OnContextMenu( HWND, HWND, UINT, UINT );		//!<	
+VOID	Mzs_OnContextMenu( HWND, HWND, UINT_PTR, UINT_PTR );		//!<	
 VOID	Mzs_OnDropFiles( HWND , HDROP );					//!<	
-LRESULT	Mzs_OnNotify( HWND , INT, LPNMHDR );				//!<	
+LRESULT	Mzs_OnNotify( HWND , INT_PTR, LPNMHDR );				//!<	
 
 HRESULT	MoziFileRefresh( HWND );							//!<	
-HRESULT	MoziFileRebuild( HWND, UINT );						//!<	
+HRESULT	MoziFileRebuild( HWND, UINT_PTR );						//!<	
 
 HRESULT	MoziFileListAdd( LPTSTR );							//!<	
 HRESULT MoziFileListDelete( HWND  );						//!<	
 
 HRESULT	MoziFileStore( LPTSTR );							//!<	
-UINT	CALLBACK MoziItemTablise( LPTSTR, LPCTSTR, INT );	//!<	
+UINT_PTR	CALLBACK MoziItemTablise( LPTSTR, LPCTSTR, INT_PTR );	//!<	
 VOID	MoziItemRemovePeriod( LPTSTR  );					//!<	
 
 HRESULT	MoziSpaceCreate( VOID );							//!<	
@@ -180,18 +180,18 @@ HRESULT	MoziSpaceCreate( VOID );							//!<
 HRESULT	MoziScriptInsert( HWND );							//!<	
 
 LRESULT	CALLBACK MoziViewProc( HWND, UINT, WPARAM, LPARAM );//!<	
-VOID	Mzv_OnKey( HWND, UINT, BOOL, INT, UINT );			//!<	
+VOID	Mzv_OnKey( HWND, UINT_PTR, BOOL, INT_PTR, UINT_PTR );			//!<	
 VOID	Mzv_OnPaint( HWND );								//!<	
 VOID	Mzv_OnMoving( HWND, LPRECT );						//!<	
 BOOL	Mzv_OnWindowPosChanging( HWND, LPWINDOWPOS );		//!<	
 VOID	Mzv_OnWindowPosChanged( HWND, const LPWINDOWPOS );	//!<	
 VOID	MoziViewDraw( HDC );								//!<	
 
-HRESULT	MoziSqlTableOpenClose( UINT );						//!<	
+HRESULT	MoziSqlTableOpenClose( UINT_PTR );						//!<	
 HRESULT	MoziSqlTransOnOff( BYTE );							//!<	
-UINT	MoziSqlItemInsert( LPTSTR, LPTSTR, INT, INT );		//!<	
-LPTSTR	MoziSqlItemSelect( TCHAR, LPINT, LPINT );			//!<	
-UINT	MoziSqlItemCount( LPINT, LPINT );					//!<	
+UINT_PTR	MoziSqlItemInsert( LPTSTR, LPTSTR, INT_PTR, INT_PTR );		//!<	
+LPTSTR	MoziSqlItemSelect( TCHAR, PINT_PTR, PINT_PTR);			//!<	
+UINT_PTR	MoziSqlItemCount( PINT_PTR, PINT_PTR);					//!<	
 HRESULT	MoziSqlItemDeleteAll( VOID );						//!<	
 
 //-------------------------------------------------------------------------------------------------
@@ -202,7 +202,8 @@ HRESULT	MoziSqlItemDeleteAll( VOID );						//!<
 	@param[in]	hInstance	インスタンスハンドル
 	@return		HRESULT	終了状態コード
 */
-INT MoziInitialise( LPTSTR ptCurrent, HINSTANCE hInstance )
+
+INT_PTR MoziInitialise( LPTSTR ptCurrent, HINSTANCE hInstance )
 {
 	WNDCLASSEX	wcex;
 	HBITMAP		hImg, hMsq;
@@ -318,7 +319,7 @@ HWND MoziScripterCreate( HINSTANCE hInst, HWND hPrWnd )
 {
 	LONG	x, y;
 	HWND	hDktpWnd;
-	UINT	dCount, height;
+	UINT_PTR	dCount, height;
 	TCHAR	atBuffer[MAX_STRING];
 	RECT	rect, vwRect, dtRect;
 
@@ -472,8 +473,8 @@ HWND MoziScripterCreate( HINSTANCE hInst, HWND hPrWnd )
 HRESULT MoziEditAssemble( HWND hWnd )
 {
 	UINT_PTR	cchSz;
-	INT			ileng, i, iNdot, iNlnDot, iMxLine, wid;
-	INT			iMaxDot, iLastLine, iViewXdot, iYline, iViewYdot, cx, cy;
+	INT_PTR			ileng, i, iNdot, iNlnDot, iMxLine, wid;
+	INT_PTR			iMaxDot, iLastLine, iViewXdot, iYline, iViewYdot, cx, cy;
 	HWND		hWorkWnd;
 	LPTSTR		ptScript;
 	RECT		rect;
@@ -595,10 +596,10 @@ HRESULT MoziEditAssemble( HWND hWnd )
 */
 LRESULT CALLBACK gpfMoziEditProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-	INT		len;
-	INT		id;
+	INT_PTR		len;
+	INT_PTR		id;
 	HWND	hWndCtl;
-	UINT	codeNotify;
+	UINT_PTR	codeNotify;
 
 	switch( msg )
 	{
@@ -709,7 +710,7 @@ VOID Mzv_OnMoving( HWND hWnd, LPRECT pstPos )
 */
 BOOL Mzv_OnWindowPosChanging( HWND hWnd, LPWINDOWPOS pstWpos )
 {
-	INT		clPosY, vwTopY, dSabun, dRem;
+	INT_PTR		clPosY, vwTopY, dSabun, dRem;
 	BOOLEAN	bMinus = FALSE;
 	RECT	vwRect;
 
@@ -775,7 +776,7 @@ VOID Mzv_OnWindowPosChanged( HWND hWnd, const LPWINDOWPOS pstWpos )
 	@param[in]	flags	キーフラグいろいろ
 	@return		無し
 */
-VOID Mzv_OnKey( HWND hWnd, UINT vk, BOOL fDown, int cRepeat, UINT flags )
+VOID Mzv_OnKey( HWND hWnd, UINT_PTR vk, BOOL fDown, INT_PTR cRepeat, UINT_PTR flags )
 {
 	RECT	rect;
 
@@ -833,7 +834,7 @@ VOID MoziViewDraw( HDC hDC )
 {
 	UINT_PTR	cchSize, dLeng, dPos;
 	INT_PTR	iItems, iLn;
-	INT		x, y, cmr;
+	INT_PTR		x, y, cmr;
 	LPTSTR	ptHead;
 	HFONT	hFtOld;
 
@@ -900,7 +901,7 @@ VOID MoziViewDraw( HDC hDC )
 	@param[in]	state	窓状態・最小化なら違うコトする
 	@return		HRESULT	終了状態コード
 */
-HRESULT MoziMoveFromView( HWND hWnd, UINT state )
+HRESULT MoziMoveFromView( HWND hWnd, UINT_PTR state )
 {
 	RECT	vwRect = {0,0,0,0};
 	POINT	lyPoint;
@@ -970,7 +971,7 @@ LRESULT CALLBACK MoziProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 	@param[in]	codeNotify	通知メッセージ	HIWORD(wParam)
 	@return		なし
 */
-VOID Mzs_OnCommand( HWND hWnd, INT id, HWND hWndCtl, UINT codeNotify )
+VOID Mzs_OnCommand( HWND hWnd, INT_PTR id, HWND hWndCtl, UINT_PTR codeNotify )
 {
 	LRESULT	lRslt;
 
@@ -1095,7 +1096,7 @@ VOID Mzs_OnDestroy( HWND hWnd )
 	@param[in]	yPos		スクリーンＹ座業
 	@return		無し
 */
-VOID Mzs_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
+VOID Mzs_OnContextMenu( HWND hWnd, HWND hWndContext, UINT_PTR xPos, UINT_PTR yPos )
 {
 	HMENU	hMenu;
 	POINT	stPoint;
@@ -1128,7 +1129,7 @@ VOID Mzs_OnContextMenu( HWND hWnd, HWND hWndContext, UINT xPos, UINT yPos )
 	@param[in]	pstNmhdr	NOTIFYの詳細
 	@return		処理した内容とか
 */
-LRESULT Mzs_OnNotify( HWND hWnd, INT idFrom, LPNMHDR pstNmhdr )
+LRESULT Mzs_OnNotify( HWND hWnd, INT_PTR idFrom, LPNMHDR pstNmhdr )
 {
 	LPNMUPDOWN	pstNmUpDown;
 
@@ -1193,7 +1194,7 @@ HRESULT MoziFileListAdd( LPTSTR ptFilePath )
 {
 	TCHAR	atFileName[MAX_PATH];
 
-	UINT	iItem;
+	UINT_PTR	iItem;
 	LVITEM	stLvi;
 
 	StringCchCopy( atFileName, MAX_PATH, ptFilePath );
@@ -1223,7 +1224,7 @@ HRESULT MoziFileListAdd( LPTSTR ptFilePath )
 */
 HRESULT MoziFileListDelete( HWND hWnd )
 {
-	INT	iItem;
+	INT_PTR	iItem;
 
 	iItem = ListView_GetNextItem( ghSettiLvWnd, -1, LVNI_ALL | LVNI_SELECTED );
 
@@ -1244,8 +1245,8 @@ HRESULT MoziFileRefresh( HWND hWnd )
 {
 	TCHAR	atKeyName[MIN_STRING], atBuff[MIN_STRING];
 	TCHAR	atFilePath[MAX_PATH];
-	INT		iItem, i;
-	UINT	bCheck;
+	INT_PTR		iItem, i;
+	UINT_PTR	bCheck;
 	LVITEM	stLvi;
 
 	iItem = ListView_GetItemCount( ghSettiLvWnd );
@@ -1292,10 +1293,10 @@ HRESULT MoziFileRefresh( HWND hWnd )
 	@param[in]	hWnd	ウインドウハンドル
 	@param[in]	bMode	非０SQL構築　０ロードのみ
 */
-HRESULT MoziFileRebuild( HWND hWnd, UINT bMode )
+HRESULT MoziFileRebuild( HWND hWnd, UINT_PTR bMode )
 {
-	UINT	dCount, d;
-	UINT	bCheck;
+	UINT_PTR	dCount, d;
+	UINT_PTR	bCheck;
 	TCHAR	atFileName[MAX_PATH], atFilePath[MAX_PATH];
 	TCHAR	atKeyName[MIN_STRING];
 	LVITEM	stLvi;
@@ -1349,7 +1350,7 @@ HRESULT MoziFileRebuild( HWND hWnd, UINT bMode )
 */
 HRESULT MoziSpaceCreate( VOID )
 {
-	INT	iLine, iAvDot;
+	INT_PTR	iLine, iAvDot;
 
 	//	占有最大行数と平均幅を確保
 	MoziSqlItemCount( &iLine, &iAvDot );
@@ -1368,14 +1369,14 @@ HRESULT MoziSpaceCreate( VOID )
 */
 HRESULT MoziScriptInsert( HWND hWnd )
 {
-	UINT	bTranst;	//	透過するか？
-	INT		ixNowPage;	//	今の頁を覚えておく
-	INT		ixTmpPage;	//	作業用につくる
-	INT		iXhideBuf = 0, iYhideBuf = 0;
+	UINT_PTR	bTranst;	//	透過するか？
+	INT_PTR		ixNowPage;	//	今の頁を覚えておく
+	INT_PTR		ixTmpPage;	//	作業用につくる
+	INT_PTR		iXhideBuf = 0, iYhideBuf = 0;
 
 	LPVOID		pBuffer;
-	INT			x, y, iByteSize, cmr;
-	INT			iX = 0, iY = 0;
+	INT_PTR			x, y, iByteSize, cmr;
+	INT_PTR			iX = 0, iY = 0;
 	HWND		hLyrWnd;
 	RECT		rect;
 
@@ -1504,16 +1505,16 @@ HRESULT MoziScriptInsert( HWND hWnd )
 	@param[in]	ptLter	項目の名前・無い時はNULL
 	@param[in]	ptCont	項目の内容
 	@param[in]	cchSize	内容の文字数
-	@return		UINT	特に意味なし
+	@return		UINT_PTR	特に意味なし
 */
-UINT CALLBACK MoziItemTablise( LPTSTR ptLter, LPCTSTR ptCont, INT cchSize )
+UINT_PTR CALLBACK MoziItemTablise( LPTSTR ptLter, LPCTSTR ptCont, INT_PTR cchSize )
 {
 	UINT_PTR	cchSz;
 	LPTSTR		ptItem;
 
 	LPTSTR	ptCaret, ptNext;
 //	TCHAR	ch;
-	INT		cl, dot, maxd;
+	INT_PTR		cl, dot, maxd;
 
 	StringCchLength( ptLter, STRSAFE_MAX_CCH, &cchSz );
 	if( 1 != cchSz )	return 0;
@@ -1571,7 +1572,7 @@ UINT CALLBACK MoziItemTablise( LPTSTR ptLter, LPCTSTR ptCont, INT cchSize )
 VOID MoziItemRemovePeriod( LPTSTR ptText )
 {
 	UINT_PTR	cchSize;
-	UINT		d;
+	UINT_PTR		d;
 
 	StringCchLength( ptText, STRSAFE_MAX_CCH, &cchSize );
 	if( 0 == cchSize )	return;	//	文字列ないならナニもしない
@@ -1649,11 +1650,11 @@ HRESULT MoziFileStore( LPTSTR ptFilePath )
 /*!
 	文字キャッシュ用オンメモリＤＢ
 */
-HRESULT MoziSqlTableOpenClose( UINT bMode )
+HRESULT MoziSqlTableOpenClose( UINT_PTR bMode )
 {
 	//	ツリー情報
-	CONST CHAR	cacMoziTable[] = { ("CREATE TABLE MoziScr ( id INTEGER PRIMARY KEY, letter TEXT, aacont TEXT, line INTEGER, dot INTEGER )") };
-	INT		rslt;
+	CONST CHAR	cacMoziTable[] = { ("CREATE TABLE MoziScr ( id INT_PTREGER PRIMARY KEY, letter TEXT, aacont TEXT, line INT_PTREGER, dot INT_PTREGER )") };
+	INT_PTR		rslt;
 	sqlite3_stmt	*statement;
 
 	if( bMode )
@@ -1707,15 +1708,15 @@ HRESULT MoziSqlTransOnOff( BYTE mode )
 	@param[in]	ptCont	文字のＡＡデータ
 	@param[in]	iLine	行数
 	@param[in]	iDot	最大ドット数
-	@return	UINT	いま登録したID番号
+	@return	UINT_PTR	いま登録したID番号
 */
-UINT MoziSqlItemInsert( LPTSTR ptLter, LPTSTR ptCont, INT iLine, INT iDot )
+UINT_PTR MoziSqlItemInsert( LPTSTR ptLter, LPTSTR ptCont, INT_PTR iLine, INT_PTR iDot )
 {
-	CONST CHAR	acMoziItemInsert[] = { ("INSERT INTO MoziScr ( letter, aacont, line, dot ) VALUES ( ?, ?, ?, ? )") };
+	CONST CHAR	acMoziItemInsert[] = { ("INSERT INT_PTRO MoziScr ( letter, aacont, line, dot ) VALUES ( ?, ?, ?, ? )") };
 	CONST CHAR	acAddNumCheck[] = { ("SELECT LAST_INSERT_ROWID( ) FROM MoziScr") };
 
-	INT		rslt;
-	UINT	iRast = 0;
+	INT_PTR		rslt;
+	UINT_PTR	iRast = 0;
 	sqlite3_stmt	*statement;
 
 
@@ -1757,11 +1758,11 @@ UINT MoziSqlItemInsert( LPTSTR ptLter, LPTSTR ptCont, INT iLine, INT iDot )
 	@param[in]	piDot	最大ドット数いれるバッファ
 	@return	LPTSTR	ＡＡ本文をAllocateして戻す・開放は受けたガワでやること・無かったらNULL
 */
-LPTSTR MoziSqlItemSelect( TCHAR ch, LPINT piLine, LPINT piDot )
+LPTSTR MoziSqlItemSelect( TCHAR ch, PINT_PTR piLine, PINT_PTR piDot )
 {
 	CONST CHAR	acSelect[] = { ("SELECT * FROM MoziScr WHERE letter == ?") };
-	INT		rslt,iLine, iDot;
-	UINT	index = 0;
+	INT_PTR		rslt,iLine, iDot;
+	UINT_PTR	index = 0;
 	TCHAR	atMozi[3];
 	LPTSTR	ptAac = NULL;
 	sqlite3_stmt*	statement;
@@ -1809,10 +1810,10 @@ LPTSTR MoziSqlItemSelect( TCHAR ch, LPINT piLine, LPINT piDot )
 	@param[in]	piAvDot	平均ドット幅いれるバッファ
 	@return		登録されている個数
 */
-UINT MoziSqlItemCount( LPINT piLine, LPINT piAvDot )
+UINT_PTR MoziSqlItemCount( PINT_PTR piLine, PINT_PTR piAvDot )
 {
-	INT		iLine, iAvDot;
-	UINT	rslt, iCount;
+	INT_PTR		iLine, iAvDot;
+	UINT_PTR	rslt, iCount;
 	sqlite3_stmt*	statement;
 
 	rslt = sqlite3_prepare( gpMoziTable, ("SELECT COUNT(id), MAX(line), AVG(dot) FROM MoziScr"), -1, &statement, NULL );
@@ -1836,7 +1837,7 @@ UINT MoziSqlItemCount( LPINT piLine, LPINT piAvDot )
 */
 HRESULT MoziSqlItemDeleteAll( VOID )
 {
-	INT		rslt;
+	INT_PTR		rslt;
 	sqlite3_stmt	*statement;
 
 	if( !(gpMoziTable) ){	return E_NOTIMPL;	}

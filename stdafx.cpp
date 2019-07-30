@@ -27,7 +27,7 @@ If not, see <http://www.gnu.org/licenses/>.
 //------------------------------------------------------------------------------------------------------------------------
 
 #ifndef _ORRVW
-extern  UINT	gbUniRadixHex;	//	ユニコード数値参照が１６進数であるか
+extern  UINT_PTR	gbUniRadixHex;	//	ユニコード数値参照が１６進数であるか
 #endif
 //------------------------------------------------------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ extern  UINT	gbUniRadixHex;	//	ユニコード数値参照が１６進数であ�
 typedef struct tagFINDPATTERN
 {
 	TCHAR	cchMozi;
-	INT		iDistance;
+	INT_PTR		iDistance;
 
 } FINDPATTERN, *LPFINDPATTERN;
 //--------------------------------
@@ -46,7 +46,7 @@ typedef struct tagMSGBOXMSG
 	TCHAR	atMsg1[MAX_PATH];	//!<	文字列１
 	TCHAR	atMsg2[MAX_PATH];	//!<	文字列２
 
-	UINT	bChecked;	//!<	非０チェキられた　０ノーチェック
+	UINT_PTR	bChecked;	//!<	非０チェキられた　０ノーチェック
 
 } MSGBOXMSG, *LPMSGBOXMSG;
 
@@ -54,7 +54,7 @@ typedef struct tagMSGBOXMSG
 
 #ifdef SPMOZI_ENCODE
 
-EXTERNED UINT	gbSpMoziEnc;	//!<	機種依存文字を数値参照コピーする
+EXTERNED UINT_PTR	gbSpMoziEnc;	//!<	機種依存文字を数値参照コピーする
 
 //	機種依存文字	2015/01/23	なんか増えた
 static CONST TCHAR	gatSpMoziList[] = {
@@ -80,9 +80,9 @@ static CONST TCHAR	gatSpMoziList[] = {
 	@param[in]	tMozi	チェックするユニコード文字
 	@return	非０該当する　０しない
 */
-UINT IsSpMozi( TCHAR tMozi )
+UINT_PTR IsSpMozi( TCHAR tMozi )
 {
-	UINT	i;
+	UINT_PTR	i;
 
 	if( !(gbSpMoziEnc) )	return 0;	//	未使用ならいつでも該当しない
 
@@ -154,7 +154,7 @@ BOOLEAN FileExtensionCheck( LPTSTR ptFile, LPTSTR ptExte )
 */
 BOOLEAN HtmlEntityCheckA( TCHAR adMozi, LPSTR pcStr, UINT_PTR cbSize )
 {
-	INT	i;
+	INT_PTR	i;
 
 	ZeroMemory( pcStr, cbSize );
 
@@ -182,7 +182,7 @@ BOOLEAN HtmlEntityCheckA( TCHAR adMozi, LPSTR pcStr, UINT_PTR cbSize )
 */
 BOOLEAN HtmlEntityCheckW( TCHAR adMozi, LPTSTR ptStr, UINT_PTR cchSize )
 {
-	INT	i;
+	INT_PTR	i;
 
 	ZeroMemory( ptStr, cchSize * sizeof(TCHAR) );
 
@@ -211,8 +211,8 @@ TCHAR UniRefCheck( LPSTR pcStr )
 {
 	CHAR	acValue[10];
 	PCHAR	pcEnd;
-	UINT	i, code;
-	INT		radix = 10;
+	UINT_PTR	i, code;
+	INT_PTR		radix = 10;
 	BOOLEAN	bXcode = FALSE;
 
 	ZeroMemory( acValue, sizeof(acValue) );
@@ -270,7 +270,7 @@ LPSTR SjisEntityExchange( LPCSTR pcMoto )
 {
 	LPSTR		pcOutput, pcTemp;
 	CHAR		acSrp[12], acChk[3], acUni[10];
-	UINT		check, el;
+	UINT_PTR		check, el;
 	UINT_PTR	szMoto, szStr, sc, dt, se, rp, cbSz;
 	BOOLEAN		bStr = FALSE, bHit = FALSE;
 
@@ -429,10 +429,10 @@ LPTSTR SjisDecodeAlloc( LPSTR pcBuff )
 	@param[out]	piLine	行数返す
 	@return		最大ドット数
 */
-INT TextViewSizeGet( LPCTSTR ptText, PINT piLine )
+INT_PTR TextViewSizeGet( LPCTSTR ptText, PINT_PTR piLine )
 {
 	UINT_PTR	cchSize, i;
-	INT		xDot, yLine, dMaxDot;
+	INT_PTR		xDot, yLine, dMaxDot;
 
 	wstring	wString;
 
@@ -541,7 +541,7 @@ LPSTR SjisEncodeAlloc( LPCTSTR ptTexts )
 	TCHAR	atMozi[2];
 	CHAR	acSjis[10];
 	BOOL	bCant = FALSE;
-	INT		iRslt;
+	INT_PTR		iRslt;
 	UINT_PTR	cchSize, d, cbSize;
 	LPSTR	pcString;
 
@@ -598,7 +598,7 @@ LPSTR SjisEncodeAlloc( LPCTSTR ptTexts )
 */
 LPFINDPATTERN FindTableMake( LPCTSTR ptPattern )
 {
-	UINT		i;
+	UINT_PTR		i;
 	UINT_PTR	dLength;
 	LPFINDPATTERN	pstPtrn;
 
@@ -635,11 +635,11 @@ LPFINDPATTERN FindTableMake( LPCTSTR ptPattern )
 	@param[out]	pdCch		ヒットした文字位置数・なかったら0
 	@return		LPTSTR		ヒットした部分の開始・なかったらNULL
 */
-LPTSTR FindStringProc( LPTSTR ptText, LPTSTR ptPattern, LPINT pdCch )
+LPTSTR FindStringProc( LPTSTR ptText, LPTSTR ptPattern, PINT_PTR pdCch )
 {
 	UINT_PTR	dPtrnLen, dLength;
 	LPTSTR	ptTextEnd;
-	INT		i, j, k, jump, cch;
+	INT_PTR		i, j, k, jump, cch;
 
 	LPFINDPATTERN	pstPattern;
 
@@ -696,7 +696,7 @@ LPTSTR FindStringProc( LPTSTR ptText, LPTSTR ptPattern, LPINT pdCch )
 INT_PTR CALLBACK MsgCheckBoxProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
 	static LPMSGBOXMSG	pcstMsg = NULL;
-	INT	id;
+	INT_PTR	id;
 
 	switch( message )
 	{
@@ -725,10 +725,10 @@ INT_PTR CALLBACK MsgCheckBoxProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM
 	@param[in]	hInst	アプリの実存
 	@param[in]	dStyle	表示Message　０頁統合　１頁分割　２頁削除
 */
-INT_PTR MessageBoxCheckBox( HWND hWnd, HINSTANCE hInst, UINT dStyle )
+INT_PTR MessageBoxCheckBox( HWND hWnd, HINSTANCE hInst, UINT_PTR dStyle )
 {
 	INT_PTR	iRslt;
-	UINT	number;
+	UINT_PTR	number;
 	MSGBOXMSG	stMsg;
 
 
@@ -770,7 +770,7 @@ INT_PTR MessageBoxCheckBox( HWND hWnd, HINSTANCE hInst, UINT dStyle )
 /*!
 	例外きゃっち
 */
-LRESULT ExceptionMessage( LPCSTR pcExpMsg, LPCSTR pcFuncName, UINT dLine, LPARAM lReturn )
+LRESULT ExceptionMessage( LPCSTR pcExpMsg, LPCSTR pcFuncName, UINT_PTR dLine, LPARAM lReturn )
 {
 	CHAR	acMessage[BIG_STRING];
 

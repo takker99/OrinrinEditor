@@ -27,14 +27,14 @@ If not, see <http://www.gnu.org/licenses/>.
 extern  HWND	ghPrntWnd;		//	親ウインドウハンドル
 extern  HWND	ghViewWnd;		//	このウインドウのハンドル
 
-extern INT		gdDocXdot;		//	キャレットのＸドット・ドキュメント位置
-extern INT		gdDocLine;		//	キャレットのＹ行数・ドキュメント位置
+extern INT_PTR		gdDocXdot;		//	キャレットのＸドット・ドキュメント位置
+extern INT_PTR		gdDocLine;		//	キャレットのＹ行数・ドキュメント位置
 
 //	画面サイズを確認して、移動によるスクロールの面倒みる
-extern INT		gdHideXdot;		//	左の隠れ部分
-extern INT		gdViewTopLine;	//	表示中の最上部行番号
+extern INT_PTR		gdHideXdot;		//	左の隠れ部分
+extern INT_PTR		gdViewTopLine;	//	表示中の最上部行番号
 extern SIZE		gstViewArea;	//	表示領域のサイズ・ルーラー等の領域は無し
-extern INT		gdDispingLine;	//	見えてる行数・中途半端に見えてる末端は含まない
+extern INT_PTR		gdDispingLine;	//	見えてる行数・中途半端に見えてる末端は含まない
 
 //	これらのキーの具合は、GetKeyStateもしくはGetKeyboardStateを使えばいい
 extern BOOLEAN	gbShiftOn;		//	シフトが押されている
@@ -56,11 +56,11 @@ static POINT	gstPrePos;		//!<	直前の選択位置
 
 
 static BOOLEAN	gbSelecting;	//!<	選択操作中か？
-EXTERNED UINT	gbSqSelect;		//!<	矩形選択中である D_SQUARE
+EXTERNED UINT_PTR	gbSqSelect;		//!<	矩形選択中である D_SQUARE
 //-------------------------------------------------------------------------------------------------
 
-HRESULT	ViewSelStateChange( UINT );
-HRESULT	ViewSqSelAdjust( INT );
+HRESULT	ViewSelStateChange( UINT_PTR );
+HRESULT	ViewSqSelAdjust( INT_PTR );
 //-------------------------------------------------------------------------------------------------
 
 /*!
@@ -68,7 +68,7 @@ HRESULT	ViewSqSelAdjust( INT );
 	@param[out]	pSqSel	矩形選択中であるかどうか・NULL可
 	@return	BOOLEAN	非０選択中である　０選択してない
 */
-BOOLEAN IsSelecting( PUINT pSqSel )
+BOOLEAN IsSelecting( PUINT_PTR pSqSel )
 {
 	if( pSqSel )	*pSqSel = gbSqSelect;
 
@@ -83,7 +83,7 @@ BOOLEAN IsSelecting( PUINT pSqSel )
 */
 HRESULT ViewSelPositionSet( LPVOID pVoid )
 {
-	INT	iBgn, iEnd, iDmy = 0;
+	INT_PTR	iBgn, iEnd, iDmy = 0;
 
 	//	ルーラ再描画・Ｘ移動無しなら描画の必要は無い
 	if( (gstPrePos.x != gdDocXdot) )
@@ -112,9 +112,9 @@ HRESULT ViewSelPositionSet( LPVOID pVoid )
 	矩形選択モードのON/OFFトグル
 	@param[in]	bMode	非０メニューから　０範囲選択処理の中から
 	@param[in]	pVoid	なにか
-	@return	UINT	非０矩形モードＯＮ　０矩形モードＯＦＦ
+	@return	UINT_PTR	非０矩形モードＯＮ　０矩形モードＯＦＦ
 */
-UINT ViewSqSelModeToggle( UINT bMode, LPVOID pVoid )
+UINT_PTR ViewSqSelModeToggle( UINT_PTR bMode, LPVOID pVoid )
 {
 	POINT	point;
 
@@ -165,7 +165,7 @@ UINT ViewSqSelModeToggle( UINT bMode, LPVOID pVoid )
 	@param[in]	dMode	零：特に考慮なし　非零：選択開始強制モード・でも使ってない
 	@return	非０始点終点が異なる　０同じ
 */
-UINT ViewSelRangeCheck( UINT dMode )
+UINT_PTR ViewSelRangeCheck( UINT_PTR dMode )
 {
 
 	//	始点終点が同じ位置＝何も選択していない
@@ -202,7 +202,7 @@ UINT ViewSelRangeCheck( UINT dMode )
 	@param[in]	dMode	零：特に考慮なし　非零：選択開始強制モード
 	@return	HRESULT		終了状態コード
 */
-HRESULT ViewSelMoveCheck( UINT dMode )
+HRESULT ViewSelMoveCheck( UINT_PTR dMode )
 {
 
 	if( gbExtract && dMode )	//	抽出モードなら
@@ -274,7 +274,7 @@ HRESULT ViewSelMoveCheck( UINT dMode )
 	@param[in]	dForce	０无　＋選択状態　ー選択解除
 	@return		全体文字数
 */
-INT ViewSelPageAll( INT dForce )
+INT_PTR ViewSelPageAll( INT_PTR dForce )
 {
 	TRACE( TEXT("全選択[%d]"), dForce );
 
@@ -291,12 +291,12 @@ INT ViewSelPageAll( INT dForce )
 	@param[in]	dFirst	選択開始したときかどうか・使ってない
 	@return		HRESULT	終了状態コード
 */
-HRESULT ViewSelStateChange( UINT dFirst )
+HRESULT ViewSelStateChange( UINT_PTR dFirst )
 {
 	//	直前のカーソル位置から、今の選択範囲END位置の間の文字
 	//	これは範囲更新された範囲に含むやつの処理
-	INT		dBeginDot, dEndDot, dStep = 0;
-	INT		dBaseLine, dJpLn;
+	INT_PTR		dBeginDot, dEndDot, dStep = 0;
+	INT_PTR		dBaseLine, dJpLn;
 //	LONG	dBuffer;
 
 	//	直前の状態から行またぎあったかどうか-
@@ -421,9 +421,9 @@ HRESULT ViewSelStateChange( UINT dFirst )
 /*!
 	選択開始地点より前に選択しているか
 	@param[in]	line	現在行
-	@return	UINT		非０いる！いる！
+	@return	UINT_PTR		非０いる！いる！
 */
-UINT ViewSelBackCheck( INT line )
+UINT_PTR ViewSelBackCheck( INT_PTR line )
 {
 	//	選択範囲、左上右下調整・Orig位置は絶対的な内容のはず・Orig値を元にすればいいか？
 
@@ -441,9 +441,9 @@ UINT ViewSelBackCheck( INT line )
 	@param[in]	dBaseLine	元々キャレットのあった行番号
 	@return		HRESULT	終了状態コード
 */
-HRESULT ViewSqSelAdjust( INT dBaseLine )
+HRESULT ViewSqSelAdjust( INT_PTR dBaseLine )
 {
-	INT	i, xDotBegin, xDotEnd, xDotLast;
+	INT_PTR	i, xDotBegin, xDotEnd, xDotLast;
 	//	もっと良いやり方ないか
 
 #pragma message ("ここで、選択範囲全体の処理が何度も行われているので重たい")
@@ -505,8 +505,8 @@ HRESULT ViewSqSelAdjust( INT dBaseLine )
 */
 HRESULT ViewSelAreaSelect( LPVOID pVoid )
 {
-	INT		iBeginDot, iEndDot, iStCnt, iCount;
-	INT		iRangeDot;
+	INT_PTR		iBeginDot, iEndDot, iStCnt, iCount;
+	INT_PTR		iRangeDot;
 	BOOLEAN	bIsSpase;
 
 	DocPageSelStateToggle(  FALSE );	//	一旦選択状態は解除

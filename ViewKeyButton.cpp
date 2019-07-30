@@ -33,21 +33,21 @@ MK_SHIFT	Shift キーが押されている場合に設定します。
 extern HWND		ghPrntWnd;		//!<	親ウインドウハンドル
 extern HWND		ghViewWnd;		//!<	このウインドウのハンドル
 
-extern INT		gdXmemory;		//		直前のＸ位置を覚えておく
+extern INT_PTR		gdXmemory;		//		直前のＸ位置を覚えておく
 
-extern INT		gdDocXdot;		//!<	キャレットのＸドット・ドキュメント位置
-extern INT		gdDocLine;		//!<	キャレットのＹ行数・ドキュメント位置
-extern INT		gdDocMozi;		//!<	キャレットの左側の文字数
+extern INT_PTR		gdDocXdot;		//!<	キャレットのＸドット・ドキュメント位置
+extern INT_PTR		gdDocLine;		//!<	キャレットのＹ行数・ドキュメント位置
+extern INT_PTR		gdDocMozi;		//!<	キャレットの左側の文字数
 
 //	画面サイズを確認して、移動によるスクロールの面倒みる
-extern INT		gdHideXdot;		//!<	左の隠れ部分
-extern INT		gdViewTopLine;	//!<	表示中の最上部行番号
+extern INT_PTR		gdHideXdot;		//!<	左の隠れ部分
+extern INT_PTR		gdViewTopLine;	//!<	表示中の最上部行番号
 extern SIZE		gstViewArea;	//!<	表示領域のサイズ・ルーラー等の領域は無し
-extern INT		gdDispingLine;	//!<	見えてる行数・中途半端に見えてる末端は含まない
+extern INT_PTR		gdDispingLine;	//!<	見えてる行数・中途半端に見えてる末端は含まない
 
 extern BOOLEAN	gbExtract;	
 
-extern  UINT	gbUniPad;		//!<	パディングにユニコードをつかって、ドットを見せないようにする
+extern  UINT_PTR	gbUniPad;		//!<	パディングにユニコードをつかって、ドットを見せないようにする
 
 //	これらのキーの具合は、GetKeyStateもしくはGetKeyboardStateを使えばいい
 EXTERNED BOOLEAN	gbShiftOn;	//!<	シフトが押されている
@@ -56,15 +56,15 @@ EXTERNED BOOLEAN	gbAltOn;	//!<	アルタが押されている
 
 EXTERNED POINT	gstCursor;		//!<	文字を考慮しない、Cursorのドット＆行位置
 
-EXTERNED UINT	gbBrushMode;	//!<	非零ブラシモード
+EXTERNED UINT_PTR	gbBrushMode;	//!<	非零ブラシモード
 static TCHAR	gatBrushPtn[SUB_STRING];	//!<	ブラシパヤーン
 
-static  UINT	gdSqFillCnt;	//!<	矩形選択を、IME文字列で塗りつぶした時の文字数
+static  UINT_PTR	gdSqFillCnt;	//!<	矩形選択を、IME文字列で塗りつぶした時の文字数
 
-static  UINT	gbLDoubleClick;	//!<	ダブルクルックした
+static  UINT_PTR	gbLDoubleClick;	//!<	ダブルクルックした
 
 static POINT	gstLClicken;	//!<	左クルックした位置
-static  UINT	gbDragMoved;	//!<	選択範囲をドラッグで移動しようとしている
+static  UINT_PTR	gbDragMoved;	//!<	選択範囲をドラッグで移動しようとしている
 //-------------------------------------------------------------------------------------------------
 
 HRESULT	ViewBrushFilling( VOID );
@@ -97,14 +97,14 @@ VOID ViewCombiKeyCheck( VOID )
 	@param[in]	flags	キーフラグいろいろ
 	@return		無し
 */
-VOID Evw_OnKey( HWND hWnd, UINT vk, BOOL fDown, INT cRepeat, UINT flags )
+VOID Evw_OnKey( HWND hWnd, UINT_PTR vk, BOOL fDown, INT_PTR cRepeat, UINT_PTR flags )
 {
-	INT		bXdirect = 0;	//	Ｘの移動方向
-	UINT	dXwidth;	//	Ｘの移動ドット
-	INT		dDot, bCrLf, iLines, i;
+	INT_PTR		bXdirect = 0;	//	Ｘの移動方向
+	UINT_PTR	dXwidth;	//	Ｘの移動ドット
+	INT_PTR		dDot, bCrLf, iLines, i;
 	BOOLEAN	bJump = FALSE, bMemoryX = FALSE;
 	BOOLEAN	bSelect = FALSE;
-	UINT	bSqSel  = 0;
+	UINT_PTR	bSqSel  = 0;
 
 	ViewCombiKeyCheck(  );
 
@@ -255,11 +255,11 @@ VOID Evw_OnKey( HWND hWnd, UINT vk, BOOL fDown, INT cRepeat, UINT flags )
 	@param[in]	cRepeat	キーリピート回数・効いてない？
 	@return		無し
 */
-VOID Evw_OnChar( HWND hWnd, TCHAR ch, INT cRepeat )
+VOID Evw_OnChar( HWND hWnd, TCHAR ch, INT_PTR cRepeat )
 {
 	BOOLEAN	bSelect, bFirst;
-	UINT	bSqSel = 0;
-	INT		isctrl, bCrLf, iLines, i;
+	UINT_PTR	bSqSel = 0;
+	INT_PTR		isctrl, bCrLf, iLines, i;
 	//	バックスペースとか改行0x0Dもくる
 	TCHAR	atCh[2];
 
@@ -381,11 +381,11 @@ VOID Evw_OnChar( HWND hWnd, TCHAR ch, INT cRepeat )
 	@param[in]	y				発生したＹ座標値
 	@param[in]	keyFlags		他に押されてるキーについて
 */
-VOID Evw_OnLButtonDown( HWND hWnd, BOOL fDoubleClick, INT x, INT y, UINT keyFlags )
+VOID Evw_OnLButtonDown( HWND hWnd, BOOL fDoubleClick, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
-	INT		dX, dY;	//	
-	INT		dDot, dMaxDot, dLine, iMaxLine;	//	
-	UINT	dRslt;
+	INT_PTR		dX, dY;	//	
+	INT_PTR		dDot, dMaxDot, dLine, iMaxLine;	//	
+	UINT_PTR	dRslt;
 
 	SetFocus( hWnd );	//	マウスインでフォーカス
 
@@ -463,11 +463,11 @@ VOID Evw_OnLButtonDown( HWND hWnd, BOOL fDoubleClick, INT x, INT y, UINT keyFlag
 	@param[in]	y			発生したクライヤントＹ座標値
 	@param[in]	keyFlags	他に押されてるキーについて
 */
-VOID Evw_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
+VOID Evw_OnMouseMove( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
 	TCHAR	atString[SUB_STRING];
-	INT		dX, dY;
-	INT		dDot, dMaxDot, dLine, iMaxLine;	//	
+	INT_PTR		dX, dY;
+	INT_PTR		dDot, dMaxDot, dLine, iMaxLine;	//	
 
 	//	ダブルクルック操作後は何もしない
 	if( gbLDoubleClick ){	 return;	}
@@ -538,15 +538,15 @@ VOID Evw_OnMouseMove( HWND hWnd, INT x, INT y, UINT keyFlags )
 	@param[in]	y				発生したＹ座標値
 	@param[in]	keyFlags		他に押されてるキーについて
 */
-VOID Evw_OnLButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
+VOID Evw_OnLButtonUp( HWND hWnd, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
-	UINT	dRslt, bSqSel;
+	UINT_PTR	dRslt, bSqSel;
 
-	INT		iCrLf;
+	INT_PTR		iCrLf;
 	LPTSTR	ptString = NULL;
-	UINT	cbSize;
+	UINT_PTR	cbSize;
 
-	INT		xPos, yPos;
+	INT_PTR		xPos, yPos;
 
 	TRACE( TEXT("マウス左アップ[%d / %d]"), x, y );
 
@@ -607,13 +607,13 @@ VOID Evw_OnLButtonUp( HWND hWnd, INT x, INT y, UINT keyFlags )
 	@param[in]	y				発生したＹ座標値
 	@param[in]	keyFlags		他に押されてるキーについて
 */
-VOID Evw_OnRButtonDown( HWND hWnd, BOOL fDoubleClick, INT x, INT y, UINT keyFlags )
+VOID Evw_OnRButtonDown( HWND hWnd, BOOL fDoubleClick, INT_PTR x, INT_PTR y, UINT_PTR keyFlags )
 {
 	//	キャレット移動のみ面倒見る
 	//	20110704	選択中はキャレット移動しないようにする
 
-	INT		dX, dY;	//	
-	INT		dDot, dMaxDot, dLine, iMaxLine;	//	
+	INT_PTR		dX, dY;	//	
+	INT_PTR		dDot, dMaxDot, dLine, iMaxLine;	//	
 
 	SetFocus( hWnd );	//	マウスインでフォーカス
 
@@ -672,9 +672,9 @@ VOID Evw_OnRButtonDown( HWND hWnd, BOOL fDoubleClick, INT x, INT y, UINT keyFlag
 	@param[in]	zDelta	回転量・１２０単位・WHEEL_DELTA
 	@param[in]	fwKeys	他に押されていたキー
 */
-VOID Evw_OnMouseWheel( HWND hWnd, INT xPos, INT yPos, INT zDelta, UINT fwKeys )
+VOID Evw_OnMouseWheel( HWND hWnd, INT_PTR xPos, INT_PTR yPos, INT_PTR zDelta, UINT_PTR fwKeys )
 {
-	UINT	dCode;
+	UINT_PTR	dCode;
 
 	HWND	hChdWnd;
 	POINT	stPoint;
@@ -704,11 +704,11 @@ VOID Evw_OnMouseWheel( HWND hWnd, INT xPos, INT yPos, INT zDelta, UINT fwKeys )
 /*!
 	ユニコード空白の挿入
 	@param[in]	dCommando	種類
-	@return	INT	文字幅
+	@return	INT_PTR	文字幅
 */
-INT ViewInsertUniSpace( UINT dCommando )
+INT_PTR ViewInsertUniSpace( UINT_PTR dCommando )
 {
-	INT	width;
+	INT_PTR	width;
 	TCHAR	ch;
 
 	TRACE( TEXT("挿入：ユニコード空白") );
@@ -749,10 +749,10 @@ HRESULT ViewScriptedLineFeed( VOID )
 
 //空白が出っ張ってる行でやったら、そこを基準点とする処理する
 
-	INT		dLines, iTgtDot, iLastDot, iLineDot, iPadDot;
-	INT		iPrvDot, iChkDot;
+	INT_PTR		dLines, iTgtDot, iLastDot, iLineDot, iPadDot;
+	INT_PTR		iPrvDot, iChkDot;
 	BOOLEAN	bIsSp, bFirst = TRUE, bJump;
-	UINT	dStyle = 0;
+	UINT_PTR	dStyle = 0;
 	LPTSTR	ptSpace;
 
 	iChkDot = gdDocXdot;
@@ -816,12 +816,12 @@ HRESULT ViewScriptedLineFeed( VOID )
 /*!
 	したらば用色指定タグの挿入
 	@param[in]	dCommando	種類
-	@return	INT	文字幅
+	@return	INT_PTR	文字幅
 */
-INT ViewInsertColourTag( UINT dCommando )
+INT_PTR ViewInsertColourTag( UINT_PTR dCommando )
 {
-	UINT	dCrLf;
-	INT		dDot;
+	UINT_PTR	dCrLf;
+	INT_PTR		dDot;
 	TCHAR	atString[MAX_STRING];
 
 	switch( dCommando )
@@ -851,10 +851,10 @@ INT ViewInsertColourTag( UINT dCommando )
 	@param[in]	ptText	挿入する文字列
 	@return		使ったドット数
 */
-INT ViewInsertTmpleString( LPCTSTR ptText )
+INT_PTR ViewInsertTmpleString( LPCTSTR ptText )
 {
-	UINT	dCrLf;
-	INT		dDot;
+	UINT_PTR	dCrLf;
+	INT_PTR		dDot;
 
 	dDot = gdDocXdot;
 
@@ -874,7 +874,7 @@ INT ViewInsertTmpleString( LPCTSTR ptText )
 	@param[in]	ptPattern	使用するブラシパヤーン
 	@return		HRESULT	終了状態コード
 */
-HRESULT ViewBrushStyleSetting( UINT bBrushOn, LPTSTR ptPattern )
+HRESULT ViewBrushStyleSetting( UINT_PTR bBrushOn, LPTSTR ptPattern )
 {
 	gbBrushMode = bBrushOn;
 
@@ -895,8 +895,8 @@ HRESULT ViewBrushStyleSetting( UINT bBrushOn, LPTSTR ptPattern )
 */
 HRESULT ViewBrushFilling( VOID )
 {
-	INT			dTgDot;
-	INT			dLeft, dRight, iBgnMozi, iCntMozi, rslt;
+	INT_PTR			dTgDot;
+	INT_PTR			dLeft, dRight, iBgnMozi, iCntMozi, rslt;
 	BOOLEAN		bSpace, bFirst = TRUE;
 	LPTSTR		ptBuff;
 	wstring		wsBuff;
@@ -940,11 +940,11 @@ HRESULT ViewBrushFilling( VOID )
 	@param[in]	ptPattern	使用するブラシパヤーン
 	@return		LPTSTR	作成した文字列・開放は呼んだ方で面倒見る・作成出来なかったらNULL
 */
-LPTSTR BrushStringMake( INT dDotLen, LPTSTR ptPattern )
+LPTSTR BrushStringMake( INT_PTR dDotLen, LPTSTR ptPattern )
 {
-	INT			dPtnDot, dCnt, dAmr, i, wid;
+	INT_PTR			dPtnDot, dCnt, dAmr, i, wid;
 #if 0
-	INT			chk;
+	INT_PTR			chk;
 #endif
 	UINT_PTR	cchSize;
 	LPTSTR		ptBuff;//, ptPadd = NULL;
@@ -1017,7 +1017,7 @@ VOID Evw_OnImeComposition( HWND hWnd, WPARAM wParam, LPARAM lParam )
 	UINT_PTR	cchSize;
 
 	BOOLEAN	bSelect = FALSE;
-	UINT	bSqSel  = 0;
+	UINT_PTR	bSqSel  = 0;
 
 	TRACE( TEXT("WM_IME_COMPOSITION[0x%X][0x%X]"), wParam, lParam );
 

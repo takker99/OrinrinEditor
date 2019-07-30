@@ -44,22 +44,22 @@ If not, see <http://www.gnu.org/licenses/>.
 #define  ACT_FAVLIST	1
 #define  ACT_SUBITEM	2	//	２以降に割当
 
-typedef LRESULT (CALLBACK *BUFFERBACK)(UINT, UINT, UINT, LPCVOID);
+typedef LRESULT (CALLBACK *BUFFERBACK)(UINT_PTR, UINT_PTR, UINT_PTR, LPCVOID);
 //-------------------------------------------------------------------------------------------------
 
 
 // このコード モジュールに含まれる関数の宣言
-UINT		Maa_OnMouseWheel( HWND, INT, INT, INT, UINT );	//!<	
-VOID		Maa_OnContextMenu( HWND, HWND, UINT, UINT );	//!<	
-VOID		Maa_OnChar( HWND , TCHAR, INT );				//!<	
-VOID		Maa_OnSize( HWND , UINT, INT, INT );			//!<	
-VOID		Maa_OnCommand( HWND , INT, HWND, UINT );		//!<	WM_COMMAND の処理
+UINT_PTR		Maa_OnMouseWheel( HWND, INT_PTR, INT_PTR, INT_PTR, UINT_PTR );	//!<	
+VOID		Maa_OnContextMenu( HWND, HWND, UINT_PTR, UINT_PTR );	//!<	
+VOID		Maa_OnChar( HWND , TCHAR, INT_PTR );				//!<	
+VOID		Maa_OnSize( HWND , UINT_PTR, INT_PTR, INT_PTR );			//!<	
+VOID		Maa_OnCommand( HWND , INT_PTR, HWND, UINT_PTR );		//!<	WM_COMMAND の処理
 
 #ifdef _ORRVW
 INT_PTR	CALLBACK OptionDlgProc( HWND, UINT, WPARAM, LPARAM );	//!<	
 #endif
 
-VOID		StatusBarMsgSet( UINT, LPTSTR );	//!<	
+VOID		StatusBarMsgSet( UINT_PTR, LPTSTR );	//!<	
 
 LRESULT		TabBarNotify( HWND, LPNMHDR );		//!<	
 VOID		TabBarResize( HWND, LPRECT );		//!<	
@@ -69,22 +69,22 @@ HRESULT		TreeResize( HWND , LPRECT );				//!<
 HRESULT		TreeConstruct( HWND, LPCTSTR, BOOLEAN );	//!<	
 LRESULT		TreeNotify( HWND, LPNMTREEVIEW );			//!<	
 LPTSTR		TreeBaseNameGet( VOID );					//!<	
-UINT		TreeFavIsUnderCursor( HWND, HWND, INT, INT, INT, UINT );	//!<	
+UINT_PTR		TreeFavIsUnderCursor( HWND, HWND, INT_PTR, INT_PTR, INT_PTR, UINT_PTR );	//!<	
 LPARAM		TreeItemInfoGet( HTREEITEM, LPTSTR, size_t );	//!<	
-INT			TreeSelItemProc( HWND, HTREEITEM, UINT );	//!<	
-UINT		TreeNodePathGet( HTREEITEM, LPTSTR );	//!<	
+INT_PTR			TreeSelItemProc( HWND, HTREEITEM, UINT_PTR );	//!<	
+UINT_PTR		TreeNodePathGet( HTREEITEM, LPTSTR );	//!<	
 
 HRESULT		TreeMaaFileFind( HWND );	//!<	
 
-LRESULT		CALLBACK FavListFolderNameBack( UINT, UINT, UINT, LPCVOID );	//!<	
-HRESULT		FavListSelected( HWND, UINT );		//!<	
+LRESULT		CALLBACK FavListFolderNameBack( UINT_PTR, UINT_PTR, UINT_PTR, LPCVOID );	//!<	
+HRESULT		FavListSelected( HWND, UINT_PTR );		//!<	
 HRESULT		FavContsRedrawRequest( HWND );		//!<	
 
 HRESULT		TabMultipleSelDelete( HWND );		//!<	
 HRESULT		TabMultipleDeleteAll( HWND );		//!<	
 HRESULT		TabMultipleStore( HWND );			//!<	
-INT			TabMultipleTopMemory( INT );		//!<	
-INT			TabMultipleNowSel( VOID );			//!<	
+INT_PTR			TabMultipleTopMemory( INT_PTR );		//!<	
+INT_PTR			TabMultipleNowSel( VOID );			//!<	
 HRESULT		TabMultipleDropAdd( HWND, LPCTSTR );	//!<	
 
 HRESULT		TabMultipleCtrlFromFind( HWND );	//!<	
@@ -94,26 +94,26 @@ HRESULT		AaItemsInitialise( HWND, HINSTANCE, LPRECT );		//!<
 VOID		AaItemsResize( HWND, LPRECT );						//!<	
 VOID		AaItemsDrawItem( HWND, CONST DRAWITEMSTRUCT * );	//!<	
 //VOID		AaItemsMeasureItem( HWND, LPMEASUREITEMSTRUCT );	//!<	
-HRESULT		AaItemsDoShow( HWND, LPTSTR, UINT );		//!<	
-HRESULT		AaItemsFavUpload( LPSTR, UINT );			//!<	
-UINT		AaItemsIsUnderCursor( HWND, HWND, INT );	//!<	
+HRESULT		AaItemsDoShow( HWND, LPTSTR, UINT_PTR );		//!<	
+HRESULT		AaItemsFavUpload( LPSTR, UINT_PTR );			//!<	
+UINT_PTR		AaItemsIsUnderCursor( HWND, HWND, INT_PTR );	//!<	
 VOID		AaTitleClear( VOID );
-INT			AaTitleAddString( UINT, LPSTR );			//!<	
-VOID		AaTitleSelect( HWND, UINT );
-UINT		AaItemsDoSelect( HWND, UINT, UINT );		//!<	
+INT_PTR			AaTitleAddString( UINT_PTR, LPSTR );			//!<	
+VOID		AaTitleSelect( HWND, UINT_PTR );
+UINT_PTR		AaItemsDoSelect( HWND, UINT_PTR, UINT_PTR );		//!<	
 
-VOID		Aai_OnKey( HWND, UINT, BOOL, INT, UINT );	//!<	
-VOID		Aai_OnVScroll( HWND , HWND, UINT, INT );	//!<	
+VOID		Aai_OnKey( HWND, UINT_PTR, BOOL, INT_PTR, UINT_PTR );	//!<	
+VOID		Aai_OnVScroll( HWND , HWND, UINT_PTR, INT_PTR );	//!<	
 
 DWORD		AacAssembleFile( HWND, LPTSTR );		//!<	
 HRESULT		AacMatrixClear( VOID  );				//!<	
 DWORD		AacAssembleSql( HWND, LPCTSTR );		//!<	
 
 #ifdef MAA_TEXT_FIND
-HRESULT		AacFindTextEntry( HWND , UINT );	//!<	
+HRESULT		AacFindTextEntry( HWND , UINT_PTR );	//!<	
 #endif
 
-HRESULT		OpenProfileLoad( HWND, INT );			//!<	
+HRESULT		OpenProfileLoad( HWND, INT_PTR );			//!<	
 HRESULT		OpenProfileLogging( HWND, LPCTSTR );	//!<	
 
 #ifndef _ORRVW
@@ -128,56 +128,56 @@ HRESULT		AacItemDelete( HWND, LONG );
 HRESULT		SqlDatabaseOpenClose( BYTE, LPCTSTR );	//!<	
 
 HRESULT		SqlFavFolderEnum( BUFFERBACK );	//!<	
-UINT		SqlFavCount( LPCTSTR, PUINT );	//!<	
+UINT_PTR		SqlFavCount( LPCTSTR, PUINT_PTR );	//!<	
 HRESULT		SqlFavArtEnum( LPCTSTR, BUFFERBACK );	//!<	
-HRESULT		SqlFavUpload( LPTSTR, DWORD, LPSTR, UINT );	//!<	
+HRESULT		SqlFavUpload( LPTSTR, DWORD, LPSTR, UINT_PTR );	//!<	
 HRESULT		SqlFavDelete( LPTSTR, DWORD );	//!<	
 HRESULT		SqlFavFolderDelete( LPTSTR );	//!<	
 
-INT			TreeProfileMake( HWND, LPTSTR );
-INT			TreeProfileOpen( HWND );
-INT			TreeProfileRebuild( HWND );
+INT_PTR			TreeProfileMake( HWND, LPTSTR );
+INT_PTR			TreeProfileOpen( HWND );
+INT_PTR			TreeProfileRebuild( HWND );
 HRESULT		TreeLoadDirCheck( HWND, HWND );
 
-HTREEITEM	MaaSearchTreeItem( INT );
-HTREEITEM	MaaSelectIDfile( HWND, INT );
+HTREEITEM	MaaSearchTreeItem( INT_PTR );
+HTREEITEM	MaaSelectIDfile( HWND, INT_PTR );
 
 HRESULT		MaaBackColourChoose( HWND );
 
-INT			MaaSearchTreeID( HTREEITEM );
+INT_PTR			MaaSearchTreeID( HTREEITEM );
 
 //HRESULT		SqlTreeOpenClose( BYTE, LPCTSTR );
 HRESULT		SqlTransactionOnOff( BYTE );
 
 HRESULT		SqlTreeTableCreate( LPTSTR );
-UINT		SqlTreeCount( UINT, PUINT );
+UINT_PTR		SqlTreeCount( UINT_PTR, PUINT_PTR );
 HRESULT		SqlTreeProfUpdate( LPCTSTR, LPCTSTR );
-HRESULT		SqlTreeProfSelect( LPTSTR, UINT, LPTSTR, UINT );
+HRESULT		SqlTreeProfSelect( LPTSTR, UINT_PTR, LPTSTR, UINT_PTR );
 
-UINT		SqlTreeNodeInsert( UINT, UINT, UINT, LPTSTR );
-HRESULT		SqlTreeNodeAllDelete( UINT );
-//HRESULT		SqlTreeNodeEnum( UINT, BUFFERBACK );
-UINT		SqlTreeNodePickUpID( UINT, PUINT, PUINT, LPTSTR, UINT );
-//UINT		SqlTreeNodeRootSearch( LPTSTR );
-UINT		SqlChildNodePickUpID( UINT, UINT, PUINT, LPTSTR );
+UINT_PTR		SqlTreeNodeInsert( UINT_PTR, UINT_PTR, UINT_PTR, LPTSTR );
+HRESULT		SqlTreeNodeAllDelete( UINT_PTR );
+//HRESULT		SqlTreeNodeEnum( UINT_PTR, BUFFERBACK );
+UINT_PTR		SqlTreeNodePickUpID( UINT_PTR, PUINT_PTR, PUINT_PTR, LPTSTR, UINT_PTR );
+//UINT_PTR		SqlTreeNodeRootSearch( LPTSTR );
+UINT_PTR		SqlChildNodePickUpID( UINT_PTR, UINT_PTR, PUINT_PTR, LPTSTR );
 
-UINT		SqlTreeFileSearch( LPTSTR, UINT );
-UINT		SqlTreeFileGetOnParent( LPTSTR, UINT );
+UINT_PTR		SqlTreeFileSearch( LPTSTR, UINT_PTR );
+UINT_PTR		SqlTreeFileGetOnParent( LPTSTR, UINT_PTR );
 
-HRESULT		SqlTreeCacheOpenClose( UINT );
-HRESULT		SqlTreeCacheDelID( INT );
-UINT		SqlTreeCacheInsert( UINT, UINT, LPTSTR );
+HRESULT		SqlTreeCacheOpenClose( UINT_PTR );
+HRESULT		SqlTreeCacheDelID( INT_PTR );
+UINT_PTR		SqlTreeCacheInsert( UINT_PTR, UINT_PTR, LPTSTR );
 
 
-UINT		SqlMultiTabInsert( LPCTSTR, LPCTSTR, LPCTSTR );
-UINT		SqlMultiTabSelect( INT, LPTSTR, LPTSTR, LPTSTR );
+UINT_PTR		SqlMultiTabInsert( LPCTSTR, LPCTSTR, LPCTSTR );
+UINT_PTR		SqlMultiTabSelect( INT_PTR, LPTSTR, LPTSTR, LPTSTR );
 HRESULT		SqlMultiTabDelete( VOID );
 
 #ifdef EXTRA_NODE_STYLE
-UINT		SqlTreeNodeExtraInsert( UINT, LPCTSTR );
-UINT		SqlTreeNodeExtraDelete( UINT );
-UINT		SqlTreeNodeExtraSelect( UINT, UINT, LPTSTR );
-UINT		SqlTreeNodeExtraIsFileExist( LPCTSTR );
+UINT_PTR		SqlTreeNodeExtraInsert( UINT_PTR, LPCTSTR );
+UINT_PTR		SqlTreeNodeExtraDelete( UINT_PTR );
+UINT_PTR		SqlTreeNodeExtraSelect( UINT_PTR, UINT_PTR, LPTSTR );
+UINT_PTR		SqlTreeNodeExtraIsFileExist( LPCTSTR );
 
 #endif
 

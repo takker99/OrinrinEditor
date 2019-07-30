@@ -24,24 +24,24 @@ If not, see <http://www.gnu.org/licenses/>.
 extern FILES_ITR	gitFileIt;	//!<	今見てるファイルの本体
 //#define gstFile	(*gitFileIt)	//!<	イテレータを構造体と見なす
 
-extern INT		gixFocusPage;	//!<	注目中のページ・とりあえず０・０インデックス
+extern INT_PTR		gixFocusPage;	//!<	注目中のページ・とりあえず０・０インデックス
 
 static BOOLEAN	gbGroupUndo;	//!<	真ならグループアンドゥをする
 //-------------------------------------------------------------------------------------------------
 
-INT	SqnUndoExec( LPUNDOBUFF, PINT, PINT );
-INT	SqnRedoExec( LPUNDOBUFF, PINT, PINT );
+INT_PTR	SqnUndoExec( LPUNDOBUFF, PINT_PTR, PINT_PTR );
+INT_PTR	SqnRedoExec( LPUNDOBUFF, PINT_PTR, PINT_PTR );
 //-------------------------------------------------------------------------------------------------
 
 /*!
 	アンドゥを実行するのかを受ける
 	@param[in,out]	pxDot	ドット位置
 	@param[in,out]	pyLine	行
-	@return		INT			改行処理があったかどうか
+	@return		INT_PTR			改行処理があったかどうか
 */
-INT DocUndoExecute( PINT pxDot, PINT pyLine )
+INT_PTR DocUndoExecute( PINT_PTR pxDot, PINT_PTR pyLine )
 {
-	INT	iRslt = 0;
+	INT_PTR	iRslt = 0;
 
 	iRslt = SqnUndoExec( &((*gitFileIt).vcCont.at( gixFocusPage ).stUndoLog), pxDot, pyLine );
 
@@ -55,11 +55,11 @@ INT DocUndoExecute( PINT pxDot, PINT pyLine )
 	リドゥを実行するのかを受ける
 	@param[in,out]	pxDot	ドット位置
 	@param[in,out]	pyLine	行
-	@return		INT			改行処理があったかどうか
+	@return		INT_PTR			改行処理があったかどうか
 */
-INT DocRedoExecute( PINT pxDot, PINT pyLine )
+INT_PTR DocRedoExecute( PINT_PTR pxDot, PINT_PTR pyLine )
 {
-	INT	iRslt = 0;
+	INT_PTR	iRslt = 0;
 
 	iRslt = SqnRedoExec( &((*gitFileIt).vcCont.at( gixFocusPage ).stUndoLog), pxDot, pyLine );
 
@@ -169,11 +169,11 @@ HRESULT SqnNumberCheck( LPUNDOBUFF pstBuff )
 	@param[in]	xDot	操作したドット位置
 	@param[in]	yLine	操作した行数
 	@param[in]	bAlone	単独かどうか・単独ら、グループシーケンス番号をインクリして記録
-	@return		UINT	グループ番号
+	@return		UINT_PTR	グループ番号
 */
-UINT SqnAppendLetter( LPUNDOBUFF pstBuff, UINT dCmd, TCHAR ch, INT xDot, INT yLine, UINT bAlone )
+UINT_PTR SqnAppendLetter( LPUNDOBUFF pstBuff, UINT_PTR dCmd, TCHAR ch, INT_PTR xDot, INT_PTR yLine, UINT_PTR bAlone )
 {
-	UINT	uRslt;
+	UINT_PTR	uRslt;
 	TCHAR	atBuffer[3];
 
 	ZeroMemory( atBuffer, sizeof(atBuffer) );
@@ -196,11 +196,11 @@ UINT SqnAppendLetter( LPUNDOBUFF pstBuff, UINT dCmd, TCHAR ch, INT xDot, INT yLi
 	@param[in]	pstPt	操作した行位置とドット位置
 	@param[in]	yLine	操作した行数
 	@param[in]	bAlone	単独かどうか・単独ら、グループシーケンス番号をインクリして記録
-	@return		UINT	先端番号？
+	@return		UINT_PTR	先端番号？
 */
-UINT SqnAppendSquare( LPUNDOBUFF pstBuff, UINT dCmd, LPCTSTR ptStr, LPPOINT pstPt, INT yLine, UINT bAlone )
+UINT_PTR SqnAppendSquare( LPUNDOBUFF pstBuff, UINT_PTR dCmd, LPCTSTR ptStr, LPPOINT pstPt, INT_PTR yLine, UINT_PTR bAlone )
 {
-	INT	i;
+	INT_PTR	i;
 	UINT_PTR	cchMozi, cchSize;
 	LPCTSTR		ptCaret, ptSprt;
 	OPERATELOG	stOpe;
@@ -262,9 +262,9 @@ UINT SqnAppendSquare( LPUNDOBUFF pstBuff, UINT dCmd, LPCTSTR ptStr, LPPOINT pstP
 	@param[in]	xDot	操作したドット位置
 	@param[in]	yLine	操作した行数
 	@param[in]	bAlone	単独かどうか・単独ら、グループシーケンス番号をインクリして記録
-	@return		UINT	先端番号？
+	@return		UINT_PTR	先端番号？
 */
-UINT SqnAppendString( LPUNDOBUFF pstBuff, UINT dCmd, LPCTSTR ptStr, INT xDot, INT yLine, UINT bAlone )
+UINT_PTR SqnAppendString( LPUNDOBUFF pstBuff, UINT_PTR dCmd, LPCTSTR ptStr, INT_PTR xDot, INT_PTR yLine, UINT_PTR bAlone )
 {
 	UINT_PTR	cchSize;
 	OPERATELOG	stOpe;
@@ -308,14 +308,15 @@ UINT SqnAppendString( LPUNDOBUFF pstBuff, UINT dCmd, LPCTSTR ptStr, INT xDot, IN
 	@param[in]	pstBuff	属するアンドゥバッファ
 	@param[in]	pxDot	操作したドット位置
 	@param[in]	pyLine	操作した行数
-	@return		INT		改行したかどうか
+	@return		INT_PTR		改行したかどうか
 */
-INT SqnUndoExec( LPUNDOBUFF pstBuff, PINT pxDot, PINT pyLine )
+INT_PTR SqnUndoExec( LPUNDOBUFF pstBuff, PINT_PTR pxDot, PINT_PTR pyLine )
 {
 	OPSQ_ITR	itSqn;
-	INT		xDot, yLine, iRslt = 0, dCrLf = 0, yPreLine = 0;
-	UINT	dCmd, dGrp, dNow, cchSize;
-	UINT	dPreGroup = 0;
+	INT_PTR		xDot, yLine, iRslt = 0, dCrLf = 0, yPreLine = 0;
+	UINT_PTR	dCmd, dGrp, dNow; 
+	CCH_SIZE cchSize;
+	UINT_PTR	dPreGroup = 0;
 	LPTSTR	ptStr;
 
 	if( !(pstBuff) )	return 0;	//	安全対策
@@ -396,14 +397,15 @@ INT SqnUndoExec( LPUNDOBUFF pstBuff, PINT pxDot, PINT pyLine )
 	@param[in]	pstBuff	属するアンドゥバッファ
 	@param[in]	pxDot	操作したドット位置
 	@param[in]	pyLine	操作した行数
-	@return		INT		改行したかどうか
+	@return		INT_PTR		改行したかどうか
 */
-INT SqnRedoExec( LPUNDOBUFF pstBuff, PINT pxDot, PINT pyLine )
+INT_PTR SqnRedoExec( LPUNDOBUFF pstBuff, PINT_PTR pxDot, PINT_PTR pyLine )
 {
 	OPSQ_ITR	itSqn;
-	INT		xDot, yLine, iRslt = 0, dCrLf = 0, yPreLine = 0;
-	UINT	dCmd, dGrp, dNow, cchSize;
-	UINT	dPreGroup = 0;
+	INT_PTR		xDot, yLine, iRslt = 0, dCrLf = 0, yPreLine = 0;
+	UINT_PTR	dCmd, dGrp, dNow;
+	CCH_SIZE	cchSize;
+	UINT_PTR	dPreGroup = 0;
 	LPTSTR	ptStr;
 
 #ifdef DO_TRY_CATCH

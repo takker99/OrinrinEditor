@@ -34,10 +34,10 @@ extern  HWND	ghViewWnd;		//!<	編集ビューハンドル
 static  HWND	ghVwTrcWnd;		//!<	このウインドウ・トレスビューハンドル
 
 //	画面サイズを確認して、移動によるスクロールの面倒みる
-extern INT		gdHideXdot;		//!<	左の隠れ部分
-extern INT		gdViewTopLine;	//!<	表示中の最上部行番号
+extern INT_PTR		gdHideXdot;		//!<	左の隠れ部分
+extern INT_PTR		gdViewTopLine;	//!<	表示中の最上部行番号
 extern SIZE		gstViewArea;	//!<	表示領域のドットサイズ・ルーラー等の領域は無し
-extern INT		gdDispingLine;	//!<	見えてる行数・中途半端に見えてる末端は含まない
+extern INT_PTR		gdDispingLine;	//!<	見えてる行数・中途半端に見えてる末端は含まない
 
 //	フォントは描画毎にデバイスコンテキストに割り付ける必要がある
 extern HFONT	ghAaFont;		//!<	AA用フォント
