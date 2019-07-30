@@ -714,7 +714,10 @@ INT_PTR DocAstSeparatorGetAlloc( FILES_ITR itFile, INT_PTR dPage, UINT_PTR bStyl
 */
 HRESULT DocImageSave( HWND hWnd, UINT_PTR bStyle, HFONT hFont )
 {
-
+#ifndef ENABLE_IMGCTL_RUNTIME
+	MessageBox(hWnd, TEXT("画像保存機能は封鎖されています。\n"), TEXT("画像保存機能は封鎖されています。"), MB_OK);
+	return S_OK;
+#else
 	LPVOID	pBuffer;
 	LPTSTR	ptText;
 	UINT_PTR	dLines;
@@ -845,6 +848,7 @@ HRESULT DocImageSave( HWND hWnd, UINT_PTR bStyle, HFONT hFont )
 	DeleteDC( hMemDC );
 
 	return S_OK;
+#endif
 }
 //-------------------------------------------------------------------------------------------------
 

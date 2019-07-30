@@ -1180,7 +1180,9 @@ BOOL InitInstance( HINSTANCE hInstance, INT_PTR nCmdShow, LPTSTR ptArgv )
 
 	FrameNameModifyMenu( hWnd );
 
+#ifdef ENABLE_IMGCTL_RUNTIME
 	TraceInitialise( hWnd, TRUE );
+#endif
 
 	OpenHistoryInitialise( hWnd );
 
@@ -1856,7 +1858,9 @@ VOID Cls_OnDestroy( HWND hWnd )
 	PreviewInitialise( NULL, NULL );
 #endif
 
-	TraceInitialise( hWnd, FALSE );
+#ifdef ENABLE_IMGCTL_RUNTIME
+	TraceInitialise(hWnd, FALSE);
+#endif
 
 	OpenHistoryInitialise( NULL );
 

@@ -22,10 +22,11 @@ If not, see <http://www.gnu.org/licenses/>.
 
 
 //	画像保存機能にも使うから注意
-#define IMGCTL_RUNTIME
-#include "imgctl.h"
+//#define IMGCTL_RUNTIME
 //-------------------------------------------------------------------------------------------------
 
+#ifdef ENABLE_IMGCTL_RUNTIME
+#include "imgctl.h"
 /*
 スライダとスクロールバーのダイヤログリソースの使い方
     CONTROL         "",IDC_SLIDER1,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,14,66,100,15
@@ -1088,3 +1089,4 @@ HRESULT ImageFileSaveDC( HDC hDC, LPTSTR ptName, INT_PTR iType )
 
 
 
+#endif

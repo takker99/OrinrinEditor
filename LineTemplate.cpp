@@ -909,7 +909,8 @@ HRESULT TemplateItemSplit( LPTSTR ptStr, UINT_PTR cchSize, PAGELOAD pfCalling )
 HRESULT TemplateItemScatter( LPCTSTR ptCont, INT_PTR cchSize, PAGELOAD pfCalling )
 {
 	//	改行で区切られた壱行単位のアイテムである
-	UINT_PTR	nowCaret, nYct, nXct, rtcnt;
+	UINT_PTR	nowCaret, nYct, rtcnt;
+	INT_PTR		nXct;
 
 	TCHAR	hdBuf[MAX_STRING];	//	データを確保
 

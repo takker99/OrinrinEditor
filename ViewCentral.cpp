@@ -1470,7 +1470,9 @@ HRESULT ViewRedrawDo( HWND hWnd, HDC hdc )
 	vwLines = gdDispingLine + 2 + gdViewTopLine;	//	余裕持たせて
 
 	//	トレスイメージ
+#ifdef ENABLE_IMGCTL_RUNTIME
 	bTrace = TraceImageAppear( hdc, gdHideXdot, gdViewTopLine * LINE_HEIGHT );	//	左上位置を考慮セヨ
+#endif
 	if( bTrace )	SetBkMode( hdc, TRANSPARENT );
 
 	//	トレス画像より上に来るように
@@ -1527,7 +1529,7 @@ BOOLEAN ViewDrawTextOut( HDC hdc, INT_PTR dDot, UINT_PTR rdLine, LPLETTER pstTex
 	INT_PTR		dX, dY;	//	描画位置左上
 	INT_PTR		width, rdStart;
 	LPTSTR	ptText;
-	UINT_PTR	bStyle, cbSize;
+	UINT_PTR	bStyle, cbSize, bTrace = FALSE;
 	BOOLEAN	bRslt, doDraw;
 	RECT	rect;
 
@@ -1541,8 +1543,12 @@ BOOLEAN ViewDrawTextOut( HDC hdc, INT_PTR dDot, UINT_PTR rdLine, LPLETTER pstTex
 	ZeroMemory( ptText, cbSize );
 
 	//	最初に基本モードセットして、標準設定を確保しておく
-	if( TraceMoziColourGet( &clrTrcMozi ) ){	clrMozi = clrTrcMozi;	}
-	else{					clrMozi =  gaColourTable[CLRT_BASICPEN];	}
+#ifdef ENABLE_IMGCTL_RUNTIME
+	bTrace = TraceMoziColourGet(&clrTrcMozi);
+#endif
+	if (bTrace) { clrMozi = clrTrcMozi; }
+	else { clrMozi = gaColourTable[CLRT_BASICPEN]; }
+
 	clrTextOld = SetTextColor( hdc, clrMozi );
 
 	clrRvsMozi = ~clrMozi;	//	選択状態用に色を反転
@@ -2345,7 +2351,13 @@ VOID OperationOnCommand( HWND hWnd, INT_PTR id, HWND hWndCtl, UINT_PTR codeNotif
 		case  IDM_GENERAL_OPTION:	OptionDialogueOpen(   );	break;
 
 		//	トレス機能窓開く
-		case  IDM_TRACE_MODE_ON:	TraceDialogueOpen( ghInst, hWnd );	break;
+		case  IDM_TRACE_MODE_ON:	
+#ifdef ENABLE_IMGCTL_RUNTIME
+			TraceDialogueOpen( ghInst, hWnd );
+#else
+			MessageBox(hWnd, TEXT("トレス機能は封鎖されています。\n"), TEXT("トレス機能は封鎖されています"), MB_OK);
+#endif
+			break;
 
 		//	文字スクリプト窓開く
 		case  IDM_MOZI_SCR_OPEN:	MoziScripterCreate( ghInst , hWnd );	break;
@@ -2372,7 +2384,11 @@ VOID OperationOnCommand( HWND hWnd, INT_PTR id, HWND hWndCtl, UINT_PTR codeNotif
 		case  IDM_WINDOW_CHG_RVRS:	WindowFocusChange( WND_MAIN, -1 );	break;
 
 		//	トレス中に、画像の表示・非表示する
-		case IDM_TRC_VIEWTOGGLE:	TraceImgViewTglExt(   );	break;
+		case IDM_TRC_VIEWTOGGLE:	
+#ifdef ENABLE_IMGCTL_RUNTIME
+			TraceImgViewTglExt();
+#endif
+			break;
 
 		//	ファイル新規作成
 		case IDM_NEWFILE:			DocOpenFromNull( hWnd );	break;

@@ -185,7 +185,7 @@ CONST static CONTEXTITEM	gstContextItem[] =
 };
 
 #define ALL_ITEMS	 117	//	右クリ用　０インデックス
-#define FULL_ITEMS	 145	//	全アイテム
+#define FULL_ITEMS	 144	//	全アイテム
 
 //	右クリ用サブアイテム・位置調整忘れないように
 #define CTS_UNISPACE	24
