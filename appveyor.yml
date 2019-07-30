@@ -1,21 +1,27 @@
 ﻿version: 1.0.{build}
-configuration: Release
 image: Visual Studio 2019
+configuration: Release
 platform: x64
 install:
-- cd C:\Tools\vcpkg
-- git pull
-- .\bootstrap-vcpkg.bat
-- vcpkg integrate install
-- cd %APPVEYOR_BUILD_FOLDER%
-- vcpkg install sqlite3:x64-windows
+- cmd: >-
+    cd C:\Tools\vcpkg
+
+    git pull
+
+    .\bootstrap-vcpkg.bat
+
+    vcpkg integrate install
+
+    cd %APPVEYOR_BUILD_FOLDER%
+
+    vcpkg install sqlite3:x64-windows
+before_build:
+- cmd: chcp 932
 build:
   project: OrinrinEditor.vcxproj
   parallel: true
   verbosity: minimal
-before_build:
-- chcp 932
 after_build:
-- .\package.ps1
+- ps: .\package.ps1
 artifacts:
 - path: ./OrinrinEditor.zip
