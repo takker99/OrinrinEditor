@@ -547,7 +547,6 @@ INT_PTR DocFileCloseCheck( HWND hWnd, UINT_PTR dMode )
 			rslt = MessageBox( hWnd, atMessage, TEXT("お燐からの確認"), MB_YESNOCANCEL | MB_ICONQUESTION );
 			if( IDCANCEL ==  rslt ){	return 0;	}	//	キャンセルなら終わること自体とりやめ
 			if( IDYES == rslt ){	DocFileSave( hWnd, D_SJIS );	}	//	保存するならセーブを呼ぶ
-			if (IDNO == rslt) { OutputDebugString(TEXT("NO\n")); }
 			//	NOなら何もせず次を確認
 			bMod = TRUE;	//	未保存があった
 		}
