@@ -16,7 +16,7 @@ build:
 before_build:
 - chcp 932
 after_build:
-- ./package.ps1
+- %APPVEYOR_BUILD_FOLDER%\package.ps1
 artifacts:
 - path: ./OrinrinEditor.vcxproj
 cache: c:\tools\vcpkg\installed\
