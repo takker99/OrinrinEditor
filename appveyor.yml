@@ -25,3 +25,4 @@ after_build:
 - ps: .\package.ps1
 artifacts:
 - path: ./OrinrinEditor.zip
+  name: OrinrinEditor
