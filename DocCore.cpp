@@ -303,7 +303,7 @@ HRESULT DocMultiFileCloseAll( VOID )
 */
 LPARAM DocMultiFileClose( HWND hWnd, LPARAM uqNumber )
 {
-	INT_PTR			iRslt;
+	int			iRslt;
 	UINT_PTR	i, iPage, iLine;
 	UINT_PTR	iCount;
 	LPARAM	dNowNum, dPrevi;
@@ -531,7 +531,8 @@ HRESULT DocOpenFromNull( HWND hWnd )
 */
 INT_PTR DocFileCloseCheck( HWND hWnd, UINT_PTR dMode )
 {
-	INT_PTR		rslt, ret = 0;
+	INT_PTR		ret = 0;
+	int rslt;
 
 	TCHAR	atMessage[BIG_STRING];
 	BOOLEAN	bMod = FALSE;
@@ -546,6 +547,7 @@ INT_PTR DocFileCloseCheck( HWND hWnd, UINT_PTR dMode )
 			rslt = MessageBox( hWnd, atMessage, TEXT("お燐からの確認"), MB_YESNOCANCEL | MB_ICONQUESTION );
 			if( IDCANCEL ==  rslt ){	return 0;	}	//	キャンセルなら終わること自体とりやめ
 			if( IDYES == rslt ){	DocFileSave( hWnd, D_SJIS );	}	//	保存するならセーブを呼ぶ
+			if (IDNO == rslt) { OutputDebugString(TEXT("NO\n")); }
 			//	NOなら何もせず次を確認
 			bMod = TRUE;	//	未保存があった
 		}
@@ -554,11 +556,15 @@ INT_PTR DocFileCloseCheck( HWND hWnd, UINT_PTR dMode )
 	if( !(bMod) )	//	未保存がなかったなら確認メッセージ
 	{
 		rslt = MessageBox( hWnd, TEXT("もう終わるかい？"), TEXT("お燐からの確認"), MB_YESNO | MB_ICONQUESTION );
-		if( IDYES == rslt ){	ret = 1;	}
-		else{					ret = 0;	}
+		if( IDYES == rslt ){	
+			return 1;
+		}
+		else{	
+			return 0;
+		}
 	}
 
-	return ret;
+	return 1;
 }
 //-------------------------------------------------------------------------------------------------
 
