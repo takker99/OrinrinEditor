@@ -351,3 +351,5 @@ healthchecksdb
 MigrationBackup/
 x64/
 
+package/OrinrinEditor.exe
+package/sqlite3.dll
