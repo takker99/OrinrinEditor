@@ -354,3 +354,7 @@ x64/
 package/OrinrinEditor.exe
 package/sqlite3.dll
 OrinrinEditor.zip
+OrinrinEditor-x86/
+OrinrinEditor-x86.zip
+OrinrinEditor-x64/
+OrinrinEditor-x64.zip

@@ -1,7 +1,9 @@
 ﻿version: 1.0.{build}
 image: Visual Studio 2019
 configuration: Release
-platform: x64
+platform:
+- x64
+- x86
 install:
 - cmd: >-
     cd C:\Tools\vcpkg
@@ -15,6 +17,8 @@ install:
     cd %APPVEYOR_BUILD_FOLDER%
 
     vcpkg install sqlite3:x64-windows
+
+    vcpkg install sqlite3:x86-windows
 before_build:
 - cmd: chcp 932
 build:
@@ -24,5 +28,7 @@ build:
 after_build:
 - ps: .\package.ps1
 artifacts:
-- path: ./OrinrinEditor.zip
-  name: OrinrinEditor
+- path: ./OrinrinEditor-x64.zip
+  name: OrinrinEditor-x64
+- path: ./OrinrinEditor-x86.zip
+  name: OrinrinEditor-x86
