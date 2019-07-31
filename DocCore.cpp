@@ -552,18 +552,17 @@ INT_PTR DocFileCloseCheck( HWND hWnd, UINT_PTR dMode )
 		}
 	}
 
-	if( !(bMod) )	//	未保存がなかったなら確認メッセージ
-	{
-		rslt = MessageBox( hWnd, TEXT("もう終わるかい？"), TEXT("お燐からの確認"), MB_YESNO | MB_ICONQUESTION );
-		if( IDYES == rslt ){	
-			return 1;
-		}
-		else{	
-			return 0;
-		}
+	if (bMod) {
+		return 1;
 	}
 
-	return 1;
+	rslt = MessageBox( hWnd, TEXT("もう終わるかい？"), TEXT("お燐からの確認"), MB_YESNO | MB_ICONQUESTION );
+	if( IDYES == rslt ){	
+		return 1;
+	}
+	else{	
+		return 0;
+	}
 }
 //-------------------------------------------------------------------------------------------------
 
