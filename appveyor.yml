@@ -39,6 +39,4 @@ deploy:
   force_update: false
   on:
     branch: master
-  artifacts:
-    - OrinrinEditor-x64
-    - OrinrinEditor-x86
+  artifacts: /.*\.zip/
