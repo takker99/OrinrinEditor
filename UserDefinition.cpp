@@ -96,7 +96,7 @@ INT_PTR UserDefInitialise( HWND hWnd, UINT_PTR bFirst )
 
 	LPTSTR	ptString;
 	LPSTR	pcText;
-	CCH_SIZE	cchSize;
+	UINT_PTR	cchSize;
 
 	if( bFirst )	//	最初ならパス作っておく
 	{

@@ -1334,7 +1334,7 @@ INT_PTR ViewLetterWidthGet( TCHAR ch )
 INT_PTR ViewStringWidthGet( LPCTSTR ptStr )
 {
 	SIZE	stSize;
-	CCH_SIZE	cchSize;
+	UINT_PTR	cchSize;
 	HDC		hdc= GetDC( ghViewWnd );
 	HFONT	hFtOld;
 

@@ -101,12 +101,12 @@ HRESULT InversePartsLoad( UINT_PTR dMode )
 
 	LPTSTR	ptString;
 	LPSTR	pcText;
-	CCH_SIZE	cchSize, cchLen;
+	UINT_PTR	cchSize, cchLen;
 	TCHAR	atFileName[MAX_PATH];
 
 	TCHAR	atBuff[INV_ITEMS][MIN_STRING];
 	INT_PTR		nYct, nXct;
-	CCH_SIZE	caret;
+	UINT_PTR	caret;
 	UINT_PTR	dItem;
 	//BOOLEAN	bEmpty = FALSE;
 

@@ -783,7 +783,7 @@ HRESULT TemplateItemLoad( LPTSTR ptFileName, PAGELOAD pfCalling )
 
 	LPTSTR	ptString;
 	LPSTR	pcText;
-	CCH_SIZE	cchSize;
+	UINT_PTR	cchSize;
 
 	TCHAR	atFileName[MAX_PATH];
 
@@ -841,7 +841,7 @@ HRESULT TemplateItemSplit( LPTSTR ptStr, UINT_PTR cchSize, PAGELOAD pfCalling )
 	LPCTSTR	ptStart;	//	セパレータの直前
 	LPTSTR	ptEnd;
 	UINT_PTR	iNumber;	//	通し番号カウント
-	CCH_SIZE	cchItem;
+	UINT_PTR	cchItem;
 //	INT_PTR		dmyX = 0, dmyY = 0;
 	BOOLEAN	bLast;
 	TCHAR	atName[MAX_PATH];

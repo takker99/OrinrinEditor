@@ -1295,7 +1295,7 @@ HRESULT LayerEditOnOff( HWND hWnd, UINT_PTR dStyle )
 {
 	UINT_PTR	i, iLines;
 	INT_PTR			ndx;
-	CCH_SIZE	cchSize;
+	UINT_PTR	cchSize;
 	LPTSTR		ptStr;
 	ONELINE		stLine;
 	LAYER_ITR	itLyr;
@@ -1377,7 +1377,7 @@ HRESULT LayerEditOnOff( HWND hWnd, UINT_PTR dStyle )
 */
 HRESULT LayerStringReplace( HWND hLyrWnd, LPTSTR ptStr )
 {
-	CCH_SIZE	cchSize;
+	UINT_PTR	cchSize;
 	ONELINE		stLine;
 	LAYER_ITR	itLyr;
 
@@ -1410,7 +1410,7 @@ HRESULT LayerStringReplace( HWND hLyrWnd, LPTSTR ptStr )
 */
 HRESULT LayerFromString( LAYER_ITR itLyr, LPCTSTR ptStr )
 {
-	CCH_SIZE	cchSize;
+	UINT_PTR	cchSize;
 	ONELINE	stLine;
 
 	ZeroONELINE( &stLine );
@@ -1434,7 +1434,7 @@ HRESULT LayerFromString( LAYER_ITR itLyr, LPCTSTR ptStr )
 HRESULT LayerFromSelectArea( LAYER_ITR itLyr, UINT_PTR bSqSel )
 {
 	LPTSTR	ptString = NULL;
-	CCH_SIZE	cchSize, cbSize;
+	UINT_PTR	cchSize, cbSize;
 	LPPOINT	pstPos;
 	ONELINE	stLine;
 
@@ -1473,7 +1473,7 @@ HRESULT LayerFromSelectArea( LAYER_ITR itLyr, UINT_PTR bSqSel )
 HRESULT LayerFromClipboard( LAYER_ITR itLyr )
 {
 	LPTSTR	ptString = NULL;
-	CCH_SIZE	cchSize, dStyle;//, i;
+	UINT_PTR	cchSize, dStyle;//, i;
 //	INT_PTR		insDot, yLine;
 	ONELINE	stLine;
 

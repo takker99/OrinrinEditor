@@ -427,4 +427,6 @@ LRESULT	ExceptionMessage( LPCSTR, LPCSTR, UINT_PTR, LPARAM );
 #define	VK_Y	0x59
 #define	VK_Z	0x5A
 //-------------------------------------------------------------------------------------------------
-using CCH_SIZE = UINT_PTR;
+#ifndef _WIN64
+#define ENABLE_IMGCTL_RUNTIME
+#endif

@@ -315,7 +315,7 @@ INT_PTR SqnUndoExec( LPUNDOBUFF pstBuff, PINT_PTR pxDot, PINT_PTR pyLine )
 	OPSQ_ITR	itSqn;
 	INT_PTR		xDot, yLine, iRslt = 0, dCrLf = 0, yPreLine = 0;
 	UINT_PTR	dCmd, dGrp, dNow; 
-	CCH_SIZE cchSize;
+	UINT_PTR	cchSize;
 	UINT_PTR	dPreGroup = 0;
 	LPTSTR	ptStr;
 
@@ -404,7 +404,7 @@ INT_PTR SqnRedoExec( LPUNDOBUFF pstBuff, PINT_PTR pxDot, PINT_PTR pyLine )
 	OPSQ_ITR	itSqn;
 	INT_PTR		xDot, yLine, iRslt = 0, dCrLf = 0, yPreLine = 0;
 	UINT_PTR	dCmd, dGrp, dNow;
-	CCH_SIZE	cchSize;
+	UINT_PTR	cchSize;
 	UINT_PTR	dPreGroup = 0;
 	LPTSTR	ptStr;
 

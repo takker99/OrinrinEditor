@@ -850,7 +850,7 @@ INT_PTR DocSquareAddPreMod( INT_PTR xDot, INT_PTR yLine, INT_PTR dNeedLine, BOOL
 //	行増やすのと、所定の位置までスペースで埋める
 	INT_PTR	iLines;
 	INT_PTR		iBaseDot, iBaseLine, iMinus, i;
-	CCH_SIZE	cchBuf;
+	UINT_PTR	cchBuf;
 	LPTSTR	ptBuffer = NULL;
 
 
@@ -913,7 +913,7 @@ INT_PTR DocInsertString(INT_PTR *pNowDot, INT_PTR *pdLine, INT_PTR *pdMozi, LPCT
 {
 	INT_PTR		dBaseDot, dBaseLine, dNeedLine;
 	INT_PTR		dCrLf, i, dLastLine;
-	CCH_SIZE	cchSize;
+	UINT_PTR	cchSize;
 	LPPOINT	pstPoint;
 
 	dBaseDot  = *pNowDot;
@@ -984,7 +984,7 @@ INT_PTR DocInsertString(INT_PTR *pNowDot, INT_PTR *pdLine, INT_PTR *pdMozi, LPCT
 INT_PTR DocInputFromClipboard( PINT_PTR pNowDot, PINT_PTR pdLine, PINT_PTR pdMozi, UINT_PTR bSqMode )
 {
 	LPTSTR	ptString = NULL;
-	CCH_SIZE cchSize;
+	UINT_PTR cchSize;
 	UINT_PTR	dStyle = 0, i, j;
 	INT_PTR		dCrLf, dTop, dBtm;
 	BOOLEAN	bSelect;

@@ -22,10 +22,11 @@ If not, see <http://www.gnu.org/licenses/>.
 
 
 //	画像保存機能にも使うから注意
-//#define IMGCTL_RUNTIME
+//
 //-------------------------------------------------------------------------------------------------
 
 #ifdef ENABLE_IMGCTL_RUNTIME
+#define IMGCTL_RUNTIME
 #include "imgctl.h"
 /*
 スライダとスクロールバーのダイヤログリソースの使い方
