@@ -1,7 +1,12 @@
 ﻿version: 1.0.{build}
-image: Visual Studio 2019
 configuration: Release
-platform: Any CPU
+environment:
+  matrix:
+    - PLATFORM: Win32
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    - PLATFORM: x64
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+
 install:
 - cmd: >-
     cd C:\Tools\vcpkg
