@@ -19,9 +19,9 @@ install:
     vcpkg install sqlite3:x86-windows
 build_script:
 - cmd: >-
-    msbuild "%APPVEYOR_BUILD_FOLDER%\OrinrinEditor.vcxproj" /m /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /t:build /p:Configuration=Debug;Platform="x64"
+    msbuild "%APPVEYOR_BUILD_FOLDER%\OrinrinEditor.vcxproj" /m /verbosity:minimal /t:build /p:Configuration=Release;Platform="x64" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" 
 
-    msbuild "%APPVEYOR_BUILD_FOLDER%\OrinrinEditor.vcxproj" /m /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /t:build /p:Configuration=Debug;Platform="Win32"
+    msbuild "%APPVEYOR_BUILD_FOLDER%\OrinrinEditor.vcxproj" /m /verbosity:minimal /t:build /p:Configuration=Release;Platform="Win32" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 artifacts:
 - path: ./OrinrinEditor-x64.zip
   name: OrinrinEditor-x64

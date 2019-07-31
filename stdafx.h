@@ -430,3 +430,7 @@ LRESULT	ExceptionMessage( LPCSTR, LPCSTR, UINT_PTR, LPARAM );
 #ifndef _WIN64
 #define ENABLE_IMGCTL_RUNTIME
 #endif
+
+#ifdef ENABLE_IMGCTL_RUNTIME
+#pragma warning(disable:4828)
+#endif
