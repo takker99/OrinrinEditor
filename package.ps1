@@ -1,4 +1,4 @@
-﻿if(Test-Path .\Release\){
+﻿if(Test-Path .\x64\Release\){
     Copy-Item -Path .\package -Destination .\OrinrinEditor-x64\ -Recurse
 
     Copy-Item -Path .\x64\Release\OrinrinEditor.exe -Destination .\OrinrinEditor-x64\
@@ -6,7 +6,7 @@
     Compress-Archive -DestinationPath OrinrinEditor-x64.zip -Path .\OrinrinEditor-x64
 }
 
-if(Test-Path .\x64\Release\){
+if(Test-Path .\Release\){
     Copy-Item -Path .\package\ -Destination .\OrinrinEditor-x86\ -Recurse
 
     Copy-Item -Path .\Release\OrinrinEditor.exe -Destination .\OrinrinEditor-x86\
