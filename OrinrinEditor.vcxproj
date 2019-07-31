@@ -244,6 +244,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="ToolBar.cpp" />
+    <ClCompile Include="TraceCtrl.cpp" />
     <ClCompile Include="UnicodePalette.cpp" />
     <ClCompile Include="UserDefinition.cpp" />
     <ClCompile Include="VerticalScript.cpp" />
