@@ -1,12 +1,7 @@
 ﻿version: 1.0.{build}
+image: Visual Studio 2019
 configuration: Release
-environment:
-  matrix:
-    - PLATFORM: Win32
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-    - PLATFORM: x64
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-
+platform: x64
 install:
 - cmd: >-
     cd C:\Tools\vcpkg
@@ -22,14 +17,11 @@ install:
     vcpkg install sqlite3:x64-windows
 
     vcpkg install sqlite3:x86-windows
-before_build:
-- cmd: chcp 932
-build:
-  project: OrinrinEditor.vcxproj
-  parallel: true
-  verbosity: minimal
-after_build:
-- ps: .\package.ps1
+build_script:
+- cmd: >-
+    msbuild "%APPVEYOR_BUILD_FOLDER%\OrinrinEditor.vcxproj" /m /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /t:build /p:Configuration=Debug;Platform="x64"
+
+    msbuild "%APPVEYOR_BUILD_FOLDER%\OrinrinEditor.vcxproj" /m /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /t:build /p:Configuration=Debug;Platform="Win32"
 artifacts:
 - path: ./OrinrinEditor-x64.zip
   name: OrinrinEditor-x64
