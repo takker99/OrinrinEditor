@@ -31,3 +31,14 @@ artifacts:
   name: OrinrinEditor-x64
 - path: ./OrinrinEditor-x86.zip
   name: OrinrinEditor-x86
+deploy:
+- provider: GitHub
+  release: OrinrinEditor-${appveyor_build_version}
+  auth_token:
+    secure: 3EevF+wMhRKfsNkvEM/6Jh0JA9VfbFqZDr3qw33FeA89K6qm20MlJJov8NHj3Tsn
+  force_update: false
+  on:
+    branch: master
+  artifacts:
+    - OrinrinEditor-x64
+    - OrinrinEditor-x86
