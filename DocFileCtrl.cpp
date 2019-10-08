@@ -105,7 +105,11 @@ HRESULT DocFileOpen( HWND hWnd )
 	if( !(bOpened) ){	return  E_ABORT;	}	//	キャンセルしてたら何もしない
 
 	DocDoOpenFile( hWnd, atFilePath );	//	ファイルを指定して読み込む時
-
+	INT_PTR iTotal = DocNowFilePageCount();
+	TRACE(TEXT("pagecount=%d\n"), iTotal);
+	for (INT_PTR i = 0; i < iTotal; i++) {
+		DocDelayPageLoad( gitFileIt ,i);
+	}
 	return S_OK;
 }
 //-------------------------------------------------------------------------------------------------
