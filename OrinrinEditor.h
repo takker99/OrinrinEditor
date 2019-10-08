@@ -908,3 +908,4 @@ HBITMAP	AacArtImageGet( HWND, INT_PTR, LPSIZE, LPSIZE );	//!<
 LPSTR	AacAsciiArtGet( DWORD );			//!<	
 INT_PTR		AacArtSizeGet( DWORD, PINT_PTR, PINT_PTR );
 
+VOID DocPageUndelay(VOID);

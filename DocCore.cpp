@@ -2065,3 +2065,9 @@ HRESULT DocSelText2PageName( VOID )
 }
 //-------------------------------------------------------------------------------------------------
 
+VOID DocPageUndelay() {
+	INT_PTR iTotal = DocNowFilePageCount();
+	for (INT_PTR i = 0; i < iTotal; i++) {
+		DocPageChange(i);
+	}
+}

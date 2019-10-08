@@ -614,6 +614,7 @@ HWND ViewInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame, LPTS
 
 			AppTitleChange( atFile );
 		}
+		DocPageUndelay();
 	}
 
 	//オーポン記録がなければ、説明ＡＳＴを表示する
@@ -639,6 +640,7 @@ HWND ViewInitialise( HINSTANCE hInstance, HWND hParentWnd, LPRECT pstFrame, LPTS
 
 			InitParamValue( INIT_SAVE, VL_FIRST_READED, 1 );
 		}
+		DocPageUndelay();
 	}
 
 	if( !(bOpen) )	//	完全に開けなかったら
