@@ -1,0 +1,40 @@
+﻿version: 1.0.{build}
+image: Visual Studio 2019
+configuration: Release
+platform: x64
+skip_tags: true
+install:
+- cmd: >-
+    cd C:\Tools\vcpkg
+
+    git pull
+
+    .\bootstrap-vcpkg.bat
+
+    vcpkg integrate install
+
+    cd %APPVEYOR_BUILD_FOLDER%
+
+    vcpkg install sqlite3:x64-windows
+
+    vcpkg install sqlite3:x86-windows
+build_script:
+- cmd: >-
+    msbuild "%APPVEYOR_BUILD_FOLDER%\OrinrinEditor.vcxproj" /m /verbosity:minimal /t:build /p:Configuration=Release;Platform="x64" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" 
+
+    msbuild "%APPVEYOR_BUILD_FOLDER%\OrinrinEditor.vcxproj" /m /verbosity:minimal /t:build /p:Configuration=Release;Platform="Win32" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+- ps: .\package.ps1
+artifacts:
+- path: ./OrinrinEditor-x64.zip
+  name: OrinrinEditor-x64
+- path: ./OrinrinEditor-x86.zip
+  name: OrinrinEditor-x86
+deploy:
+- provider: GitHub
+  release: OrinrinEditor-${appveyor_build_version}
+  auth_token:
+    secure: 3EevF+wMhRKfsNkvEM/6Jh0JA9VfbFqZDr3qw33FeA89K6qm20MlJJov8NHj3Tsn
+  force_update: false
+  on:
+    branch: master
+  artifacts: /.*\.zip/
