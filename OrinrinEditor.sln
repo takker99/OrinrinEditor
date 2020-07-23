@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OrinrinEditor", "OrinrinEditor.vcxproj", "{30415D19-CFC4-446B-A442-08C5ED7E789A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SQLite3", "SQLite3\SQLite3.vcxproj", "{0254AF27-6E47-4F6B-8CA1-AA83CF0F0911}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,6 +23,14 @@ Global
 		{30415D19-CFC4-446B-A442-08C5ED7E789A}.Release|Win32.Build.0 = Release|Win32
 		{30415D19-CFC4-446B-A442-08C5ED7E789A}.Release|x64.ActiveCfg = Release|x64
 		{30415D19-CFC4-446B-A442-08C5ED7E789A}.Release|x64.Build.0 = Release|x64
+		{0254AF27-6E47-4F6B-8CA1-AA83CF0F0911}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0254AF27-6E47-4F6B-8CA1-AA83CF0F0911}.Debug|Win32.Build.0 = Debug|Win32
+		{0254AF27-6E47-4F6B-8CA1-AA83CF0F0911}.Debug|x64.ActiveCfg = Debug|x64
+		{0254AF27-6E47-4F6B-8CA1-AA83CF0F0911}.Debug|x64.Build.0 = Debug|x64
+		{0254AF27-6E47-4F6B-8CA1-AA83CF0F0911}.Release|Win32.ActiveCfg = Release|Win32
+		{0254AF27-6E47-4F6B-8CA1-AA83CF0F0911}.Release|Win32.Build.0 = Release|Win32
+		{0254AF27-6E47-4F6B-8CA1-AA83CF0F0911}.Release|x64.ActiveCfg = Release|x64
+		{0254AF27-6E47-4F6B-8CA1-AA83CF0F0911}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

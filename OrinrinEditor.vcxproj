@@ -22,28 +22,29 @@
     <ProjectGuid>{30415D19-CFC4-446B-A442-08C5ED7E789A}</ProjectGuid>
     <RootNamespace>OrinrinEditor</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>ClangCL</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>ClangCL</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>ClangCL</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>ClangCL</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -106,6 +107,9 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>include\stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -136,6 +140,9 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>include\stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -163,6 +170,9 @@
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>include\stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
@@ -195,6 +205,9 @@
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>include\stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
@@ -211,59 +224,60 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BrushTemplate.cpp" />
-    <ClCompile Include="ContextCtrl.cpp" />
-    <ClCompile Include="DocAdjustant.cpp" />
-    <ClCompile Include="DocCore.cpp" />
-    <ClCompile Include="DocFileCtrl.cpp" />
-    <ClCompile Include="DocInsDelCtrl.cpp" />
-    <ClCompile Include="DocInverseCtrl.cpp" />
-    <ClCompile Include="DocMiscellaneous.cpp" />
-    <ClCompile Include="DocOperateLog.cpp" />
-    <ClCompile Include="DocPreview.cpp" />
-    <ClCompile Include="DocSearchCtrl.cpp" />
-    <ClCompile Include="DocSelect.cpp" />
-    <ClCompile Include="DraughtBoard.cpp" />
-    <ClCompile Include="FrameCtrl.cpp" />
-    <ClCompile Include="HoverTip.cpp" />
-    <ClCompile Include="LayerBox.cpp" />
-    <ClCompile Include="LineTemplate.cpp" />
-    <ClCompile Include="MaaCatalogue.cpp" />
-    <ClCompile Include="MaaItems.cpp" />
-    <ClCompile Include="MaaSqlManipulate.cpp" />
-    <ClCompile Include="MaaTemplate.cpp" />
-    <ClCompile Include="MaaTreeView.cpp" />
-    <ClCompile Include="MiniTemplate.cpp" />
-    <ClCompile Include="MoziScript.cpp" />
-    <ClCompile Include="OrinrinEditor.cpp" />
-    <ClCompile Include="PageCtrl.cpp" />
-    <ClCompile Include="SplitBar.cpp" />
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="src\BrushTemplate.cpp" />
+    <ClCompile Include="src\ContextCtrl.cpp" />
+    <ClCompile Include="src\doc\DocAdjustant.cpp" />
+    <ClCompile Include="src\doc\DocCore.cpp" />
+    <ClCompile Include="src\doc\DocFileCtrl.cpp" />
+    <ClCompile Include="src\doc\DocInsDelCtrl.cpp" />
+    <ClCompile Include="src\doc\DocInverseCtrl.cpp" />
+    <ClCompile Include="src\doc\DocMiscellaneous.cpp" />
+    <ClCompile Include="src\doc\DocOperateLog.cpp" />
+    <ClCompile Include="src\doc\DocPreview.cpp" />
+    <ClCompile Include="src\doc\DocSearchCtrl.cpp" />
+    <ClCompile Include="src\doc\DocSelect.cpp" />
+    <ClCompile Include="src\DraughtBoard.cpp" />
+    <ClCompile Include="src\FrameCtrl.cpp" />
+    <ClCompile Include="src\HoverTip.cpp" />
+    <ClCompile Include="src\LayerBox.cpp" />
+    <ClCompile Include="src\LineTemplate.cpp" />
+    <ClCompile Include="src\maa\MaaCatalogue.cpp" />
+    <ClCompile Include="src\maa\MaaItems.cpp" />
+    <ClCompile Include="src\maa\MaaSqlManipulate.cpp" />
+    <ClCompile Include="src\maa\MaaTemplate.cpp" />
+    <ClCompile Include="src\maa\MaaTreeView.cpp" />
+    <ClCompile Include="src\MiniTemplate.cpp" />
+    <ClCompile Include="src\MoziScript.cpp" />
+    <ClCompile Include="src\OrinrinEditor.cpp" />
+    <ClCompile Include="src\PageCtrl.cpp" />
+    <ClCompile Include="src\SplitBar.cpp" />
+    <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="ToolBar.cpp" />
-    <ClCompile Include="TraceCtrl.cpp" />
-    <ClCompile Include="UnicodePalette.cpp" />
-    <ClCompile Include="UserDefinition.cpp" />
-    <ClCompile Include="VerticalScript.cpp" />
-    <ClCompile Include="ViewCaret.cpp" />
-    <ClCompile Include="ViewCentral.cpp" />
-    <ClCompile Include="ViewKeyButton.cpp" />
-    <ClCompile Include="ViewSelect.cpp" />
-    <ClCompile Include="ViewTrace.cpp" />
+    <ClCompile Include="src\ToolBar.cpp" />
+    <ClCompile Include="src\TraceCtrl.cpp" />
+    <ClCompile Include="src\UnicodePalette.cpp" />
+    <ClCompile Include="src\UserDefinition.cpp" />
+    <ClCompile Include="src\VerticalScript.cpp" />
+    <ClCompile Include="src\view\ViewCaret.cpp" />
+    <ClCompile Include="src\view\ViewCentral.cpp" />
+    <ClCompile Include="src\view\ViewKeyButton.cpp" />
+    <ClCompile Include="src\view\ViewSelect.cpp" />
+    <ClCompile Include="src\view\ViewTrace.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Entity.h" />
-    <ClInclude Include="MaaTemplate.h" />
-    <ClInclude Include="OrinrinEditor.h" />
+    <ClInclude Include="include\Entity.h" />
+    <ClInclude Include="include\MaaTemplate.h" />
+    <ClInclude Include="include\OrinrinEditor.h" />
+    <ClInclude Include="include\sqlite3.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="SplitBar.h" />
-    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="include\SplitBar.h" />
+    <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="UnicodePalette.h" />
+    <ClInclude Include="include\UnicodePalette.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="OrinrinEditor.ico" />

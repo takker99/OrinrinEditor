@@ -18,144 +18,147 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BrushTemplate.cpp">
+    <ClCompile Include="src\doc\DocAdjustant.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ContextCtrl.cpp">
+    <ClCompile Include="src\doc\DocCore.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DocAdjustant.cpp">
+    <ClCompile Include="src\doc\DocFileCtrl.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DocCore.cpp">
+    <ClCompile Include="src\doc\DocInsDelCtrl.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DocFileCtrl.cpp">
+    <ClCompile Include="src\doc\DocInverseCtrl.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DocInsDelCtrl.cpp">
+    <ClCompile Include="src\doc\DocMiscellaneous.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DocInverseCtrl.cpp">
+    <ClCompile Include="src\doc\DocOperateLog.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DocMiscellaneous.cpp">
+    <ClCompile Include="src\doc\DocPreview.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DocOperateLog.cpp">
+    <ClCompile Include="src\doc\DocSearchCtrl.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DocSearchCtrl.cpp">
+    <ClCompile Include="src\doc\DocSelect.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DocSelect.cpp">
+    <ClCompile Include="src\maa\MaaCatalogue.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DraughtBoard.cpp">
+    <ClCompile Include="src\maa\MaaItems.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="FrameCtrl.cpp">
+    <ClCompile Include="src\maa\MaaSqlManipulate.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="HoverTip.cpp">
+    <ClCompile Include="src\maa\MaaTemplate.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="LayerBox.cpp">
+    <ClCompile Include="src\maa\MaaTreeView.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="LineTemplate.cpp">
+    <ClCompile Include="src\view\ViewCaret.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="MaaCatalogue.cpp">
+    <ClCompile Include="src\view\ViewCentral.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="MaaItems.cpp">
+    <ClCompile Include="src\view\ViewKeyButton.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="MaaSqlManipulate.cpp">
+    <ClCompile Include="src\view\ViewSelect.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="MaaTemplate.cpp">
+    <ClCompile Include="src\view\ViewTrace.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="MaaTreeView.cpp">
+    <ClCompile Include="src\BrushTemplate.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="MiniTemplate.cpp">
+    <ClCompile Include="src\ContextCtrl.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="MoziScript.cpp">
+    <ClCompile Include="src\DraughtBoard.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="OrinrinEditor.cpp">
+    <ClCompile Include="src\FrameCtrl.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="PageCtrl.cpp">
+    <ClCompile Include="src\HoverTip.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="SplitBar.cpp">
+    <ClCompile Include="src\LineTemplate.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="src\MiniTemplate.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ToolBar.cpp">
+    <ClCompile Include="src\MoziScript.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="UnicodePalette.cpp">
+    <ClCompile Include="src\LayerBox.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="UserDefinition.cpp">
+    <ClCompile Include="src\OrinrinEditor.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="VerticalScript.cpp">
+    <ClCompile Include="src\PageCtrl.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ViewCaret.cpp">
+    <ClCompile Include="src\SplitBar.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ViewCentral.cpp">
+    <ClCompile Include="src\stdafx.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ViewKeyButton.cpp">
+    <ClCompile Include="src\ToolBar.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ViewSelect.cpp">
+    <ClCompile Include="src\TraceCtrl.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ViewTrace.cpp">
+    <ClCompile Include="src\UnicodePalette.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DocPreview.cpp">
+    <ClCompile Include="src\UserDefinition.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="TraceCtrl.cpp">
+    <ClCompile Include="src\VerticalScript.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Entity.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="MaaTemplate.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="OrinrinEditor.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="SplitBar.h">
+    <ClInclude Include="include\MaaTemplate.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="stdafx.h">
+    <ClInclude Include="include\Entity.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OrinrinEditor.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SplitBar.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="include\stdafx.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="include\UnicodePalette.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sqlite3.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="UnicodePalette.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

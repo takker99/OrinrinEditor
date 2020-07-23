@@ -20,9 +20,9 @@ If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-#include "stdafx.h"
-#include "OrinrinEditor.h"
-#include "MaaTemplate.h"
+#include "../../include/stdafx.h"
+#include "../../include/OrinrinEditor.h"
+#include "../../include/MaaTemplate.h"
 //------------------------------------------------------------------------------------------------------------------------
 
 static CONST TCHAR	gcatLicense[] = {
